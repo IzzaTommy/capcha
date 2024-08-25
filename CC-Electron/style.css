@@ -1,12 +1,18 @@
-/** for highlighting **/
+/* Positioning */
+/* Display & Box Model */
+/* Other */
+
+/* for highlighting */
 :root {
-    --bg-color: rgb(183, 110, 102);
-    --main-color: rgba(135, 207, 235);
-    --nav-color: rgb(126, 196, 126);
-    --text-color: rgb(135, 99, 65);
+    --bg-color: rgb(130, 79, 73);
+    --main-color: rgb(100, 149, 169);
+    --nav-color: rgb(81, 138, 81);
+    --text-color: rgb(211, 157, 106);
 
     height: 100%;
 }
+
+/* alt colors */
 /* :root {
     --bg-color: rgba(83, 92, 104, 1);
     --main-color: rgba(68, 68, 68, 0.78);
@@ -16,54 +22,151 @@
     height: 100%;
 } */
 
-body {
-    background-color: var(--bg-color);
-    margin: 0;
-    height: 100%;
+/* true colors */
+:root {
+    --bg-color: #535c68;
+    --main-color: #47494b;
+    --nav-color: #373738;
+    --text-color: #dddddd;
+    --hover-color: #aaaaaa;
 
+    height: 100%;
+}
+
+:root {
+    --title-bar-svg-length: 10px;
+    --title-bar-btn-height: 25px;
+    --title-bar-btn-width: 40px;
+    --nav-bar-padding: 10px;
+    --nav-bar-btn-length: 50px;
+    --nav-bar-svg-length: 40px;
+    --nav-bar-btn-gap: 20px;
+    --nav-bar-width: 180px;
+    --nav-pane-lip-width: 10px;
+    --nav-pane-width: 250px;
+    --def-gap: 20px;
+    --module-gap: calc(var(--nav-pane-lip-width) + var(--def-gap));
+    --expanded-module-gap: calc(var(--nav-pane-lip-width) + var(--def-gap) + var(--nav-pane-width));
+    --def-border-radius: 10px;
+
+    height: 100%;
+}
+
+body {
     display: flex;
     flex-flow: column nowrap;
+    height: 100%;
+    margin: 0;
+
+    background-color: var(--bg-color);
 }
 
 div#title-bar {
+    justify-content: end;
+
+    display: flex;
+    flex: 0 0 auto; /* change auto to the height later? */
+    flex-flow: row nowrap;
+}
+
+div#title-bar > button {
     flex: 0 0 auto;
+    height: var(--title-bar-btn-height);
+    padding: 0;
+    width: var(--title-bar-btn-width);
+
+    border: none;
+    background-color: transparent;
+    line-height: 0;
+}
+
+div#title-bar > button > svg {
+    height: var(--title-bar-svg-length);
+    width: var(--title-bar-svg-length);
+
+    fill: var(--text-color);
+}
+
+div#title-bar > button#minimize:hover,
+div#title-bar > button#maximize-restore:hover {
+    background-color: var(--hover-color);
+}
+
+div#title-bar > button#close:hover {
+    background-color: red;
 }
 
 div#client-area {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1 1 0;
-    gap: 20px;
     position: relative;
+
+    display: flex;
+    /* grow/shrink, start with no size and fill space */
+    flex: 1 1 0;
+    flex-flow: row nowrap;
+    gap: var(--module-gap);
 }
 
-div#client-area > nav#nav {
-    background-color: var(--nav-color);
-    border-radius: 0 15px 0 0;
-    width: 100px;
-    flex: 0 0 auto;
+div#client-area > nav#nav-bar {
     position: relative;
     z-index: 2;
+
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: column nowrap;
+    gap: var(--nav-bar-btn-gap);
+    padding: var(--nav-bar-padding) 0;
+    width: var(--nav-bar-width);
+
+    background-color: var(--nav-color);
 }
 
-div#client-area > div#expanded-nav {
+div#client-area > div#nav-pane {
+    inset: 0;
     position: absolute;
-    background-color: var(--main-color);
-    border-radius: 0 15px 0 0;
     z-index: 1;
-    left: 0px;
-    width: 120px;
-    top: 0;
-    bottom: 0;
+
+    border-radius: 0 var(--def-border-radius) 0 0;
+    width: calc(var(--nav-bar-width) + var(--nav-pane-lip-width));
+
+    background-color: var(--main-color);
 }
 
-div#client-area > div#expanded-nav.expanded {
-    width: 300px;
+div#client-area > div#nav-pane.expanded {
+    width: calc(var(--nav-bar-width) + var(--nav-pane-lip-width) + var(--nav-pane-width));
 }
 
 div#client-area > div#content {
+    /* grow/shrink, start with no size and fill space */
+    border-radius: var(--def-border-radius) 0 0;
+    flex: 1 1 0;
+    margin: 0;
+
     background-color: var(--main-color);
-    border-radius: 15px 0 0;
-    width: 100%;
-    margin: 0 0 0 20px;
+}
+
+div#client-area > nav#nav-bar > button {
+    border: none;
+    border-radius: var(--def-border-radius);
+    height: var(--nav-bar-btn-length);
+    padding: 0;
+    width: var(--nav-bar-btn-length);
+    
+    background-color: var(--main-color);
+    line-height: 0;
+}
+
+div#client-area > nav#nav-bar > button#record {
+    margin-top: auto;
+}
+
+div#client-area > nav#nav-bar > button:hover {
+    background-color: var(--hover-color);
+}
+
+div#client-area > nav#nav-bar > button > svg {
+    height: var(--nav-bar-svg-length);
+    width: var(--nav-bar-svg-length);
+
+    fill: var(--text-color);
 }

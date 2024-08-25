@@ -9,17 +9,45 @@
 </head>
 <body>
     <div id="title-bar">
-        <button id="minimize">Min</button>
-        <button id="maximize-restore">Max</button>
-        <button id="close">Close</button>
+        <button id="minimize">
+            <svg>
+                <use href="assets/window-minimize-solid.svg#window-minimize-solid"></use>
+            </svg>
+        </button>
+        <button id="maximize-restore">
+            <svg>
+                <use href="assets/expand-solid.svg#expand-solid"></use>
+            </svg>
+        </button>
+        <button id="close">
+            <svg>
+                <use href="assets/xmark-solid.svg#xmark-solid"></use>
+            </svg>
+        </button>
     </div>
 
     <div id="client-area">
-        <nav id="nav">
+        <nav id="nav-bar">
+            <button id="folder">
+                <svg>
+                    <use href="assets/folder-solid.svg#folder-solid"></use>
+                </svg>
+            </button>
 
+            <button id="setting">
+                <svg>
+                    <use href="assets/gear-solid.svg#gear-solid"></use>
+                </svg>
+            </button>
+
+            <button id="record">
+                <svg>
+                    <use href="assets/record-vinyl-solid.svg#record-vinyl-solid"></use>
+                </svg>
+            </button>
         </nav>
 
-        <div id="expanded-nav">
+        <div id="nav-pane">
 
         </div>
 
