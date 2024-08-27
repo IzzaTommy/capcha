@@ -11,36 +11,11 @@ function init() {
     //     window.webSocketAPI.stopRecord();
     // });
     
-    // document.querySelector('div#client-area > div#nav-pane').addEventListener('click', function() {
-    //     const navPane = document.querySelector('div#client-area > div#nav-pane');
-    //     const clientArea = document.querySelector('div#client-area');
-
-    //     navPane.classList.toggle('expanded');
+    const navExpander = document.querySelector('div#client-area > div#nav-area > div#nav-expander');
     
-    //     if (navPane.classList.contains('expanded')) {
-    //         clientArea.style.columnGap = 'var(--expanded-module-gap)';
-    //     } else {
-    //         clientArea.style.columnGap = 'var(--module-gap)';
-    //     }
-    // });
+    navExpander.addEventListener('click', function() {
+        const navArea = document.querySelector('div#client-area > div#nav-area');
 
-    buttonList = document.querySelectorAll('div#client-area > nav#nav-bar > button');
-
-    for (const button of buttonList)
-    {
-
-        button.addEventListener('click', () => {
-            const navPane = document.querySelector('div#client-area > div#nav-pane');
-            const clientArea = document.querySelector('div#client-area');
-    
-            navPane.classList.toggle('expanded');
-        
-            if (navPane.classList.contains('expanded')) {
-                clientArea.style.columnGap = 'var(--expanded-module-gap)';
-            } else {
-                clientArea.style.columnGap = 'var(--module-gap)';
-            }
-        });
-    }
-    
+        navArea.classList.toggle('expanded');
+    });    
 }

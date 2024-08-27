@@ -2,52 +2,90 @@
 /* Display & Box Model */
 /* Other */
 
-/* for highlighting */
-:root {
-    --bg-color: rgb(130, 79, 73);
-    --main-color: rgb(100, 149, 169);
-    --nav-color: rgb(81, 138, 81);
-    --text-color: rgb(211, 157, 106);
+/**/ /* means unused */ 
 
-    height: 100%;
+/* development colors */
+:root {
+    --def-text-color: black;
+
+    --body-color: #78ABA8;
+
+    --title-bar-btn-color: #EF9C66;
+    --title-bar-btn-hover-color: #3a3a3a;
+    --title-bar-svg-color: black;
+
+    --nav-area-color: #C8CFA0;
+
+    --nav-bar-color: #FCDC94;
+    --nav-bar-logo-color: black;
+    --nav-bar-btn-color: #EF9C66;
+    --nav-bar-btn-hover-color: #3a3a3a;
+    --nav-bar-svg-color: black;
+    --nav-bar-label-color: black;
+
+    --nav-expander-color: #EF9C66;
+    --nav-expander-hover-color: #3a3a3a;
+
+    --nav-content-area-color: #C8CFA0;
 }
 
-/* alt colors */
+/* regular colors */
 /* :root {
-    --bg-color: rgba(83, 92, 104, 1);
-    --main-color: rgba(68, 68, 68, 0.78);
-    --nav-color: rgba(51, 51, 51, 0.78);
-    --text-color: rgba(221, 221, 221, 1);
+    --def-text-color: #dddddd;
 
-    height: 100%;
+    --body-color: #535c68;
+
+    --title-bar-btn-color: transparent;
+    --title-bar-btn-hover-color: #3a3a3a;
+    --title-bar-svg-color: #cccccc;
+
+    --nav-area-color: transparent;
+
+    --nav-bar-color: #373738;
+    --nav-bar-logo-color: red;
+    --nav-bar-btn-color: transparent;
+    --nav-bar-btn-hover-color: #777777;
+    --nav-bar-svg-color: #dddddd;
+    --nav-bar-label-color: var(--def-text-color);
+
+    --nav-expander-color: var(--nav-bar-color);
+    --nav-expander-hover-color: lime;
+
+    --nav-content-area-color: rgba(71, 73, 75, 0.8);
 } */
 
-/* true colors */
 :root {
-    --bg-color: #535c68;
-    --main-color: #47494b;
-    --nav-color: #373738;
-    --text-color: #dddddd;
-    --hover-color: #aaaaaa;
-
-    height: 100%;
-}
-
-:root {
-    --title-bar-svg-length: 10px;
-    --title-bar-btn-height: 25px;
-    --title-bar-btn-width: 40px;
-    --nav-bar-padding: 10px;
-    --nav-bar-btn-length: 50px;
-    --nav-bar-svg-length: 40px;
-    --nav-bar-btn-gap: 20px;
-    --nav-bar-width: 180px;
-    --nav-pane-lip-width: 10px;
-    --nav-pane-width: 250px;
-    --def-gap: 20px;
-    --module-gap: calc(var(--nav-pane-lip-width) + var(--def-gap));
-    --expanded-module-gap: calc(var(--nav-pane-lip-width) + var(--def-gap) + var(--nav-pane-width));
     --def-border-radius: 10px;
+
+    --title-bar-btn-height: 25px; /**/
+    --title-bar-btn-width: 40px; /**/
+    --title-bar-btn-h-padding: calc((var(--title-bar-btn-width) - var(--title-bar-svg-length)) / 2);
+    --title-bar-btn-v-padding: calc((var(--title-bar-btn-height) - var(--title-bar-svg-length)) / 2);
+    --title-bar-svg-length: 10px;
+
+    --client-area-gap: 20px;
+
+    --nav-bar-width: 70px; /**/
+    --nav-bar-h-padding: calc((var(--nav-bar-width) - var(--nav-bar-btn-width)) / 2);
+    --nav-bar-v-padding: 10px;
+    --nav-bar-gap: 5px;
+
+    --nav-bar-logo-length: 60px;
+    --nav-bar-logo-h-padding: 10px;
+    --nav-bar-logo-v-padding: 10px;
+
+    --nav-bar-btn-height: 40px; /**/
+    --nav-bar-btn-width: 40px; /**/
+    --nav-bar-btn-h-padding: calc((var(--nav-bar-btn-width) - var(--nav-bar-svg-length)) / 2);
+    --nav-bar-btn-v-padding: calc((var(--nav-bar-btn-height) - var(--nav-bar-svg-length)) / 2);
+    --nav-bar-btn-border-radius: var(--def-border-radius);
+    --nav-bar-btn-gap: 20px;
+    --nav-bar-svg-length: 20px;
+
+    --nav-expander-width: 10px;
+    --nav-expander-border-radius: var(--def-border-radius);
+
+    --content-area-border-radius: var(--def-border-radius);
 
     height: 100%;
 }
@@ -58,25 +96,22 @@ body {
     height: 100%;
     margin: 0;
 
-    background-color: var(--bg-color);
+    background-color: var(--body-color);
 }
 
 div#title-bar {
-    justify-content: end;
-
     display: flex;
-    flex: 0 0 auto; /* change auto to the height later? */
+    flex: 0 0 fit-content;
     flex-flow: row nowrap;
+    justify-content: end;
 }
 
 div#title-bar > button {
-    flex: 0 0 auto;
-    height: var(--title-bar-btn-height);
-    padding: 0;
-    width: var(--title-bar-btn-width);
-
     border: none;
-    background-color: transparent;
+    flex: 0 0 fit-content;
+    padding: var(--title-bar-btn-v-padding) var(--title-bar-btn-h-padding);
+
+    background-color: var(--title-bar-btn-color);
     line-height: 0;
 }
 
@@ -84,12 +119,12 @@ div#title-bar > button > svg {
     height: var(--title-bar-svg-length);
     width: var(--title-bar-svg-length);
 
-    fill: var(--text-color);
+    fill: var(--title-bar-svg-color);
 }
 
 div#title-bar > button#minimize:hover,
 div#title-bar > button#maximize-restore:hover {
-    background-color: var(--hover-color);
+    background-color: var(--title-bar-btn-hover-color);
 }
 
 div#title-bar > button#close:hover {
@@ -97,76 +132,99 @@ div#title-bar > button#close:hover {
 }
 
 div#client-area {
-    position: relative;
-
     display: flex;
-    /* grow/shrink, start with no size and fill space */
-    flex: 1 1 0;
+    flex: 1 1 fit-content;
     flex-flow: row nowrap;
-    gap: var(--module-gap);
+    gap: var(--client-area-gap);
 }
 
-div#client-area > nav#nav-bar {
-    position: relative;
-    z-index: 2;
+div#client-area > div#nav-area {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
 
+    background-color: var(--nav-area-color);
+}
+
+div#client-area > div#nav-area > nav#nav-bar {
     align-items: center;
     display: flex;
-    flex: 0 0 auto;
+    flex: 1 1 fit-content;
     flex-flow: column nowrap;
-    gap: var(--nav-bar-btn-gap);
-    padding: var(--nav-bar-padding) 0;
-    width: var(--nav-bar-width);
+    gap: var(--nav-bar-gap);
+    padding: var(--nav-bar-v-padding) var(--nav-bar-h-padding);
 
-    background-color: var(--nav-color);
+    background-color: var(--nav-bar-color);
 }
 
-div#client-area > div#nav-pane {
-    inset: 0;
-    position: absolute;
-    z-index: 1;
-
-    border-radius: 0 var(--def-border-radius) 0 0;
-    width: calc(var(--nav-bar-width) + var(--nav-pane-lip-width));
-
-    background-color: var(--main-color);
+div#client-area > div#nav-area.expanded > nav#nav-bar {
+    align-items: stretch;
 }
 
-div#client-area > div#nav-pane.expanded {
-    width: calc(var(--nav-bar-width) + var(--nav-pane-lip-width) + var(--nav-pane-width));
+div#client-area > div#nav-area > nav#nav-bar > svg {
+    align-self: center;
+    flex: 0 0 auto;
+    height: var(--nav-bar-logo-length);
+    padding: var(--nav-bar-logo-v-padding) var(--nav-bar-logo-h-padding);
+    width: var(--nav-bar-logo-length);
+
+    fill: var(--nav-bar-logo-color);
 }
 
-div#client-area > div#content {
-    /* grow/shrink, start with no size and fill space */
-    border-radius: var(--def-border-radius) 0 0;
-    flex: 1 1 0;
-    margin: 0;
-
-    background-color: var(--main-color);
-}
-
-div#client-area > nav#nav-bar > button {
+div#client-area > div#nav-area > nav#nav-bar > button {
+    align-items: center;
     border: none;
-    border-radius: var(--def-border-radius);
-    height: var(--nav-bar-btn-length);
-    padding: 0;
-    width: var(--nav-bar-btn-length);
-    
-    background-color: var(--main-color);
+    border-radius: var(--nav-bar-btn-border-radius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--nav-bar-btn-gap);
+    padding: var(--nav-bar-btn-v-padding) var(--nav-bar-btn-h-padding);
+
+    background-color: var(--nav-bar-btn-color);
     line-height: 0;
 }
 
-div#client-area > nav#nav-bar > button#record {
-    margin-top: auto;
+div#client-area > div#nav-area > nav#nav-bar > button:hover {
+    background-color: var(--nav-bar-btn-hover-color);
 }
 
-div#client-area > nav#nav-bar > button:hover {
-    background-color: var(--hover-color);
-}
-
-div#client-area > nav#nav-bar > button > svg {
+div#client-area > div#nav-area > nav#nav-bar > button > svg {
+    flex: 0 0 auto;
     height: var(--nav-bar-svg-length);
     width: var(--nav-bar-svg-length);
 
-    fill: var(--text-color);
+    fill: var(--nav-bar-svg-color);
+}
+
+div#client-area > div#nav-area > nav#nav-bar > button > h3 {
+    display: none;
+    flex: 1 1 auto;
+    margin: 0;
+
+    color: var(--nav-bar-label-color);
+}
+
+div#client-area > div#nav-area.expanded > nav#nav-bar > button > h3 {
+    display: block;
+}
+
+div#client-area > div#nav-area > div#nav-expander {
+    border-radius: 0 var(--nav-expander-border-radius) 0 0;
+    flex: 0 0 auto;
+    width: var(--nav-expander-width);
+
+    background: var(--nav-expander-color);
+}
+
+div#client-area > div#nav-area > div#nav-expander:hover {
+    background-color: var(--nav-expander-hover-color);
+}
+
+div#client-area > div#content-area {
+    border-radius: var(--content-area-border-radius) 0 0;
+    flex: 1 1 fit-content;
+    margin: 0;
+
+    background-color: var(--nav-content-area-color);
 }
