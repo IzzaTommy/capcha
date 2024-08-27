@@ -9,3 +9,17 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
         ipcRenderer.send('ws-send', 'StopRecord', {});
     }
 });
+
+contextBridge.exposeInMainWorld('titleBarAPI', {
+    minimize: () => {
+        ipcRenderer.send('tb-send', 'minimize');
+    },
+
+    maximize: () => {
+        ipcRenderer.send('tb-send', 'maximize');
+    },
+
+    close: () => {
+        ipcRenderer.send('tb-send', 'close');
+    }
+});

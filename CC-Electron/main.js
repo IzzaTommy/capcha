@@ -6,7 +6,9 @@ function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
-        frame: false,
+        // frame: false,
+        titleBarStyle: 'hidden',
+        // titleBarOverlay: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -96,6 +98,29 @@ function createWindow() {
         } 
         else {
             console.log('WebSocket is not open. Cannot send message.');
+        }
+    });
+
+
+
+    ipcMain.on('tb-send', (event, requestType) => {
+        switch (requestType) {
+            case 'minimize':
+                mainWindow.minimize();
+                break;
+            case 'maximize':
+                if (mainWindow.isMaximized()) {
+                    mainWindow.unmaximize();
+                }
+                else {
+                    mainWindow.maximize();
+                }
+                break;
+            case 'close':
+                mainWindow.close();
+                break;
+            default:
+                console.log('Title Bar Error.')
         }
     });
 }

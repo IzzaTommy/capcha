@@ -30,7 +30,7 @@
 }
 
 /* regular colors */
-/* :root {
+:root {
     --def-text-color: #dddddd;
 
     --body-color: #535c68;
@@ -42,7 +42,7 @@
     --nav-area-color: transparent;
 
     --nav-bar-color: #373738;
-    --nav-bar-logo-color: red;
+    --nav-bar-logo-color: #dddddd;
     --nav-bar-btn-color: transparent;
     --nav-bar-btn-hover-color: #777777;
     --nav-bar-svg-color: #dddddd;
@@ -52,7 +52,7 @@
     --nav-expander-hover-color: lime;
 
     --nav-content-area-color: rgba(71, 73, 75, 0.8);
-} */
+}
 
 :root {
     --def-border-radius: 10px;
@@ -63,26 +63,31 @@
     --title-bar-btn-v-padding: calc((var(--title-bar-btn-height) - var(--title-bar-svg-length)) / 2);
     --title-bar-svg-length: 10px;
 
-    --client-area-gap: 20px;
+    --client-area-gap: 12px;
 
-    --nav-bar-width: 70px; /**/
-    --nav-bar-h-padding: calc((var(--nav-bar-width) - var(--nav-bar-btn-width)) / 2);
-    --nav-bar-v-padding: 10px;
-    --nav-bar-gap: 5px;
+    --nav-bar-width: 80px; /**/
+    --nav-bar-h-padding: calc((var(--nav-bar-width) - var(--nav-bar-logo-area-width)) / 2);
+    --nav-bar-v-padding: var(--nav-bar-h-padding);
+    --nav-bar-gap: 30px;
 
+    --nav-bar-logo-area-height: 80px; /**/
+    --nav-bar-logo-area-width: 80px; /**/
+    --nav-bar-logo-area-h-margin: calc((var(--nav-bar-logo-area-width) - var(--nav-bar-logo-length)) / 2);
+    --nav-bar-logo-area-v-margin: calc((var(--nav-bar-logo-area-height) - var(--nav-bar-logo-length)) / 2);
+    --nav-bar-logo-area-gap: var(--nav-bar-btn-gap);
     --nav-bar-logo-length: 60px;
-    --nav-bar-logo-h-padding: 10px;
-    --nav-bar-logo-v-padding: 10px;
 
-    --nav-bar-btn-height: 40px; /**/
-    --nav-bar-btn-width: 40px; /**/
+    --nav-bar-btn-height: 50px; /**/
+    --nav-bar-btn-width: 50px; /**/
+    --nav-bar-btn-h-margin: calc((var(--nav-bar-logo-area-width) - var(--nav-bar-btn-width)) / 2);
+    --nav-bar-btn-v-margin: 0;
     --nav-bar-btn-h-padding: calc((var(--nav-bar-btn-width) - var(--nav-bar-svg-length)) / 2);
     --nav-bar-btn-v-padding: calc((var(--nav-bar-btn-height) - var(--nav-bar-svg-length)) / 2);
     --nav-bar-btn-border-radius: var(--def-border-radius);
     --nav-bar-btn-gap: 20px;
-    --nav-bar-svg-length: 20px;
+    --nav-bar-svg-length: 30px;
 
-    --nav-expander-width: 10px;
+    --nav-expander-width: var(--nav-expander-border-radius);
     --nav-expander-border-radius: var(--def-border-radius);
 
     --content-area-border-radius: var(--def-border-radius);
@@ -90,6 +95,7 @@
     height: 100%;
 }
 
+/* body */
 body {
     display: flex;
     flex-flow: column nowrap;
@@ -99,11 +105,15 @@ body {
     background-color: var(--body-color);
 }
 
+/* title bar of the window */
 div#title-bar {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
     justify-content: end;
+
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
 }
 
 div#title-bar > button {
@@ -113,6 +123,8 @@ div#title-bar > button {
 
     background-color: var(--title-bar-btn-color);
     line-height: 0;
+
+    -webkit-app-region: no-drag;
 }
 
 div#title-bar > button > svg {
@@ -123,7 +135,7 @@ div#title-bar > button > svg {
 }
 
 div#title-bar > button#minimize:hover,
-div#title-bar > button#maximize-restore:hover {
+div#title-bar > button#maximize:hover {
     background-color: var(--title-bar-btn-hover-color);
 }
 
@@ -131,6 +143,7 @@ div#title-bar > button#close:hover {
     background-color: red;
 }
 
+/* client area (window minus the title bar) */
 div#client-area {
     display: flex;
     flex: 1 1 fit-content;
@@ -138,6 +151,7 @@ div#client-area {
     gap: var(--client-area-gap);
 }
 
+/* navigation area */
 div#client-area > div#nav-area {
     display: flex;
     flex: 0 0 fit-content;
@@ -161,14 +175,35 @@ div#client-area > div#nav-area.expanded > nav#nav-bar {
     align-items: stretch;
 }
 
-div#client-area > div#nav-area > nav#nav-bar > svg {
-    align-self: center;
+div#client-area > div#nav-area > nav#nav-bar > div#logo-area {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--nav-bar-logo-area-gap);
+    margin: var(--nav-bar-logo-area-v-margin) var(--nav-bar-logo-area-h-margin);
+
+    line-height: 0;
+}
+
+div#client-area > div#nav-area > nav#nav-bar > div#logo-area > svg {
     flex: 0 0 auto;
     height: var(--nav-bar-logo-length);
-    padding: var(--nav-bar-logo-v-padding) var(--nav-bar-logo-h-padding);
     width: var(--nav-bar-logo-length);
 
     fill: var(--nav-bar-logo-color);
+}
+
+div#client-area > div#nav-area > nav#nav-bar > div#logo-area > h2 {
+    display: none;
+    flex: 1 1 auto;
+    margin: 0;
+
+    color: var(--nav-bar-label-color);
+}
+
+div#client-area > div#nav-area.expanded > nav#nav-bar > div#logo-area > h2 {
+    display: block;
 }
 
 div#client-area > div#nav-area > nav#nav-bar > button {
@@ -183,6 +218,10 @@ div#client-area > div#nav-area > nav#nav-bar > button {
 
     background-color: var(--nav-bar-btn-color);
     line-height: 0;
+}
+
+div#client-area > div#nav-area.expanded > nav#nav-bar > button {
+    margin: var(--nav-bar-btn-v-margin) var(--nav-bar-btn-h-margin);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > button:hover {
@@ -221,6 +260,7 @@ div#client-area > div#nav-area > div#nav-expander:hover {
     background-color: var(--nav-expander-hover-color);
 }
 
+/* content area */
 div#client-area > div#content-area {
     border-radius: var(--content-area-border-radius) 0 0;
     flex: 1 1 fit-content;
