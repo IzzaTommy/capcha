@@ -40,33 +40,40 @@ function userInterfaceInit() {
         const navArea = document.querySelector('div#client-area > div#nav-area');
 
         navArea.classList.toggle('expanded');
+
+        if (navArea.classList.contains('expanded')) {
+            navExpander.querySelector('svg > use').setAttribute('href', 'assets/svg/arrow-back-ios.svg#arrow-back-ios');
+        }
+        else {
+            navExpander.querySelector('svg > use').setAttribute('href', 'assets/svg/arrow-forward-ios.svg#arrow-forward-ios');
+        }
     });
 
     const folderBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#folder');
-    const settingBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#setting');
+    const settingsBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#settings');
     const recordBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#record');
 
     folderBtn.addEventListener('mouseover', () => {
-        folderBtn.querySelector('use').setAttribute('href', 'assets/folder-solid.svg#folder-solid');
+        folderBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/folder-solid.svg#folder-solid');
     });
 
     folderBtn.addEventListener('mouseout', () => {
-        folderBtn.querySelector('use').setAttribute('href', 'assets/folder.svg#folder');
+        folderBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/folder.svg#folder');
     });
 
-    settingBtn.addEventListener('mouseover', () => {
-        settingBtn.querySelector('use').setAttribute('href', 'assets/setting-solid.svg#setting-solid');
+    settingsBtn.addEventListener('mouseover', () => {
+        settingsBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/settings-solid.svg#settings-solid');
     });
 
-    settingBtn.addEventListener('mouseout', () => {
-        settingBtn.querySelector('use').setAttribute('href', 'assets/setting.svg#setting');
+    settingsBtn.addEventListener('mouseout', () => {
+        settingsBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/settings.svg#settings');
     });
 
     recordBtn.addEventListener('mouseover', () => {
-        recordBtn.querySelector('use').setAttribute('href', 'assets/record-solid.svg#record-solid');
+        recordBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/record-solid.svg#record-solid');
     });
 
     recordBtn.addEventListener('mouseout', () => {
-        recordBtn.querySelector('use').setAttribute('href', 'assets/record.svg#record');
+        recordBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/record.svg#record');
     });
 }
