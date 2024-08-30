@@ -17,93 +17,121 @@
 
 /* development colors */
 :root {
-    --def-text-color: black;
+    --def-text-color: #C8CFA0;
+    --primary-color: #3a4257;
+    --secondary-color: #61748e;
+    --tertiary-color: #78594a;
 
-    --body-color: #78ABA8;
+    --body-bgcolor: var(--tertiary-color);
 
-    --tb-btn-color: #EF9C66;
-    --tb-btn-hover-color: #3a3a3a;
-    --tb-btn-svg-color: black;
+    --tb-btn-bgcolor: transparent;
+    --tb-btn-hover-bgcolor: #6d9c66;
+    --tb-btn-svg-fill: var(--def-text-color);
 
-    --nav-area-color: #C8CFA0;
+    --na-bgcolor: transparent;
 
-    --nav-bar-color: #FCDC94;
-    --nav-bar-logo-svg-color: black;
-    --nav-bar-logo-label-color: black;
-    --nav-bar-btn-color: #EF9C66;
-    --nav-bar-btn-hover-color: #3a3a3a;
-    --nav-bar-btn-svg-color: black;
-    --nav-bar-btn-label-color: black;
+    --nb-bgcolor: var(--secondary-color);
+    --nb-logo-svg-fill: var(--def-text-color);
+    --nb-logo-h1-color: var(--def-text-color);
+    --nb-hr-bgcolor: var(--def-text-color);
+    --nb-btn-bgcolor: transparent;
+    --nb-btn-hover-bgcolor: #6d9c66;
+    --nb-btn-svg-fill: var(--def-text-color);
+    --nb-btn-span-color: var(--def-text-color);
 
-    --nav-expander-color: #EF9C66;
-    --nav-expander-hover-color: #3a3a3a;
+    --ne-bgcolor: var(--nb-bgcolor);
+    --ne-hover-bgcolor: var(--def-text-color);
+    --ne-svg-fill: var(--def-text-color);
 
-    --content-area-color: #C8CFA0;
+    --ca-bgcolor: var(--primary-color);
+
+    --sm-h2-color: var(--def-text-color);
+    --sm-hr-bgcolor: var(--def-text-color);
+
+    --xsl-h3-color: var(--def-text-color);
+    --xsl-hr-bgcolor: var(--def-text-color);
+
+    --xs-h4-color: var(--def-text-color);
+    --xs-container-bordercolor: var(--secondary-color);
+    --xs-container-bgcolor: var(--secondary-color);
+    --xs-container-svg-fill: var(--def-text-color);
+    --xs-container-input-bgcolor: #8a6464;
+    --xs-container-input-color: var(--def-text-color);
+    --xs-container-p-color: var(--def-text-color);
 }
+
+/* * {
+    outline: 1px solid rgba(247, 77, 227, 0.4);
+} */
 
 /* regular colors */
 :root {
     --def-text-color: #dddddd;
+    --primary-color: #4a4c51;
+    --secondary-color: #373737;
+    --tertiary-color: #535c68;
 
-    --body-color: #535c68;
+    --body-bgcolor: var(--tertiary-color);
 
-    --tb-btn-color: transparent;
-    --tb-btn-hover-color: #3a3a3a;
-    --tb-btn-svg-color: #cccccc;
+    --tb-btn-bgcolor: transparent;
+    --tb-btn-hover-bgcolor: #3a3a3a;
+    --tb-btn-svg-fill: #cccccc;
 
-    --nav-area-color: transparent;
+    --na-bgcolor: transparent;
 
-    --nav-bar-color: #373738;
-    --nav-bar-logo-svg-color: #dddddd;
-    --nav-bar-logo-label-color: var(--def-text-color);
-    --nav-bar-btn-color: transparent;
-    --nav-bar-btn-hover-color: #656565;
-    --nav-bar-btn-svg-color: #dddddd;
-    --nav-bar-btn-label-color: var(--def-text-color);
+    --nb-bgcolor: var(--secondary-color);
+    --nb-logo-svg-fill: var(--def-text-color);
+    --nb-logo-h1-color: var(--def-text-color);
+    --nb-hr-bgcolor: var(--def-text-color);
+    --nb-btn-bgcolor: transparent;
+    --nb-btn-hover-bgcolor: #656565;
+    --nb-btn-svg-fill: var(--def-text-color);
+    --nb-btn-span-color: var(--def-text-color);
 
-    --nav-bar-hr-color: #dddddd;
+    --ne-bgcolor: var(--nb-bgcolor);
+    --ne-hover-bgcolor: var(--def-text-color);
+    --ne-svg-fill: var(--def-text-color);
 
-    --nav-expander-svg-color: #dddddd;
-    --nav-expander-color: var(--nav-bar-color);
-    --nav-expander-hover-color: lime;
+    --ca-bgcolor: var(--primary-color);
 
-    --content-area-color: rgba(71, 73, 75, 0.8);
+    --sm-h2-color: var(--def-text-color);
+    --sm-hr-bgcolor: var(--def-text-color);
 
-    --settings-menu-label-color: var(--def-text-color);
+    --xsl-h3-color: var(--def-text-color);
+    --xsl-hr-bgcolor: var(--def-text-color);
 
-    --files-settings-label-color: var(--def-text-color);
-
-    --video-save-location-color: #373737;
-    --video-save-location-label-color: var(--def-text-color);
-    --video-save-location-svg-color: #dddddd;
-    --video-save-location-text-color: var(--def-text-color);
-
-    --video-save-location-input-color: #5a5a5a;
+    --xs-h4-color: var(--def-text-color);
+    --xs-container-bordercolor: var(--secondary-color);
+    --xs-container-bgcolor: var(--secondary-color);
+    --xs-container-svg-fill: var(--def-text-color);
+    --xs-container-input-bgcolor: #5a5a5a;
+    --xs-container-input-color: var(--def-text-color);
+    --xs-container-p-color: var(--def-text-color);
 }
 
 :root {
     --def-border-radius: 10px;
+    --def-hr-height: 1px;
 
     /* tb === Title Bar */
     --tb-btn-svg-length: 10px;
     --tb-btn-hpadding: 15px;
     --tb-btn-vpadding: 7.5px;
 
-    /* ca === Client Area */
-    --client-area-gap: 12px;
+    /* cla === Client Area */
+    --cla-hgap: 12px;
 
     /* nb === Nav(igation) Bar */
     --nb-logo-svg-length: 60px;
     --nb-logo-hmargin: 10px;
     --nb-logo-vmargin: 10px;
-    --nb-logo-gap: 20px;
-    --nb-logo-label-fsize: 28px;
-    --nb-logo-label-fweight: 600;
+    --nb-logo-hgap: 20px;
+    --nb-logo-h1-fsize: 28px;
+    --nb-logo-h1-fweight: 600;
 
-    --nb-hr-height: 1px;
+    --nb-hr-height: var(--def-hr-height);
     --nb-hr-width: calc(100% - var(--nb-logo-hmargin));
     --nb-hr-hmargin: calc(var(--nb-logo-hmargin) / 2);
-    --nb-hr-vmargin: 0;
 
     --nb-btn-svg-length: 30px;
     --nb-btn-hpadding: 10px;
@@ -111,30 +139,54 @@
     --nb-btn-border-radius: var(--def-border-radius);
     --nb-btn-hmargin: calc(((var(--nb-logo-svg-length) - var(--nb-btn-svg-length)) / 2) + var(--nb-logo-hmargin) - var(--nb-btn-hpadding));
     --nb-btn-vmargin: 10px;
-    --nb-btn-gap: 40px;
-    --nb-btn-label-fsize: 20px;
-    --nb-btn-label-fweight: 400;
+    --nb-btn-hgap: 40px;
+    --nb-btn-span-fsize: 20px;
+    --nb-btn-span-fweight: 400;
 
     /* ne === Nav(igation) Expander */
     --ne-svg-length: 15px;
     --ne-border-radius: var(--def-border-radius);
 
-    /* coa === Content Area */
-    --content-area-border-radius: var(--def-border-radius);
+    /* ca === Content Area */
+    --ca-border-radius: var(--def-border-radius);
 
-    --settings-menu-label-font-size: 60px;
-    --settings-menu-label-font-weight: 400;
+    /* sm === Settings Menu */
+    --sm-h2-hmargin: calc(var(--nb-logo-hmargin) + var(--ne-svg-length));
+    --sm-h2-vmargin: calc(var(--nb-logo-vmargin));
+    --sm-h2-fsize: 60px;
+    --sm-h2-fweight: 600;
 
-    --files-settings-label-font-size: 30px;
-    --files-settings-label-font-weight: 300;
+    --sm-hr-height: var(--def-hr-height);
+    --sm-hr-width: calc(100% - var(--sm-h2-hmargin));
+    --sm-hr-hmargin: calc(var(--ne-svg-length) + (var(--nb-logo-hmargin) / 2));
 
-    --video-save-location-label-font-size: 20px;
-    --video-save-location-label-font-weight: 300;
+    /* xsl === X Settings List (Files Settings List, Video Settings List, etc.) */
+    --xsl-hmargin: var(--sm-h2-hmargin);
+    --xsl-vmargin: calc(var(--nb-btn-vpadding) + var(--nb-btn-vmargin));
 
-    --video-save-location-text-font-size: 12px;
-    --video-save-location-text-font-weight: 300;
+    --xsl-h3-vmargin: 10px;
+    --xsl-h3-fsize: 40px;
+    --xsl-h3-fweight: 500;
 
-    --video-save-location-border-radius: var(--def-border-radius);
+    /* --xsl-hr-height: 1px;
+    --xsl-hr-width: 1000px; */
+
+    /* xs === X Settings (Save Settings, Storage Settings, etc.) */
+    --xs-hmargin: 0;
+    --xs-vmargin: var(--xsl-h3-vmargin);
+    --xs-hgap: 30px;
+
+    --xs-h4-vmargin: var(--xsl-h3-vmargin);
+    --xs-h4-fsize: 17px;
+    --xs-h4-fweight: 350;
+
+    --xs-container-svg-length: 25px;
+    --xs-container-svg-hmargin: 5px;
+    --xs-container-svg-vmargin: 5px;
+    --xs-container-input-border-radius: var(--def-border-radius);
+    --xs-container-p-fsize: 11px;
+    --xs-container-p-fweight: 300;
+    --xs-container-border-radius: var(--def-border-radius);
 
     height: 100%;
 }
@@ -146,7 +198,7 @@ body {
     height: 100%;
     margin: 0;
 
-    background-color: var(--body-color);
+    background-color: var(--body-bgcolor);
 }
 
 /* title bar of the window */
@@ -165,26 +217,26 @@ div#title-bar > button {
     flex: 0 0 fit-content;
     padding: var(--tb-btn-vpadding) var(--tb-btn-hpadding);
 
-    background-color: var(--tb-btn-color);
-    line-height: 0;
+    background-color: var(--tb-btn-bgcolor);
 
     -webkit-app-region: no-drag;
 }
 
-div#title-bar > button > svg {
-    height: var(--tb-btn-svg-length);
-    width: var(--tb-btn-svg-length);
-
-    fill: var(--tb-btn-svg-color);
-}
-
 div#title-bar > button#minimize:hover,
 div#title-bar > button#maximize:hover {
-    background-color: var(--tb-btn-hover-color);
+    background-color: var(--tb-btn-hover-bgcolor);
 }
 
 div#title-bar > button#close:hover {
     background-color: red;
+}
+
+div#title-bar > button > svg {
+    display: block;
+    height: var(--tb-btn-svg-length);
+    width: var(--tb-btn-svg-length);
+
+    fill: var(--tb-btn-svg-fill);
 }
 
 /* client area (window minus the title bar) */
@@ -192,7 +244,7 @@ div#client-area {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
-    gap: var(--client-area-gap);
+    gap: var(--cla-hgap);
 }
 
 /* navigation area */
@@ -201,7 +253,7 @@ div#client-area > div#nav-area {
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--nav-area-color);
+    background-color: var(--na-bgcolor);
 }
 
 div#client-area > div#nav-area > nav#nav-bar {
@@ -210,7 +262,7 @@ div#client-area > div#nav-area > nav#nav-bar {
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
 
-    background-color: var(--nav-bar-color);
+    background-color: var(--nb-bgcolor);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > div#logo {
@@ -218,16 +270,17 @@ div#client-area > div#nav-area > nav#nav-bar > div#logo {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--nb-logo-gap);
+    gap: var(--nb-logo-hgap);
     margin: var(--nb-logo-vmargin) var(--nb-logo-hmargin);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > div#logo > svg {
+    display: block;
     flex: 0 0 auto;
     height: var(--nb-logo-svg-length);
     width: var(--nb-logo-svg-length);
 
-    fill: var(--nav-bar-logo-svg-color);
+    fill: var(--nb-logo-svg-fill);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > div#logo > h1 {
@@ -235,9 +288,9 @@ div#client-area > div#nav-area > nav#nav-bar > div#logo > h1 {
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--nav-bar-logo-label-color);
-    font-size: var(--nb-logo-label-fsize);
-    font-weight: var(--nb-logo-label-fweight);
+    color: var(--nb-logo-h1-color);
+    font-size: var(--nb-logo-h1-fsize);
+    font-weight: var(--nb-logo-h1-fweight);
 }
 
 div#client-area > div#nav-area.expanded > nav#nav-bar > div#logo > h1 {
@@ -248,12 +301,11 @@ div#client-area > div#nav-area > nav#nav-bar > hr {
     border: none;
     flex: 0 0 auto;
     height: var(--nb-hr-height);
-    margin: var(--nb-hr-vmargin) var(--nb-hr-hmargin);
+    margin: 0 0 0 var(--nb-hr-hmargin);
     width: var(--nb-hr-width);
 
-    background-color: var(--nav-bar-hr-color);
+    background-color: var(--nb-hr-bgcolor);
 }
-/** EXPANDED?? **/
 
 div#client-area > div#nav-area > nav#nav-bar > button {
     align-items: center;
@@ -262,37 +314,37 @@ div#client-area > div#nav-area > nav#nav-bar > button {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--nb-btn-gap);
+    gap: var(--nb-btn-hgap);
     margin: var(--nb-btn-vmargin) var(--nb-btn-hmargin);
     padding: var(--nb-btn-vpadding) var(--nb-btn-hpadding);
 
-    background-color: var(--nav-bar-btn-color);
+    background-color: var(--nb-btn-bgcolor);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > button:hover {
-    background-color: var(--nav-bar-btn-hover-color);
+    background-color: var(--nb-btn-hover-bgcolor);
 }
 
 div#client-area > div#nav-area > nav#nav-bar > button > svg {
+    display: block;
     flex: 0 0 auto;
     height: var(--nb-btn-svg-length);
     width: var(--nb-btn-svg-length);
 
-    fill: var(--nav-bar-btn-svg-color);
+    fill: var(--nb-btn-svg-fill);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > button > h2 {
+div#client-area > div#nav-area > nav#nav-bar > button > span {
     display: none;
     flex: 0 0 fit-content;
-    margin: 0;
 
-    color: var(--nav-bar-btn-label-color);
-    font-size: var(--nb-btn-label-fsize);
-    font-weight: var(--nb-btn-label-fweight);
+    color: var(--nb-btn-span-color);
+    font-size: var(--nb-btn-span-fsize);
+    font-weight: var(--nb-btn-span-fweight);
 }
 
-div#client-area > div#nav-area.expanded > nav#nav-bar > button > h2 {
-    display: block;
+div#client-area > div#nav-area.expanded > nav#nav-bar > button > span {
+    display: inline;
 }
 
 div#client-area > div#nav-area > div#nav-expander {
@@ -302,149 +354,177 @@ div#client-area > div#nav-area > div#nav-expander {
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--nav-expander-color);
+    background-color: var(--ne-bgcolor);
 }
 
 div#client-area > div#nav-area > div#nav-expander:hover {
-    background-color: var(--nav-expander-hover-color);
+    background-color: var(--ne-hover-bgcolor);
 }
 
 div#client-area > div#nav-area > div#nav-expander > svg {
+    display: block;
     flex: 0 0 auto;
     height: var(--ne-svg-length);
     width: var(--ne-svg-length);
 
-    fill: var(--nav-expander-svg-color);
+    fill: var(--ne-svg-fill);
 }
-
-
-
-
-
-
-
-
-
-
 
 /* content area */
 div#client-area > div#content-area {
-    border-radius: var(--content-area-border-radius) 0 0;
+    border-radius: var(--ca-border-radius) 0 0;
     flex: 1 1 fit-content;
 
-    background-color: var(--content-area-color);
+    background-color: var(--ca-bgcolor);
 }
 
-div#client-area > div#content-area > div#settings-menu {
+div#client-area > div#content-area > div {
     align-items: start;
-    /* border: 1px solid pink; */
     display: flex;
     flex-flow: column nowrap;
-    gap: 10px;
 }
 
-div#client-area > div#content-area > div#settings-menu > h2 {
-    /* border: 1px solid lime; */
+div#client-area > div#content-area > div > h2 {
     flex: 0 0 fit-content;
-    margin: 0;
+    margin: var(--sm-h2-vmargin) var(--sm-h2-hmargin);
 
-    color: var(--settings-menu-label-color);
-    font-size: var(--settings-menu-label-font-size);
-    font-weight: var(--settings-menu-label-font-weight);
+    color: var(--sm-h2-color);
+    font-size: var(--sm-h2-fsize);
+    font-weight: var(--sm-h2-fweight);
+    line-height: 1;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings {
+div#client-area > div#content-area > div > hr {
+    border: none;
+    flex: 0 0 auto;
+    height: var(--sm-hr-height);
+    margin: 0 0 0 var(--sm-hr-hmargin);
+    width: var(--sm-hr-width);
+
+    background-color: var(--sm-hr-bgcolor);
+}
+
+div#client-area > div#content-area > div#settings-menu > div {
     align-items: start;
-    /* border: 1px solid skyblue; */
-    display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: column nowrap;
-}
-
-div#client-area > div#content-area > div#settings-menu > div#files-settings > h3 {
-    /* border: 1px solid lime; */
-    flex: 0 0 fit-content;
-    margin: 0;
-
-    color: var(--files-settings-label-color);
-    font-size: var(--files-settings-label-font-size);
-    font-weight: var(--files-settings-label-font-weight);
-}
-
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location {
-    align-items: start;
-    /* border: 1px solid red; */
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: column nowrap;
+    margin: var(--xsl-vmargin) var(--xsl-hmargin);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > h4 {
-    /* border: 1px solid lime; */
+div#client-area > div#content-area > div#settings-menu > div > h3 {
     flex: 0 0 fit-content;
-    margin: 0;
+    margin: 0 0 var(--xsl-h3-vmargin);
 
-    color: var(--video-save-location-label-color);
-    font-size: var(--video-save-location-label-font-size);
-    font-weight: var(--video-save-location-label-font-weight);
+    color: var(--xsl-h3-color);
+    font-size: var(--xsl-h3-fsize);
+    font-weight: var(--xsl-h3-fweight);
+    line-height: 1;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > div {
-    border: 1px solid var(--video-save-location-color);
-    border-radius: var(--video-save-location-border-radius);
-    background-color: var(--video-save-location-color);
+/* div#client-area > div#content-area > div#settings-menu > div > hr {
+    border: none;
+    flex: 0 0 auto;
+    height: var(--xsl-hr-height);
+    margin: 0;
+    width: var(--xsl-hr-width);
+
+    background-color: var(--xsl-hr-bgcolor);
+} */
+
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
+    gap: var(--xs-hgap);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > div > svg {
-    /* border: 1px solid salmon; */
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div, 
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div {
+    align-items: start;
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    margin: var(--xs-vmargin) 0;
+}
+
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > h4,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > h4 {
+    flex: 0 0 fit-content;
+    margin: 0 0 var(--xs-h4-vmargin);
+
+    color: var(--xs-h4-color);
+    font-size: var(--xs-h4-fsize);
+    font-weight: var(--xs-h4-fweight);
+    line-height: 1;
+}
+
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div {
+    border: 1px solid var(--xs-container-bordercolor);
+    border-radius: var(--xs-container-border-radius);
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--xs-container-bgcolor);
+}
+
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > svg,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > svg {
+    display: block;
     flex: 0 0 auto;
-    height: 30px;
-    width: 30px;
+    height: var(--xs-container-svg-length);
+    width: var(--xs-container-svg-length);
+    margin: var(--xs-container-svg-vmargin) var(--xs-container-svg-hmargin);
 
-    fill: var(--video-save-location-svg-color);
+    fill: var(--xs-container-svg-fill);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > div > input {
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input {
     border: none;
-    border-radius: 0 var(--video-save-location-border-radius) var(--video-save-location-border-radius) 0;
-    background-color: var(--video-save-location-input-color);
+    border-radius: 0 var(--xs-container-input-border-radius) var(--xs-container-input-border-radius) 0;
     flex: 0 0 auto;
-    width: 400px;
+    width: 40px; /****/
 
-    color: var(--video-save-location-text-color);
+    background-color: var(--xs-container-input-bgcolor);
+    color: var(--xs-container-input-color);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > div > input:focus {
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input:focus,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input:focus {
     outline: none;
 }
 
-input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button {
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input::-webkit-inner-spin-button,
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input::-webkit-outer-spin-button,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input::-webkit-inner-spin-button,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings > div#video-save-location > p {
-    /* border: 1px solid lime; */
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > select,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > select {
+    border: none;
+    border-radius: 0 var(--xs-container-input-border-radius) var(--xs-container-input-border-radius) 0;
+    flex: 0 0 fit-content;
+
+    background-color: var(--xs-container-input-bgcolor);
+    color: var(--xs-container-input-color);
+}
+
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > select:focus,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > select:focus {
+    outline: none;
+}
+
+div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > p,
+div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > p {
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--video-save-location-text-color);
-    font-size: var(--video-save-location-text-font-size);
-    font-weight: var(--video-save-location-text-font-weight);
+    color: var(--xs-container-p-color);
+    font-size: var(--xs-container-p-fsize);
+    font-weight: var(--xs-container-p-fweight);
 }
-
-
-
-
-
-
-
-
-/* div#client-area > div#content-area > div#settings-menu > div#files-settings > div#storage-limit {
-    border: 1px solid lime;
-} */
-
-
