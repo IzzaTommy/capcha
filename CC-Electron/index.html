@@ -67,15 +67,53 @@
         </div>
 
         <div id="content-area">
-            <div id="settings-menu">
+            <div id="editor-menu">
+                <h2>Editor</h2>
+
+                <hr>
+
+                <div id="video-container">
+                    <video>
+                        <source src="assets/example-video.mp4" type="video/mp4">
+                    </video>
+                    <div id="playback-controller">
+                        <input type="range" min="0" max="100" value="0" step="0.1">
+                        <div>
+                            <button id="play-pause">
+                                <svg>
+                                    <use href="assets/svg/play-arrow.svg#play-arrow"></use>
+                                </svg>
+                            </button>
+
+                            <button id="volume">
+                                <svg>
+                                    <use href="assets/svg/volume-mute.svg#volume-mute"></use>
+                                </svg>
+                            </button>
+                            <span>
+                                88:88/88:88
+                            </span>
+                            <button id="speed">
+                                <span>1X</span>
+                            </button>
+                            <button id="fullscreen">
+                                <svg>
+                                    <use href="assets/svg/fullscreen.svg#fullscreen"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div id="settings-menu">
                 <h2>Settings</h2>
 
                 <hr>
 
                 <div id="files-settings-list">
                     <h3>Files</h3>
-
-                    <!-- <hr> -->
 
                     <div id="save">
                         <h4>Video Save Location</h4>
@@ -85,7 +123,7 @@
                             </svg>
                             <input type="text">
                         </div>
-                        <p>Your videos will be saved in this location.</p>
+                        <p>Your videos and configuration file will be saved in this location.</p>
                     </div>
 
                     <div id="storage">
@@ -145,8 +183,6 @@
                 <div id="video-settings-list">
                     <h3>Video</h3>
 
-                    <!-- <hr> -->
-
                     <div>
                         <div id="res-width">
                             <h4>Width</h4>
@@ -205,7 +241,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </body>

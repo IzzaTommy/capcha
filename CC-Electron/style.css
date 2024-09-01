@@ -45,8 +45,8 @@
 
     --ca-bgcolor: var(--primary-color);
 
-    --sm-h2-color: var(--def-text-color);
-    --sm-hr-bgcolor: var(--def-text-color);
+    --xm-h2-color: var(--def-text-color);
+    --xm-hr-bgcolor: var(--def-text-color);
 
     --xsl-h3-color: var(--def-text-color);
     --xsl-hr-bgcolor: var(--def-text-color);
@@ -61,7 +61,7 @@
 }
 
 /* * {
-    outline: 1px solid rgba(247, 77, 227, 0.4);
+    outline: 1px solid rgba(247, 77, 227, 0.3);
 } */
 
 /* regular colors */
@@ -94,8 +94,8 @@
 
     --ca-bgcolor: var(--primary-color);
 
-    --sm-h2-color: var(--def-text-color);
-    --sm-hr-bgcolor: var(--def-text-color);
+    --xm-h2-color: var(--def-text-color);
+    --xm-hr-bgcolor: var(--def-text-color);
 
     --xsl-h3-color: var(--def-text-color);
     --xsl-hr-bgcolor: var(--def-text-color);
@@ -107,10 +107,22 @@
     --xs-container-input-bgcolor: #5a5a5a;
     --xs-container-input-color: var(--def-text-color);
     --xs-container-p-color: var(--def-text-color);
+
+    --vc-bgcolor: black;
+
+    --pc-input-bgcolor: rgba(137, 137, 137, 0.4);
+    --pc-input-slider-bgcolor: #00a9ff;
+    --pc-container-bgcolor: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+    --pc-container-btn-hover-bgcolor: #656565;
+    --pc-container-btn-bgcolor: transparent;
+    --pc-container-btn-svg-fill: var(--def-text-color);
+    --pc-container-btn-span-color: var(--def-text-color);
+
+    --pc-container-span-color: var(--def-text-color);
 }
 
 :root {
-    --def-border-radius: 10px;
+    --def-bradius: 10px;
     --def-hr-height: 1px;
 
     /* tb === Title Bar */
@@ -136,7 +148,7 @@
     --nb-btn-svg-length: 30px;
     --nb-btn-hpadding: 10px;
     --nb-btn-vpadding: 10px;
-    --nb-btn-border-radius: var(--def-border-radius);
+    --nb-btn-bradius: var(--def-bradius);
     --nb-btn-hmargin: calc(((var(--nb-logo-svg-length) - var(--nb-btn-svg-length)) / 2) + var(--nb-logo-hmargin) - var(--nb-btn-hpadding));
     --nb-btn-vmargin: 10px;
     --nb-btn-hgap: 40px;
@@ -145,23 +157,23 @@
 
     /* ne === Nav(igation) Expander */
     --ne-svg-length: 15px;
-    --ne-border-radius: var(--def-border-radius);
+    --ne-bradius: var(--def-bradius);
 
     /* ca === Content Area */
-    --ca-border-radius: var(--def-border-radius);
+    --ca-bradius: var(--def-bradius);
 
-    /* sm === Settings Menu */
-    --sm-h2-hmargin: calc(var(--nb-logo-hmargin) + var(--ne-svg-length));
-    --sm-h2-vmargin: calc(var(--nb-logo-vmargin));
-    --sm-h2-fsize: 60px;
-    --sm-h2-fweight: 600;
+    /* xm === X Menu (Settings Menu, Editor Menu, etc.) */
+    --xm-h2-hmargin: calc(var(--nb-logo-hmargin) + var(--ne-svg-length));
+    --xm-h2-vmargin: calc(var(--nb-logo-vmargin));
+    --xm-h2-fsize: 60px;
+    --xm-h2-fweight: 600;
 
-    --sm-hr-height: var(--def-hr-height);
-    --sm-hr-width: calc(100% - var(--sm-h2-hmargin));
-    --sm-hr-hmargin: calc(var(--ne-svg-length) + (var(--nb-logo-hmargin) / 2));
+    --xm-hr-height: var(--def-hr-height);
+    --xm-hr-width: calc(100% - var(--xm-h2-hmargin));
+    --xm-hr-hmargin: calc(var(--ne-svg-length) + (var(--nb-logo-hmargin) / 2));
 
     /* xsl === X Settings List (Files Settings List, Video Settings List, etc.) */
-    --xsl-hmargin: var(--sm-h2-hmargin);
+    --xsl-hmargin: var(--xm-h2-hmargin);
     --xsl-vmargin: calc(var(--nb-btn-vpadding) + var(--nb-btn-vmargin));
 
     --xsl-h3-vmargin: 10px;
@@ -183,10 +195,38 @@
     --xs-container-svg-length: 25px;
     --xs-container-svg-hmargin: 5px;
     --xs-container-svg-vmargin: 5px;
-    --xs-container-input-border-radius: var(--def-border-radius);
+    --xs-container-input-bradius: var(--def-bradius);
     --xs-container-p-fsize: 11px;
     --xs-container-p-fweight: 300;
-    --xs-container-border-radius: var(--def-border-radius);
+    --xs-container-bradius: var(--def-bradius);
+
+    /* vc === Video Container */
+    --vc-bradius: 10px;
+    --vc-hpadding: 100px;
+
+    --vc-video-width: 1000px;
+
+    /* pc === Playback Controller */
+    --pc-container-bradius: var(--vc-bradius);
+    --pc-input-hmargin: 6px;
+
+    --pc-input-slider-height: 3px;
+    --pc-input-slider-hover-height: 8px;
+    --pc-input-slider-progressbar: calc((var(--vc-hpadding) * 2) + var(--vc-video-width));
+
+    --pc-container-btn-bradius: 5px;
+    --pc-container-btn-hmargin: 3px;
+    --pc-container-btn-vmargin: 3px;
+    --pc-container-btn-svg-length: 40px;
+
+    --pc-container-btn-span-hpadding: var(--pc-container-btn-span-vpadding);
+    --pc-container-btn-span-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-btn-span-fsize)) / 2);
+    --pc-container-btn-span-fsize: 15px;
+    --pc-container-btn-span-fweight: 400;
+
+    --pc-container-span-hmargin: 3px;
+    --pc-container-span-fsize: var(--pc-container-btn-span-fsize);
+    --pc-container-span-fweight: 400;
 
     height: 100%;
 }
@@ -310,7 +350,7 @@ div#client-area > div#nav-area > nav#nav-bar > hr {
 div#client-area > div#nav-area > nav#nav-bar > button {
     align-items: center;
     border: none;
-    border-radius: var(--nb-btn-border-radius);
+    border-radius: var(--nb-btn-bradius);
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -349,7 +389,7 @@ div#client-area > div#nav-area.expanded > nav#nav-bar > button > span {
 
 div#client-area > div#nav-area > div#nav-expander {
     align-items: center;
-    border-radius: 0 var(--ne-border-radius) 0 0;
+    border-radius: 0 var(--ne-bradius) 0 0;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -372,7 +412,7 @@ div#client-area > div#nav-area > div#nav-expander > svg {
 
 /* content area */
 div#client-area > div#content-area {
-    border-radius: var(--ca-border-radius) 0 0;
+    border-radius: var(--ca-bradius) 0 0;
     flex: 1 1 fit-content;
 
     background-color: var(--ca-bgcolor);
@@ -386,24 +426,138 @@ div#client-area > div#content-area > div {
 
 div#client-area > div#content-area > div > h2 {
     flex: 0 0 fit-content;
-    margin: var(--sm-h2-vmargin) var(--sm-h2-hmargin);
+    margin: var(--xm-h2-vmargin) var(--xm-h2-hmargin);
 
-    color: var(--sm-h2-color);
-    font-size: var(--sm-h2-fsize);
-    font-weight: var(--sm-h2-fweight);
+    color: var(--xm-h2-color);
+    font-size: var(--xm-h2-fsize);
+    font-weight: var(--xm-h2-fweight);
     line-height: 1;
 }
 
 div#client-area > div#content-area > div > hr {
     border: none;
     flex: 0 0 auto;
-    height: var(--sm-hr-height);
-    margin: 0 0 0 var(--sm-hr-hmargin);
-    width: var(--sm-hr-width);
+    height: var(--xm-hr-height);
+    margin: 0 0 0 var(--xm-hr-hmargin);
+    width: var(--xm-hr-width);
 
-    background-color: var(--sm-hr-bgcolor);
+    background-color: var(--xm-hr-bgcolor);
 }
 
+/* editor menu */
+div#client-area > div#content-area > div#editor-menu > div#video-container {
+    position: relative;
+
+    align-self: center;
+    border-radius: var(--vc-bradius);
+    flex: 0 0 fit-content;
+    padding: 0 var(--vc-hpadding);
+
+    background-color: var(--vc-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > video {
+    display: block;
+    flex: 0 0 auto;
+    width: var(--vc-video-width);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller {
+    inset: auto 0 0;
+    position: absolute;
+
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input {
+    flex: 0 0 fit-content;
+    margin: 0 var(--pc-input-hmargin);
+    overflow: hidden;
+
+    background-color: var(--pc-input-bgcolor);
+
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input::-webkit-slider-thumb {
+    height: var(--pc-input-slider-height);
+    width: 0;
+
+    background-color: var(--pc-input-slider-bgcolor);
+    box-shadow: calc(var(--pc-input-slider-progressbar) * -1) 0 0 var(--pc-input-slider-progressbar) var(--pc-input-slider-bgcolor);
+    clip-path: polygon(
+        100% 0%,
+        calc(var(--pc-input-slider-progressbar) * -1) 0%,
+        calc(var(--pc-input-slider-progressbar) * -1) 100%,
+        100% 100%
+    );
+
+    -webkit-appearance: none;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input:hover::-webkit-slider-thumb {
+    height: var(--pc-input-slider-hover-height);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    border-radius: 0 0 var(--pc-container-bradius) var(--pc-container-bradius);
+
+    background: var(--pc-container-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button {
+    border: none;
+    border-radius: var(--pc-container-btn-bradius);
+    flex: 0 0 fit-content;
+    padding: 0;
+    margin: var(--pc-container-btn-vmargin) var(--pc-container-btn-hmargin);
+
+    background-color: var(--pc-container-btn-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover {
+    background-color: var(--pc-container-btn-hover-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > svg {
+    display: block;
+    height: var(--pc-container-btn-svg-length);
+    width: var(--pc-container-btn-svg-length);
+
+    fill: var(--pc-container-btn-svg-fill);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed {
+    margin: var(--pc-container-btn-vmargin) var(--pc-container-btn-hmargin) var(--pc-container-btn-vmargin) auto;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed > span {
+    display: block;
+    padding: var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding);
+
+    color: var(--pc-container-btn-span-color);
+    font-size: var(--pc-container-btn-span-fsize);
+    font-weight: var(--pc-container-btn-span-fweight);
+    text-align: center;
+    line-height: 1;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > span {
+    flex: 0 0 fit-content;
+    margin: 0 0 0 var(--pc-container-span-hmargin);
+
+    color: var(--pc-container-span-color);
+    font-size: var(--pc-container-span-fsize);
+    font-weight: var(--pc-container-span-fweight);
+}
+
+/* settings menu */
 div#client-area > div#content-area > div#settings-menu > div {
     align-items: start;
     display: flex;
@@ -462,7 +616,7 @@ div#client-area > div#content-area > div#settings-menu > div#video-settings-list
 div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div,
 div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div {
     border: 1px solid var(--xs-container-bordercolor);
-    border-radius: var(--xs-container-border-radius);
+    border-radius: var(--xs-container-bradius);
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
@@ -484,7 +638,7 @@ div#client-area > div#content-area > div#settings-menu > div#video-settings-list
 div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input,
 div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input {
     border: none;
-    border-radius: 0 var(--xs-container-input-border-radius) var(--xs-container-input-border-radius) 0;
+    border-radius: 0 var(--xs-container-input-bradius) var(--xs-container-input-bradius) 0;
     flex: 0 0 auto;
     width: 40px; /****/
 
@@ -507,7 +661,7 @@ div#client-area > div#content-area > div#settings-menu > div#video-settings-list
 div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > select,
 div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > select {
     border: none;
-    border-radius: 0 var(--xs-container-input-border-radius) var(--xs-container-input-border-radius) 0;
+    border-radius: 0 var(--xs-container-input-bradius) var(--xs-container-input-bradius) 0;
     flex: 0 0 fit-content;
 
     background-color: var(--xs-container-input-bgcolor);
