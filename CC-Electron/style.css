@@ -108,17 +108,22 @@
     --xs-container-input-color: var(--def-text-color);
     --xs-container-p-color: var(--def-text-color);
 
-    --vc-bgcolor: black;
+    --vc-video-bgcolor: black;
 
-    --pc-input-bgcolor: rgba(137, 137, 137, 0.4);
-    --pc-input-slider-bgcolor: #00a9ff;
+    --pc-input-track-bgcolor: rgba(137, 137, 137, 0.4);
+    --pc-input-thumb-bgcolor: #00a9ff;
     --pc-container-bgcolor: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
-    --pc-container-btn-hover-bgcolor: #656565;
     --pc-container-btn-bgcolor: transparent;
+    --pc-container-btn-hover-bgcolor: rgba(114, 114, 114, 0.5);
     --pc-container-btn-svg-fill: var(--def-text-color);
     --pc-container-btn-span-color: var(--def-text-color);
+    --pc-container-btn-svg-hover-fill: white;
+    --pc-container-btn-span-hover-color: white;
 
-    --pc-container-span-color: var(--def-text-color);
+    --pc-container-div-span-color: var(--def-text-color);
+
+    --pc-container-input-thumb-bgcolor: #00a9ff;
+    --pc-container-volume-input-track-bgcolor: var(--def-text-color);
 }
 
 :root {
@@ -201,18 +206,18 @@
     --xs-container-bradius: var(--def-bradius);
 
     /* vc === Video Container */
-    --vc-bradius: 10px;
-    --vc-hpadding: 100px;
+    --vc-video-bradius: 10px;
+    --vc-video-hpadding: 100px;
 
     --vc-video-width: 1000px;
 
     /* pc === Playback Controller */
-    --pc-container-bradius: var(--vc-bradius);
     --pc-input-hmargin: 6px;
+    --pc-input-width: calc((var(--vc-video-hpadding) * 2) + var(--vc-video-width));
+    --pc-input-thumb-height: 3px;
+    --pc-input-thumb-hover-height: 8px;
 
-    --pc-input-slider-height: 3px;
-    --pc-input-slider-hover-height: 8px;
-    --pc-input-slider-progressbar: calc((var(--vc-hpadding) * 2) + var(--vc-video-width));
+    --pc-container-bradius: var(--vc-video-bradius);
 
     --pc-container-btn-bradius: 5px;
     --pc-container-btn-hmargin: 3px;
@@ -221,12 +226,34 @@
 
     --pc-container-btn-span-hpadding: var(--pc-container-btn-span-vpadding);
     --pc-container-btn-span-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-btn-span-fsize)) / 2);
-    --pc-container-btn-span-fsize: 15px;
+    --pc-container-btn-span-fsize: 20px;
     --pc-container-btn-span-fweight: 400;
+    --pc-container-btn-span1-width: 3ch;
 
-    --pc-container-span-hmargin: 3px;
-    --pc-container-span-fsize: var(--pc-container-btn-span-fsize);
-    --pc-container-span-fweight: 400;
+    --pc-container-div-hmargin: var(--pc-container-btn-hmargin);
+    --pc-container-div-vmargin: var(--pc-container-btn-vmargin);
+
+    --pc-container-div-span-hpadding: var(--pc-container-div-span-vpadding);
+    --pc-container-div-span-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-div-span-fsize)) / 2);
+    --pc-container-div-span-fsize: 15px;
+    --pc-container-div-span-fweight: 400;
+    --pc-container-div-span1-width: 5ch;
+
+    --pc-container-input-height: var(--pc-container-input-thumb-height);
+    --pc-container-volume-input-width: 100px;
+    --pc-container-speed-input-width: 150px;
+    --pc-container-volume-input-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-input-height)) / 2);
+    --pc-container-volume-input-hmargin: var(--pc-container-volume-input-vpadding);
+    --pc-container-speed-input-vpadding: var(--pc-container-volume-input-vpadding);
+
+    --pc-container-input-thumb-height: 16px;
+    --pc-container-volume-input-thumb-width: var(--pc-container-input-thumb-height);
+    --pc-container-speed-input-thumb-height: var(--pc-container-input-thumb-height);
+    --pc-container-speed-input-thumb-width: 4px;
+    --pc-container-speed-input-thumb-bradius: calc(var(--pc-container-speed-input-thumb-width) / 2);
+    --pc-container-volume-input-thumb-bradius: calc(var(--pc-container-input-thumb-height) / 2);
+    --pc-container-input-thumb-vmargin: calc(((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2) * -1);
+    --pc-container-input-track-height: 4px;
 
     height: 100%;
 }
@@ -444,22 +471,35 @@ div#client-area > div#content-area > div > hr {
     background-color: var(--xm-hr-bgcolor);
 }
 
+
+
+
+
+
+
+
 /* editor menu */
 div#client-area > div#content-area > div#editor-menu > div#video-container {
     position: relative;
 
     align-self: center;
-    border-radius: var(--vc-bradius);
     flex: 0 0 fit-content;
-    padding: 0 var(--vc-hpadding);
-
-    background-color: var(--vc-bgcolor);
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > video {
+    border-radius: var(--vc-video-bradius);
     display: block;
     flex: 0 0 auto;
+    padding: 0 var(--vc-video-hpadding);
     width: var(--vc-video-width);
+
+    background-color: var(--vc-video-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container:fullscreen > video {
+    height: 100%;
+    width: 100%;
+    padding: 0;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller {
@@ -468,6 +508,12 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
 
     display: flex;
     flex-flow: column nowrap;
+    visibility: hidden;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > video:hover + div#playback-controller,
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller:hover {
+    visibility: visible;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input {
@@ -475,30 +521,31 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     margin: 0 var(--pc-input-hmargin);
     overflow: hidden;
 
-    background-color: var(--pc-input-bgcolor);
-
+    background-color: transparent;
     cursor: pointer;
+
     -webkit-appearance: none;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input::-webkit-slider-thumb {
-    height: var(--pc-input-slider-height);
+    height: var(--pc-input-thumb-height);
     width: 0;
 
-    background-color: var(--pc-input-slider-bgcolor);
-    box-shadow: calc(var(--pc-input-slider-progressbar) * -1) 0 0 var(--pc-input-slider-progressbar) var(--pc-input-slider-bgcolor);
-    clip-path: polygon(
-        100% 0%,
-        calc(var(--pc-input-slider-progressbar) * -1) 0%,
-        calc(var(--pc-input-slider-progressbar) * -1) 100%,
-        100% 100%
-    );
+    /* box-shadow is longer than needed to make sure it covers the track */
+    box-shadow: calc(var(--pc-input-width) * -1) 0 0 var(--pc-input-width) var(--pc-input-thumb-bgcolor);
 
     -webkit-appearance: none;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input:hover::-webkit-slider-thumb {
-    height: var(--pc-input-slider-hover-height);
+    height: var(--pc-input-thumb-hover-height);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input::-webkit-slider-runnable-track {
+    background-color: var(--pc-input-track-bgcolor);
+
+    /* not needed? */
+    -webkit-appearance: none;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div {
@@ -511,6 +558,7 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     background: var(--pc-container-bgcolor);
 }
 
+
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button {
     border: none;
     border-radius: var(--pc-container-btn-bradius);
@@ -521,8 +569,33 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     background-color: var(--pc-container-btn-bgcolor);
 }
 
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#volume {
+    margin-right: 0;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed {
+    margin-left: 0;
+}
+
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover {
     background-color: var(--pc-container-btn-hover-bgcolor);
+}
+
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed, 
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div#time {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#volume:hover + input#volume-slider,
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider:hover {
+    display: inline-block;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider:has(+ button#speed:hover),
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider:hover {
+    visibility: visible;
 }
 
 div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > svg {
@@ -533,29 +606,144 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     fill: var(--pc-container-btn-svg-fill);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed {
-    margin: var(--pc-container-btn-vmargin) var(--pc-container-btn-hmargin) var(--pc-container-btn-vmargin) auto;
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover > svg {
+    fill: var(--pc-container-btn-svg-hover-fill);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed > span {
-    display: block;
-    padding: var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding);
-
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span {
     color: var(--pc-container-btn-span-color);
     font-size: var(--pc-container-btn-span-fsize);
     font-weight: var(--pc-container-btn-span-fweight);
-    text-align: center;
     line-height: 1;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > span {
-    flex: 0 0 fit-content;
-    margin: 0 0 0 var(--pc-container-span-hmargin);
-
-    color: var(--pc-container-span-color);
-    font-size: var(--pc-container-span-fsize);
-    font-weight: var(--pc-container-span-fweight);
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover > span {
+    color: var(--pc-container-btn-span-hover-color);
 }
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span:nth-child(1) {
+    flex: 0 0 auto;
+    padding: var(--pc-container-btn-span-vpadding) 0 var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding);
+    width: var(--pc-container-btn-span1-width);
+
+    text-align: right;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span:nth-child(2) {
+    flex: 0 0 auto;
+    padding: var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding) var(--pc-container-btn-span-vpadding) 0;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div {
+    margin: var(--pc-container-div-vmargin) var(--pc-container-div-hmargin);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span {
+    color: var(--pc-container-div-span-color);
+    font-size: var(--pc-container-div-span-fsize);
+    font-weight: var(--pc-container-div-span-fweight);
+    line-height: 1;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span:nth-child(1) {
+    padding: var(--pc-container-div-span-vpadding) 0 var(--pc-container-div-span-vpadding) var(--pc-container-div-span-hpadding);
+    width: var(--pc-container-div-span1-width);
+    text-align: right;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span:nth-child(2) {
+    padding: var(--pc-container-div-span-vpadding) var(--pc-container-div-span-hpadding) var(--pc-container-div-span-vpadding) 0;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input {
+    height: var(--pc-container-input-height);
+    flex: 0 0 fit-content;
+    overflow: hidden;
+
+    cursor: pointer;
+    -webkit-appearance: none;
+
+    background-color: transparent;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider {
+    display: none;
+    padding: var(--pc-container-volume-input-vmargin) 0;
+    margin: 0 var(--pc-container-volume-input-hmargin) 0 0;
+    width: var(--pc-container-volume-input-width);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider {
+    width: var(--pc-container-speed-input-width);
+    padding: var(--pc-container-speed-input-vmargin);
+    margin: 0 0 0 auto;
+
+    visibility: hidden;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input::-webkit-slider-thumb {
+    height: var(--pc-container-input-thumb-height);
+    margin: var(--pc-container-input-thumb-vmargin) 0 0;
+
+    background-color: var(--pc-container-input-thumb-bgcolor);
+
+    -webkit-appearance: none;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider::-webkit-slider-thumb {
+    border-radius: var(--pc-container-volume-input-thumb-bradius);
+    width: var(--pc-container-volume-input-thumb-width);
+
+    /* box-shadow is longer than needed to make sure it covers the track */
+    box-shadow: calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) 0 0 var(--pc-container-volume-input-width) var(--pc-container-input-thumb-bgcolor);
+    clip-path: polygon(
+        100% 0%,
+        0% 0%,
+        0% calc((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2),
+        calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) calc((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2),
+        calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) calc((var(--pc-container-input-thumb-height) + var(--pc-container-input-track-height)) / 2),
+        0% calc((var(--pc-container-input-thumb-height) + var(--pc-container-input-track-height)) / 2),
+        0% 100%,
+        100% 100%
+    );
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider::-webkit-slider-thumb {
+    border-radius: var(--pc-container-speed-input-thumb-bradius);
+    height: var(--pc-container-speed-input-thumb-height);
+    width: var(--pc-container-speed-input-thumb-width);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input::-webkit-slider-runnable-track {
+    height: var(--pc-container-input-track-height);
+    
+    -webkit-appearance: none;
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider::-webkit-slider-runnable-track {
+    background-color: var(--pc-container-volume-input-track-bgcolor);
+}
+
+div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider::-webkit-slider-runnable-track {
+    background: linear-gradient(
+        to right,
+        #000 0%,
+        #000 2%,
+        white 2%,
+        white 10%
+    );
+    background-size: 16.666% 50%;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* settings menu */
 div#client-area > div#content-area > div#settings-menu > div {
