@@ -14,11 +14,13 @@
                 <use href="assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
             </svg>
         </button>
+
         <button id="maximize">
             <svg>
                 <use href="assets/svg/expand-solid.svg#expand-solid"></use>
             </svg>
         </button>
+
         <button id="close">
             <svg>
                 <use href="assets/svg/xmark-solid.svg#xmark-solid"></use>
@@ -33,6 +35,7 @@
                     <svg>
                         <use href="assets/svg/capcraft-logo.svg#capcraft-logo"></use>
                     </svg>
+
                     <h1>CapCraft</h1>
                 </div>
 
@@ -42,6 +45,7 @@
                     <svg>
                         <use href="assets/svg/folder.svg#folder"></use>
                     </svg>
+
                     <span>Files</span>
                 </button>
     
@@ -49,6 +53,7 @@
                     <svg>
                         <use href="assets/svg/settings.svg#settings"></use>
                     </svg>
+
                     <span>Settings</span>
                 </button>
     
@@ -56,6 +61,7 @@
                     <svg>
                         <use href="assets/svg/record.svg#record"></use>
                     </svg>
+
                     <span>Record</span>
                 </button>
             </nav>
@@ -67,18 +73,20 @@
         </div>
 
         <div id="content-area">
-            <div id="editor-menu">
+            <div id="editor-area">
                 <h2>Editor</h2>
 
                 <hr>
 
                 <div id="video-container">
-                    <video>
+                    <video id="video-player">
                         <source src="assets/example-video-2.mp4" type="video/mp4">
                     </video>
+
                     <div id="playback-controller">
                         <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
-                        <div>
+
+                        <div id="playback-bar">
                             <button id="play-pause">
                                 <svg>
                                     <use href="assets/svg/play-arrow.svg#play-arrow"></use>
@@ -93,7 +101,7 @@
 
                             <input id="volume-slider" type="range" min="0" max="1" value="0" step="0.01">
 
-                            <div id="time">
+                            <div id="timer">
                                 <span>88:88</span>
                                 <span>/88:88</span>
                             </div>
@@ -116,31 +124,36 @@
             </div>
 
 
-            <!-- <div id="settings-menu">
+            <!-- <div id="settings-area">
                 <h2>Settings</h2>
 
                 <hr>
 
-                <div id="files-settings-list">
+                <div id="files-menu">
                     <h3>Files</h3>
 
                     <div id="save">
                         <h4>Video Save Location</h4>
+
                         <div>
                             <svg>
                                 <use href="assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                             </svg>
+
                             <input type="text">
                         </div>
+
                         <p>Your videos and configuration file will be saved in this location.</p>
                     </div>
 
                     <div id="storage">
                         <h4>Storage Limit</h4>
+
                         <div>
                             <svg>
                                 <use href="assets/svg/storage.svg#storage"></use>
                             </svg>
+
                             <select>
                                 <option>5 GB</option>
                                 <option>10 GB</option>
@@ -158,10 +171,12 @@
 
                     <div id="extension">
                         <h4>File Extension</h4>
+
                         <div>
                             <svg>
                                 <use href="assets/svg/draft.svg#draft"></use>
                             </svg>
+
                             <select>
                                 <option>.mp4</option>
                                 <option>.mkv</option>
@@ -174,10 +189,12 @@
 
                     <div id="encoder">
                         <h4>Encoder</h4>
+
                         <div>
                             <svg>
                                 <use href="assets/svg/compress.svg#compress"></use>
                             </svg>
+
                             <select>
                                 <option>nvenc</option>
                                 <option>jim_nvenc</option>
@@ -189,37 +206,43 @@
                     </div>
                 </div>
 
-                <div id="video-settings-list">
+                <div id="video-menu">
                     <h3>Video</h3>
 
-                    <div>
-                        <div id="res-width">
+                    <div id="resolution">
+                        <div id="resolution-width">
                             <h4>Width</h4>
+
                             <div>
                                 <svg>
                                     <use href="assets/svg/width.svg#width"></use>
                                 </svg>
+
                                 <input type="text">
                             </div>
                         </div>   
-                        <div id="res-height">
+                        <div id="resolution-height">
                             <h4>Height</h4>
+
                             <div>
                                 <svg>
                                     <use href="assets/svg/height.svg#height"></use>
                                 </svg>
+
                                 <input type="text">
                             </div>
                         </div>
                     </div>
 
-                    <div>
+                    <div id="rates">
                         <div id="framerate">
                             <h4>Framerate</h4>
+
                             <div>
                                 <svg>
                                     <use href="assets/svg/autofps-select.svg#autofps-select"></use>
                                 </svg>
+
                                 <select>
                                     <option>10 fps</option>
                                     <option>20 fps</option>
@@ -232,10 +255,12 @@
                         </div>
                         <div id="bitrate">
                             <h4>Bitrate</h4>
+
                             <div>
                                 <svg>
                                     <use href="assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
                                 </svg>
+
                                 <select>
                                     <option>3 Mbps</option>
                                     <option>5 Mbps</option>

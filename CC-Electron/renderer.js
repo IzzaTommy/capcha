@@ -2,9 +2,12 @@ window.addEventListener('DOMContentLoaded', init);
 
 function init() {
     webSocketInit();
+
     titleBarInit();
-    userInterfaceInit();
-    editorInit();
+
+    navAreaInit();
+
+    editorAreaInit();
 }
 
 function webSocketInit() {
@@ -20,91 +23,98 @@ function webSocketInit() {
 }
 
 function titleBarInit() {
-    document.querySelector('div#title-bar > button#minimize').addEventListener('click', () => {
+    document.querySelector('button#minimize').addEventListener('click', () => {
         window.titleBarAPI.minimize();
     });
 
-    document.querySelector('div#title-bar > button#maximize').addEventListener('click', () => {
+    document.querySelector('button#maximize').addEventListener('click', () => {
         window.titleBarAPI.maximize();
     });
 
-    document.querySelector('div#title-bar > button#close').addEventListener('click', () => {
+    document.querySelector('button#close').addEventListener('click', () => {
         window.titleBarAPI.close();
     });
 }
 
-function userInterfaceInit() {
-    const navExpander = document.querySelector('div#client-area > div#nav-area > div#nav-expander');
-    const folderBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#folder');
-    const settingsBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#settings');
-    const recordBtn = document.querySelector('div#client-area > div#nav-area > nav#nav-bar > button#record');
+function navAreaInit() {
+    const navArea = document.querySelector('div#nav-area');
+
+    const navExpander = navArea.querySelector('div#nav-expander');
+    const navExpanderSVG = navExpander.querySelector('svg > use');
+
+    const folderBtn = navArea.querySelector('button#folder');
+    const folderSVG = folderBtn.querySelector('svg > use');
+
+    const settingsBtn = navArea.querySelector('button#settings');
+    const settingsSVG = settingsBtn.querySelector('svg > use');
+
+    const recordBtn = navArea.querySelector('button#record');
+    const recordSVG = recordBtn.querySelector('svg > use');
     
     navExpander.addEventListener('click', () => {
-        const navArea = document.querySelector('div#client-area > div#nav-area');
-
         navArea.classList.toggle('expanded');
 
         if (navArea.classList.contains('expanded')) {
-            navExpander.querySelector('svg > use').setAttribute('href', 'assets/svg/arrow-back-ios.svg#arrow-back-ios');
+            navExpanderSVG.setAttribute('href', 'assets/svg/arrow-back-ios.svg#arrow-back-ios');
         }
         else {
-            navExpander.querySelector('svg > use').setAttribute('href', 'assets/svg/arrow-forward-ios.svg#arrow-forward-ios');
+            navExpanderSVG.setAttribute('href', 'assets/svg/arrow-forward-ios.svg#arrow-forward-ios');
         }
     });
 
     folderBtn.addEventListener('mouseover', () => {
-        folderBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/folder-solid.svg#folder-solid');
+        folderSVG.setAttribute('href', 'assets/svg/folder-solid.svg#folder-solid');
     });
 
     folderBtn.addEventListener('mouseout', () => {
-        folderBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/folder.svg#folder');
+        folderSVG.setAttribute('href', 'assets/svg/folder.svg#folder');
     });
 
     settingsBtn.addEventListener('mouseover', () => {
-        settingsBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/settings-solid.svg#settings-solid');
+        settingsSVG.setAttribute('href', 'assets/svg/settings-solid.svg#settings-solid');
     });
 
     settingsBtn.addEventListener('mouseout', () => {
-        settingsBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/settings.svg#settings');
+        settingsSVG.setAttribute('href', 'assets/svg/settings.svg#settings');
     });
 
     recordBtn.addEventListener('mouseover', () => {
-        recordBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/record-solid.svg#record-solid');
+        recordSVG.setAttribute('href', 'assets/svg/record-solid.svg#record-solid');
     });
 
     recordBtn.addEventListener('mouseout', () => {
-        recordBtn.querySelector('svg > use').setAttribute('href', 'assets/svg/record.svg#record');
+        recordSVG.setAttribute('href', 'assets/svg/record.svg#record');
     });
 }
 
-function editorInit() {
-    const videoContainer = document.querySelector('div#client-area > div#content-area > div#editor-menu > div#video-container');
+function editorAreaInit() {
+    const videoContainer = document.querySelector('div#video-container');
 
-    const video = videoContainer.querySelector('video');
+    const video = videoContainer.querySelector('video#video-player');
     const playbackController = videoContainer.querySelector('div#playback-controller');
 
     const playbackInput = playbackController.querySelector('input#playback-slider');
 
-    const playPauseBtn = playbackController.querySelector('div > button#play-pause');
+    const playPauseBtn = playbackController.querySelector('button#play-pause');
     const playPauseSVG = playPauseBtn.querySelector('svg > use');
 
-    const volumeBtn = playbackController.querySelector('div > button#volume');
+    const volumeBtn = playbackController.querySelector('button#volume');
     const volumeSVG = volumeBtn.querySelector('svg > use');
 
-    const volumeInput = playbackController.querySelector('div > input#volume-slider');
+    const volumeInput = playbackController.querySelector('input#volume-slider');
 
-    const timeSpan = playbackController.querySelector('div > div#time > span:nth-child(1)');
-    const durationSpan = playbackController.querySelector('div > div#time > span:nth-child(2)');
+    const timeSpan = playbackController.querySelector('div#timer > span:nth-child(1)');
+    const durationSpan = playbackController.querySelector('div#timer > span:nth-child(2)');
 
-    const speedInput = playbackController.querySelector('div > input#speed-slider');
+    const speedInput = playbackController.querySelector('input#speed-slider');
 
-    const speedBtn = playbackController.querySelector('div > button#speed');
+    const speedBtn = playbackController.querySelector('button#speed');
     const speedSpan = speedBtn.querySelector('span:nth-child(1)');
 
-    const fullscreenBtn = playbackController.querySelector('div > button#fullscreen');
+    const fullscreenBtn = playbackController.querySelector('button#fullscreen');
     const fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
-    /* Playback Slider -*/
+    /* Playback Slider */
     playbackInput.addEventListener('mousemove', (mouse) => {
         const playbackInputBox = playbackInput.getBoundingClientRect();
         const percentage = (mouse.clientX - playbackInputBox.left) / playbackInputBox.width * 100;

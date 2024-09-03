@@ -2,8 +2,6 @@
 /* Display & Box Model */
 /* Other */
 
-/**/ /* means unused */ 
-
 @font-face {
     font-family: "Lexend";
     src: url(assets/font/Lexend/Lexend-VariableFont_wght.ttf);
@@ -13,51 +11,6 @@
     font-family: "Lexend", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-}
-
-/* development colors */
-:root {
-    --def-text-color: #C8CFA0;
-    --primary-color: #3a4257;
-    --secondary-color: #61748e;
-    --tertiary-color: #78594a;
-
-    --body-bgcolor: var(--tertiary-color);
-
-    --tb-btn-bgcolor: transparent;
-    --tb-btn-hover-bgcolor: #6d9c66;
-    --tb-btn-svg-fill: var(--def-text-color);
-
-    --na-bgcolor: transparent;
-
-    --nb-bgcolor: var(--secondary-color);
-    --nb-logo-svg-fill: var(--def-text-color);
-    --nb-logo-h1-color: var(--def-text-color);
-    --nb-hr-bgcolor: var(--def-text-color);
-    --nb-btn-bgcolor: transparent;
-    --nb-btn-hover-bgcolor: #6d9c66;
-    --nb-btn-svg-fill: var(--def-text-color);
-    --nb-btn-span-color: var(--def-text-color);
-
-    --ne-bgcolor: var(--nb-bgcolor);
-    --ne-hover-bgcolor: var(--def-text-color);
-    --ne-svg-fill: var(--def-text-color);
-
-    --ca-bgcolor: var(--primary-color);
-
-    --xm-h2-color: var(--def-text-color);
-    --xm-hr-bgcolor: var(--def-text-color);
-
-    --xsl-h3-color: var(--def-text-color);
-    --xsl-hr-bgcolor: var(--def-text-color);
-
-    --xs-h4-color: var(--def-text-color);
-    --xs-container-bordercolor: var(--secondary-color);
-    --xs-container-bgcolor: var(--secondary-color);
-    --xs-container-svg-fill: var(--def-text-color);
-    --xs-container-input-bgcolor: #8a6464;
-    --xs-container-input-color: var(--def-text-color);
-    --xs-container-p-color: var(--def-text-color);
 }
 
 /* * {
@@ -71,194 +24,233 @@
     --secondary-color: #373737;
     --tertiary-color: #535c68;
 
+    /* ==== body -> body ==== */
     --body-bgcolor: var(--tertiary-color);
 
-    --tb-btn-bgcolor: transparent;
+    /* ==== tb -> Title Bar ==== */
     --tb-btn-hover-bgcolor: #3a3a3a;
+
     --tb-btn-svg-fill: #cccccc;
 
-    --na-bgcolor: transparent;
-
+    /* ==== nb -> Nav(igation) Bar ==== */
     --nb-bgcolor: var(--secondary-color);
-    --nb-logo-svg-fill: var(--def-text-color);
-    --nb-logo-h1-color: var(--def-text-color);
-    --nb-hr-bgcolor: var(--def-text-color);
-    --nb-btn-bgcolor: transparent;
+
+    /* ---- logo -> logo ---- */
+    --logo-h1-color: var(--def-text-color);
+
+    --logo-svg-fill: var(--def-text-color);
+
     --nb-btn-hover-bgcolor: #656565;
-    --nb-btn-svg-fill: var(--def-text-color);
+
     --nb-btn-span-color: var(--def-text-color);
 
-    --ne-bgcolor: var(--nb-bgcolor);
+    --nb-btn-svg-fill: var(--def-text-color);
+
+    --nb-hr-bgcolor: var(--def-text-color);
+
+    /* ==== ne -> Nav(igation) Expander ==== */
+    --ne-bgcolor: var(--secondary-color);
     --ne-hover-bgcolor: var(--def-text-color);
+
     --ne-svg-fill: var(--def-text-color);
 
+    /* ==== ca -> Content Area ==== */
     --ca-bgcolor: var(--primary-color);
 
-    --xm-h2-color: var(--def-text-color);
-    --xm-hr-bgcolor: var(--def-text-color);
+    /* ==== xa -> X Area (Settings Area, Editor Area, etc.) ==== */
+    --xa-h2-color: var(--def-text-color);
 
-    --xsl-h3-color: var(--def-text-color);
-    --xsl-hr-bgcolor: var(--def-text-color);
+    --xa-hr-bgcolor: var(--def-text-color);
+
+    /* xm === X Menu (Files Menu, Video Menu, etc.) */
+    --xm-h3-color: var(--def-text-color);
+
+    /* ---- vp -> Video Player ---- */
+    --vp-bgcolor: black;
+
+    /* ---- ps -> Playback Slider ---- */
+    --ps-thumb-bgcolor: #00a9ff;
+
+    --ps-track-bgcolor: rgba(137, 137, 137, 0.4);
+
+    /* ---- pb -> Playback Bar ---- */
+    --pb-bgcolor: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+
+    --pb-btn-hover-bgcolor: rgba(114, 114, 114, 0.5);
+
+    --pb-btn-span-color: var(--def-text-color);
+    --pb-btn-span-hover-color: white;
+
+    --pb-btn-svg-fill: var(--def-text-color);
+    --pb-btn-svg-hover-fill: white;
+
+    --pb-input-thumb-bgcolor: #00a9ff;
+
+    /* ---- vs -> Volume Slider ---- */
+    --vs-track-bgcolor: var(--def-text-color);
+
+    /* ---- timer -> Timer ---- */
+    --timer-span-color: var(--def-text-color);
+
+    /* ---- xs -> X Settings (Save Settings, Storage Settings, etc.) ---- */
+    --xs-div-bgcolor: var(--secondary-color);
+    --xs-div-bordercolor: var(--secondary-color);
+
+    --xs-div-input-bgcolor: #5a5a5a;
+    --xs-div-input-color: var(--def-text-color);
+
+    --xs-div-p-color: var(--def-text-color);
+
+    --xs-div-svg-fill: var(--def-text-color);
 
     --xs-h4-color: var(--def-text-color);
-    --xs-container-bordercolor: var(--secondary-color);
-    --xs-container-bgcolor: var(--secondary-color);
-    --xs-container-svg-fill: var(--def-text-color);
-    --xs-container-input-bgcolor: #5a5a5a;
-    --xs-container-input-color: var(--def-text-color);
-    --xs-container-p-color: var(--def-text-color);
-
-    --vc-video-bgcolor: black;
-
-    --pc-input-track-bgcolor: rgba(137, 137, 137, 0.4);
-    --pc-input-thumb-bgcolor: #00a9ff;
-    --pc-container-bgcolor: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
-    --pc-container-btn-bgcolor: transparent;
-    --pc-container-btn-hover-bgcolor: rgba(114, 114, 114, 0.5);
-    --pc-container-btn-svg-fill: var(--def-text-color);
-    --pc-container-btn-span-color: var(--def-text-color);
-    --pc-container-btn-svg-hover-fill: white;
-    --pc-container-btn-span-hover-color: white;
-
-    --pc-container-div-span-color: var(--def-text-color);
-
-    --pc-container-input-thumb-bgcolor: #00a9ff;
-    --pc-container-volume-input-track-bgcolor: var(--def-text-color);
 }
 
 :root {
     --def-bradius: 10px;
     --def-hr-height: 1px;
 
-    /* tb === Title Bar */
-    --tb-btn-svg-length: 10px;
+    /* ==== tb -> Title Bar ==== */
     --tb-btn-hpadding: 15px;
     --tb-btn-vpadding: 7.5px;
+    --tb-btn-svg-length: 10px;
 
-    /* cla === Client Area */
+    /* ==== cla -> Client Area ==== */
     --cla-hgap: 12px;
 
-    /* nb === Nav(igation) Bar */
-    --nb-logo-svg-length: 60px;
-    --nb-logo-hmargin: 10px;
-    --nb-logo-vmargin: 10px;
-    --nb-logo-hgap: 20px;
-    --nb-logo-h1-fsize: 28px;
-    --nb-logo-h1-fweight: 600;
+    /* ==== nb -> Nav(igation) Bar ==== */
+    /* ---- logo -> logo ---- */
+    --logo-hgap: 20px;
+    --logo-margin: 10px;
+
+    --logo-h1-fsize: 28px;
+    --logo-h1-fweight: 600;
+
+    --logo-svg-length: 60px;
 
     --nb-hr-height: var(--def-hr-height);
-    --nb-hr-width: calc(100% - var(--nb-logo-hmargin));
-    --nb-hr-hmargin: calc(var(--nb-logo-hmargin) / 2);
+    --nb-hr-lmargin: calc(var(--logo-margin) / 2);
+    --nb-hr-width: calc(100% - var(--logo-margin));
 
-    --nb-btn-svg-length: 30px;
-    --nb-btn-hpadding: 10px;
-    --nb-btn-vpadding: 10px;
     --nb-btn-bradius: var(--def-bradius);
-    --nb-btn-hmargin: calc(((var(--nb-logo-svg-length) - var(--nb-btn-svg-length)) / 2) + var(--nb-logo-hmargin) - var(--nb-btn-hpadding));
-    --nb-btn-vmargin: 10px;
     --nb-btn-hgap: 40px;
+    --nb-btn-hmargin: calc(((var(--logo-svg-length) - var(--nb-btn-svg-length)) / 2) + var(--logo-margin) - var(--nb-btn-padding));
+    --nb-btn-vmargin: 10px;
+    --nb-btn-padding: 10px;
+
     --nb-btn-span-fsize: 20px;
     --nb-btn-span-fweight: 400;
 
-    /* ne === Nav(igation) Expander */
-    --ne-svg-length: 15px;
+    --nb-btn-svg-length: 30px;
+
+    /* ==== ne -> Nav(igation) Expander ==== */
     --ne-bradius: var(--def-bradius);
 
-    /* ca === Content Area */
+    --ne-svg-length: 15px;
+
+    /* ==== ca -> Content Area ==== */
     --ca-bradius: var(--def-bradius);
 
-    /* xm === X Menu (Settings Menu, Editor Menu, etc.) */
-    --xm-h2-hmargin: calc(var(--nb-logo-hmargin) + var(--ne-svg-length));
-    --xm-h2-vmargin: calc(var(--nb-logo-vmargin));
-    --xm-h2-fsize: 60px;
-    --xm-h2-fweight: 600;
+    /* ==== xa -> X Area (Settings Area, Editor Area, etc.) ==== */
+    --xa-h2-hmargin: calc(var(--logo-margin) + var(--ne-svg-length));
+    --xa-h2-vmargin: calc(var(--logo-margin));
+    --xa-h2-fsize: 60px;
+    --xa-h2-fweight: 600;
 
-    --xm-hr-height: var(--def-hr-height);
-    --xm-hr-width: calc(100% - var(--xm-h2-hmargin));
-    --xm-hr-hmargin: calc(var(--ne-svg-length) + (var(--nb-logo-hmargin) / 2));
+    --xa-hr-height: var(--def-hr-height);
+    --xa-hr-lmargin: calc(var(--ne-svg-length) + (var(--logo-margin) / 2));
+    --xa-hr-width: calc(100% - var(--xa-h2-hmargin));
 
-    /* xsl === X Settings List (Files Settings List, Video Settings List, etc.) */
-    --xsl-hmargin: var(--xm-h2-hmargin);
-    --xsl-vmargin: calc(var(--nb-btn-vpadding) + var(--nb-btn-vmargin));
+    /* ---- vp -> Video Player ---- */
+    --vp-bradius: 10px;
+    --vp-hpadding: 100px;
+    --vp-width: 1000px;
 
-    --xsl-h3-vmargin: 10px;
-    --xsl-h3-fsize: 40px;
-    --xsl-h3-fweight: 500;
+    /* ---- ps -> Playback Slider ---- */
+    --ps-hmargin: 6px;
+    --ps-width: calc((var(--vp-hpadding) * 2) + var(--vp-width));
 
-    /* --xsl-hr-height: 1px;
-    --xsl-hr-width: 1000px; */
+    --ps-thumb-height: 3px;
+    --ps-thumb-hover-height: 8px;
 
-    /* xs === X Settings (Save Settings, Storage Settings, etc.) */
-    --xs-hmargin: 0;
-    --xs-vmargin: var(--xsl-h3-vmargin);
+    /* ---- pb -> Playback Bar ---- */
+    --pb-bradius: var(--vp-bradius);
+
+    --pb-btn-bradius: 5px;
+    --pb-btn-margin: 3px;
+    
+    --pb-btn-span-hpadding: var(--pb-btn-span-vpadding);
+    --pb-btn-span-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-btn-span-fsize)) / 2);
+    --pb-btn-span-fsize: 20px;
+    --pb-btn-span-fweight: 400;
+
+    --pb-btn-span1-width: 3ch;
+
+    --pb-btn-svg-length: 40px;
+
+    --pb-input-height: var(--pb-input-thumb-height);
+
+    --pb-input-thumb-height: 16px;
+    --pb-input-thumb-tmargin: calc(((var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2) * -1);
+
+    --pb-input-track-height: 4px;
+
+    /* ---- vs -> Volume Slider ---- */
+    --vs-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-input-height)) / 2);
+    --vs-rmargin: var(--vs-vpadding);
+    --vs-width: 100px;
+
+    --vs-thumb-bradius: calc(var(--pb-input-thumb-height) / 2);
+    --vs-thumb-width: var(--pb-input-thumb-height);
+
+    /* ---- ss -> Speed Slider ---- */
+    --ss-thumb-bradius: calc(var(--ss-thumb-width) / 2);
+    --ss-thumb-height: var(--pb-input-thumb-height);
+    --ss-thumb-width: 4px;
+
+    --ss-vpadding: var(--vs-vpadding);
+    --ss-width: 150px;
+
+    /* ---- timer -> Timer ---- */
+    --timer-margin: var(--pb-btn-margin);
+
+    --timer-span-hpadding: var(--timer-span-vpadding);
+    --timer-span-vpadding: calc((var(--pb-btn-svg-length) - var(--timer-span-fsize)) / 2);
+    --timer-span-fsize: 15px;
+    --timer-span-fweight: 400;
+
+    --timer-span1-width: 5ch;
+
+    /* ---- xm -> X Menu (Files Menu, Video Menu, etc.) ---- */
+    --xm-hmargin: var(--xa-h2-hmargin);
+    --xm-vmargin: calc(var(--nb-btn-padding) + var(--nb-btn-vmargin));
+
+    --xm-h3-bmargin: 10px;
+    --xm-h3-fsize: 40px;
+    --xm-h3-fweight: 500;
+
+    /* ---- xs -> X Settings (Save Settings, Storage Settings, etc.) ---- */
     --xs-hgap: 30px;
+    --xs-vmargin: var(--xm-h3-bmargin);
 
-    --xs-h4-vmargin: var(--xsl-h3-vmargin);
+    --xs-h4-bmargin: var(--xm-h3-bmargin);
     --xs-h4-fsize: 17px;
     --xs-h4-fweight: 350;
 
-    --xs-container-svg-length: 25px;
-    --xs-container-svg-hmargin: 5px;
-    --xs-container-svg-vmargin: 5px;
-    --xs-container-input-bradius: var(--def-bradius);
-    --xs-container-p-fsize: 11px;
-    --xs-container-p-fweight: 300;
-    --xs-container-bradius: var(--def-bradius);
+    --xs-div-bradius: var(--def-bradius);
 
-    /* vc === Video Container */
-    --vc-video-bradius: 10px;
-    --vc-video-hpadding: 100px;
+    --xs-div-input-bradius: var(--def-bradius);
 
-    --vc-video-width: 1000px;
+    --xs-div-p-fsize: 11px;
+    --xs-div-p-fweight: 300;
 
-    /* pc === Playback Controller */
-    --pc-input-hmargin: 6px;
-    --pc-input-width: calc((var(--vc-video-hpadding) * 2) + var(--vc-video-width));
-    --pc-input-thumb-height: 3px;
-    --pc-input-thumb-hover-height: 8px;
-
-    --pc-container-bradius: var(--vc-video-bradius);
-
-    --pc-container-btn-bradius: 5px;
-    --pc-container-btn-hmargin: 3px;
-    --pc-container-btn-vmargin: 3px;
-    --pc-container-btn-svg-length: 40px;
-
-    --pc-container-btn-span-hpadding: var(--pc-container-btn-span-vpadding);
-    --pc-container-btn-span-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-btn-span-fsize)) / 2);
-    --pc-container-btn-span-fsize: 20px;
-    --pc-container-btn-span-fweight: 400;
-    --pc-container-btn-span1-width: 3ch;
-
-    --pc-container-div-hmargin: var(--pc-container-btn-hmargin);
-    --pc-container-div-vmargin: var(--pc-container-btn-vmargin);
-
-    --pc-container-div-span-hpadding: var(--pc-container-div-span-vpadding);
-    --pc-container-div-span-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-div-span-fsize)) / 2);
-    --pc-container-div-span-fsize: 15px;
-    --pc-container-div-span-fweight: 400;
-    --pc-container-div-span1-width: 5ch;
-
-    --pc-container-input-height: var(--pc-container-input-thumb-height);
-    --pc-container-volume-input-width: 100px;
-    --pc-container-speed-input-width: 150px;
-    --pc-container-volume-input-vpadding: calc((var(--pc-container-btn-svg-length) - var(--pc-container-input-height)) / 2);
-    --pc-container-volume-input-hmargin: var(--pc-container-volume-input-vpadding);
-    --pc-container-speed-input-vpadding: var(--pc-container-volume-input-vpadding);
-
-    --pc-container-input-thumb-height: 16px;
-    --pc-container-volume-input-thumb-width: var(--pc-container-input-thumb-height);
-    --pc-container-speed-input-thumb-height: var(--pc-container-input-thumb-height);
-    --pc-container-speed-input-thumb-width: 4px;
-    --pc-container-speed-input-thumb-bradius: calc(var(--pc-container-speed-input-thumb-width) / 2);
-    --pc-container-volume-input-thumb-bradius: calc(var(--pc-container-input-thumb-height) / 2);
-    --pc-container-input-thumb-vmargin: calc(((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2) * -1);
-    --pc-container-input-track-height: 4px;
+    --xs-div-svg-length: 25px;
+    --xs-div-svg-margin: 5px;
 
     height: 100%;
 }
 
-/* body */
+/* ========== BODY ========== */
 body {
     display: flex;
     flex-flow: column nowrap;
@@ -268,7 +260,7 @@ body {
     background-color: var(--body-bgcolor);
 }
 
-/* title bar of the window */
+/* ========== TITLE BAR ========== */
 div#title-bar {
     display: flex;
     flex: 0 0 fit-content;
@@ -284,7 +276,7 @@ div#title-bar > button {
     flex: 0 0 fit-content;
     padding: var(--tb-btn-vpadding) var(--tb-btn-hpadding);
 
-    background-color: var(--tb-btn-bgcolor);
+    background-color: transparent;
 
     -webkit-app-region: no-drag;
 }
@@ -306,7 +298,7 @@ div#title-bar > button > svg {
     fill: var(--tb-btn-svg-fill);
 }
 
-/* client area (window minus the title bar) */
+/* ========== CLIENT AREA ========== */
 div#client-area {
     display: flex;
     flex: 1 1 fit-content;
@@ -314,16 +306,17 @@ div#client-area {
     gap: var(--cla-hgap);
 }
 
-/* navigation area */
-div#client-area > div#nav-area {
+/* ========== NAV(IGATION) AREA ========== */
+div#nav-area {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--na-bgcolor);
+    background-color: transparent;
 }
 
-div#client-area > div#nav-area > nav#nav-bar {
+/* ========== NAV(IGATION) BAR ========== */
+nav#nav-bar {
     align-items: stretch;
     display: flex;
     flex: 0 0 fit-content;
@@ -332,49 +325,50 @@ div#client-area > div#nav-area > nav#nav-bar {
     background-color: var(--nb-bgcolor);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > div#logo {
+/* ---------- logo ---------- */
+div#logo {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--nb-logo-hgap);
-    margin: var(--nb-logo-vmargin) var(--nb-logo-hmargin);
+    gap: var(--logo-hgap);
+    margin: var(--logo-margin);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > div#logo > svg {
+div#logo > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--nb-logo-svg-length);
-    width: var(--nb-logo-svg-length);
+    height: var(--logo-svg-length);
+    width: var(--logo-svg-length);
 
-    fill: var(--nb-logo-svg-fill);
+    fill: var(--logo-svg-fill);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > div#logo > h1 {
+div#logo > h1 {
     display: none;
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--nb-logo-h1-color);
-    font-size: var(--nb-logo-h1-fsize);
-    font-weight: var(--nb-logo-h1-fweight);
+    color: var(--logo-h1-color);
+    font-size: var(--logo-h1-fsize);
+    font-weight: var(--logo-h1-fweight);
 }
 
-div#client-area > div#nav-area.expanded > nav#nav-bar > div#logo > h1 {
+div#nav-area.expanded > nav#nav-bar > div#logo > h1 {
     display: block;
 }
 
-div#client-area > div#nav-area > nav#nav-bar > hr {
+nav#nav-bar > hr {
     border: none;
     flex: 0 0 auto;
     height: var(--nb-hr-height);
-    margin: 0 0 0 var(--nb-hr-hmargin);
+    margin: 0 0 0 var(--nb-hr-lmargin);
     width: var(--nb-hr-width);
 
     background-color: var(--nb-hr-bgcolor);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > button {
+nav#nav-bar > button {
     align-items: center;
     border: none;
     border-radius: var(--nb-btn-bradius);
@@ -383,16 +377,16 @@ div#client-area > div#nav-area > nav#nav-bar > button {
     flex-flow: row nowrap;
     gap: var(--nb-btn-hgap);
     margin: var(--nb-btn-vmargin) var(--nb-btn-hmargin);
-    padding: var(--nb-btn-vpadding) var(--nb-btn-hpadding);
+    padding: var(--nb-btn-padding);
 
-    background-color: var(--nb-btn-bgcolor);
+    background-color: transparent;
 }
 
-div#client-area > div#nav-area > nav#nav-bar > button:hover {
+nav#nav-bar > button:hover {
     background-color: var(--nb-btn-hover-bgcolor);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > button > svg {
+nav#nav-bar > button > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--nb-btn-svg-length);
@@ -401,7 +395,7 @@ div#client-area > div#nav-area > nav#nav-bar > button > svg {
     fill: var(--nb-btn-svg-fill);
 }
 
-div#client-area > div#nav-area > nav#nav-bar > button > span {
+nav#nav-bar > button > span {
     display: none;
     flex: 0 0 fit-content;
 
@@ -410,11 +404,12 @@ div#client-area > div#nav-area > nav#nav-bar > button > span {
     font-weight: var(--nb-btn-span-fweight);
 }
 
-div#client-area > div#nav-area.expanded > nav#nav-bar > button > span {
+div#nav-area.expanded > nav#nav-bar > button > span {
     display: inline;
 }
 
-div#client-area > div#nav-area > div#nav-expander {
+/* ========== NAV(IGATION) EXPANDER ========== */
+div#nav-expander {
     align-items: center;
     border-radius: 0 var(--ne-bradius) 0 0;
     display: flex;
@@ -424,11 +419,11 @@ div#client-area > div#nav-area > div#nav-expander {
     background-color: var(--ne-bgcolor);
 }
 
-div#client-area > div#nav-area > div#nav-expander:hover {
+div#nav-expander:hover {
     background-color: var(--ne-hover-bgcolor);
 }
 
-div#client-area > div#nav-area > div#nav-expander > svg {
+div#nav-expander > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--ne-svg-length);
@@ -437,72 +432,68 @@ div#client-area > div#nav-area > div#nav-expander > svg {
     fill: var(--ne-svg-fill);
 }
 
-/* content area */
-div#client-area > div#content-area {
+/* ========== CONTENT AREA ========== */
+div#content-area {
     border-radius: var(--ca-bradius) 0 0;
     flex: 1 1 fit-content;
 
     background-color: var(--ca-bgcolor);
 }
 
-div#client-area > div#content-area > div {
+/* ========== X AREA (SETTINGS AREA, EDITOR AREA, ETC.) ========== */
+div#content-area > div {
     align-items: start;
     display: flex;
     flex-flow: column nowrap;
 }
 
-div#client-area > div#content-area > div > h2 {
+div#content-area > div > h2 {
     flex: 0 0 fit-content;
-    margin: var(--xm-h2-vmargin) var(--xm-h2-hmargin);
+    margin: var(--xa-h2-vmargin) var(--xa-h2-hmargin);
 
-    color: var(--xm-h2-color);
-    font-size: var(--xm-h2-fsize);
-    font-weight: var(--xm-h2-fweight);
+    color: var(--xa-h2-color);
+    font-size: var(--xa-h2-fsize);
+    font-weight: var(--xa-h2-fweight);
     line-height: 1;
 }
 
-div#client-area > div#content-area > div > hr {
+div#content-area > div > hr {
     border: none;
     flex: 0 0 auto;
-    height: var(--xm-hr-height);
-    margin: 0 0 0 var(--xm-hr-hmargin);
-    width: var(--xm-hr-width);
+    height: var(--xa-hr-height);
+    margin: 0 0 0 var(--xa-hr-lmargin);
+    width: var(--xa-hr-width);
 
-    background-color: var(--xm-hr-bgcolor);
+    background-color: var(--xa-hr-bgcolor);
 }
 
-
-
-
-
-
-
-
-/* editor menu */
-div#client-area > div#content-area > div#editor-menu > div#video-container {
+/* ---------- VIDEO CONTAINER ---------- */
+div#video-container {
     position: relative;
 
     align-self: center;
     flex: 0 0 fit-content;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > video {
-    border-radius: var(--vc-video-bradius);
+/* ---------- video player ---------- */
+video#video-player {
+    border-radius: var(--vp-bradius);
     display: block;
     flex: 0 0 auto;
-    padding: 0 var(--vc-video-hpadding);
-    width: var(--vc-video-width);
+    padding: 0 var(--vp-hpadding);
+    width: var(--vp-width);
 
-    background-color: var(--vc-video-bgcolor);
+    background-color: var(--vp-bgcolor);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container:fullscreen > video {
+div#video-container:fullscreen > video#video-player {
     height: 100%;
     width: 100%;
     padding: 0;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller {
+/* ---------- playback controller ---------- */
+div#playback-controller {
     inset: auto 0 0;
     position: absolute;
 
@@ -511,14 +502,15 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     visibility: hidden;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > video:hover + div#playback-controller,
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller:hover {
+video#video-player:hover + div#playback-controller,
+div#playback-controller:hover {
     visibility: visible;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input {
+/* ---------- playback slider ---------- */
+input#playback-slider {
     flex: 0 0 fit-content;
-    margin: 0 var(--pc-input-hmargin);
+    margin: 0 var(--ps-hmargin);
     overflow: hidden;
 
     background-color: transparent;
@@ -527,136 +519,104 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input::-webkit-slider-thumb {
-    height: var(--pc-input-thumb-height);
+input#playback-slider::-webkit-slider-thumb {
+    height: var(--ps-thumb-height);
     width: 0;
 
     /* box-shadow is longer than needed to make sure it covers the track */
-    box-shadow: calc(var(--pc-input-width) * -1) 0 0 var(--pc-input-width) var(--pc-input-thumb-bgcolor);
+    box-shadow: calc(var(--ps-width) * -1) 0 0 var(--ps-width) var(--ps-thumb-bgcolor);
 
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input:hover::-webkit-slider-thumb {
-    height: var(--pc-input-thumb-hover-height);
+input:hover#playback-slider::-webkit-slider-thumb {
+    height: var(--ps-thumb-hover-height);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > input::-webkit-slider-runnable-track {
-    background-color: var(--pc-input-track-bgcolor);
+input#playback-slider::-webkit-slider-runnable-track {
+    background-color: var(--ps-track-bgcolor);
 
     /* not needed? */
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div {
+/* ---------- playback bar ---------- */
+div#playback-bar {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    border-radius: 0 0 var(--pc-container-bradius) var(--pc-container-bradius);
+    border-radius: 0 0 var(--pb-bradius) var(--pb-bradius);
 
-    background: var(--pc-container-bgcolor);
+    background: var(--pb-bgcolor);
 }
 
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button {
+div#playback-bar > button {
     border: none;
-    border-radius: var(--pc-container-btn-bradius);
+    border-radius: var(--pb-btn-bradius);
     flex: 0 0 fit-content;
     padding: 0;
-    margin: var(--pc-container-btn-vmargin) var(--pc-container-btn-hmargin);
+    margin: var(--pb-btn-margin);
 
-    background-color: var(--pc-container-btn-bgcolor);
+    background-color: transparent;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#volume {
+div#playback-bar > button#volume {
     margin-right: 0;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed {
+div#playback-bar > button#speed {
     margin-left: 0;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover {
-    background-color: var(--pc-container-btn-hover-bgcolor);
-}
-
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#speed, 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div#time {
+button#speed, 
+div#timer {
     display: flex;
     flex-flow: row nowrap;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button#volume:hover + input#volume-slider,
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider:hover {
-    display: inline-block;
+div#playback-bar > button:hover {
+    background-color: var(--pb-btn-hover-bgcolor);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider:has(+ button#speed:hover),
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider:hover {
-    visibility: visible;
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > svg {
+div#playback-bar > button > svg {
     display: block;
-    height: var(--pc-container-btn-svg-length);
-    width: var(--pc-container-btn-svg-length);
+    height: var(--pb-btn-svg-length);
+    width: var(--pb-btn-svg-length);
 
-    fill: var(--pc-container-btn-svg-fill);
+    fill: var(--pb-btn-svg-fill);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover > svg {
-    fill: var(--pc-container-btn-svg-hover-fill);
+div#playback-bar > button:hover > svg {
+    fill: var(--pb-btn-svg-hover-fill);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span {
-    color: var(--pc-container-btn-span-color);
-    font-size: var(--pc-container-btn-span-fsize);
-    font-weight: var(--pc-container-btn-span-fweight);
+div#playback-bar > button > span {
+    color: var(--pb-btn-span-color);
+    font-size: var(--pb-btn-span-fsize);
+    font-weight: var(--pb-btn-span-fweight);
     line-height: 1;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button:hover > span {
-    color: var(--pc-container-btn-span-hover-color);
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span:nth-child(1) {
+div#playback-bar > button > span:nth-child(1) {
     flex: 0 0 auto;
-    padding: var(--pc-container-btn-span-vpadding) 0 var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding);
-    width: var(--pc-container-btn-span1-width);
+    padding: var(--pb-btn-span-vpadding) 0 var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding);
+    width: var(--pb-btn-span1-width);
 
     text-align: right;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > button > span:nth-child(2) {
+div#playback-bar > button > span:nth-child(2) {
     flex: 0 0 auto;
-    padding: var(--pc-container-btn-span-vpadding) var(--pc-container-btn-span-hpadding) var(--pc-container-btn-span-vpadding) 0;
+    padding: var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding) var(--pb-btn-span-vpadding) 0;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div {
-    margin: var(--pc-container-div-vmargin) var(--pc-container-div-hmargin);
+div#playback-bar > button:hover > span {
+    color: var(--pb-btn-span-hover-color);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span {
-    color: var(--pc-container-div-span-color);
-    font-size: var(--pc-container-div-span-fsize);
-    font-weight: var(--pc-container-div-span-fweight);
-    line-height: 1;
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span:nth-child(1) {
-    padding: var(--pc-container-div-span-vpadding) 0 var(--pc-container-div-span-vpadding) var(--pc-container-div-span-hpadding);
-    width: var(--pc-container-div-span1-width);
-    text-align: right;
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > div > span:nth-child(2) {
-    padding: var(--pc-container-div-span-vpadding) var(--pc-container-div-span-hpadding) var(--pc-container-div-span-vpadding) 0;
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input {
-    height: var(--pc-container-input-height);
+div#playback-bar > input {
+    height: var(--pb-input-height);
     flex: 0 0 fit-content;
     overflow: hidden;
 
@@ -666,65 +626,77 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     background-color: transparent;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider {
-    display: none;
-    padding: var(--pc-container-volume-input-vmargin) 0;
-    margin: 0 var(--pc-container-volume-input-hmargin) 0 0;
-    width: var(--pc-container-volume-input-width);
-}
+div#playback-bar > input::-webkit-slider-thumb {
+    height: var(--pb-input-thumb-height);
+    margin: var(--pb-input-thumb-tmargin) 0 0;
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider {
-    width: var(--pc-container-speed-input-width);
-    padding: var(--pc-container-speed-input-vmargin);
-    margin: 0 0 0 auto;
-
-    visibility: hidden;
-}
-
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input::-webkit-slider-thumb {
-    height: var(--pc-container-input-thumb-height);
-    margin: var(--pc-container-input-thumb-vmargin) 0 0;
-
-    background-color: var(--pc-container-input-thumb-bgcolor);
+    background-color: var(--pb-input-thumb-bgcolor);
 
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider::-webkit-slider-thumb {
-    border-radius: var(--pc-container-volume-input-thumb-bradius);
-    width: var(--pc-container-volume-input-thumb-width);
+div#playback-bar > input::-webkit-slider-runnable-track {
+    height: var(--pb-input-track-height);
+    
+    -webkit-appearance: none;
+}
+
+/* ---------- volume slider ----------*/
+input#volume-slider {
+    display: none;
+    padding: var(--vs-vpadding) 0;
+    margin: 0 var(--vs-rmargin) 0 0;
+    width: var(--vs-width);
+}
+
+button#volume:hover + input#volume-slider,
+input#volume-slider:hover {
+    display: inline-block;
+}
+
+input#volume-slider::-webkit-slider-thumb {
+    border-radius: var(--vs-thumb-bradius);
+    width: var(--vs-thumb-width);
 
     /* box-shadow is longer than needed to make sure it covers the track */
-    box-shadow: calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) 0 0 var(--pc-container-volume-input-width) var(--pc-container-input-thumb-bgcolor);
+    box-shadow: calc((var(--vs-width) * -1) - var(--vs-thumb-width)) 0 0 var(--vs-width) var(--pb-input-thumb-bgcolor);
     clip-path: polygon(
         100% 0%,
         0% 0%,
-        0% calc((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2),
-        calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) calc((var(--pc-container-input-thumb-height) - var(--pc-container-input-track-height)) / 2),
-        calc((var(--pc-container-volume-input-width) * -1) - var(--pc-container-volume-input-thumb-width)) calc((var(--pc-container-input-thumb-height) + var(--pc-container-input-track-height)) / 2),
-        0% calc((var(--pc-container-input-thumb-height) + var(--pc-container-input-track-height)) / 2),
+        0% calc((var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2),
+        calc((var(--vs-width) * -1) - var(--vs-thumb-width)) calc((var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2),
+        calc((var(--vs-width) * -1) - var(--vs-thumb-width)) calc((var(--pb-input-thumb-height) + var(--pb-input-track-height)) / 2),
+        0% calc((var(--pb-input-thumb-height) + var(--pb-input-track-height)) / 2),
         0% 100%,
         100% 100%
     );
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider::-webkit-slider-thumb {
-    border-radius: var(--pc-container-speed-input-thumb-bradius);
-    height: var(--pc-container-speed-input-thumb-height);
-    width: var(--pc-container-speed-input-thumb-width);
+input#volume-slider::-webkit-slider-runnable-track {
+    background-color: var(--vs-track-bgcolor);
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input::-webkit-slider-runnable-track {
-    height: var(--pc-container-input-track-height);
-    
-    -webkit-appearance: none;
+/* ---------- speed slider ----------*/
+input#speed-slider {
+    padding: var(--ss-vpadding) 0;
+    margin: 0 0 0 auto;
+    width: var(--ss-width);
+
+    visibility: hidden;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#volume-slider::-webkit-slider-runnable-track {
-    background-color: var(--pc-container-volume-input-track-bgcolor);
+input#speed-slider:has(+ button#speed:hover),
+input#speed-slider:hover {
+    visibility: visible;
 }
 
-div#client-area > div#content-area > div#editor-menu > div#video-container > div#playback-controller > div > input#speed-slider::-webkit-slider-runnable-track {
+input#speed-slider::-webkit-slider-thumb {
+    border-radius: var(--ss-thumb-bradius);
+    height: var(--ss-thumb-height);
+    width: var(--ss-thumb-width);
+}
+
+input#speed-slider::-webkit-slider-runnable-track {
     background: linear-gradient(
         to right,
         #000 0%,
@@ -735,54 +707,57 @@ div#client-area > div#content-area > div#editor-menu > div#video-container > div
     background-size: 16.666% 50%;
 }
 
+/* ---------- timer ----------*/
+div#timer {
+    margin: var(--timer-margin);
+}
 
+div#timer > span {
+    color: var(--timer-span-color);
+    font-size: var(--timer-span-fsize);
+    font-weight: var(--timer-span-fweight);
+    line-height: 1;
+}
 
+div#timer > span:nth-child(1) {
+    padding: var(--timer-span-vpadding) 0 var(--timer-span-vpadding) var(--timer-span-hpadding);
+    width: var(--timer-span1-width);
+    text-align: right;
+}
 
+div#timer > span:nth-child(2) {
+    padding: var(--timer-span-vpadding) var(--timer-span-hpadding) var(--timer-span-vpadding) 0;
+}
 
-
-
-
-
-
-
-/* settings menu */
-div#client-area > div#content-area > div#settings-menu > div {
+/* ========== X MENU (FILES MENU, VIDEO MENU, ETC.) ========== */
+div#settings-area > div {
     align-items: start;
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: column nowrap;
-    margin: var(--xsl-vmargin) var(--xsl-hmargin);
+    margin: var(--xm-vmargin) var(--xm-hmargin);
 }
 
-div#client-area > div#content-area > div#settings-menu > div > h3 {
+div#settings-area > div > h3 {
     flex: 0 0 fit-content;
-    margin: 0 0 var(--xsl-h3-vmargin);
+    margin: 0 0 var(--xm-h3-bmargin);
 
-    color: var(--xsl-h3-color);
-    font-size: var(--xsl-h3-fsize);
-    font-weight: var(--xsl-h3-fweight);
+    color: var(--xm-h3-color);
+    font-size: var(--xm-h3-fsize);
+    font-weight: var(--xm-h3-fweight);
     line-height: 1;
 }
 
-/* div#client-area > div#content-area > div#settings-menu > div > hr {
-    border: none;
-    flex: 0 0 auto;
-    height: var(--xsl-hr-height);
-    margin: 0;
-    width: var(--xsl-hr-width);
-
-    background-color: var(--xsl-hr-bgcolor);
-} */
-
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div {
+/* ---------- x settings (save settings, storage settings, etc.) ---------- */
+div#video-menu > div {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
     gap: var(--xs-hgap);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div, 
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div {
+div#files-menu > div, 
+div#video-menu > div > div {
     align-items: start;
     display: flex;
     flex: 1 1 fit-content;
@@ -790,10 +765,10 @@ div#client-area > div#content-area > div#settings-menu > div#video-settings-list
     margin: var(--xs-vmargin) 0;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > h4,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > h4 {
+div#files-menu > div > h4,
+div#video-menu > div > div > h4 {
     flex: 0 0 fit-content;
-    margin: 0 0 var(--xs-h4-vmargin);
+    margin: 0 0 var(--xs-h4-bmargin);
 
     color: var(--xs-h4-color);
     font-size: var(--xs-h4-fsize);
@@ -801,72 +776,72 @@ div#client-area > div#content-area > div#settings-menu > div#video-settings-list
     line-height: 1;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div {
-    border: 1px solid var(--xs-container-bordercolor);
-    border-radius: var(--xs-container-bradius);
+div#files-menu > div > div,
+div#video-menu > div > div > div {
+    border: 1px solid var(--xs-div-bordercolor);
+    border-radius: var(--xs-div-bradius);
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--xs-container-bgcolor);
+    background-color: var(--xs-div-bgcolor);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > svg,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > svg {
+div#files-menu > div > div > svg,
+div#video-menu > div > div > div > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--xs-container-svg-length);
-    width: var(--xs-container-svg-length);
-    margin: var(--xs-container-svg-vmargin) var(--xs-container-svg-hmargin);
+    height: var(--xs-div-svg-length);
+    width: var(--xs-div-svg-length);
+    margin: var(--xs-div-svg-margin);
 
-    fill: var(--xs-container-svg-fill);
+    fill: var(--xs-div-svg-fill);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input {
+div#files-menu > div > div > input,
+div#video-menu > div > div > div > input {
     border: none;
-    border-radius: 0 var(--xs-container-input-bradius) var(--xs-container-input-bradius) 0;
+    border-radius: 0 var(--xs-div-input-bradius) var(--xs-div-input-bradius) 0;
     flex: 0 0 auto;
     width: 40px; /****/
 
-    background-color: var(--xs-container-input-bgcolor);
-    color: var(--xs-container-input-color);
+    background-color: var(--xs-div-input-bgcolor);
+    color: var(--xs-div-input-color);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input:focus,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input:focus {
+div#files-menu > div > div > input:focus,
+div#video-menu > div > div > div > input:focus {
     outline: none;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input::-webkit-inner-spin-button,
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > input::-webkit-outer-spin-button,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input::-webkit-inner-spin-button,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > input::-webkit-outer-spin-button {
+div#files-menu > div > div > input::-webkit-inner-spin-button,
+div#files-menu > div > div > input::-webkit-outer-spin-button,
+div#video-menu > div > div > div > input::-webkit-inner-spin-button,
+div#video-menu > div > div > div > input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > select,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > select {
+div#files-menu > div > div > select,
+div#video-menu > div > div > div > select {
     border: none;
-    border-radius: 0 var(--xs-container-input-bradius) var(--xs-container-input-bradius) 0;
+    border-radius: 0 var(--xs-div-input-bradius) var(--xs-div-input-bradius) 0;
     flex: 0 0 fit-content;
 
-    background-color: var(--xs-container-input-bgcolor);
-    color: var(--xs-container-input-color);
+    background-color: var(--xs-div-input-bgcolor);
+    color: var(--xs-div-input-color);
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > div > select:focus,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > div > select:focus {
+div#files-menu > div > div > select:focus,
+div#video-menu > div > div > div > select:focus {
     outline: none;
 }
 
-div#client-area > div#content-area > div#settings-menu > div#files-settings-list > div > p,
-div#client-area > div#content-area > div#settings-menu > div#video-settings-list > div > div > p {
+div#files-menu > div > p,
+div#video-menu > div > div > p {
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--xs-container-p-color);
-    font-size: var(--xs-container-p-fsize);
-    font-weight: var(--xs-container-p-fweight);
+    color: var(--xs-div-p-color);
+    font-size: var(--xs-div-p-fsize);
+    font-weight: var(--xs-div-p-fweight);
 }
