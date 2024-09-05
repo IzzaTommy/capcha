@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="renderer.js"></script>
+    <link rel="shortcut icon" href="assets/svg/capcraft-logo-favicon.svg" type="image/x-icon">
     <title>CapCraft</title>
 </head>
 <body>
@@ -78,47 +79,58 @@
 
                 <hr>
 
-                <div id="video-container">
-                    <video id="video-player">
-                        <source src="assets/example-video-2.mp4" type="video/mp4">
-                    </video>
+                <div id=editor-container>
+                    <div id="video-container">
+                        <video id="video-player">
+                            <source src="assets/example-video-2.mp4" type="video/mp4">
+                        </video>
 
-                    <div id="playback-controller">
-                        <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
+                        <div id="playback-controller">
+                            <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
 
-                        <div id="playback-bar">
-                            <button id="play-pause">
-                                <svg>
-                                    <use href="assets/svg/play-arrow.svg#play-arrow"></use>
-                                </svg>
-                            </button>
+                            <div id="playback-bar">
+                                <button id="play-pause">
+                                    <svg>
+                                        <use href="assets/svg/play-arrow.svg#play-arrow"></use>
+                                    </svg>
+                                </button>
 
-                            <button id="volume">
-                                <svg>
-                                    <use href="assets/svg/volume-down.svg#volume-down"></use>
-                                </svg>
-                            </button>
+                                <button id="volume">
+                                    <svg>
+                                        <use href="assets/svg/volume-down.svg#volume-down"></use>
+                                    </svg>
+                                </button>
 
-                            <input id="volume-slider" type="range" min="0" max="1" value="0" step="0.01">
+                                <input id="volume-slider" type="range" min="0" max="1" value="0" step="0.01">
 
-                            <div id="timer">
-                                <span>88:88</span>
-                                <span>/88:88</span>
+                                <div id="timer">
+                                    <span>88:88</span>
+                                    <span>/88:88</span>
+                                </div>
+
+                                <input id="speed-slider" type="range" min="-2" max="4" value="1" step="1">
+
+                                <button id="speed">
+                                    <span>1</span>
+                                    <span>X</span>
+                                </button>
+                                
+                                <button id="fullscreen">
+                                    <svg>
+                                        <use href="assets/svg/fullscreen.svg#fullscreen"></use>
+                                    </svg>
+                                </button>
                             </div>
-
-                            <input id="speed-slider" type="range" min="-2" max="4" value="1" step="1">
-
-                            <button id="speed">
-                                <span>1</span>
-                                <span>X</span>
-                            </button>
-                            
-                            <button id="fullscreen">
-                                <svg>
-                                    <use href="assets/svg/fullscreen.svg#fullscreen"></use>
-                                </svg>
-                            </button>
                         </div>
+                    </div>
+
+                    <div id="timeline-container">
+                        <svg id="timeline" viewBox="0 0 1200 60"></svg>
+                        <svg id="scrubber" viewbox="0 0 12 84">
+                            <polygon points="0,0 6,10 12,0" />
+                            <line x1="6" y1="4" x2="6" y2="80" />
+                            <polygon points="0,84 6,74 12,84" />
+                        </svg>
                     </div>
                 </div>
             </div>
