@@ -162,7 +162,7 @@
     --xa-hr-width: calc(100% - var(--xa-h2-hmargin));
 
     /* ---- vp -> Video Player ---- */
-    --vp-bradius: 10px;
+    --vp-bradius: var(--def-bradius);
     --vp-hpadding: 100px;
     --vp-width: 1000px;
 
@@ -467,21 +467,12 @@ div#content-area > div > hr {
     background-color: var(--xa-hr-bgcolor);
 }
 
-
-
-
-
-/* ---------- VIDEO CONTAINER ---------- */
+/* ========== VIDEO CONTAINER ========== */
 div#video-container {
     position: relative;
 
-    /* align-self: center; */
     flex: 0 0 fit-content;
 }
-
-
-
-
 
 /* ---------- video player ---------- */
 video#video-player {
@@ -857,72 +848,158 @@ div#video-menu > div > div > p {
 
 
 
+
+/* div#settings-area > div {
+    align-items: start;
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    margin: var(--xm-vmargin) var(--xm-hmargin);
+}
+
+div#settings-area > div > h3 {
+    flex: 0 0 fit-content;
+    margin: 0 0 var(--xm-h3-bmargin);
+
+    color: var(--xm-h3-color);
+    font-size: var(--xm-h3-fsize);
+    font-weight: var(--xm-h3-fweight);
+    line-height: 1;
+} */
+
+:root {
+    /* ec == editor container*/
+    --ec-gap: 20px;
+    --ec-vmargin: var(--xm-vmargin);
+
+    /* tc == timeline container*/
+    --tc-bgcolor: var(--secondary-color);
+    --tc-bradius: var(--def-bradius);
+    --tc-height: 60px;
+    --tc-width: calc(var(--vp-width) + (var(--vp-hpadding) * 2));
+
+    --tl-fill: #8e8e8e;
+    --tl-stroke: #8e8e8e;
+    --tl-swidth: 1px;
+
+    --tl-text-fsize: 12px;
+    --tl-text-fweight: 10;
+
+    --sb-height: 84px;
+    --sb-left: -6px;
+    --sb-top: -12px;
+    --sb-width: 12px;
+    --sb-line-swidth: 1px;
+}
+
 div#editor-container {
     align-items: center;
-
     display: flex;
-    flex: 1 1 auto;
-    
+    flex: 1 1 fit-content;
     flex-flow: column nowrap;
-
-    gap: 20px;
-    margin: var(--xm-vmargin) auto;
+    gap: var(--ec-gap);
+    margin: var(--ec-vmargin) auto;
 }
 
 div#timeline-container {
-    background-color: var(--secondary-color);
-    border-radius: 10px;
-    height: 60px;
-    width: 1200px;
     position: relative;
-    /* overflow:visible; */
+
+    border-radius: var(--def-bradius);
+    height: var(--tc-height);
+    width: var(--tc-width);
+
+    background-color: var(--tc-bgcolor);
 }
 
-svg#timeline {
+svg#timeline-marker {
     position: absolute;
-    inset: 0;
-    display: block; /* for random gap */
-    /* background-color: rgb(47, 47, 47); */
-    width: 1200px;
-    height: 60px;
-
-    fill: rgb(142, 142, 142);
-    stroke: rgb(142, 142, 142);
+    fill: var(--tl-fill);
+    stroke: var(--tl-stroke);
+    stroke-width: var(--tl-swidth);
 }
 
-svg#timeline > line {
-    stroke-width: 1px;
-}
-
-svg#timeline > text {
-    font-size: 12px;
-    font-weight: 10;
-
-    stroke: white;
+svg#timeline-marker > text {
     fill: white;
+    font-size: var(--tl-text-fsize);
+    font-weight: var(--tl-text-fweight);
+    stroke: white;
 }
 
-svg#scrubber > line {
-    stroke-width: 1px;
-}
 
-svg#scrubber > polygon {
-    stroke-width: 0;
+
+/* svg#scrubber, 
+svg#start-clip, 
+svg#end-clip {
+    inset: var(--sb-top) 0 0 var(--sb-left);
+    position: absolute;
+
+    height: var(--sb-height);
+    width: var(--sb-width);
+
 }
 
 svg#scrubber {
-    height: 84px;
-    width: 12px;
-    stroke: white;
     fill: white;
-    position: absolute;
-    left: -6px;
-    top: -12px;
-    /* pointer-events: none; */
+    stroke: white;
 
-    transition: transform 1s ease;
+    transition: all 0.3s linear;
 }
 
+svg#start-clip,
+svg#end-clip {
+    stroke: yellow;
+    fill: yellow;
+
+    transition: all 0s linear;
+    visibility: hidden;
+}
+
+svg#start-clip.enabled,
+svg#end-clip.enabled {
+    visibility: visible;
+}
+
+svg#scrubber > line,
+svg#start-clip > line,
+svg#end-clip > line {
+    stroke-width: var(--sb-line-swidth);
+}
+
+svg#scrubber > polygon,
+svg#start-clip > polygon,
+svg#end-clip > polygon {
+    stroke-width: 0;
+} */
+
+/* temp */
 video {
-    height: 400px;
+    height: 300px;
+}
+
+input#timeline-slider {
+    margin: 0;
+    top: -12px;
+    width: 1200px;
+    height: 84px;
+    position: absolute;
+    /* background-color: rgba(255, 255, 255, 0.5); */
+    background-color: transparent;
+    -webkit-appearance: none;
+    pointer-events: none;
+}
+
+input#timeline-slider::-webkit-slider-thumb {
+    width: 6px;
+    border-radius: 3px;
+    height: 84px;
+    background-color: white;
+    /* background-image: url(assets/svg/timeline-scrubber.svg); */
+    -webkit-appearance: none;
+    pointer-events: all;
+
+}
+
+input#timeline-slider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    /* pointer-events: none; */
 }
