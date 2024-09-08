@@ -1,13 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const WebSocket = require('ws');
 const path = require('path');
+const fs = require('fs');
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
         // frame: false,
-        titleBarStyle: 'hidden',
+        // titleBarStyle: 'hidden',
         // titleBarOverlay: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -129,6 +130,42 @@ function createWindow() {
 
 
 app.whenReady().then(createWindow);
+
+function getVideoFiles(directory) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(directory, (err, files) => {
+            if (err) return reject(err);
+
+            const videoFiles = files
+                .filter(file => ['.mp4', '.avi', '.mkv'].includes(path.extname(file))) // Filter by video extensions
+                .map(file => {
+                    const filePath = path.join(directory, file);
+                    const stats = fs.statSync(filePath); // Get file metadata
+
+                    return {
+                        fileName: file,
+                        filePath: filePath,
+                        size: stats.size, // Size in bytes
+                        createdAt: stats.birthtime, // Creation date
+                        modifiedAt: stats.mtime // Last modified date
+                    };
+                });
+
+            resolve(videoFiles);
+        });
+    });
+}
+
+// IPC event to fetch videos and metadata
+ipcMain.handle('get-videos', async (event, directory) => {
+    try {
+        const videoFiles = await getVideoFiles(directory);
+        return videoFiles;
+    } catch (error) {
+        console.error('Error getting video files:', error);
+        return [];
+    }
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

@@ -17,93 +17,28 @@
     outline: 1px solid rgba(247, 77, 227, 0.3);
 } */
 
-/* regular colors */
 :root {
-    --def-text-color: #dddddd;
-    --primary-color: #4a4c51;
-    --secondary-color: #373737;
-    --tertiary-color: #535c68;
+    /* primary color shade/transparent */
+    --pmc-sh1: #656565;
+    --pmc-sh2: #5a5a5a;
+    --pmc-sh3: #535c68;
+    --pmc-sh4: #4a4c51;
+    --pmc-sh5: #414344;
+    --pmc-sh6: #3a3a3a;
+    --pmc-sh7: #373737;
+    --pmc-tp1: rgba(137, 137, 137, 0.4);
+    --pmc-tp2: rgba(114, 114, 114, 0.5);
 
-    /* ==== body -> body ==== */
-    --body-bgcolor: var(--tertiary-color);
+    /* secondary color */
+    --scc-tp1: rgba(0, 0, 0, 0.75);
 
-    /* ==== tb -> Title Bar ==== */
-    --tb-btn-hover-bgcolor: #3a3a3a;
+    /* complementary color shade */
+    --cpc-sh1: #dddddd;
+    --cpc-sh2: #cccccc;
+    --cpc-sh3: #8e8e8e;
 
-    --tb-btn-svg-fill: #cccccc;
-
-    /* ==== nb -> Nav(igation) Bar ==== */
-    --nb-bgcolor: var(--secondary-color);
-
-    /* ---- logo -> logo ---- */
-    --logo-h1-color: var(--def-text-color);
-
-    --logo-svg-fill: var(--def-text-color);
-
-    --nb-btn-hover-bgcolor: #656565;
-
-    --nb-btn-span-color: var(--def-text-color);
-
-    --nb-btn-svg-fill: var(--def-text-color);
-
-    --nb-hr-bgcolor: var(--def-text-color);
-
-    /* ==== ne -> Nav(igation) Expander ==== */
-    --ne-bgcolor: var(--secondary-color);
-    --ne-hover-bgcolor: var(--def-text-color);
-
-    --ne-svg-fill: var(--def-text-color);
-
-    /* ==== ca -> Content Area ==== */
-    --ca-bgcolor: var(--primary-color);
-
-    /* ==== xa -> X Area (Settings Area, Editor Area, etc.) ==== */
-    --xa-h2-color: var(--def-text-color);
-
-    --xa-hr-bgcolor: var(--def-text-color);
-
-    /* xm === X Menu (Files Menu, Video Menu, etc.) */
-    --xm-h3-color: var(--def-text-color);
-
-    /* ---- vp -> Video Player ---- */
-    --vp-bgcolor: black;
-
-    /* ---- ps -> Playback Slider ---- */
-    --ps-thumb-bgcolor: #00a9ff;
-
-    --ps-track-bgcolor: rgba(137, 137, 137, 0.4);
-
-    /* ---- pb -> Playback Bar ---- */
-    --pb-bgcolor: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
-
-    --pb-btn-hover-bgcolor: rgba(114, 114, 114, 0.5);
-
-    --pb-btn-span-color: var(--def-text-color);
-    --pb-btn-span-hover-color: white;
-
-    --pb-btn-svg-fill: var(--def-text-color);
-    --pb-btn-svg-hover-fill: white;
-
-    --pb-input-thumb-bgcolor: #00a9ff;
-
-    /* ---- vs -> Volume Slider ---- */
-    --vs-track-bgcolor: var(--def-text-color);
-
-    /* ---- timer -> Timer ---- */
-    --timer-span-color: var(--def-text-color);
-
-    /* ---- xs -> X Settings (Save Settings, Storage Settings, etc.) ---- */
-    --xs-div-bgcolor: var(--secondary-color);
-    --xs-div-bordercolor: var(--secondary-color);
-
-    --xs-div-input-bgcolor: #5a5a5a;
-    --xs-div-input-color: var(--def-text-color);
-
-    --xs-div-p-color: var(--def-text-color);
-
-    --xs-div-svg-fill: var(--def-text-color);
-
-    --xs-h4-color: var(--def-text-color);
+    /* accent color shade */
+    --acc-sh1: #00a9ff;
 }
 
 :root {
@@ -128,7 +63,6 @@
 
     --logo-svg-length: 60px;
 
-    --nb-hr-height: var(--def-hr-height);
     --nb-hr-lmargin: calc(var(--logo-margin) / 2);
     --nb-hr-width: calc(100% - var(--logo-margin));
 
@@ -148,18 +82,21 @@
 
     --ne-svg-length: 15px;
 
-    /* ==== ca -> Content Area ==== */
-    --ca-bradius: var(--def-bradius);
+    /* ==== ca -> content panel ==== */
+    --cp-bradius: var(--def-bradius);
 
-    /* ==== xa -> X Area (Settings Area, Editor Area, etc.) ==== */
-    --xa-h2-hmargin: calc(var(--logo-margin) + var(--ne-svg-length));
-    --xa-h2-vmargin: calc(var(--logo-margin));
-    --xa-h2-fsize: 60px;
-    --xa-h2-fweight: 600;
+    /* ==== xs -> X Area (Settings Area, Editor Area, etc.) ==== */
+    --xs-h2-hmargin: calc(var(--logo-margin) + var(--ne-svg-length));
+    --xs-h2-vmargin: calc(var(--logo-margin));
+    --xs-h2-fsize: 60px;
+    --xs-h2-fweight: 600;
 
-    --xa-hr-height: var(--def-hr-height);
-    --xa-hr-lmargin: calc(var(--ne-svg-length) + (var(--logo-margin) / 2));
-    --xa-hr-width: calc(100% - var(--xa-h2-hmargin));
+    --xs-hr-lmargin: calc(var(--ne-svg-length) + (var(--logo-margin) / 2));
+    --xs-hr-width: calc(100% - var(--xs-h2-hmargin));
+
+    /* ---- vc -> Video Container ---- */
+    --vc-vmargin: var(--xm-vmargin);
+    --vc-width: calc(var(--vp-width) + 2 * var(--vp-hpadding));
 
     /* ---- vp -> Video Player ---- */
     --vp-bradius: var(--def-bradius);
@@ -211,41 +148,61 @@
     --ss-vpadding: var(--vs-vpadding);
     --ss-width: 150px;
 
-    /* ---- timer -> Timer ---- */
-    --timer-margin: var(--pb-btn-margin);
+    /* ---- time -> time ---- */
+    --time-margin: var(--pb-btn-margin);
 
-    --timer-span-hpadding: var(--timer-span-vpadding);
-    --timer-span-vpadding: calc((var(--pb-btn-svg-length) - var(--timer-span-fsize)) / 2);
-    --timer-span-fsize: 15px;
-    --timer-span-fweight: 400;
+    --time-span-hpadding: var(--time-span-vpadding);
+    --time-span-vpadding: calc((var(--pb-btn-svg-length) - var(--time-span-fsize)) / 2);
+    --time-span-fsize: 15px;
+    --time-span-fweight: 400;
 
-    --timer-span1-width: 5ch;
+    --time-span1-width: 5ch;
 
     /* ---- xm -> X Menu (Files Menu, Video Menu, etc.) ---- */
-    --xm-hmargin: var(--xa-h2-hmargin);
+    --xm-hmargin: var(--xs-h2-hmargin);
     --xm-vmargin: calc(var(--nb-btn-padding) + var(--nb-btn-vmargin));
 
     --xm-h3-bmargin: 10px;
     --xm-h3-fsize: 40px;
     --xm-h3-fweight: 500;
 
-    /* ---- xs -> X Settings (Save Settings, Storage Settings, etc.) ---- */
-    --xs-hgap: 30px;
-    --xs-vmargin: var(--xm-h3-bmargin);
+    /* ---- xst -> X Settings (Save Settings, Storage Settings, etc.) ---- */
+    --xst-hgap: 30px;
+    --xst-vmargin: var(--xm-h3-bmargin);
 
-    --xs-h4-bmargin: var(--xm-h3-bmargin);
-    --xs-h4-fsize: 17px;
-    --xs-h4-fweight: 350;
+    --xst-h4-bmargin: var(--xm-h3-bmargin);
+    --xst-h4-fsize: 17px;
+    --xst-h4-fweight: 350;
 
-    --xs-div-bradius: var(--def-bradius);
+    --xst-div-bradius: var(--def-bradius);
 
-    --xs-div-input-bradius: var(--def-bradius);
+    --xst-div-input-bradius: var(--def-bradius);
 
-    --xs-div-p-fsize: 11px;
-    --xs-div-p-fweight: 300;
+    --xst-div-p-fsize: 11px;
+    --xst-div-p-fweight: 300;
 
-    --xs-div-svg-length: 25px;
-    --xs-div-svg-margin: 5px;
+    --xst-div-svg-length: 25px;
+    --xst-div-svg-margin: 5px;
+
+    /* ---- tc -> Timeline Container ---- */
+    --tc-bradius: var(--def-bradius);
+    --tc-height: 60px;
+    --tc-width: calc(var(--vp-width) + (var(--vp-hpadding) * 2));
+
+    /* ---- tl -> Timeline ---- */
+    --tl-swidth: 1px;
+    --tl-bmargin: 20px;
+
+    --tl-text-fsize: 12px;
+    --tl-text-fweight: 10;
+
+    /* ---- tls -> Timeline Slider ---- */
+    --tls-top: -12px;
+    --tls-width: var(--tc-width);
+
+    --tls-thumb-bradius: calc(var(--tls-thumb-width) / 2);
+    --tls-thumb-height: calc(-2 * var(--tls-top) + var(--tc-height));
+    --tls-thumb-width: 4px;
 
     height: 100%;
 }
@@ -257,11 +214,11 @@ body {
     height: 100%;
     margin: 0;
 
-    background-color: var(--body-bgcolor);
+    background-color: var(--pmc-sh3);
 }
 
 /* ========== TITLE BAR ========== */
-div#title-bar {
+#title-bar {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -271,7 +228,7 @@ div#title-bar {
     -webkit-user-select: none;
 }
 
-div#title-bar > button {
+.title-bar-btn {
     border: none;
     flex: 0 0 fit-content;
     padding: var(--tb-btn-vpadding) var(--tb-btn-hpadding);
@@ -281,25 +238,24 @@ div#title-bar > button {
     -webkit-app-region: no-drag;
 }
 
-div#title-bar > button#minimize:hover,
-div#title-bar > button#maximize:hover {
-    background-color: var(--tb-btn-hover-bgcolor);
+.title-bar-btn:hover {
+    background-color: var(--pmc-sh6);
 }
 
-div#title-bar > button#close:hover {
+#close:hover {
     background-color: red;
 }
 
-div#title-bar > button > svg {
+.title-bar-btn > svg {
     display: block;
     height: var(--tb-btn-svg-length);
     width: var(--tb-btn-svg-length);
 
-    fill: var(--tb-btn-svg-fill);
+    fill: var(--cpc-sh2);
 }
 
 /* ========== CLIENT AREA ========== */
-div#client-area {
+#client-area {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
@@ -307,7 +263,7 @@ div#client-area {
 }
 
 /* ========== NAV(IGATION) AREA ========== */
-div#nav-area {
+#nav-panel {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -316,17 +272,17 @@ div#nav-area {
 }
 
 /* ========== NAV(IGATION) BAR ========== */
-nav#nav-bar {
+#nav-bar {
     align-items: stretch;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
 
-    background-color: var(--nb-bgcolor);
+    background-color: var(--pmc-sh7);
 }
 
 /* ---------- logo ---------- */
-div#logo {
+#logo {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
@@ -335,40 +291,43 @@ div#logo {
     margin: var(--logo-margin);
 }
 
-div#logo > svg {
+#logo > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--logo-svg-length);
     width: var(--logo-svg-length);
 
-    fill: var(--logo-svg-fill);
+    fill: var(--cpc-sh1);
 }
 
-div#logo > h1 {
+#logo > h1 {
     display: none;
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--logo-h1-color);
+    color: var(--cpc-sh1);
     font-size: var(--logo-h1-fsize);
     font-weight: var(--logo-h1-fweight);
+    line-height: 1;
 }
 
-div#nav-area.expanded > nav#nav-bar > div#logo > h1 {
+#nav-bar.active > #logo > h1 {
     display: block;
 }
 
-nav#nav-bar > hr {
+.divider {
     border: none;
     flex: 0 0 auto;
-    height: var(--nb-hr-height);
-    margin: 0 0 0 var(--nb-hr-lmargin);
-    width: var(--nb-hr-width);
-
-    background-color: var(--nb-hr-bgcolor);
+    height: var(--def-hr-height);
+    background-color: var(--cpc-sh1);
 }
 
-nav#nav-bar > button {
+#nav-bar > hr {
+    margin: 0 0 0 var(--nb-hr-lmargin);
+    width: var(--nb-hr-width);
+}
+
+.nav-bar-btn {
     align-items: center;
     border: none;
     border-radius: var(--nb-btn-bradius);
@@ -382,132 +341,132 @@ nav#nav-bar > button {
     background-color: transparent;
 }
 
-nav#nav-bar > button:hover {
-    background-color: var(--nb-btn-hover-bgcolor);
+.nav-bar-btn:hover {
+    background-color: var(--pmc-sh1);
 }
 
-nav#nav-bar > button > svg {
+.nav-bar-btn > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--nb-btn-svg-length);
     width: var(--nb-btn-svg-length);
 
-    fill: var(--nb-btn-svg-fill);
+    fill: var(--cpc-sh1);
 }
 
-nav#nav-bar > button > span {
+.nav-bar-btn > span {
     display: none;
     flex: 0 0 fit-content;
 
-    color: var(--nb-btn-span-color);
+    color: var(--cpc-sh1);
     font-size: var(--nb-btn-span-fsize);
     font-weight: var(--nb-btn-span-fweight);
+    line-height: 1;
 }
 
-div#nav-area.expanded > nav#nav-bar > button > span {
-    display: inline;
+#nav-bar.active > .nav-bar-btn > span {
+    display: block;
 }
 
 /* ========== NAV(IGATION) EXPANDER ========== */
-div#nav-expander {
+#nav-expander {
     align-items: center;
     border-radius: 0 var(--ne-bradius) 0 0;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--ne-bgcolor);
+    background-color: var(--pmc-sh7);
 }
 
-div#nav-expander:hover {
-    background-color: var(--ne-hover-bgcolor);
+#nav-expander:hover {
+    background-color: var(--cpc-sh1);
 }
 
-div#nav-expander > svg {
+#nav-expander > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--ne-svg-length);
     width: var(--ne-svg-length);
 
-    fill: var(--ne-svg-fill);
+    fill: var(--cpc-sh1);
 }
 
-/* ========== CONTENT AREA ========== */
-div#content-area {
-    border-radius: var(--ca-bradius) 0 0;
+/* ========== content panel ========== */
+div#content-panel {
+    border-radius: var(--cp-bradius) 0 0;
     flex: 1 1 fit-content;
 
-    background-color: var(--ca-bgcolor);
+    background-color: var(--pmc-sh4);
 }
 
-/* ========== X AREA (SETTINGS AREA, EDITOR AREA, ETC.) ========== */
-div#content-area > div {
-    align-items: start;
-    display: flex;
+/* ========== X SECTION (SETTINGS SECTION, EDITOR SECTION, ETC.) ========== */
+.content-section {
+    display: none;
     flex-flow: column nowrap;
 }
 
-div#content-area > div > h2 {
-    flex: 0 0 fit-content;
-    margin: var(--xa-h2-vmargin) var(--xa-h2-hmargin);
+.content-section.active {
+    display: flex;
+}
 
-    color: var(--xa-h2-color);
-    font-size: var(--xa-h2-fsize);
-    font-weight: var(--xa-h2-fweight);
+.content-section > h2 {
+    flex: 0 0 fit-content;
+    margin: var(--xs-h2-vmargin) var(--xs-h2-hmargin);
+
+    color: var(--cpc-sh1);
+    font-size: var(--xs-h2-fsize);
+    font-weight: var(--xs-h2-fweight);
     line-height: 1;
 }
 
-div#content-area > div > hr {
-    border: none;
-    flex: 0 0 auto;
-    height: var(--xa-hr-height);
-    margin: 0 0 0 var(--xa-hr-lmargin);
-    width: var(--xa-hr-width);
-
-    background-color: var(--xa-hr-bgcolor);
+.content-section > hr {
+    margin: 0 0 0 var(--xs-hr-lmargin);
+    width: var(--xs-hr-width);
 }
 
 /* ========== VIDEO CONTAINER ========== */
-div#video-container {
+#video-container {
     position: relative;
 
     flex: 0 0 fit-content;
+    width: var(--vc-width);
+    margin: var(--vc-vmargin) auto;
 }
 
 /* ---------- video player ---------- */
-video#video-player {
-    border-radius: var(--vp-bradius);
+#video-player {
     display: block;
-    flex: 0 0 auto;
+    border-radius: var(--vp-bradius);
     padding: 0 var(--vp-hpadding);
     width: var(--vp-width);
 
-    background-color: var(--vp-bgcolor);
+    background-color: black;
 }
 
-div#video-container:fullscreen > video#video-player {
+#video-container:fullscreen > #video-player {
     height: 100%;
     width: 100%;
     padding: 0;
 }
 
 /* ---------- playback controller ---------- */
-div#playback-controller {
+#playback-controller {
     inset: auto 0 0;
     position: absolute;
 
     display: flex;
     flex-flow: column nowrap;
-    /* visibility: hidden; */
+    visibility: hidden;
 }
 
-video#video-player:hover + div#playback-controller,
-div#playback-controller:hover {
+#video-player:hover + #playback-controller,
+#playback-controller:hover {
     visibility: visible;
 }
 
 /* ---------- playback slider ---------- */
-input#playback-slider {
+#playback-slider {
     flex: 0 0 fit-content;
     margin: 0 var(--ps-hmargin);
     overflow: hidden;
@@ -518,39 +477,38 @@ input#playback-slider {
     -webkit-appearance: none;
 }
 
-input#playback-slider::-webkit-slider-thumb {
+#playback-slider::-webkit-slider-thumb {
     height: var(--ps-thumb-height);
     width: 0;
 
     /* box-shadow is longer than needed to make sure it covers the track */
-    box-shadow: calc(var(--ps-width) * -1) 0 0 var(--ps-width) var(--ps-thumb-bgcolor);
+    box-shadow: calc(var(--ps-width) * -1) 0 0 var(--ps-width) var(--acc-sh1);
 
     -webkit-appearance: none;
 }
 
-input:hover#playback-slider::-webkit-slider-thumb {
+#playback-slider:hover::-webkit-slider-thumb {
     height: var(--ps-thumb-hover-height);
 }
 
-input#playback-slider::-webkit-slider-runnable-track {
-    background-color: var(--ps-track-bgcolor);
+#playback-slider::-webkit-slider-runnable-track {
+    background-color: var(--pmc-tp1);
 
-    /* not needed? */
     -webkit-appearance: none;
 }
 
 /* ---------- playback bar ---------- */
-div#playback-bar {
+#playback-bar {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
     border-radius: 0 0 var(--pb-bradius) var(--pb-bradius);
 
-    background: var(--pb-bgcolor);
+    background: linear-gradient(to top, var(--scc-tp1), transparent);
 }
 
-div#playback-bar > button {
+.pb-btn {
     border: none;
     border-radius: var(--pb-btn-bradius);
     flex: 0 0 fit-content;
@@ -560,44 +518,44 @@ div#playback-bar > button {
     background-color: transparent;
 }
 
-div#playback-bar > button#volume {
+#volume {
     margin-right: 0;
 }
 
-div#playback-bar > button#speed {
+#speed {
     margin-left: 0;
 }
 
-button#speed, 
-div#timer {
+#speed, 
+#time {
     display: flex;
     flex-flow: row nowrap;
 }
 
-div#playback-bar > button:hover {
-    background-color: var(--pb-btn-hover-bgcolor);
+.pb-btn:hover {
+    background-color: var(--pmc-tp2);
 }
 
-div#playback-bar > button > svg {
+.pb-btn > svg {
     display: block;
     height: var(--pb-btn-svg-length);
     width: var(--pb-btn-svg-length);
 
-    fill: var(--pb-btn-svg-fill);
+    fill: var(--cpc-sh1);
 }
 
-div#playback-bar > button:hover > svg {
-    fill: var(--pb-btn-svg-hover-fill);
+.pb-btn:hover > svg {
+    fill: white;
 }
 
-div#playback-bar > button > span {
-    color: var(--pb-btn-span-color);
+#speed > span {
+    color: var(--cpc-sh1);
     font-size: var(--pb-btn-span-fsize);
     font-weight: var(--pb-btn-span-fweight);
     line-height: 1;
 }
 
-div#playback-bar > button > span:nth-child(1) {
+#current-speed {
     flex: 0 0 auto;
     padding: var(--pb-btn-span-vpadding) 0 var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding);
     width: var(--pb-btn-span1-width);
@@ -605,16 +563,16 @@ div#playback-bar > button > span:nth-child(1) {
     text-align: right;
 }
 
-div#playback-bar > button > span:nth-child(2) {
+#speed > span:nth-child(2) {
     flex: 0 0 auto;
     padding: var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding) var(--pb-btn-span-vpadding) 0;
 }
 
-div#playback-bar > button:hover > span {
-    color: var(--pb-btn-span-hover-color);
+.pb-btn:hover > span {
+    color: white;
 }
 
-div#playback-bar > input {
+.pb-input {
     height: var(--pb-input-height);
     flex: 0 0 fit-content;
     overflow: hidden;
@@ -625,40 +583,40 @@ div#playback-bar > input {
     background-color: transparent;
 }
 
-div#playback-bar > input::-webkit-slider-thumb {
+.pb-input::-webkit-slider-thumb {
     height: var(--pb-input-thumb-height);
     margin: var(--pb-input-thumb-tmargin) 0 0;
 
-    background-color: var(--pb-input-thumb-bgcolor);
+    background-color: var(--acc-sh1);
 
     -webkit-appearance: none;
 }
 
-div#playback-bar > input::-webkit-slider-runnable-track {
+.pb-input::-webkit-slider-runnable-track {
     height: var(--pb-input-track-height);
     
     -webkit-appearance: none;
 }
 
 /* ---------- volume slider ----------*/
-input#volume-slider {
+#volume-slider {
     display: none;
     padding: var(--vs-vpadding) 0;
     margin: 0 var(--vs-rmargin) 0 0;
     width: var(--vs-width);
 }
 
-button#volume:hover + input#volume-slider,
-input#volume-slider:hover {
+#volume:hover + #volume-slider,
+#volume-slider:hover {
     display: inline-block;
 }
 
-input#volume-slider::-webkit-slider-thumb {
+#volume-slider::-webkit-slider-thumb {
     border-radius: var(--vs-thumb-bradius);
     width: var(--vs-thumb-width);
 
     /* box-shadow is longer than needed to make sure it covers the track */
-    box-shadow: calc((var(--vs-width) * -1) - var(--vs-thumb-width)) 0 0 var(--vs-width) var(--pb-input-thumb-bgcolor);
+    box-shadow: calc((var(--vs-width) * -1) - var(--vs-thumb-width)) 0 0 var(--vs-width) var(--acc-sh1);
     clip-path: polygon(
         100% 0%,
         0% 0%,
@@ -671,12 +629,12 @@ input#volume-slider::-webkit-slider-thumb {
     );
 }
 
-input#volume-slider::-webkit-slider-runnable-track {
-    background-color: var(--vs-track-bgcolor);
+#volume-slider::-webkit-slider-runnable-track {
+    background-color: var(--cpc-sh1);
 }
 
 /* ---------- speed slider ----------*/
-input#speed-slider {
+#speed-slider {
     padding: var(--ss-vpadding) 0;
     margin: 0 0 0 auto;
     width: var(--ss-width);
@@ -684,18 +642,18 @@ input#speed-slider {
     visibility: hidden;
 }
 
-input#speed-slider:has(+ button#speed:hover),
-input#speed-slider:hover {
+#speed-slider:has(+ button#speed:hover),
+#speed-slider:hover {
     visibility: visible;
 }
 
-input#speed-slider::-webkit-slider-thumb {
+#speed-slider::-webkit-slider-thumb {
     border-radius: var(--ss-thumb-bradius);
     height: var(--ss-thumb-height);
     width: var(--ss-thumb-width);
 }
 
-input#speed-slider::-webkit-slider-runnable-track {
+#speed-slider::-webkit-slider-runnable-track {
     background: linear-gradient(
         to right,
         #000 0%,
@@ -706,30 +664,85 @@ input#speed-slider::-webkit-slider-runnable-track {
     background-size: 16.666% 50%;
 }
 
-/* ---------- timer ----------*/
-div#timer {
-    margin: var(--timer-margin);
+/* ---------- time ----------*/
+#time {
+    margin: var(--time-margin);
 }
 
-div#timer > span {
-    color: var(--timer-span-color);
-    font-size: var(--timer-span-fsize);
-    font-weight: var(--timer-span-fweight);
+.time-span {
+    color: var(--cpc-sh1);
+    font-size: var(--time-span-fsize);
+    font-weight: var(--time-span-fweight);
     line-height: 1;
 }
 
-div#timer > span:nth-child(1) {
-    padding: var(--timer-span-vpadding) 0 var(--timer-span-vpadding) var(--timer-span-hpadding);
-    width: var(--timer-span1-width);
+#current-time {
+    padding: var(--time-span-vpadding) 0 var(--time-span-vpadding) var(--time-span-hpadding);
+    width: var(--time-span1-width);
     text-align: right;
 }
 
-div#timer > span:nth-child(2) {
-    padding: var(--timer-span-vpadding) var(--timer-span-hpadding) var(--timer-span-vpadding) 0;
+#total-time {
+    padding: var(--time-span-vpadding) var(--time-span-hpadding) var(--time-span-vpadding) 0;
+}
+
+/* ---------- timeline ---------- */
+#timeline-container {
+    position: relative;
+
+    border-radius: var(--def-bradius);
+    height: var(--tc-height);
+    width: var(--tc-width);
+    margin: 0 auto var(--tl-bmargin);
+
+    background-color: var(--pmc-sh7);
+}
+
+#timeline-marker {
+    position: absolute;
+
+    fill: var(--cpc-sh3);
+    stroke: var(--cpc-sh3);
+    stroke-width: var(--tl-swidth);
+}
+
+#timeline-marker > text {
+    fill: var(--cpc-sh1);
+    font-size: var(--tl-text-fsize);
+    font-weight: var(--tl-text-fweight);
+    stroke: var(--cpc-sh1);
+}
+
+#timeline-slider {
+    position: absolute;
+    top: var(--tls-top);
+
+    margin: 0;
+    width: var(--tls-width);
+
+    background-color: transparent;
+    pointer-events: none;
+
+    -webkit-appearance: none;
+}
+
+#timeline-slider::-webkit-slider-thumb {
+    border-radius: var(--tls-thumb-bradius);
+    height: var(--tls-thumb-height);
+    width: var(--tls-thumb-width);
+
+    background-color: var(--cpc-sh1);
+    pointer-events: all;
+
+    -webkit-appearance: none;
+}
+
+#timeline-slider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
 }
 
 /* ========== X MENU (FILES MENU, VIDEO MENU, ETC.) ========== */
-div#settings-area > div {
+.settings-menu {
     align-items: start;
     display: flex;
     flex: 1 1 fit-content;
@@ -737,11 +750,11 @@ div#settings-area > div {
     margin: var(--xm-vmargin) var(--xm-hmargin);
 }
 
-div#settings-area > div > h3 {
+.settings-menu > h3 {
     flex: 0 0 fit-content;
     margin: 0 0 var(--xm-h3-bmargin);
 
-    color: var(--xm-h3-color);
+    color: var(--cpc-sh1);
     font-size: var(--xm-h3-fsize);
     font-weight: var(--xm-h3-fweight);
     line-height: 1;
@@ -752,139 +765,102 @@ div#video-menu > div {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
-    gap: var(--xs-hgap);
+    gap: var(--xst-hgap);
 }
 
-div#files-menu > div, 
-div#video-menu > div > div {
+.setting-text, .setting-select {
     align-items: start;
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: column nowrap;
-    margin: var(--xs-vmargin) 0;
+    margin: var(--xst-vmargin) 0;
 }
 
-div#files-menu > div > h4,
-div#video-menu > div > div > h4 {
+.setting-text > h4, .setting-select > h4 {
     flex: 0 0 fit-content;
-    margin: 0 0 var(--xs-h4-bmargin);
+    margin: 0 0 var(--xst-h4-bmargin);
 
-    color: var(--xs-h4-color);
-    font-size: var(--xs-h4-fsize);
-    font-weight: var(--xs-h4-fweight);
+    color: var(--cpc-sh1);
+    font-size: var(--xst-h4-fsize);
+    font-weight: var(--xst-h4-fweight);
     line-height: 1;
 }
 
-div#files-menu > div > div,
-div#video-menu > div > div > div {
-    border: 1px solid var(--xs-div-bordercolor);
-    border-radius: var(--xs-div-bradius);
+.setting-text > div,
+.setting-select > div {
+    border: 1px solid var(--pmc-sh7);
+    border-radius: var(--xst-div-bradius);
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
 
-    background-color: var(--xs-div-bgcolor);
+    background-color: var(--pmc-sh7);
 }
 
-div#files-menu > div > div > svg,
-div#video-menu > div > div > div > svg {
+.setting-text > div > svg,
+.setting-select > div > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--xs-div-svg-length);
-    width: var(--xs-div-svg-length);
-    margin: var(--xs-div-svg-margin);
+    height: var(--xst-div-svg-length);
+    width: var(--xst-div-svg-length);
+    margin: var(--xst-div-svg-margin);
 
-    fill: var(--xs-div-svg-fill);
+    fill: var(--cpc-sh1);
 }
 
-div#files-menu > div > div > input,
-div#video-menu > div > div > div > input {
+.setting-text > div > input,
+.setting-select > div > input {
     border: none;
-    border-radius: 0 var(--xs-div-input-bradius) var(--xs-div-input-bradius) 0;
+    border-radius: 0 var(--xst-div-input-bradius) var(--xst-div-input-bradius) 0;
     flex: 0 0 auto;
     width: 40px; /****/
 
-    background-color: var(--xs-div-input-bgcolor);
-    color: var(--xs-div-input-color);
+    background-color: var(--pmc-sh2);
+    color: var(--cpc-sh1);
 }
 
-div#files-menu > div > div > input:focus,
-div#video-menu > div > div > div > input:focus {
+.setting-text > div > input:focus,
+.setting-select > div > input:focus {
     outline: none;
 }
 
-div#files-menu > div > div > input::-webkit-inner-spin-button,
-div#files-menu > div > div > input::-webkit-outer-spin-button,
-div#video-menu > div > div > div > input::-webkit-inner-spin-button,
-div#video-menu > div > div > div > input::-webkit-outer-spin-button {
+.setting-text > div > input::-webkit-inner-spin-button,
+.setting-text > div > input::-webkit-outer-spin-button,
+.setting-select > div > input::-webkit-inner-spin-button,
+.setting-select > div > input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-div#files-menu > div > div > select,
-div#video-menu > div > div > div > select {
+.setting-select > div > select {
     border: none;
-    border-radius: 0 var(--xs-div-input-bradius) var(--xs-div-input-bradius) 0;
+    border-radius: 0 var(--xst-div-input-bradius) var(--xst-div-input-bradius) 0;
     flex: 0 0 fit-content;
 
-    background-color: var(--xs-div-input-bgcolor);
-    color: var(--xs-div-input-color);
+    background-color: var(--pmc-sh2);
+    color: var(--cpc-sh1);
 }
 
-div#files-menu > div > div > select:focus,
-div#video-menu > div > div > div > select:focus {
+.setting-select > div > select:focus {
     outline: none;
 }
 
-div#files-menu > div > p,
-div#video-menu > div > div > p {
+.setting-select > p,
+.setting-text > p {
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--xs-div-p-color);
-    font-size: var(--xs-div-p-fsize);
-    font-weight: var(--xs-div-p-fweight);
+    color: var(--cpc-sh1);
+    font-size: var(--xst-div-p-fsize);
+    font-weight: var(--xst-div-p-fweight);
 }
 
 
 
 
 
-/* div#settings-area > div {
-    align-items: start;
-    display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: column nowrap;
-    margin: var(--xm-vmargin) var(--xm-hmargin);
-}
 
-div#settings-area > div > h3 {
-    flex: 0 0 fit-content;
-    margin: 0 0 var(--xm-h3-bmargin);
 
-    color: var(--xm-h3-color);
-    font-size: var(--xm-h3-fsize);
-    font-weight: var(--xm-h3-fweight);
-    line-height: 1;
-} */
-
-:root {
-    /* ec == editor container*/
-    --ec-gap: 20px;
-    --ec-vmargin: var(--xm-vmargin);
-
-    /* tc == timeline container*/
-    --tc-bgcolor: var(--secondary-color);
-    --tc-bradius: var(--def-bradius);
-    --tc-height: 60px;
-    --tc-width: calc(var(--vp-width) + (var(--vp-hpadding) * 2));
-
-    --tl-fill: #8e8e8e;
-    --tl-stroke: #8e8e8e;
-    --tl-swidth: 1px;
-
-    --tl-text-fsize: 12px;
-    --tl-text-fweight: 10;
-
+/* :root {
     --sb-height: 84px;
     --sb-left: -6px;
     --sb-top: -12px;
@@ -892,42 +868,7 @@ div#settings-area > div > h3 {
     --sb-line-swidth: 1px;
 }
 
-div#editor-container {
-    align-items: center;
-    display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: column nowrap;
-    gap: var(--ec-gap);
-    margin: var(--ec-vmargin) auto;
-}
-
-div#timeline-container {
-    position: relative;
-
-    border-radius: var(--def-bradius);
-    height: var(--tc-height);
-    width: var(--tc-width);
-
-    background-color: var(--tc-bgcolor);
-}
-
-svg#timeline-marker {
-    position: absolute;
-    fill: var(--tl-fill);
-    stroke: var(--tl-stroke);
-    stroke-width: var(--tl-swidth);
-}
-
-svg#timeline-marker > text {
-    fill: white;
-    font-size: var(--tl-text-fsize);
-    font-weight: var(--tl-text-fweight);
-    stroke: white;
-}
-
-
-
-/* svg#scrubber, 
+svg#scrubber, 
 svg#start-clip, 
 svg#end-clip {
     inset: var(--sb-top) 0 0 var(--sb-left);
@@ -970,36 +911,3 @@ svg#start-clip > polygon,
 svg#end-clip > polygon {
     stroke-width: 0;
 } */
-
-/* temp */
-video {
-    height: 300px;
-}
-
-input#timeline-slider {
-    margin: 0;
-    top: -12px;
-    width: 1200px;
-    height: 84px;
-    position: absolute;
-    /* background-color: rgba(255, 255, 255, 0.5); */
-    background-color: transparent;
-    -webkit-appearance: none;
-    pointer-events: none;
-}
-
-input#timeline-slider::-webkit-slider-thumb {
-    width: 6px;
-    border-radius: 3px;
-    height: 84px;
-    background-color: white;
-    /* background-image: url(assets/svg/timeline-scrubber.svg); */
-    -webkit-appearance: none;
-    pointer-events: all;
-
-}
-
-input#timeline-slider::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    /* pointer-events: none; */
-}

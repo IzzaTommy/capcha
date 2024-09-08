@@ -23,3 +23,17 @@ contextBridge.exposeInMainWorld('titleBarAPI', {
         ipcRenderer.send('tb-send', 'close');
     }
 });
+
+// Expose the `getVideos` function to the renderer process
+contextBridge.exposeInMainWorld('videoAPI', {
+    getVideos: async (directory) => {
+        try {
+            // Invoke the 'get-videos' handler and return the resolved value
+            const videos = await ipcRenderer.invoke('get-videos', directory);
+            return videos; // This is the returned data from ipcMain.handle
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+            return [];
+        }
+    }
+});

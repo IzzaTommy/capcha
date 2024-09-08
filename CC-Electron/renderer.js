@@ -1,3 +1,5 @@
+import { TimelineState } from './timelineState.js';
+
 // wait for DOM to finish loading
 window.addEventListener('DOMContentLoaded', init);
 
@@ -12,7 +14,6 @@ function init() {
     //settingsAreaInit();
 
     editorAreaInit();
-
 }
 
 function webSocketInit() {
@@ -25,13 +26,17 @@ function webSocketInit() {
     // document.getElementById('stop').addEventListener('click', () => {
     //     window.webSocketAPI.stopRecord();
     // });
+
+    // document.getElementById('test').addEventListener('click', () => {
+    //     console.log(window.videoAPI.getVideos('S:/League of Legends/Lowkey'));
+    // });
 }
 
 function titleBarInit() {
     // get the title bar buttons
-    const minimizeBtn = document.querySelector('button#minimize');
-    const maximizeBtn = document.querySelector('button#maximize');
-    const closeBtn = document.querySelector('button#close');
+    const minimizeBtn = document.querySelector('#minimize');
+    const maximizeBtn = document.querySelector('#maximize');
+    const closeBtn = document.querySelector('#close');
 
     // API calls for window manipulation
     minimizeBtn.addEventListener('click', () => window.titleBarAPI.minimize());
@@ -41,34 +46,45 @@ function titleBarInit() {
 
 function navAreaInit() {
     // get the nav area buttons and expander
-    const navArea = document.querySelector('div#nav-area');
+    const navBar = document.querySelector('#nav-bar');
     // get the folder button and svg
-    const folderBtn = document.querySelector('button#folder');
+    const folderBtn = document.querySelector('#folder');
     const folderSVG = folderBtn.querySelector('svg > use');
     // get the settings button and svg
-    const settingsBtn = document.querySelector('button#settings');
+    const settingsBtn = document.querySelector('#settings');
     const settingsSVG = settingsBtn.querySelector('svg > use');
     // get the record button and svg
-    const recordBtn = document.querySelector('button#record');
+    const recordBtn = document.querySelector('#record');
     const recordSVG = recordBtn.querySelector('svg > use');
     // get the nav expander and svg
-    const navExpander = document.querySelector('div#nav-expander');
+    const navExpander = document.querySelector('#nav-expander');
     const navExpanderSVG = navExpander.querySelector('svg > use');
 
+    const editorArea = document.getElementById('editor-section');
+    const settingsArea = document.getElementById('settings-section');
+
     // change the SVGs on hover
-    folderBtn.addEventListener('mouseover', () => swapSVG(folderSVG, 'folder-solid'));
-    folderBtn.addEventListener('mouseout', () => swapSVG(folderSVG, 'folder'));
+    folderBtn.addEventListener('mouseenter', () => swapSVG(folderSVG, 'folder-solid'));
+    folderBtn.addEventListener('mouseleave', () => swapSVG(folderSVG, 'folder'));
+    folderBtn.addEventListener('click', () => {
+        settingsArea.classList.remove('active');
+        editorArea.classList.add('active');
+    });
 
-    settingsBtn.addEventListener('mouseover', () => swapSVG(settingsSVG, 'settings-solid'));
-    settingsBtn.addEventListener('mouseout', () => swapSVG(settingsSVG, 'settings'));
+    settingsBtn.addEventListener('mouseenter', () => swapSVG(settingsSVG, 'settings-solid'));
+    settingsBtn.addEventListener('mouseleave', () => swapSVG(settingsSVG, 'settings'));
+    settingsBtn.addEventListener('click', () => {
+        editorArea.classList.remove('active');
+        settingsArea.classList.add('active');
+    });
 
-    recordBtn.addEventListener('mouseover', () => swapSVG(recordSVG, 'record-solid'));
-    recordBtn.addEventListener('mouseout', () => swapSVG(recordSVG, 'record'));
+    recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
+    recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
 
     navExpander.addEventListener('click', () => {
-        navArea.classList.toggle('expanded');
+        navBar.classList.toggle('active');
 
-        if (navArea.classList.contains('expanded')) {
+        if (navBar.classList.contains('active')) {
             swapSVG(navExpanderSVG, 'arrow-back-ios');
         }
         else {
@@ -79,52 +95,43 @@ function navAreaInit() {
 
 function editorAreaInit() {
     // video container that holds everything
-    const videoContainer = document.querySelector('div#video-container');
+    const videoContainer = document.querySelector('#video-container');
 
     // video element
-    const video = document.querySelector('video#video-player');
+    const video = document.querySelector('#video-player');
     
     // playback slider
-    const playbackInput = document.querySelector('input#playback-slider');
+    const playbackInput = document.querySelector('#playback-slider');
     const playbackInputBox = playbackInput.getBoundingClientRect();
 
     // play/pause button
-    const playPauseBtn = document.querySelector('button#play-pause');
+    const playPauseBtn = document.querySelector('#play-pause');
     const playPauseSVG = playPauseBtn.querySelector('svg > use');
     // volume button
-    const volumeBtn = document.querySelector('button#volume');
+    const volumeBtn = document.querySelector('#volume');
     const volumeSVG = volumeBtn.querySelector('svg > use');
     // volume slider
-    const volumeInput = document.querySelector('input#volume-slider');
+    const volumeInput = document.querySelector('#volume-slider');
     // video timer
-    const timeSpan = document.querySelector('div#timer > span:nth-child(1)');
-    const durationSpan = document.querySelector('div#timer > span:nth-child(2)');
+    const timeSpan = document.querySelector('#current-time');
+    const durationSpan = document.querySelector('span#total-time');
     // speed slider
-    const speedInput = document.querySelector('input#speed-slider');
+    const speedInput = document.querySelector('#speed-slider');
     // speed button
-    const speedBtn = document.querySelector('button#speed');
-    const speedSpan = speedBtn.querySelector('span:nth-child(1)');
+    const speedBtn = document.querySelector('#speed');
+    const speedSpan = speedBtn.querySelector('#current-speed');
     // fullscreen button
-    const fullscreenBtn = document.querySelector('button#fullscreen');
+    const fullscreenBtn = document.querySelector('#fullscreen');
     const fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
     // get the timeline element and initialize timeline state
-    const timeline = document.querySelector('svg#timeline-marker');
+    const timeline = document.querySelector('#timeline-marker');
     const timelineBox = timeline.getBoundingClientRect();
-    const timelineInput = document.querySelector('input#timeline-slider');
-    // // get the timeline scrubber, start clip, and end clip
-    // const scrubber = document.querySelector('svg#scrubber');
-    // const startClip = document.querySelector('svg#start-clip');
-    // const endClip = document.querySelector('svg#end-clip');
-    // // booleans for timeline dragging
-    // let scrubberDrag = false;
-    // let startClipDrag = false;
-    // let endClipDrag = false; 
-    
+    const timelineInput = document.querySelector('#timeline-slider');
 
     // wait for the video meta data to load 
     video.addEventListener('loadedmetadata', () => {
-        const timelineState = createTimelineState(0, video.duration);
+        const timelineState = new TimelineState(0, video.duration);
 
         initTimeline();
         initVideoContainer();
@@ -267,9 +274,8 @@ function editorAreaInit() {
                 // check if the scrubber would be out of the timeline, put it back at the start
                 // checking if the scrubber is before the start creates a race condition...
                 if (video.currentTime >= timelineState.getEndTime()) {
-                    playPauseVideo();
                     video.currentTime = timelineState.getStartTime();
-                    playPauseVideo();
+                    video.play();
                 }
 
                 // update the scrubber, playback slider, and timer to match the current time
@@ -443,118 +449,6 @@ function editorAreaInit() {
             });
         }
 
-
-
-
-            // // checks if the scrubber is moused down
-            // scrubber.addEventListener('mousedown', () => {
-            //     scrubberDrag = true;
-            //     scrubber.style.transitionDuration = '0s';
-            // });
-
-            // // checks if the start clip is moused down
-            // startClip.addEventListener('mousedown', () => {
-            //     startClipDrag = true;
-            // });
-
-            // // checks if the end clip is moused down
-            // endClip.addEventListener('mousedown', () => {
-            //     endClipDrag = true;
-            // });
-
-
-
-            // // moves the scrubber based on horizontal mouse movements
-            // document.addEventListener('mousemove', (pointer) => {
-            //     if (scrubberDrag) {
-            //         // get the percentage of the timeline where the event occurred
-            //         let percentage;
-            //         // get the mouse X location relative to the timeline start
-            //         let pointerX = pointer.clientX - timelineBox.left;
-
-            //         // make sure the scrubber is within the bounds of the timeline
-            //         if (pointerX < 0) {
-            //             pointerX = 0;
-            //             percentage = 0;
-            //         }
-            //         else {
-            //             if (pointerX > timelineBox.width) {
-            //                 pointerX = timelineBox.width;
-            //                 percentage = 1;
-            //             }
-            //             else {
-            //                 percentage = getPercentage(pointer, timelineBox);
-            //             }
-            //         }
-
-            //         // move the scrubber to the right position
-            //         scrubber.style.transform = `translateX(${pointerX}px)`;
-
-            //         // update the video time based on position of the scrubber
-            //         video.currentTime = timelineState.getStartTime() + (percentage * timelineState.getDuration());
-            //     }
-
-            //     if (startClipDrag) {
-
-            //     }
-
-            //     if (endClipDrag) {
-
-            //     }
-            // });
-
-            // const clipper = document.querySelector('button#clip');
-
-            // clipper.addEventListener('click', () => {
-            //     startClip.classList.toggle('enabled');
-            //     endClip.classList.toggle('enabled');
-
-            //     const clipLength = timelineState.getClipLength();
-            //     const duration = timelineState.getDuration();
-            //     const pointerX = scrubber.getBoundingClientRect().left - timelineBox.left + 6;
-
-            //     if (clipLength > duration) {
-            //         startClip.style.transform = 'translateX(0px)';
-            //         endClip.style.transform = `translateX(${timelineBox.width}px)`;
-            //     }
-            //     else {
-
-            //         const clipStartTime = pointerX - ((clipLength / 2) / duration * timelineBox.width);
-            //         const clipEndTime = pointerX + ((clipLength / 2) / duration * timelineBox.width);
-
-
-            //         if (clipStartTime < 0) {
-            //             console.log('ONE');
-            //             startClip.style.transform = 'translateX(0px)';
-            //             endClip.style.transform = `translateX(${clipEndTime + Math.abs(clipStartTime)}px)`;
-            //         }
-            //         else {
-            //             if (clipEndTime > timelineBox.width) {
-            //                 console.log('TWO');
-            //                 startClip.style.transform = `translateX(${clipStartTime - (clipEndTime - timelineBox.width)}px)`;
-            //                 endClip.style.transform = `translateX(${timelineBox.width}px)`;
-            //             }
-            //             else {
-            //                 console.log('THREE');
-            //                 startClip.style.transform = `translateX(${clipStartTime}px)`;
-            //                 endClip.style.transform = `translateX(${clipEndTime}px)`;
-            //             }
-            //         }
-            //     }
-            // });
-
-            // // checks if the scrubber, start clip, and end clip are moused up
-            // document.addEventListener('mouseup', () => {
-            //     if (scrubberDrag || startClipDrag || endClipDrag) {
-            //         scrubberDrag = false;
-            //         startClipDrag = false;
-            //         endClipDrag = false;
-
-            //         scrubber.style.transitionDuration = '0.3s';
-            //     }
-            // });
-        // }
-
         /* ========================= HELPER FUNCTIONS ========================= */
         // draws the interval ticks on the timeline
         function drawTicks() {
@@ -618,85 +512,6 @@ function editorAreaInit() {
             }
         }
 
-        // gets the interval, subinterval, and clip length based on duration of the timeline
-        function getTimings(duration) {
-            if (duration > 2400) {
-                // 10m interval, 2m30s subinterval, 2m clip length
-                return [600, 150, 120];
-            }
-            else {
-                if (duration > 960) {
-                    // 5m interval, 1m subinterval, 1m clip length
-                    return [300, 60, 60];
-                }
-                else {
-                    if (duration > 480) {
-                        // 2m interval, 30s subinterval, 1m20s clip length
-                        return [120, 30, 50];
-                    }
-                    else {
-                        if (duration > 240) {
-                            // 1m interval, 15s subinterval, 30s clip length
-                            return [60, 15, 30];
-                        }
-                        else {
-                            if (duration > 80) {
-                                // 30s interval, 10s subinterval, 30s clip length
-                                return [30, 10, 30];
-                            }
-                            else {
-                                if (duration > 40) {
-                                    // 10s interval, 5s subinterval, 20s clip length
-                                    return [10, 5, 20];
-                                }
-                                else {
-                                    // 5s interval, 1s subinterval, 10s clip length
-                                    return [5, 1, 5];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // closure for capturing timeline state
-        function createTimelineState(initStartTime, initEndTime) {
-            // time and interval variables for the timeline
-            let startTime = initStartTime;
-            let endTime = initEndTime;
-            let duration = endTime - startTime;
-            let [interval, subInterval, clipLength] = getTimings(endTime - startTime);
-
-            // getters and setters
-            return {
-                getStartTime: function () {
-                    return startTime;
-                },
-                getEndTime: function () {
-                    return endTime;
-                },
-                getDuration: function () {
-                    return duration;
-                },
-                getInterval: function () {
-                    return interval;
-                },
-                getSubInterval: function() {
-                    return subInterval;
-                },
-                getClipLength: function() {
-                    return clipLength;
-                },
-                update: function(newStartTime, newEndTime) {
-                    startTime = newStartTime;
-                    endTime = newEndTime;
-                    duration = endTime - startTime;
-                    [interval, subInterval, clipLength] = getTimings(endTime - startTime);
-                }
-            }
-        }
-
         // gets the time text from the number of seconds
         function getTimeText(time) {
             return `${Math.floor(time / 60)}:${Math.floor(time % 60) < 10 ? '0' : ''}${Math.floor(time % 60)}`;
@@ -720,16 +535,6 @@ function editorAreaInit() {
 function getPercentage(pointer, box) {
     return (pointer.clientX - box.left) / box.width;
 }
-
-// gets the scrubber percentage in the timeline bounding box
-// function getScrubberPercentage(video, timelineState) {
-//     return (video.currentTime - timelineState.getStartTime()) / (timelineState.getEndTime() - timelineState.getStartTime());
-// }
-
-// // updates the scrubber location
-// function updateScrubber(video, timelineState, scrubber) {
-//     scrubber.style.transform = `translateX(${getScrubberPercentage(video, timelineState) * 1200}px)`;
-// }
 
 // swaps the SVG of an element
 function swapSVG(elementSVG, name) {
