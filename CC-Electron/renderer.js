@@ -62,24 +62,32 @@ function navAreaInit() {
 
     const editorArea = document.getElementById('editor-section');
     const settingsArea = document.getElementById('settings-section');
+    const directoryArea = document.getElementById('directory-section');
 
     // change the SVGs on hover
     folderBtn.addEventListener('mouseenter', () => swapSVG(folderSVG, 'folder-solid'));
     folderBtn.addEventListener('mouseleave', () => swapSVG(folderSVG, 'folder'));
     folderBtn.addEventListener('click', () => {
         settingsArea.classList.remove('active');
-        editorArea.classList.add('active');
+        editorArea.classList.remove('active');
+        directoryArea.classList.add('active');
     });
 
     settingsBtn.addEventListener('mouseenter', () => swapSVG(settingsSVG, 'settings-solid'));
     settingsBtn.addEventListener('mouseleave', () => swapSVG(settingsSVG, 'settings'));
     settingsBtn.addEventListener('click', () => {
+        directoryArea.classList.remove('active');
         editorArea.classList.remove('active');
         settingsArea.classList.add('active');
     });
 
     recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
     recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
+    recordBtn.addEventListener('click', () => {
+        directoryArea.classList.remove('active');
+        settingsArea.classList.remove('active');
+        editorArea.classList.add('active');
+    });
 
     navExpander.addEventListener('click', () => {
         navBar.classList.toggle('active');
@@ -126,7 +134,6 @@ function editorAreaInit() {
 
     // get the timeline element and initialize timeline state
     const timeline = document.querySelector('#timeline-marker');
-    const timelineBox = timeline.getBoundingClientRect();
     const timelineInput = document.querySelector('#timeline-slider');
 
     // wait for the video meta data to load 
@@ -168,6 +175,8 @@ function editorAreaInit() {
 
             // change the video time based on the click location of the timeline
             timeline.addEventListener('click', (pointer) => {
+                const timelineBox = timeline.getBoundingClientRect();
+
                 const newTime = (timelineState.getDuration() * getPercentage(pointer, timelineBox)) + timelineState.getStartTime();
 
                 video.currentTime = newTime;
@@ -179,6 +188,7 @@ function editorAreaInit() {
 
             // "zoom" in and out of the timeline with the scroll wheel
             timeline.addEventListener('wheel', (pointer) => {
+                const timelineBox = timeline.getBoundingClientRect();
                 // get the timeline's start time, end time, and content box
                 const startTime = timelineState.getStartTime();
                 const endTime = timelineState.getEndTime();

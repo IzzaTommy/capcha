@@ -8,7 +8,7 @@ function createWindow() {
         width: 1920,
         height: 1080,
         // frame: false,
-        // titleBarStyle: 'hidden',
+        titleBarStyle: 'hidden',
         // titleBarOverlay: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),

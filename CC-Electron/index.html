@@ -40,7 +40,7 @@
                     <h1>CapCraft</h1>
                 </div>
 
-                <hr class="divider">
+                <hr>
 
                 <button id="folder" class="nav-bar-btn">
                     <svg>
@@ -74,208 +74,348 @@
         </div>
 
         <div id="content-panel">
-            <div id="editor-section" class="content-section">
-                <h2>Editor</h2>
+            <div id="directory-section" class="content-panel-cl1 active">
+                <h2>Directory</h2>
 
-                <hr class="divider">
+                <hr>
 
-                <div id="video-container">
-                    <video id="video-player">
-                        <source src="assets/example-video-2.mp4" type="video/mp4">
-                    </video>
-
-                    <div id="playback-controller">
-                        <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
-
-                        <div id="playback-bar">
-                            <button id="play-pause" class="pb-btn">
+                <div id="directory-container" class="content-panel-cl2">
+                    <div id="captures-carousel-container" class="content-panel-cl3">
+                        <h3>Captures</h3>
+                        
+                        <div id="captures" class="directory-carousel">
+                            <div class="carousel-left" >
                                 <svg>
-                                    <use href="assets/svg/play-arrow.svg#play-arrow"></use>
+                                    <use href="assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
-                            </button>
-
-                            <button id="volume" class="pb-btn">
-                                <svg>
-                                    <use href="assets/svg/volume-down.svg#volume-down"></use>
-                                </svg>
-                            </button>
-
-                            <input id="volume-slider" class="pb-input" type="range" min="0" max="1" value="0" step="0.01">
-
-                            <div id="time">
-                                <span id="current-time" class="time-span">88:88</span>
-                                <span id="total-time" class="time-span">/88:88</span>
                             </div>
 
-                            <input id="speed-slider" class="pb-input" type="range" min="-2" max="4" value="1" step="1">
+                            <div class="gallery">
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
 
-                            <button id="speed" class="pb-btn">
-                                <span id="current-speed">1</span>
-                                <span>X</span>
-                            </button>
-                            
-                            <button id="fullscreen" class="pb-btn">
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-right">
                                 <svg>
-                                    <use href="assets/svg/fullscreen.svg#fullscreen"></use>
+                                    <use href="assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
-                            </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="timeline-container">
-                    <svg id="timeline-marker" viewBox="0 0 1200 60"></svg>
-                    <input id="timeline-slider" type="range" min="0" max="100" value="0" step="0.01">
+                    <div id="clips-carousel-container" class="content-panel-cl3">
+                        <h3>Clips</h3>
+                        
+                        <div id="clips" class="directory-carousel">
+                            <div class="carousel-left" >
+                                <svg>
+                                    <use href="assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
+                                </svg>
+                            </div>
+
+                            <div class="gallery">
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+
+                                <div class="video-preview">
+                                    <img src="assets/example-thumbnail.png" alt="">
+                                    <h4>VALORANT - 4 hours ago</h4>
+                                    <p>VALORANT_FULL_1829183723_NEON</p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-right">
+                                <svg>
+                                    <use href="assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="settings-section" class="content-section">
-                <h2>Settings</h2>
+            <div id="editor-section" class="content-panel-cl1">
+                <h2>Editor</h2>
 
-                <hr class="divider">
+                <hr>
 
-                <div id="files-menu" class="settings-menu">
-                    <h3>Files</h3>
+                <div id="editor-container" class="content-panel-cl2">
+                    <div id="video-container">
+                        <video id="video-player">
+                            <source src="assets/example-video-2.mp4" type="video/mp4">
+                        </video>
 
-                    <div id="save" class="setting-text">
-                        <h4>Video Save Location</h4>
+                        <div id="playback-controller">
+                            <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
 
-                        <div>
-                            <svg>
-                                <use href="assets/svg/folder-open-solid.svg#folder-open-solid"></use>
-                            </svg>
+                            <div id="playback-bar">
+                                <button id="play-pause" class="pb-btn">
+                                    <svg>
+                                        <use href="assets/svg/play-arrow.svg#play-arrow"></use>
+                                    </svg>
+                                </button>
 
-                            <input type="text">
+                                <button id="volume" class="pb-btn">
+                                    <svg>
+                                        <use href="assets/svg/volume-down.svg#volume-down"></use>
+                                    </svg>
+                                </button>
+
+                                <input id="volume-slider" class="pb-input" type="range" min="0" max="1" value="0" step="0.01">
+
+                                <div id="time">
+                                    <span id="current-time" class="time-span">88:88</span>
+                                    <span id="total-time" class="time-span">/88:88</span>
+                                </div>
+
+                                <input id="speed-slider" class="pb-input" type="range" min="-2" max="4" value="1" step="1">
+
+                                <button id="speed" class="pb-btn">
+                                    <span id="current-speed">1</span>
+                                    <span>X</span>
+                                </button>
+                                
+                                <button id="fullscreen" class="pb-btn">
+                                    <svg>
+                                        <use href="assets/svg/fullscreen.svg#fullscreen"></use>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-
-                        <p>Your videos and configuration file will be saved in this location.</p>
                     </div>
 
-                    <div id="storage" class="setting-select">
-                        <h4>Storage Limit</h4>
-
-                        <div>
-                            <svg>
-                                <use href="assets/svg/storage.svg#storage"></use>
-                            </svg>
-
-                            <select>
-                                <option>5 GB</option>
-                                <option>10 GB</option>
-                                <option>20 GB</option>
-                                <option>50 GB</option>
-                                <option>100 GB</option>
-                                <option>200 GB</option>
-                                <option>500 GB</option>
-                                <option>No Limit</option>
-                            </select>
-                        </div>
-
-                        <p>When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
-                    </div>
-
-                    <div id="extension" class="setting-select">
-                        <h4>File Extension</h4>
-
-                        <div>
-                            <svg>
-                                <use href="assets/svg/draft.svg#draft"></use>
-                            </svg>
-
-                            <select>
-                                <option>.mp4</option>
-                                <option>.mkv</option>
-                                <option>.avi</option>
-                            </select>
-                        </div>
-
-                        <p>Your videos will be saved with this extension.</p>
-                    </div>
-
-                    <div id="encoder" class="setting-select">
-                        <h4>Encoder</h4>
-
-                        <div>
-                            <svg>
-                                <use href="assets/svg/compress.svg#compress"></use>
-                            </svg>
-
-                            <select>
-                                <option>nvenc</option>
-                                <option>jim_nvenc</option>
-                                <option>h.264</option>
-                            </select>
-                        </div>
-
-                        <p>Something something CPU vs GPU...</p>
+                    <div id="timeline-container">
+                        <svg id="timeline-marker" viewBox="0 0 1200 60"></svg>
+                        <input id="timeline-slider" type="range" min="0" max="100" value="0" step="0.01">
                     </div>
                 </div>
-                
-                <div id="video-menu" class="settings-menu">
-                    <h3>Video</h3>
+            </div>
 
-                    <div id="resolution">
-                        <div id="resolution-width" class="setting-text">
-                            <h4>Width</h4>
+            <div id="settings-section" class="content-panel-cl1">
+                <h2>Settings</h2>
 
-                            <div>
+                <hr>
+
+                <div id="settings-container" class="content-panel-cl2">
+                    <div id="files-settings-container" class="content-panel-cl3">
+                        <h3>Files</h3>
+
+                        <div id="save" class="setting">
+                            <h4>Video Save Location</h4>
+
+                            <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/width.svg#width"></use>
+                                    <use href="assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
 
                                 <input type="text">
                             </div>
-                        </div>   
-                        <div id="resolution-height" class="setting-text">
-                            <h4>Height</h4>
 
-                            <div>
+                            <p>Your videos and configuration file will be saved in this location.</p>
+                        </div>
+
+                        <div id="storage" class="setting">
+                            <h4>Storage Limit</h4>
+
+                            <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/height.svg#height"></use>
+                                    <use href="assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <input type="text">
+                                <select>
+                                    <option>5 GB</option>
+                                    <option>10 GB</option>
+                                    <option>20 GB</option>
+                                    <option>50 GB</option>
+                                    <option>100 GB</option>
+                                    <option>200 GB</option>
+                                    <option>500 GB</option>
+                                    <option>No Limit</option>
+                                </select>
                             </div>
+
+                            <p>When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
+                        </div>
+
+                        <div id="extension" class="setting">
+                            <h4>File Extension</h4>
+
+                            <div class="pill">
+                                <svg>
+                                    <use href="assets/svg/draft.svg#draft"></use>
+                                </svg>
+
+                                <select>
+                                    <option>.mp4</option>
+                                    <option>.mkv</option>
+                                    <option>.avi</option>
+                                </select>
+                            </div>
+
+                            <p>Your videos will be saved with this extension.</p>
+                        </div>
+
+                        <div id="encoder" class="setting">
+                            <h4>Encoder</h4>
+
+                            <div class="pill">
+                                <svg>
+                                    <use href="assets/svg/compress.svg#compress"></use>
+                                </svg>
+
+                                <select>
+                                    <option>nvenc</option>
+                                    <option>jim_nvenc</option>
+                                    <option>h.264</option>
+                                </select>
+                            </div>
+
+                            <p>Something something CPU vs GPU...</p>
                         </div>
                     </div>
+                    
+                    <div id="video-settings-container" class="content-panel-cl3">
+                        <h3>Video</h3>
 
-                    <div id="rates">
-                        <div id="framerate" class="setting-select">
-                            <h4>Framerate</h4>
+                        <div id="resolution" class="settings-group">
+                            <div id="resolution-width" class="setting">
+                                <h4>Width</h4>
 
-                            <div>
-                                <svg>
-                                    <use href="assets/svg/autofps-select.svg#autofps-select"></use>
-                                </svg>
+                                <div class="pill">
+                                    <svg>
+                                        <use href="assets/svg/width.svg#width"></use>
+                                    </svg>
 
-                                <select>
-                                    <option>10 fps</option>
-                                    <option>20 fps</option>
-                                    <option>24 fps</option>
-                                    <option>30 fps</option>
-                                    <option>48 fps</option>
-                                    <option>60 fps</option>
-                                </select>
+                                    <input type="text">
+                                </div>
+                            </div>   
+                            <div id="resolution-height" class="setting">
+                                <h4>Height</h4>
+
+                                <div class="pill">
+                                    <svg>
+                                        <use href="assets/svg/height.svg#height"></use>
+                                    </svg>
+
+                                    <input type="text">
+                                </div>
                             </div>
                         </div>
-                        <div id="bitrate" class="setting-select">
-                            <h4>Bitrate</h4>
 
-                            <div>
-                                <svg>
-                                    <use href="assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
-                                </svg>
+                        <div id="rates" class="settings-group">
+                            <div id="framerate" class="setting">
+                                <h4>Framerate</h4>
 
-                                <select>
-                                    <option>3 Mbps</option>
-                                    <option>5 Mbps</option>
-                                    <option>10 Mbps</option>
-                                    <option>15 Mbps</option>
-                                    <option>20 Mbps</option>
-                                    <option>30 Mbps</option>
-                                    <option>50 Mbps</option>
-                                    <option>100 Mbps</option>
-                                </select>
+                                <div class="pill">
+                                    <svg>
+                                        <use href="assets/svg/autofps-select.svg#autofps-select"></use>
+                                    </svg>
+
+                                    <select>
+                                        <option>10 fps</option>
+                                        <option>20 fps</option>
+                                        <option>24 fps</option>
+                                        <option>30 fps</option>
+                                        <option>48 fps</option>
+                                        <option>60 fps</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="bitrate" class="setting">
+                                <h4>Bitrate</h4>
+
+                                <div class="pill">
+                                    <svg>
+                                        <use href="assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
+                                    </svg>
+
+                                    <select>
+                                        <option>3 Mbps</option>
+                                        <option>5 Mbps</option>
+                                        <option>10 Mbps</option>
+                                        <option>15 Mbps</option>
+                                        <option>20 Mbps</option>
+                                        <option>30 Mbps</option>
+                                        <option>50 Mbps</option>
+                                        <option>100 Mbps</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

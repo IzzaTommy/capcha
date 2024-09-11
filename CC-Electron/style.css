@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "Lexend";
-    src: url(assets/font/Lexend/Lexend-VariableFont_wght.ttf);
+    src: url("assets/font/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
 * {
@@ -41,77 +41,100 @@
     --acc-sh1: #00a9ff;
 }
 
+
+
 :root {
     --def-bradius: 10px;
     --def-hr-height: 1px;
+    
+
+
+
+
 
     /* ==== tb -> Title Bar ==== */
     --tb-btn-hpadding: 15px;
     --tb-btn-vpadding: 7.5px;
+
     --tb-btn-svg-length: 10px;
 
     /* ==== cla -> Client Area ==== */
     --cla-hgap: 12px;
 
     /* ==== nb -> Nav(igation) Bar ==== */
-    /* ---- logo -> logo ---- */
-    --logo-hgap: 20px;
-    --logo-margin: 10px;
+    --nb-vgap: 10px;
+    --nb-padding: 10px;
 
-    --logo-h1-fsize: 28px;
-    --logo-h1-fweight: 600;
+    --nb-logo-hgap: 20px;
 
-    --logo-svg-length: 60px;
+    --nb-logo-svg-length: 60px;
 
-    --nb-hr-lmargin: calc(var(--logo-margin) / 2);
-    --nb-hr-width: calc(100% - var(--logo-margin));
+    --nb-logo-h1-fsize: 28px;
+    --nb-logo-h1-fweight: 600;
+
+    --nb-hr-lmargin: calc(-1 * var(--nb-padding) / 2);
+    --nb-hr-width: calc(100% + var(--nb-padding));
 
     --nb-btn-bradius: var(--def-bradius);
     --nb-btn-hgap: 40px;
-    --nb-btn-hmargin: calc(((var(--logo-svg-length) - var(--nb-btn-svg-length)) / 2) + var(--logo-margin) - var(--nb-btn-padding));
-    --nb-btn-vmargin: 10px;
     --nb-btn-padding: 10px;
+    --nb-btn-hmargin: calc((var(--nb-logo-svg-length) - var(--nb-btn-svg-length) - 2 * var(--nb-btn-padding)) / 2);
 
     --nb-btn-span-fsize: 20px;
     --nb-btn-span-fweight: 400;
 
     --nb-btn-svg-length: 30px;
 
-    /* ==== ne -> Nav(igation) Expander ==== */
-    --ne-bradius: var(--def-bradius);
+    /* ==== np -> Nav(igation) Panel ==== */
+    --np-bradius: var(--def-bradius);
 
+    /* ==== ne -> Nav(igation) Expander ==== */
     --ne-svg-length: 15px;
 
     /* ==== ca -> content panel ==== */
     --cp-bradius: var(--def-bradius);
 
-    /* ==== xs -> X Area (Settings Area, Editor Area, etc.) ==== */
-    --xs-h2-hmargin: calc(var(--logo-margin) + var(--ne-svg-length));
-    --xs-h2-vmargin: calc(var(--logo-margin));
-    --xs-h2-fsize: 60px;
-    --xs-h2-fweight: 600;
+    --cl1-vgap: var(--nb-vgap);
+    --cl1-hpadding: calc(var(--nb-padding) + var(--ne-svg-length));
+    --cl1-vpadding: var(--nb-padding);
 
-    --xs-hr-lmargin: calc(var(--ne-svg-length) + (var(--logo-margin) / 2));
-    --xs-hr-width: calc(100% - var(--xs-h2-hmargin));
+    --cl1-h2-fsize: 60px;
+    --cl1-h2-fweight: 600;
+
+    --cl1-hr-lmargin: var(--nb-hr-lmargin);
+    --cl1-hr-width: calc(100% + var(--cl1-hpadding));
+
+    --cl2-bradius: var(--def-bradius);
+    --cl2-padding: 20px;
+    --cl2-vgap: 30px;
+
+    --cl3-h3-fsize: 40px;
+    --cl3-h3-fweight: 500;
+    --cl3-vgap: 30px;
+
+    --stg-hgap: 30px;
+
+    --st-vgap: 5px;
+    --h4-fsize: 17px;
+    --h4-fweight: 350;
+    --p-fsize: 11px;
+    --p-fweight: 300;
 
     /* ---- vc -> Video Container ---- */
-    --vc-vmargin: var(--xm-vmargin);
-    --vc-width: calc(var(--vp-width) + 2 * var(--vp-hpadding));
+    --vc-bradius: var(--def-bradius);
 
     /* ---- vp -> Video Player ---- */
-    --vp-bradius: var(--def-bradius);
     --vp-hpadding: 100px;
     --vp-width: 1000px;
 
     /* ---- ps -> Playback Slider ---- */
     --ps-hmargin: 6px;
-    --ps-width: calc((var(--vp-hpadding) * 2) + var(--vp-width));
+    --ps-width: calc(var(--vp-width) + 2 * var(--vp-hpadding));
 
     --ps-thumb-height: 3px;
     --ps-thumb-hover-height: 8px;
 
     /* ---- pb -> Playback Bar ---- */
-    --pb-bradius: var(--vp-bradius);
 
     --pb-btn-bradius: 5px;
     --pb-btn-margin: 3px;
@@ -125,15 +148,13 @@
 
     --pb-btn-svg-length: 40px;
 
-    --pb-input-height: var(--pb-input-thumb-height);
-
     --pb-input-thumb-height: 16px;
-    --pb-input-thumb-tmargin: calc(((var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2) * -1);
+    --pb-input-thumb-tmargin: calc(-1 * (var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2);
 
     --pb-input-track-height: 4px;
 
     /* ---- vs -> Volume Slider ---- */
-    --vs-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-input-height)) / 2);
+    --vs-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-input-thumb-height)) / 2);
     --vs-rmargin: var(--vs-vpadding);
     --vs-width: 100px;
 
@@ -142,47 +163,18 @@
 
     /* ---- ss -> Speed Slider ---- */
     --ss-thumb-bradius: calc(var(--ss-thumb-width) / 2);
-    --ss-thumb-height: var(--pb-input-thumb-height);
     --ss-thumb-width: 4px;
 
     --ss-vpadding: var(--vs-vpadding);
     --ss-width: 150px;
 
     /* ---- time -> time ---- */
-    --time-margin: var(--pb-btn-margin);
-
     --time-span-hpadding: var(--time-span-vpadding);
     --time-span-vpadding: calc((var(--pb-btn-svg-length) - var(--time-span-fsize)) / 2);
     --time-span-fsize: 15px;
     --time-span-fweight: 400;
 
     --time-span1-width: 5ch;
-
-    /* ---- xm -> X Menu (Files Menu, Video Menu, etc.) ---- */
-    --xm-hmargin: var(--xs-h2-hmargin);
-    --xm-vmargin: calc(var(--nb-btn-padding) + var(--nb-btn-vmargin));
-
-    --xm-h3-bmargin: 10px;
-    --xm-h3-fsize: 40px;
-    --xm-h3-fweight: 500;
-
-    /* ---- xst -> X Settings (Save Settings, Storage Settings, etc.) ---- */
-    --xst-hgap: 30px;
-    --xst-vmargin: var(--xm-h3-bmargin);
-
-    --xst-h4-bmargin: var(--xm-h3-bmargin);
-    --xst-h4-fsize: 17px;
-    --xst-h4-fweight: 350;
-
-    --xst-div-bradius: var(--def-bradius);
-
-    --xst-div-input-bradius: var(--def-bradius);
-
-    --xst-div-p-fsize: 11px;
-    --xst-div-p-fweight: 300;
-
-    --xst-div-svg-length: 25px;
-    --xst-div-svg-margin: 5px;
 
     /* ---- tc -> Timeline Container ---- */
     --tc-bradius: var(--def-bradius);
@@ -191,8 +183,6 @@
 
     /* ---- tl -> Timeline ---- */
     --tl-swidth: 1px;
-    --tl-bmargin: 20px;
-
     --tl-text-fsize: 12px;
     --tl-text-fweight: 10;
 
@@ -204,10 +194,36 @@
     --tls-thumb-height: calc(-2 * var(--tls-top) + var(--tc-height));
     --tls-thumb-width: 4px;
 
+    --pl-bradius: var(--def-bradius);
+    --pl-bwidth: 1px;
+
+    --pl-svg-length: 25px;
+    --pl-svg-margin: 5px;
+
+    --dc-bradius: var(--def-bradius);
+
+    --cs-svg-length: 15px;
+
+    --gl-vpadding: 10px;
+    --gl-hmargin: 10px;
+    --gl-hgap: calc((100% - 4 * (var(--vpv-img-width) + 2 * var(--vpv-bwidth))) / 3);
+
+    --vpv-bradius: var(--def-bradius);
+    --vpv-bwidth: 1px;
+    --vpv-vgap: 5px;
+
+    --vpv-img-width: 340px;
+
+    --sb-length: 20px;
+    --sb-thumb-bwidth: calc((var(--sb-length) - 6px) / 2);
+    --sb-thumb-bradius: calc(var(--sb-length) / 2);
+
+    --cl2-sb-track-margin: calc(var(--cl2-padding) - var(--sb-thumb-bwidth));
+    --gl-sb-track-margin: calc(-1 * var(--sb-thumb-bwidth));
+
     height: 100%;
 }
 
-/* ========== BODY ========== */
 body {
     display: flex;
     flex-flow: column nowrap;
@@ -217,7 +233,6 @@ body {
     background-color: var(--pmc-sh3);
 }
 
-/* ========== TITLE BAR ========== */
 #title-bar {
     display: flex;
     flex: 0 0 fit-content;
@@ -231,6 +246,7 @@ body {
 .title-bar-btn {
     border: none;
     flex: 0 0 fit-content;
+    margin: 0;
     padding: var(--tb-btn-vpadding) var(--tb-btn-hpadding);
 
     background-color: transparent;
@@ -254,48 +270,46 @@ body {
     fill: var(--cpc-sh2);
 }
 
-/* ========== CLIENT AREA ========== */
 #client-area {
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
     gap: var(--cla-hgap);
+
+    overflow: hidden; /* for vertical scroll */
 }
 
-/* ========== NAV(IGATION) AREA ========== */
 #nav-panel {
+    border-radius: 0 var(--np-bradius) 0 0;
+    overflow: hidden;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background-color: transparent;
-}
-
-/* ========== NAV(IGATION) BAR ========== */
-#nav-bar {
-    align-items: stretch;
-    display: flex;
-    flex: 0 0 fit-content;
-    flex-flow: column nowrap;
-
     background-color: var(--pmc-sh7);
 }
 
-/* ---------- logo ---------- */
+#nav-bar {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--nb-vgap);
+    padding: var(--nb-padding);
+}
+
 #logo {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--logo-hgap);
-    margin: var(--logo-margin);
+    gap: var(--nb-logo-hgap);
 }
 
 #logo > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--logo-svg-length);
-    width: var(--logo-svg-length);
+    height: var(--nb-logo-svg-length);
+    width: var(--nb-logo-svg-length);
 
     fill: var(--cpc-sh1);
 }
@@ -306,8 +320,8 @@ body {
     margin: 0;
 
     color: var(--cpc-sh1);
-    font-size: var(--logo-h1-fsize);
-    font-weight: var(--logo-h1-fweight);
+    font-size: var(--nb-logo-h1-fsize);
+    font-weight: var(--nb-logo-h1-fweight);
     line-height: 1;
 }
 
@@ -315,16 +329,14 @@ body {
     display: block;
 }
 
-.divider {
+#nav-bar > hr {
     border: none;
     flex: 0 0 auto;
     height: var(--def-hr-height);
-    background-color: var(--cpc-sh1);
-}
-
-#nav-bar > hr {
     margin: 0 0 0 var(--nb-hr-lmargin);
     width: var(--nb-hr-width);
+
+    background-color: var(--cpc-sh1);
 }
 
 .nav-bar-btn {
@@ -335,7 +347,7 @@ body {
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
     gap: var(--nb-btn-hgap);
-    margin: var(--nb-btn-vmargin) var(--nb-btn-hmargin);
+    margin: 0 var(--nb-btn-hmargin);
     padding: var(--nb-btn-padding);
 
     background-color: transparent;
@@ -368,15 +380,11 @@ body {
     display: block;
 }
 
-/* ========== NAV(IGATION) EXPANDER ========== */
 #nav-expander {
     align-items: center;
-    border-radius: 0 var(--ne-bradius) 0 0;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-
-    background-color: var(--pmc-sh7);
 }
 
 #nav-expander:hover {
@@ -392,52 +400,84 @@ body {
     fill: var(--cpc-sh1);
 }
 
-/* ========== content panel ========== */
-div#content-panel {
+#content-panel {
     border-radius: var(--cp-bradius) 0 0;
     flex: 1 1 fit-content;
 
     background-color: var(--pmc-sh4);
+    overflow: hidden; /* for vertical/horizontal scroll */
 }
 
-/* ========== X SECTION (SETTINGS SECTION, EDITOR SECTION, ETC.) ========== */
-.content-section {
+.content-panel-cl1 {
+    box-sizing: border-box; /* for vertical scroll */
     display: none;
+    flex: 1 1 fit-content;
     flex-flow: column nowrap;
+    gap: var(--cl1-vgap);
+    height: 100%; /* for vertical scroll */
+    padding: var(--cl1-vpadding) var(--cl1-hpadding);
 }
 
-.content-section.active {
+.content-panel-cl1.active {
     display: flex;
 }
 
-.content-section > h2 {
+.content-panel-cl1 > h2 {
     flex: 0 0 fit-content;
-    margin: var(--xs-h2-vmargin) var(--xs-h2-hmargin);
+    margin: 0;
 
     color: var(--cpc-sh1);
-    font-size: var(--xs-h2-fsize);
-    font-weight: var(--xs-h2-fweight);
+    font-size: var(--cl1-h2-fsize);
+    font-weight: var(--cl1-h2-fweight);
     line-height: 1;
 }
 
-.content-section > hr {
-    margin: 0 0 0 var(--xs-hr-lmargin);
-    width: var(--xs-hr-width);
+.content-panel-cl1 > hr {
+    border: none;
+    flex: 0 0 auto;
+    height: var(--def-hr-height);
+    margin: 0 0 0 var(--cl1-hr-lmargin);
+    width: var(--cl1-hr-width);
+
+    background-color: var(--cpc-sh1);
 }
 
-/* ========== VIDEO CONTAINER ========== */
+.content-panel-cl2 {
+    border-radius: var(--cl2-bradius);
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--cl2-vgap);
+    padding: var(--cl2-padding);
+
+    background-color: var(--pmc-sh5);
+    overflow-y: auto; /* for vertical scroll */
+}
+
+#editor-container {
+    align-items: center;
+}
+
+.content-panel-cl3 > h3 {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--cl3-h3-fsize);
+    font-weight: var(--cl3-h3-fweight);
+    line-height: 1;
+}
+
 #video-container {
     position: relative;
+    border-radius: var(--vc-bradius);
+    overflow: hidden;
 
     flex: 0 0 fit-content;
-    width: var(--vc-width);
-    margin: var(--vc-vmargin) auto;
 }
 
-/* ---------- video player ---------- */
 #video-player {
     display: block;
-    border-radius: var(--vp-bradius);
     padding: 0 var(--vp-hpadding);
     width: var(--vp-width);
 
@@ -450,14 +490,13 @@ div#content-panel {
     padding: 0;
 }
 
-/* ---------- playback controller ---------- */
 #playback-controller {
     inset: auto 0 0;
     position: absolute;
 
     display: flex;
     flex-flow: column nowrap;
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 #video-player:hover + #playback-controller,
@@ -465,7 +504,6 @@ div#content-panel {
     visibility: visible;
 }
 
-/* ---------- playback slider ---------- */
 #playback-slider {
     flex: 0 0 fit-content;
     margin: 0 var(--ps-hmargin);
@@ -481,8 +519,7 @@ div#content-panel {
     height: var(--ps-thumb-height);
     width: 0;
 
-    /* box-shadow is longer than needed to make sure it covers the track */
-    box-shadow: calc(var(--ps-width) * -1) 0 0 var(--ps-width) var(--acc-sh1);
+    box-shadow: calc(-1 * var(--ps-width)) 0 0 var(--ps-width) var(--acc-sh1);
 
     -webkit-appearance: none;
 }
@@ -497,13 +534,11 @@ div#content-panel {
     -webkit-appearance: none;
 }
 
-/* ---------- playback bar ---------- */
 #playback-bar {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    border-radius: 0 0 var(--pb-bradius) var(--pb-bradius);
 
     background: linear-gradient(to top, var(--scc-tp1), transparent);
 }
@@ -512,8 +547,8 @@ div#content-panel {
     border: none;
     border-radius: var(--pb-btn-bradius);
     flex: 0 0 fit-content;
-    padding: 0;
     margin: var(--pb-btn-margin);
+    padding: 0;
 
     background-color: transparent;
 }
@@ -523,6 +558,7 @@ div#content-panel {
 }
 
 #speed {
+    justify-content: end;
     margin-left: 0;
 }
 
@@ -538,6 +574,7 @@ div#content-panel {
 
 .pb-btn > svg {
     display: block;
+    flex: 0 0 auto;
     height: var(--pb-btn-svg-length);
     width: var(--pb-btn-svg-length);
 
@@ -549,6 +586,8 @@ div#content-panel {
 }
 
 #speed > span {
+    flex: 0 0 fit-content;
+
     color: var(--cpc-sh1);
     font-size: var(--pb-btn-span-fsize);
     font-weight: var(--pb-btn-span-fweight);
@@ -556,15 +595,11 @@ div#content-panel {
 }
 
 #current-speed {
-    flex: 0 0 auto;
     padding: var(--pb-btn-span-vpadding) 0 var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding);
     width: var(--pb-btn-span1-width);
-
-    text-align: right;
 }
 
 #speed > span:nth-child(2) {
-    flex: 0 0 auto;
     padding: var(--pb-btn-span-vpadding) var(--pb-btn-span-hpadding) var(--pb-btn-span-vpadding) 0;
 }
 
@@ -573,14 +608,13 @@ div#content-panel {
 }
 
 .pb-input {
-    height: var(--pb-input-height);
     flex: 0 0 fit-content;
     overflow: hidden;
 
-    cursor: pointer;
-    -webkit-appearance: none;
-
     background-color: transparent;
+    cursor: pointer;
+    
+    -webkit-appearance: none;
 }
 
 .pb-input::-webkit-slider-thumb {
@@ -598,7 +632,6 @@ div#content-panel {
     -webkit-appearance: none;
 }
 
-/* ---------- volume slider ----------*/
 #volume-slider {
     display: none;
     padding: var(--vs-vpadding) 0;
@@ -608,14 +641,13 @@ div#content-panel {
 
 #volume:hover + #volume-slider,
 #volume-slider:hover {
-    display: inline-block;
+    display: block;
 }
 
 #volume-slider::-webkit-slider-thumb {
     border-radius: var(--vs-thumb-bradius);
     width: var(--vs-thumb-width);
 
-    /* box-shadow is longer than needed to make sure it covers the track */
     box-shadow: calc((var(--vs-width) * -1) - var(--vs-thumb-width)) 0 0 var(--vs-width) var(--acc-sh1);
     clip-path: polygon(
         100% 0%,
@@ -633,7 +665,6 @@ div#content-panel {
     background-color: var(--cpc-sh1);
 }
 
-/* ---------- speed slider ----------*/
 #speed-slider {
     padding: var(--ss-vpadding) 0;
     margin: 0 0 0 auto;
@@ -649,7 +680,6 @@ div#content-panel {
 
 #speed-slider::-webkit-slider-thumb {
     border-radius: var(--ss-thumb-bradius);
-    height: var(--ss-thumb-height);
     width: var(--ss-thumb-width);
 }
 
@@ -664,12 +694,13 @@ div#content-panel {
     background-size: 16.666% 50%;
 }
 
-/* ---------- time ----------*/
 #time {
-    margin: var(--time-margin);
+    justify-content: end;
 }
 
 .time-span {
+    flex: 0 0 fit-content;
+
     color: var(--cpc-sh1);
     font-size: var(--time-span-fsize);
     font-weight: var(--time-span-fweight);
@@ -686,14 +717,12 @@ div#content-panel {
     padding: var(--time-span-vpadding) var(--time-span-hpadding) var(--time-span-vpadding) 0;
 }
 
-/* ---------- timeline ---------- */
 #timeline-container {
     position: relative;
 
-    border-radius: var(--def-bradius);
+    border-radius: var(--tc-bradius);
     height: var(--tc-height);
     width: var(--tc-width);
-    margin: 0 auto var(--tl-bmargin);
 
     background-color: var(--pmc-sh7);
 }
@@ -741,173 +770,189 @@ div#content-panel {
     -webkit-appearance: none;
 }
 
-/* ========== X MENU (FILES MENU, VIDEO MENU, ETC.) ========== */
-.settings-menu {
+
+
+
+.content-panel-cl3  {
     align-items: start;
     display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: column nowrap;
-    margin: var(--xm-vmargin) var(--xm-hmargin);
-}
-
-.settings-menu > h3 {
     flex: 0 0 fit-content;
-    margin: 0 0 var(--xm-h3-bmargin);
-
-    color: var(--cpc-sh1);
-    font-size: var(--xm-h3-fsize);
-    font-weight: var(--xm-h3-fweight);
-    line-height: 1;
+    flex-flow: column nowrap;
+    gap: var(--cl3-vgap);
 }
 
-/* ---------- x settings (save settings, storage settings, etc.) ---------- */
-div#video-menu > div {
+.settings-group {
     display: flex;
-    flex: 1 1 fit-content;
+    flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--xst-hgap);
+    gap: var(--stg-hgap);
 }
 
-.setting-text, .setting-select {
+.setting {
     align-items: start;
     display: flex;
-    flex: 1 1 fit-content;
+    flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    margin: var(--xst-vmargin) 0;
+    gap: var(--st-vgap);
 }
 
-.setting-text > h4, .setting-select > h4 {
-    flex: 0 0 fit-content;
-    margin: 0 0 var(--xst-h4-bmargin);
-
-    color: var(--cpc-sh1);
-    font-size: var(--xst-h4-fsize);
-    font-weight: var(--xst-h4-fweight);
-    line-height: 1;
-}
-
-.setting-text > div,
-.setting-select > div {
-    border: 1px solid var(--pmc-sh7);
-    border-radius: var(--xst-div-bradius);
-    display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: row nowrap;
-
-    background-color: var(--pmc-sh7);
-}
-
-.setting-text > div > svg,
-.setting-select > div > svg {
-    display: block;
-    flex: 0 0 auto;
-    height: var(--xst-div-svg-length);
-    width: var(--xst-div-svg-length);
-    margin: var(--xst-div-svg-margin);
-
-    fill: var(--cpc-sh1);
-}
-
-.setting-text > div > input,
-.setting-select > div > input {
-    border: none;
-    border-radius: 0 var(--xst-div-input-bradius) var(--xst-div-input-bradius) 0;
-    flex: 0 0 auto;
-    width: 40px; /****/
-
-    background-color: var(--pmc-sh2);
-    color: var(--cpc-sh1);
-}
-
-.setting-text > div > input:focus,
-.setting-select > div > input:focus {
-    outline: none;
-}
-
-.setting-text > div > input::-webkit-inner-spin-button,
-.setting-text > div > input::-webkit-outer-spin-button,
-.setting-select > div > input::-webkit-inner-spin-button,
-.setting-select > div > input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-
-.setting-select > div > select {
-    border: none;
-    border-radius: 0 var(--xst-div-input-bradius) var(--xst-div-input-bradius) 0;
-    flex: 0 0 fit-content;
-
-    background-color: var(--pmc-sh2);
-    color: var(--cpc-sh1);
-}
-
-.setting-select > div > select:focus {
-    outline: none;
-}
-
-.setting-select > p,
-.setting-text > p {
+.setting > h4 {
     flex: 0 0 fit-content;
     margin: 0;
 
     color: var(--cpc-sh1);
-    font-size: var(--xst-div-p-fsize);
-    font-weight: var(--xst-div-p-fweight);
+    font-size: var(--h4-fsize);
+    font-weight: var(--h4-fweight);
+    line-height: 1;
+}
+
+.setting > p {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--p-fsize);
+    font-weight: var(--p-fweight);
 }
 
 
 
+.pill {
+    border: var(--pl-bwidth) solid var(--pmc-sh7);
+    border-radius: var(--pl-bradius);
 
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
 
-
-
-/* :root {
-    --sb-height: 84px;
-    --sb-left: -6px;
-    --sb-top: -12px;
-    --sb-width: 12px;
-    --sb-line-swidth: 1px;
+    background-color: var(--pmc-sh7);
+    overflow: hidden;
 }
 
-svg#scrubber, 
-svg#start-clip, 
-svg#end-clip {
-    inset: var(--sb-top) 0 0 var(--sb-left);
-    position: absolute;
+.pill > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--pl-svg-length);
+    width: var(--pl-svg-length);
+    margin: var(--pl-svg-margin);
 
-    height: var(--sb-height);
-    width: var(--sb-width);
-
+    fill: var(--cpc-sh1);
 }
 
-svg#scrubber {
-    fill: white;
-    stroke: white;
+.pill > input, .pill > select {
+    border: none;
+    flex: 0 0 auto;
+    width: 80px; /****/
 
-    transition: all 0.3s linear;
+    background-color: var(--pmc-sh2);
+    color: var(--cpc-sh1);
 }
 
-svg#start-clip,
-svg#end-clip {
-    stroke: yellow;
-    fill: yellow;
-
-    transition: all 0s linear;
-    visibility: hidden;
+.pill > input:focus, .pill > select:focus {
+    outline: none;
 }
 
-svg#start-clip.enabled,
-svg#end-clip.enabled {
-    visibility: visible;
-}
-
-svg#scrubber > line,
-svg#start-clip > line,
-svg#end-clip > line {
-    stroke-width: var(--sb-line-swidth);
-}
-
-svg#scrubber > polygon,
-svg#start-clip > polygon,
-svg#end-clip > polygon {
-    stroke-width: 0;
+/* .pill > input::-webkit-inner-spin-button,
+.pill > input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
 } */
+
+
+
+
+
+.directory-carousel {
+    border-radius: var(--dc-bradius);
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    
+    background-color: var(--pmc-sh7);
+    overflow: hidden;
+}
+
+.carousel-left, .carousel-right {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+.carousel-left:hover, .carousel-right:hover {
+    background-color: var(--cpc-sh1);
+}
+
+.carousel-left > svg, .carousel-right > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--cs-svg-length);
+    width: var(--cs-svg-length);
+
+    fill: var(--cpc-sh1);
+}
+
+.gallery {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--gl-hgap);
+    padding: var(--gl-vpadding) 0;
+    margin: 0 var(--gl-hmargin);
+
+    overflow-x: auto;
+}
+
+.video-preview {
+    border: var(--vpv-bwidth) solid var(--pmc-sh6);
+    border-radius: var(--vpv-bradius);
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: column nowrap;
+    gap: var(--vpv-vgap);
+
+    background-color: #5a5a5b;
+    overflow: hidden;
+}
+
+.video-preview > img {
+    width: var(--vpv-img-width);
+}
+
+.video-preview > h4 {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--h4-fsize);
+    font-weight: var(--h4-fweight);
+    line-height: 1;
+}
+
+.video-preview > p {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--p-fsize);
+    font-weight: var(--p-fweight);
+}
+
+::-webkit-scrollbar {
+    height: var(--sb-length);
+    width: var(--sb-length);
+}
+
+::-webkit-scrollbar-thumb {
+    border: var(--sb-thumb-bwidth) solid transparent;
+    border-radius: var(--sb-thumb-bradius);
+
+    background-clip: padding-box;
+    background-color: var(--cpc-sh2);
+}
+
+.content-panel-cl2::-webkit-scrollbar-track {
+    /* margin: var(--cl2-sb-track-margin); */
+}
+  
+.gallery::-webkit-scrollbar-track {
+    margin: var(--gl-sb-track-margin);
+}
