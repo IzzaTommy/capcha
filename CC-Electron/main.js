@@ -1,25 +1,131 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const WebSocket = require('ws');
-const path = require('path');
-const fs = require('fs');
+// const { app, BrowserWindow, ipcMain } = require('electron');
+// const WebSocket = require('ws');
+// const path = require('path');
+// const fs = require('fs');
+// const Store = require('electron-store');
 
+import { app, BrowserWindow, ipcMain } from 'electron';
+import WebSocket from 'ws';
+import path from 'path';
+import { promises as fs } from 'fs';
+import Store from 'electron-store';
+
+const __dirname = import.meta.dirname;
+const ws = new WebSocket('ws://localhost:4444');
+const store = new Store({
+    schema: {
+        appearance: {
+            type: 'object',
+            properties: {
+                theme: {
+                    type: 'string',
+                    enum: ['light', 'dark'],
+                    default: 'dark'
+                }
+            }
+        },
+        videoPlayer: {
+            type: 'object',
+            properties: {
+                volume: {
+                    type: 'number',
+                    minimum: 0,
+                    maximum: 1,
+                    default: 0.5
+                }
+            }
+        },
+        files: {
+            type: 'object',
+            properties: {
+                saveLocation: {
+                    type: 'string',
+                    default: 'videos'
+                },
+                storageLimit: {
+                    type: 'number',
+                    minimum: 0,
+                    maximum: 500,
+                    default: 100
+                },
+                fileExtension: {
+                    type: 'string',
+                    enum: ['.mp4', '.mkv', '.avi'],
+                    default: '.mp4'
+                },
+                encoder: {
+                    type: 'string',
+                    enum: ['nvenc', 'jim_nvenc', 'h.264'],
+                    default: 'jim_nvenc'
+                }
+            }
+        },
+        video: {
+            type: 'object',
+            properties: {
+                videoWidth: {
+                    type: 'number',
+                    minimum: 100,
+                    maximum: 2560,
+                    default: 2560
+                },
+                videoHeight: {
+                    type: 'number',
+                    minimum: 100,
+                    maximum: 1440,
+                    default: 1440
+                },
+                framerate: {
+                    type: 'number',
+                    minimum: 10,
+                    maximum: 60,
+                    default: 60
+                },
+                bitrate: {
+                    type: 'number',
+                    minimum: 3,
+                    maximum: 100,
+                    default: 30
+                }
+            }
+        }
+    }
+});
+
+let mainWindow;
+
+/* window function */
 function createWindow() {
-    const mainWindow = new BrowserWindow({
-        width: 1920,
-        height: 1080,
-        // frame: false,
-        titleBarStyle: 'hidden',
-        // titleBarOverlay: true,
+    mainWindow = new BrowserWindow({
+        minWidth: 1000,
+        minHeight: 800,
+        show: false,
+        icon: path.join(__dirname, 'diagrams', 'CapCraft Window Logo.png'),
+        frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
         }
     });
 
+    mainWindow.maximize();
+
     mainWindow.loadFile('index.html');
 
-    const ws = new WebSocket('ws://localhost:4444');
+    console.log(store.get('theme'));
+    console.log(store.get('volume'));
+    console.log(store.get('saveLocation'));
+    console.log(store.get('storageLimit'));
+    console.log(store.get('fileExtension'));
+    console.log(store.get('encoder'));
+    console.log(store.get('videoWidth'));
+    console.log(store.get('videoHeight'));
+    console.log(store.get('framerate'));
+    console.log(store.get('bitrate'));
+}
 
+/* web socket handler */
+function initWebSocket() {
     ws.on('open', () => {
         console.log('Connected to OBS WebSocket');
 
@@ -32,7 +138,7 @@ function createWindow() {
     });
 
     ws.on('message', (data) => {
-        message = JSON.parse(data);
+        const message = JSON.parse(data);
 
         console.log('--------------------------------');
 
@@ -70,7 +176,6 @@ function createWindow() {
         }
     });
 
-
     ws.on('close', (code, reason) => {
         console.log('--------------------------------');
         console.log('Disconnected from OBS WebSocket');
@@ -82,9 +187,13 @@ function createWindow() {
         console.log('--------------------------------');
         console.error('WebSocket error:', error);
     });
+}
 
-    ipcMain.on('ws-send', (event, requestType, requestData) => {
+/* ipc handler */
+function initIPC() {
+    ipcMain.on('ws-send', (_, requestType, requestData) => {
         console.log(`Sending ${requestType} request to OBS WebSocket with data:`, requestData);
+
         if (ws && ws.readyState === WebSocket.OPEN) {
             const requestMessage = {
                 'op': 6,
@@ -102,9 +211,7 @@ function createWindow() {
         }
     });
 
-
-
-    ipcMain.on('tb-send', (event, requestType) => {
+    ipcMain.on('tb-send', (_, requestType) => {
         switch (requestType) {
             case 'minimize':
                 mainWindow.minimize();
@@ -124,13 +231,19 @@ function createWindow() {
                 console.log('Title Bar Error.')
         }
     });
+
+    ipcMain.handle('get-videos', async (_, directory) => {
+        try {
+            const videoFiles = await getVideoFiles(directory);
+            return videoFiles;
+        } catch (error) {
+            console.error('Error getting video files:', error);
+            return [];
+        }
+    });
 }
 
-
-
-
-app.whenReady().then(createWindow);
-
+/* file system handler */
 function getVideoFiles(directory) {
     return new Promise((resolve, reject) => {
         fs.readdir(directory, (err, files) => {
@@ -156,15 +269,11 @@ function getVideoFiles(directory) {
     });
 }
 
-// IPC event to fetch videos and metadata
-ipcMain.handle('get-videos', async (event, directory) => {
-    try {
-        const videoFiles = await getVideoFiles(directory);
-        return videoFiles;
-    } catch (error) {
-        console.error('Error getting video files:', error);
-        return [];
-    }
+/* app functions */
+app.whenReady().then(() => {
+    createWindow();
+    initWebSocket();
+    initIPC();
 });
 
 app.on('window-all-closed', () => {

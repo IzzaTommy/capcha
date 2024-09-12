@@ -17,26 +17,20 @@ function init() {
 }
 
 function webSocketInit() {
-    // // API call to start recording
-    // document.getElementById('start').addEventListener('click', () => {
-    //     window.webSocketAPI.startRecord();
-    // });
+    document.getElementById('start').addEventListener('click', () => {
+        window.webSocketAPI.startRecord();
+    });
 
-    // // API call to stop recording
-    // document.getElementById('stop').addEventListener('click', () => {
-    //     window.webSocketAPI.stopRecord();
-    // });
-
-    // document.getElementById('test').addEventListener('click', () => {
-    //     console.log(window.videoAPI.getVideos('S:/League of Legends/Lowkey'));
-    // });
+    document.getElementById('stop').addEventListener('click', () => {
+        window.webSocketAPI.stopRecord();
+    });
 }
 
 function titleBarInit() {
     // get the title bar buttons
-    const minimizeBtn = document.querySelector('#minimize');
-    const maximizeBtn = document.querySelector('#maximize');
-    const closeBtn = document.querySelector('#close');
+    const minimizeBtn = document.querySelector('#minimize-trigger');
+    const maximizeBtn = document.querySelector('#maximize-trigger');
+    const closeBtn = document.querySelector('#close-trigger');
 
     // API calls for window manipulation
     minimizeBtn.addEventListener('click', () => window.titleBarAPI.minimize());
@@ -48,13 +42,13 @@ function navAreaInit() {
     // get the nav area buttons and expander
     const navBar = document.querySelector('#nav-bar');
     // get the folder button and svg
-    const folderBtn = document.querySelector('#folder');
-    const folderSVG = folderBtn.querySelector('svg > use');
+    const directoryBtn = document.querySelector('#directory-trigger');
+    const directorySVG = directoryBtn.querySelector('svg > use');
     // get the settings button and svg
-    const settingsBtn = document.querySelector('#settings');
+    const settingsBtn = document.querySelector('#settings-trigger');
     const settingsSVG = settingsBtn.querySelector('svg > use');
     // get the record button and svg
-    const recordBtn = document.querySelector('#record');
+    const recordBtn = document.querySelector('#record-trigger');
     const recordSVG = recordBtn.querySelector('svg > use');
     // get the nav expander and svg
     const navExpander = document.querySelector('#nav-expander');
@@ -65,9 +59,9 @@ function navAreaInit() {
     const directoryArea = document.getElementById('directory-section');
 
     // change the SVGs on hover
-    folderBtn.addEventListener('mouseenter', () => swapSVG(folderSVG, 'folder-solid'));
-    folderBtn.addEventListener('mouseleave', () => swapSVG(folderSVG, 'folder'));
-    folderBtn.addEventListener('click', () => {
+    directoryBtn.addEventListener('mouseenter', () => swapSVG(directorySVG, 'folder-solid'));
+    directoryBtn.addEventListener('mouseleave', () => swapSVG(directorySVG, 'folder'));
+    directoryBtn.addEventListener('click', () => {
         settingsArea.classList.remove('active');
         editorArea.classList.remove('active');
         directoryArea.classList.add('active');
@@ -113,23 +107,23 @@ function editorAreaInit() {
     const playbackInputBox = playbackInput.getBoundingClientRect();
 
     // play/pause button
-    const playPauseBtn = document.querySelector('#play-pause');
+    const playPauseBtn = document.querySelector('#play-pause-control');
     const playPauseSVG = playPauseBtn.querySelector('svg > use');
     // volume button
-    const volumeBtn = document.querySelector('#volume');
+    const volumeBtn = document.querySelector('#volume-control');
     const volumeSVG = volumeBtn.querySelector('svg > use');
     // volume slider
     const volumeInput = document.querySelector('#volume-slider');
     // video timer
     const timeSpan = document.querySelector('#current-time');
-    const durationSpan = document.querySelector('span#total-time');
+    const durationSpan = document.querySelector('#total-time');
     // speed slider
     const speedInput = document.querySelector('#speed-slider');
     // speed button
-    const speedBtn = document.querySelector('#speed');
+    const speedBtn = document.querySelector('#speed-control');
     const speedSpan = speedBtn.querySelector('#current-speed');
     // fullscreen button
-    const fullscreenBtn = document.querySelector('#fullscreen');
+    const fullscreenBtn = document.querySelector('#fullscreen-control');
     const fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
     // get the timeline element and initialize timeline state
