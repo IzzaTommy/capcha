@@ -138,14 +138,12 @@
 
     /* ==== vc -> Video Container ==== */
     --vc-bradius: var(--def-bradius);
-
-    /* ==== vp -> Video Player ==== */
-    --vp-hpadding: 100px;
-    --vp-width: 1000px;
+    --vc-height: 80%;
+    --vc-width: 80%;
 
     /* ==== ps -> Playback Slider ==== */
     --ps-hmargin: 6px;
-    --ps-width: calc(var(--vp-width) + 2 * var(--vp-hpadding));
+    --ps-width: var(--vc-width);
 
     --ps-thumb-height: 3px;
     --ps-thumb-hover-height: 8px;
@@ -195,7 +193,7 @@
     /* ==== tc -> Timeline Container ==== */
     --tc-bradius: var(--def-bradius);
     --tc-height: 60px;
-    --tc-width: calc(var(--vp-width) + (var(--vp-hpadding) * 2));
+    --tc-width: var(--vc-width);
 
     /* ==== tl -> Timeline ==== */
     --tl-swidth: 1px;
@@ -205,7 +203,6 @@
 
     /* ==== tls -> Timeline Slider ==== */
     --tls-top: -12px;
-    --tls-width: var(--tc-width);
 
     --tls-thumb-bradius: calc(var(--tls-thumb-width) / 2);
     --tls-thumb-height: calc(-2 * var(--tls-top) + var(--tc-height));
@@ -225,7 +222,8 @@
     --jm-svg-length: 15px;
 
     /* ==== gl -> Gallery ==== */
-    --gl-hgap: calc((100% - 4 * var(--vt-width)) / 3);
+    /* --gl-hgap: calc((100% - 4 * var(--vt-width)) / 3); */
+    --gl-hgap: 45px;
     --gl-hmargin: 10px;
     --gl-vpadding: 10px;
 
@@ -237,7 +235,7 @@
     /* ==== vt -> Video Thumbnail ==== */
     --vt-bradius: var(--def-bradius);
     --vt-height: calc((var(--vt-width) * 9) / 16);
-    --vt-width: 340px;
+    --vt-width: 311px;
 
     /* ==== vo -> Video Options ==== */
     --vo-hgap: 10px;
@@ -265,6 +263,10 @@
 
     background-clip: padding-box;
     background-color: var(--cpc-sh1);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
 }
 
 html {
@@ -540,23 +542,18 @@ body {
     position: relative;
 
     border-radius: var(--vc-bradius);
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--vc-height);
+    width: var(--vc-width);
 
+    background-color: black;
     overflow: hidden;
 }
 
 #video-player {
     display: block;
-    padding: 0 var(--vp-hpadding);
-    width: var(--vp-width);
-
-    background-color: black;
-}
-
-#video-container:fullscreen > #video-player {
     height: 100%;
     width: 100%;
-    padding: 0;
 }
 
 #playback-controller {
@@ -799,6 +796,8 @@ body {
 #timeline-marker {
     position: absolute;
 
+    width: 100%;
+
     fill: var(--cpc-sh5);
     stroke: var(--cpc-sh5);
     stroke-width: var(--tl-swidth);
@@ -816,7 +815,7 @@ body {
     top: var(--tls-top);
 
     margin: 0;
-    width: var(--tls-width);
+    width: 100%;
 
     background-color: transparent;
     pointer-events: none;
@@ -969,7 +968,7 @@ body {
 .video-preview {
     align-items: start;
     display: flex;
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
     flex-flow: column nowrap;
     gap: var(--vpv-vgap);
 

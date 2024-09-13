@@ -5,6 +5,8 @@ window.addEventListener('DOMContentLoaded', init);
 
 function init() {
     // initialize event listeners for each area
+    mediaQueryInit();
+    
     webSocketInit();
 
     titleBarInit();
@@ -16,14 +18,18 @@ function init() {
     editorAreaInit();
 }
 
-function webSocketInit() {
-    document.getElementById('start').addEventListener('click', () => {
-        window.webSocketAPI.startRecord();
-    });
+function mediaQueryInit() {
 
-    document.getElementById('stop').addEventListener('click', () => {
-        window.webSocketAPI.stopRecord();
-    });
+}
+
+function webSocketInit() {
+    // document.getElementById('#record-trigger').addEventListener('click', () => {
+    //     window.webSocketAPI.startRecord();
+    // });
+
+    // document.getElementById('stop').addEventListener('click', () => {
+    //     window.webSocketAPI.stopRecord();
+    // });
 }
 
 function titleBarInit() {
@@ -101,7 +107,7 @@ function editorAreaInit() {
 
     // video element
     const video = document.querySelector('#video-player');
-    
+
     // playback slider
     const playbackInput = document.querySelector('#playback-slider');
     const playbackInputBox = playbackInput.getBoundingClientRect();
@@ -137,10 +143,16 @@ function editorAreaInit() {
         initTimeline();
         initVideoContainer();
         initVideo();
-        initPlaybackInput();  
+        initPlaybackInput();
         initPlaybackBar();
         
         function initTimeline() {
+            window.addEventListener('resize', () => {
+                timeline.setAttribute('viewbox', `0 0 ${timeline.getBoundingClientRect().width} 60`);
+        
+                drawTicks();
+            });
+
             // update timeline slider range
             timelineInput.max = video.duration;
 
@@ -462,6 +474,7 @@ function editorAreaInit() {
             const interval = timelineState.getInterval();
             const subInterval = timelineState.getSubInterval();
             const subIntervalFactor = interval / subInterval;
+            const timelineBox = timeline.getBoundingClientRect();
 
             // get the expected number of ticks in the timeline
             const numTicks = ((endTime - (endTime % interval)) - (startTime - (startTime % interval))) / interval;
@@ -483,15 +496,15 @@ function editorAreaInit() {
                 if (x > -1) {
                     // generate the tick line
                     const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    tickLine.setAttribute('x1', x * 1200);
+                    tickLine.setAttribute('x1', x * timelineBox.width);
                     tickLine.setAttribute('y1', 10);
-                    tickLine.setAttribute('x2', x * 1200);
+                    tickLine.setAttribute('x2', x * timelineBox.width);
                     tickLine.setAttribute('y2', 50);
                     timeline.appendChild(tickLine);
 
                     // generate the time text
                     const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    tickText.setAttribute('x', x * 1200 + 5);
+                    tickText.setAttribute('x', x * timelineBox.width + 5);
                     tickText.setAttribute('y', 45);
                     tickText.textContent = `${Math.floor((interval * (i + firstTick)) / 60)}:${Math.floor((interval * (i + firstTick)) % 60) < 10 ? '0' : ''}${Math.floor((interval * (i + firstTick)) % 60)}`;
                     timeline.appendChild(tickText);
@@ -506,9 +519,9 @@ function editorAreaInit() {
                     if (((x2 * j) + x) > -1 && ((x2 * j) % x) != 0) {
                         // generate the sub tick line
                         const subTickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        subTickLine.setAttribute('x1', (x + x2 * j) * 1200);
+                        subTickLine.setAttribute('x1', (x + x2 * j) * timelineBox.width);
                         subTickLine.setAttribute('y1', 15);
-                        subTickLine.setAttribute('x2', (x + x2 * j) * 1200);
+                        subTickLine.setAttribute('x2', (x + x2 * j) * timelineBox.width);
                         subTickLine.setAttribute('y2', 30);
                         timeline.appendChild(subTickLine);
                     }

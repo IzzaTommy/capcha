@@ -97,8 +97,8 @@ let mainWindow;
 /* window function */
 function createWindow() {
     mainWindow = new BrowserWindow({
-        minWidth: 1000,
-        minHeight: 800,
+        minWidth: 1280,
+        minHeight: 900,
         show: false,
         icon: path.join(__dirname, 'diagrams', 'CapCraft Window Logo.png'),
         frame: false,
