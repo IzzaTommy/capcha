@@ -1,10 +1,4 @@
-// const { app, BrowserWindow, ipcMain } = require('electron');
-// const WebSocket = require('ws');
-// const path = require('path');
-// const fs = require('fs');
-// const Store = require('electron-store');
-
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import WebSocket from 'ws';
 import path from 'path';
 import { promises as fs } from 'fs';
@@ -13,81 +7,69 @@ import Store from 'electron-store';
 const __dirname = import.meta.dirname;
 const ws = new WebSocket('ws://localhost:4444');
 const store = new Store({
+    defaults: {
+        theme: 'dark',
+        
+        volume: 0.5,
+
+        saveLocation: 'videos',
+        storageLimit: 100,
+        fileExtension: '.mp4',
+        encoder: 'jim_nvenc',
+
+        resolutionWidth: 2560,
+        resolutionHeight: 1440,
+        framerate: 60,
+        bitrate: 30
+    },
     schema: {
-        appearance: {
-            type: 'object',
-            properties: {
-                theme: {
-                    type: 'string',
-                    enum: ['light', 'dark'],
-                    default: 'dark'
-                }
-            }
+        theme: {
+            type: 'string',
+            enum: ['light', 'dark'],
         },
-        videoPlayer: {
-            type: 'object',
-            properties: {
-                volume: {
-                    type: 'number',
-                    minimum: 0,
-                    maximum: 1,
-                    default: 0.5
-                }
-            }
+
+        volume: {
+            type: 'number',
+            minimum: 0,
+            maximum: 1,
         },
-        files: {
-            type: 'object',
-            properties: {
-                saveLocation: {
-                    type: 'string',
-                    default: 'videos'
-                },
-                storageLimit: {
-                    type: 'number',
-                    minimum: 0,
-                    maximum: 500,
-                    default: 100
-                },
-                fileExtension: {
-                    type: 'string',
-                    enum: ['.mp4', '.mkv', '.avi'],
-                    default: '.mp4'
-                },
-                encoder: {
-                    type: 'string',
-                    enum: ['nvenc', 'jim_nvenc', 'h.264'],
-                    default: 'jim_nvenc'
-                }
-            }
+
+        saveLocation: {
+            type: 'string',
         },
-        video: {
-            type: 'object',
-            properties: {
-                videoWidth: {
-                    type: 'number',
-                    minimum: 100,
-                    maximum: 2560,
-                    default: 2560
-                },
-                videoHeight: {
-                    type: 'number',
-                    minimum: 100,
-                    maximum: 1440,
-                    default: 1440
-                },
-                framerate: {
-                    type: 'number',
-                    minimum: 10,
-                    maximum: 60,
-                    default: 60
-                },
-                bitrate: {
-                    type: 'number',
-                    minimum: 3,
-                    maximum: 100,
-                    default: 30
-                }
-            }
+        storageLimit: {
+            type: 'number',
+            minimum: 0,
+            maximum: 500,
+        },
+        fileExtension: {
+            type: 'string',
+            enum: ['.mp4', '.mkv', '.avi'],
+        },
+        encoder: {
+            type: 'string',
+            enum: ['nvenc', 'jim_nvenc', 'h.264'],
+        },
+
+        resolutionWidth: {
+            type: 'number',
+            minimum: 100,
+            maximum: 2560,
+        },
+        resolutionHeight: {
+            type: 'number',
+            minimum: 100,
+            maximum: 1440,
+        },
+        framerate: {
+            type: 'number',
+            minimum: 10,
+            maximum: 60,
+        },
+        bitrate: {
+            type: 'number',
+            minimum: 3,
+            maximum: 100,
         }
     }
 });
@@ -112,16 +94,18 @@ function createWindow() {
 
     mainWindow.loadFile('index.html');
 
-    console.log(store.get('theme'));
-    console.log(store.get('volume'));
-    console.log(store.get('saveLocation'));
-    console.log(store.get('storageLimit'));
-    console.log(store.get('fileExtension'));
-    console.log(store.get('encoder'));
-    console.log(store.get('videoWidth'));
-    console.log(store.get('videoHeight'));
-    console.log(store.get('framerate'));
-    console.log(store.get('bitrate'));
+    mainWindow.webContents.openDevTools();
+
+    mainWindow.on('close', (event) => {
+        event.preventDefault();
+
+        mainWindow.webContents.send('settings:reqSave');
+
+        ipcMain.once('settings:setAll', (_, settings) => {
+            store.set(settings);
+            mainWindow.destroy();
+        });
+    });
 }
 
 /* web socket handler */
@@ -191,7 +175,7 @@ function initWebSocket() {
 
 /* ipc handler */
 function initIPC() {
-    ipcMain.on('ws-send', (_, requestType, requestData) => {
+    ipcMain.on('ws-fn', (_, requestType, requestData) => {
         console.log(`Sending ${requestType} request to OBS WebSocket with data:`, requestData);
 
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -211,63 +195,64 @@ function initIPC() {
         }
     });
 
-    ipcMain.on('tb-send', (_, requestType) => {
-        switch (requestType) {
-            case 'minimize':
-                mainWindow.minimize();
-                break;
-            case 'maximize':
-                if (mainWindow.isMaximized()) {
-                    mainWindow.unmaximize();
-                }
-                else {
-                    mainWindow.maximize();
-                }
-                break;
-            case 'close':
-                mainWindow.close();
-                break;
-            default:
-                console.log('Title Bar Error.')
+    ipcMain.on('window:minimize', (_) => mainWindow.minimize());
+    ipcMain.on('window:maximize', (_) => {
+        if (mainWindow.isMaximized()) {
+            mainWindow.unmaximize();
+        }
+        else {
+            mainWindow.maximize();
+        }
+    });
+    ipcMain.on('window:close', (_) => mainWindow.close());
+
+
+    ipcMain.handle('settings:getAll', () => { return store.store });
+
+    ipcMain.handle('dialog:getDirectory', async () => {
+        const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
+        
+        if (!canceled) {
+            return filePaths[0];
         }
     });
 
-    ipcMain.handle('get-videos', async (_, directory) => {
-        try {
-            const videoFiles = await getVideoFiles(directory);
-            return videoFiles;
-        } catch (error) {
-            console.error('Error getting video files:', error);
-            return [];
-        }
-    });
+    // ipcMain.handle('get-videos', async (_, directory) => {
+    //     try {
+    //         const videoFiles = await getVideoFiles(directory);
+    //         return videoFiles;
+    //     } catch (error) {
+    //         console.error('Error getting video files:', error);
+    //         return [];
+    //     }
+    // });
 }
 
 /* file system handler */
-function getVideoFiles(directory) {
-    return new Promise((resolve, reject) => {
-        fs.readdir(directory, (err, files) => {
-            if (err) return reject(err);
+// function getVideoFiles(directory) {
+//     return new Promise((resolve, reject) => {
+//         fs.readdir(directory, (err, files) => {
+//             if (err) return reject(err);
 
-            const videoFiles = files
-                .filter(file => ['.mp4', '.avi', '.mkv'].includes(path.extname(file))) // Filter by video extensions
-                .map(file => {
-                    const filePath = path.join(directory, file);
-                    const stats = fs.statSync(filePath); // Get file metadata
+//             const videoFiles = files
+//                 .filter(file => ['.mp4', '.avi', '.mkv'].includes(path.extname(file))) // Filter by video extensions
+//                 .map(file => {
+//                     const filePath = path.join(directory, file);
+//                     const stats = fs.statSync(filePath); // Get file metadata
 
-                    return {
-                        fileName: file,
-                        filePath: filePath,
-                        size: stats.size, // Size in bytes
-                        createdAt: stats.birthtime, // Creation date
-                        modifiedAt: stats.mtime // Last modified date
-                    };
-                });
+//                     return {
+//                         fileName: file,
+//                         filePath: filePath,
+//                         size: stats.size, // Size in bytes
+//                         createdAt: stats.birthtime, // Creation date
+//                         modifiedAt: stats.mtime // Last modified date
+//                     };
+//                 });
 
-            resolve(videoFiles);
-        });
-    });
-}
+//             resolve(videoFiles);
+//         });
+//     });
+// }
 
 /* app functions */
 app.whenReady().then(() => {

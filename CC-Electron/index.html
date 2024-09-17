@@ -74,7 +74,7 @@
         </div>
 
         <div id="content-panel">
-            <section id="directory-section" class="cp-cl1 active">
+            <section id="directory-section" class="cp-cl1">
                 <h2>Directory</h2>
 
                 <hr>
@@ -296,7 +296,7 @@
                 </div>
             </section>
 
-            <section id="settings-section" class="cp-cl1">
+            <section id="settings-section" class="cp-cl1 active">
                 <h2>Settings</h2>
 
                 <hr>
@@ -315,7 +315,7 @@
                                     <use href="assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
 
-                                <input type="text">
+                                <input type="text" name="saveLocation" readonly>
                             </div>
 
                             <p>Your videos and configuration file will be saved in this location.</p>
@@ -329,15 +329,15 @@
                                     <use href="assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <select>
-                                    <option>5 GB</option>
-                                    <option>10 GB</option>
-                                    <option>20 GB</option>
-                                    <option>50 GB</option>
-                                    <option>100 GB</option>
-                                    <option>200 GB</option>
-                                    <option>500 GB</option>
-                                    <option>No Limit</option>
+                                <select name="storageLimit">
+                                    <option value="5">5 GB</option>
+                                    <option value="10">10 GB</option>
+                                    <option value="20">20 GB</option>
+                                    <option value="50">50 GB</option>
+                                    <option value="100">100 GB</option>
+                                    <option value="200">200 GB</option>
+                                    <option value="500">500 GB</option>
+                                    <option value="0">No Limit</option>
                                 </select>
                             </div>
 
@@ -352,10 +352,10 @@
                                     <use href="assets/svg/draft.svg#draft"></use>
                                 </svg>
 
-                                <select>
-                                    <option>.mp4</option>
-                                    <option>.mkv</option>
-                                    <option>.avi</option>
+                                <select name="fileExtension">
+                                    <option value=".mp4">.mp4</option>
+                                    <option value=".mkv">.mkv</option>
+                                    <option value=".avi">.avi</option>
                                 </select>
                             </div>
 
@@ -370,10 +370,10 @@
                                     <use href="assets/svg/compress.svg#compress"></use>
                                 </svg>
 
-                                <select>
-                                    <option>nvenc</option>
-                                    <option>jim_nvenc</option>
-                                    <option>h.264</option>
+                                <select name="encoder">
+                                    <option value="nvenc">nvenc</option>
+                                    <option value="jim_nvenc">jim_nvenc</option>
+                                    <option value="h.264">h.264</option>
                                 </select>
                             </div>
 
@@ -395,7 +395,7 @@
                                         <use href="assets/svg/width.svg#width"></use>
                                     </svg>
 
-                                    <input type="text">
+                                    <input type="text" name="resolutionWidth">
                                 </div>
                             </div>   
                             <div id="resolution-height-setting" class="setting">
@@ -406,7 +406,7 @@
                                         <use href="assets/svg/height.svg#height"></use>
                                     </svg>
 
-                                    <input type="text">
+                                    <input type="text" name="resolutionHeight">
                                 </div>
                             </div>
                         </div>
@@ -420,13 +420,13 @@
                                         <use href="assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
 
-                                    <select>
-                                        <option>10 fps</option>
-                                        <option>20 fps</option>
-                                        <option>24 fps</option>
-                                        <option>30 fps</option>
-                                        <option>48 fps</option>
-                                        <option>60 fps</option>
+                                    <select name="framerate">
+                                        <option value="10">10 fps</option>
+                                        <option value="20">20 fps</option>
+                                        <option value="24">24 fps</option>
+                                        <option value="30">30 fps</option>
+                                        <option value="48">48 fps</option>
+                                        <option value="60">60 fps</option>
                                     </select>
                                 </div>
                             </div>
@@ -438,15 +438,15 @@
                                         <use href="assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
                                     </svg>
 
-                                    <select>
-                                        <option>3 Mbps</option>
-                                        <option>5 Mbps</option>
-                                        <option>10 Mbps</option>
-                                        <option>15 Mbps</option>
-                                        <option>20 Mbps</option>
-                                        <option>30 Mbps</option>
-                                        <option>50 Mbps</option>
-                                        <option>100 Mbps</option>
+                                    <select name="bitrate">
+                                        <option value="3">3 Mbps</option>
+                                        <option value="5">5 Mbps</option>
+                                        <option value="10">10 Mbps</option>
+                                        <option value="15">15 Mbps</option>
+                                        <option value="20">20 Mbps</option>
+                                        <option value="30">30 Mbps</option>
+                                        <option value="50">50 Mbps</option>
+                                        <option value="100">100 Mbps</option>
                                     </select>
                                 </div>
                             </div>

@@ -143,7 +143,8 @@
 
     /* ==== ps -> Playback Slider ==== */
     --ps-hmargin: 6px;
-    --ps-width: var(--vc-width);
+    /* --ps-width: var(--vc-width); */
+    --ps-width: 9000px;
 
     --ps-thumb-height: 3px;
     --ps-thumb-hover-height: 8px;
@@ -211,6 +212,9 @@
     /* ==== pl -> Pill ==== */
     --pl-bradius: var(--def-bradius);
     --pl-bwidth: 1px;
+
+    --pl-inputselect-hpadding: 10px;
+    --pl-inputselect-width: 110px;
 
     --pl-svg-length: 25px;
     --pl-svg-margin: 5px;
@@ -307,7 +311,7 @@ body {
     background-color: var(--pmc-sh6);
 }
 
-#close:hover {
+#close-trigger:hover {
     background-color: red;
 }
 
@@ -584,7 +588,7 @@ body {
 
 #playback-slider::-webkit-slider-thumb {
     height: var(--ps-thumb-height);
-    width: 0;
+    width: 0px;
 
     box-shadow: calc(-1 * var(--ps-width)) 0 0 var(--ps-width) var(--acc-sh1);
 
@@ -903,11 +907,17 @@ body {
 
 .pill > input, .pill > select {
     border: none;
+    box-sizing: content-box;
     flex: 0 0 auto;
-    width: 80px; /****/
+    padding: 0 var(--pl-inputselect-hpadding);
+    width: var(--pl-inputselect-width);
 
     background-color: var(--pmc-sh2);
     color: var(--cpc-sh1);
+}
+
+#save-location-setting > .pill > input {
+    width: 500px;
 }
 
 .pill > input:focus, .pill > select:focus {

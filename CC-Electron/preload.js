@@ -2,35 +2,45 @@ const { contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
     startRecord: () => {
-        ipcRenderer.send('ws-send', 'StartRecord', {});
+        ipcRenderer.send('ws-fn', 'StartRecord', {});
     },
 
     stopRecord: () => {
-        ipcRenderer.send('ws-send', 'StopRecord', {});
+        ipcRenderer.send('ws-fn', 'StopRecord', {});
     }
 });
 
 contextBridge.exposeInMainWorld('titleBarAPI', {
     minimize: () => {
-        ipcRenderer.send('tb-send', 'minimize');
+        ipcRenderer.send('window:minimize');
     },
 
     maximize: () => {
-        ipcRenderer.send('tb-send', 'maximize');
+        ipcRenderer.send('window:maximize');
     },
 
     close: () => {
-        ipcRenderer.send('tb-send', 'close');
+        ipcRenderer.send('window:close');
     }
 });
 
-// Expose the `getVideos` function to the renderer process
+contextBridge.exposeInMainWorld('settingsAPI', {
+    getAllSettings: () => ipcRenderer.invoke('settings:getAll'),
+
+    setAllSettings: (settings) => ipcRenderer.send('settings:setAll', settings),
+
+    onReqSave: (callback) => ipcRenderer.on('settings:reqSave', callback),
+});
+
+contextBridge.exposeInMainWorld('dialogAPI', {
+    getDirectory: () => ipcRenderer.invoke('dialog:getDirectory')
+});
+
 contextBridge.exposeInMainWorld('videoAPI', {
     getVideos: async (directory) => {
         try {
-            // Invoke the 'get-videos' handler and return the resolved value
             const videos = await ipcRenderer.invoke('get-videos', directory);
-            return videos; // This is the returned data from ipcMain.handle
+            return videos;
         } catch (error) {
             console.error('Error fetching videos:', error);
             return [];
