@@ -27,23 +27,18 @@ contextBridge.exposeInMainWorld('titleBarAPI', {
 contextBridge.exposeInMainWorld('settingsAPI', {
     getAllSettings: () => ipcRenderer.invoke('settings:getAll'),
 
-    setAllSettings: (settings) => ipcRenderer.send('settings:setAll', settings),
+    setSetting: (key, value) => ipcRenderer.invoke('settings:set', key, value),
+    setVolume: (value) => ipcRenderer.send('settings:setVolume', value),
 
-    onReqSave: (callback) => ipcRenderer.on('settings:reqSave', callback),
+    onGetVolume: (callback) => ipcRenderer.on('settings:getVolume', callback)
 });
 
-contextBridge.exposeInMainWorld('dialogAPI', {
-    getDirectory: () => ipcRenderer.invoke('dialog:getDirectory')
+contextBridge.exposeInMainWorld('filesAPI', {
+    getAllFiles: (directory) => ipcRenderer.invoke('files:getAll', directory)
 });
 
-contextBridge.exposeInMainWorld('videoAPI', {
-    getVideos: async (directory) => {
-        try {
-            const videos = await ipcRenderer.invoke('get-videos', directory);
-            return videos;
-        } catch (error) {
-            console.error('Error fetching videos:', error);
-            return [];
-        }
-    }
-});
+
+
+// contextBridge.exposeInMainWorld('dialogAPI', {
+//     getDirectory: () => ipcRenderer.invoke('dialog:getDirectory')
+// });

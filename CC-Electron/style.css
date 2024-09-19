@@ -138,7 +138,7 @@
 
     /* ==== vc -> Video Container ==== */
     --vc-bradius: var(--def-bradius);
-    --vc-height: 80%;
+    --vc-height: 75%;
     --vc-width: 80%;
 
     /* ==== ps -> Playback Slider ==== */
@@ -234,7 +234,9 @@
     --gl-sb-track-margin: calc(-1 * var(--sb-thumb-bwidth));
 
     /* ==== vpv -> Video Preview ==== */
+    --vpv-bradius: var(--def-bradius);
     --vpv-vgap: 10px;
+    --vpv-padding: 10px;
 
     /* ==== vt -> Video Thumbnail ==== */
     --vt-bradius: var(--def-bradius);
@@ -977,12 +979,18 @@ body {
 
 .video-preview {
     align-items: start;
+    border-radius: var(--vpv-bradius);
     display: flex;
     flex: 0 0 auto;
     flex-flow: column nowrap;
     gap: var(--vpv-vgap);
+    padding: var(--vpv-padding);
 
     overflow: hidden;
+}
+
+.video-preview:hover {
+    background-color: var(--pmc-sh1);
 }
 
 .video-thumbnail {

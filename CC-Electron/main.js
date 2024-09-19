@@ -3,6 +3,7 @@ import WebSocket from 'ws';
 import path from 'path';
 import { promises as fs } from 'fs';
 import Store from 'electron-store';
+import ffmpeg from 'fluent-ffmpeg';
 
 const __dirname = import.meta.dirname;
 const ws = new WebSocket('ws://localhost:4444');
@@ -53,12 +54,12 @@ const store = new Store({
 
         resolutionWidth: {
             type: 'number',
-            minimum: 100,
+            minimum: 1,
             maximum: 2560,
         },
         resolutionHeight: {
             type: 'number',
-            minimum: 100,
+            minimum: 1,
             maximum: 1440,
         },
         framerate: {
@@ -73,6 +74,15 @@ const store = new Store({
         }
     }
 });
+
+// const appDataPath = path.join(app.getPath('userData'), 'thumbnails');
+
+// if (!fs.existsSync(appDataPath)) {
+//     fs.mkdirSync(appDataPath, { recursive: true });
+// }
+
+
+
 
 let mainWindow;
 
@@ -99,12 +109,7 @@ function createWindow() {
     mainWindow.on('close', (event) => {
         event.preventDefault();
 
-        mainWindow.webContents.send('settings:reqSave');
-
-        ipcMain.once('settings:setAll', (_, settings) => {
-            store.set(settings);
-            mainWindow.destroy();
-        });
+        mainWindow.webContents.send('settings:getVolume');
     });
 }
 
@@ -207,52 +212,124 @@ function initIPC() {
     ipcMain.on('window:close', (_) => mainWindow.close());
 
 
-    ipcMain.handle('settings:getAll', () => { return store.store });
+    ipcMain.handle('settings:getAll', (_) => { return store.store });
 
-    ipcMain.handle('dialog:getDirectory', async () => {
-        const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
+    ipcMain.handle('settings:set', async (_, key, value) => {
+        let setValue;
+
+        switch (key) {
+            case 'resolutionWidth':
+                if (value > 2560 || isNaN(value)) {
+                    setValue = 2560;
+                }
+                else {
+                    if (value < 1) {
+                        setValue = 1;
+                    }
+                    else {
+                        setValue = Math.floor(value);
+                    }
+                }
+                break;
+            case 'resolutionHeight':
+                if (value > 1440 || isNaN(value)) {
+                    setValue = 1440;
+                }
+                else {
+                    if (value < 1) {
+                        setValue = 1;
+                    }
+                    else {
+                        setValue = Math.floor(value);
+                    }
+                }
+                break;
+            case 'saveLocation':
+                const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
         
-        if (!canceled) {
-            return filePaths[0];
+                if (canceled) {
+                    setValue = value;
+                }
+                else {
+                    setValue = filePaths[0];
+                }
+                break;
+            default: 
+                if (isNaN(value)) {
+                    setValue = value;
+                }
+                else {
+                    setValue = Number(value);
+                }
         }
+
+        store.set(key, setValue);
+
+        return setValue;
     });
 
-    // ipcMain.handle('get-videos', async (_, directory) => {
-    //     try {
-    //         const videoFiles = await getVideoFiles(directory);
-    //         return videoFiles;
-    //     } catch (error) {
-    //         console.error('Error getting video files:', error);
-    //         return [];
+    ipcMain.once('settings:setVolume', (_, value) => {
+        store.set('volume', value);
+        mainWindow.destroy();
+    });
+
+    ipcMain.handle('files:getAll', async (_, directory) => {
+        const thumbnailDir = path.join(app.getPath('userData'), 'thumbnails');
+
+        await fs.mkdir(thumbnailDir, { recursive: true });
+
+        const files = await fs.readdir(directory);
+
+        const videoFiles = files.filter(file =>
+            ['.mp4', '.mkv', '.avi'].includes(path.extname(file).toLowerCase())
+        );
+
+        const fileData = await Promise.all(videoFiles.map(async file => {
+            const filePath = path.join(directory, file);
+            const stats = await fs.stat(filePath);
+            const thumbnailPath = path.join(thumbnailDir, `${path.parse(file).name}.png`);
+
+
+            try {
+                await fs.access(thumbnailPath);
+            } catch {
+
+                await new Promise((resolve, reject) => {
+                    ffmpeg(filePath)
+                        .on('end', resolve)
+                        .on('error', reject)
+                        .screenshots({
+                            timestamps: ['50%'],
+                            filename: path.basename(thumbnailPath),
+                            folder: path.dirname(thumbnailPath),
+                            size: '320x180'
+                        });
+                });
+            }
+
+            return {
+                fileName: file,
+                filePath: filePath,
+                size: stats.size,
+                created: stats.birthtime,
+                thumbnail: thumbnailPath
+            };
+        }));
+
+        console.log(fileData);
+        console.log(fileData.sort((a, b) => b.created - a.created));
+
+        return fileData.sort((a, b) => b.created - a.created);
+    });
+
+    // ipcMain.handle('dialog:getDirectory', async (_) => {
+    //     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
+        
+    //     if (!canceled) {
+    //         return filePaths[0];
     //     }
     // });
 }
-
-/* file system handler */
-// function getVideoFiles(directory) {
-//     return new Promise((resolve, reject) => {
-//         fs.readdir(directory, (err, files) => {
-//             if (err) return reject(err);
-
-//             const videoFiles = files
-//                 .filter(file => ['.mp4', '.avi', '.mkv'].includes(path.extname(file))) // Filter by video extensions
-//                 .map(file => {
-//                     const filePath = path.join(directory, file);
-//                     const stats = fs.statSync(filePath); // Get file metadata
-
-//                     return {
-//                         fileName: file,
-//                         filePath: filePath,
-//                         size: stats.size, // Size in bytes
-//                         createdAt: stats.birthtime, // Creation date
-//                         modifiedAt: stats.mtime // Last modified date
-//                     };
-//                 });
-
-//             resolve(videoFiles);
-//         });
-//     });
-// }
 
 /* app functions */
 app.whenReady().then(() => {
