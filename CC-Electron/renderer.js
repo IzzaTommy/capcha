@@ -9,7 +9,6 @@ async function init() {
     const REDUCE_FACTOR = 0.1;
 
     /* ========== elements ========== */
-
     /* ---------- title bar elements---------- */
     const minimizeBtn = document.querySelector('#minimize-trigger');
     const maximizeBtn = document.querySelector('#maximize-trigger');
@@ -41,7 +40,8 @@ async function init() {
     const video = document.querySelector('#video-player');
 
     const playbackInput = document.querySelector('#playback-slider');
-    const playbackInputBox = playbackInput.getBoundingClientRect();
+    let playbackInputBox;
+    let playbackInputPct;
 
     const playPauseBtn = document.querySelector('#play-pause-control');
     const playPauseSVG = playPauseBtn.querySelector('svg > use');
@@ -62,45 +62,42 @@ async function init() {
 
     const timelineSVG = document.querySelector('#timeline-marker');
     const timelineInput = document.querySelector('#timeline-slider');
+    let timelineBox;
+
     let timelineState;
 
     let videoMetaDataLoaded = false;
 
     /* ---------- settings section elements---------- */
     const settingsInputSelect = document.querySelectorAll(':not(#save-location-setting).setting > div > input, .setting > div > select');
-    // const settingsInput = document.querySelectorAll('.setting > div > input');
-    // const settingsSelect = document.querySelectorAll('.setting > div > select');
     const saveLocationInput = document.querySelector('#save-location-setting > div > input');
-    // const storageLimitSelect = document.querySelector('#storage-limit-setting > div > select');
-    // const fileExtensionSelect = document.querySelector('#file-extension-setting > div > select');
-    // const encoderSelect = document.querySelector('#encoder-setting > div > select');
-    // const resolutionWidthInput = document.querySelector('#resolution-width-setting > div > input');
-    // const resolutionHeightInput = document.querySelector('#resolution-height-setting > div > input');
-    // const framerateSelect = document.querySelector('#framerate-setting > div > select');
-    // const bitrateSelect = document.querySelector('#bitrate-setting > div > select');
 
     /* ---------- directory section elements---------- */
     const capturesGallery = document.querySelector('#captures-carousel > .gallery');
     const videoPreviewTemplate = document.getElementsByTagName('template')[0];
 
+    // get settings and run pre-initialization
     const [settingsCache] = await Promise.all([
         window.settingsAPI.getAllSettings(),
         preInit()
     ]);
 
-    const [files] = await Promise.all([
-        window.filesAPI.getAllFiles(settingsCache.saveLocation),
+    // apply settings and get videos from the directory
+    const [videosData] = await Promise.all([
+        window.filesAPI.getAllVideosData(),
         postSettingsFetch()
     ]);
 
-    postFilesFetch();
+    // load the video galleries
+    postVideosDataFetch();
 
-
+    // handles loading event listeners for the title bar, nav panel, and editor
     function preInit() {
         titleBarInit();
         navPanelInit();
         editorSectionInit();
 
+        // handles title bar button event listeners
         function titleBarInit() {
             // API calls for window manipulation
             minimizeBtn.addEventListener('click', () => window.titleBarAPI.minimize());
@@ -108,32 +105,40 @@ async function init() {
             closeBtn.addEventListener('click', () => window.titleBarAPI.close());
         }
     
+        // handles navigation bar button event listeners
         function navPanelInit() {
-            // change the SVGs on hover
+            // change the SVGs on hover, change active content on click
             directoryBtn.addEventListener('mouseenter', () => swapSVG(directorySVG, 'folder-solid'));
             directoryBtn.addEventListener('mouseleave', () => swapSVG(directorySVG, 'folder'));
             directoryBtn.addEventListener('click', () => {
                 settingsSection.classList.remove('active');
                 editorSection.classList.remove('active');
                 directorySection.classList.add('active');
+
+                video.pause();
             });
         
+            // change the SVGs on hover, change active content on click
             settingsBtn.addEventListener('mouseenter', () => swapSVG(settingsSVG, 'settings-solid'));
             settingsBtn.addEventListener('mouseleave', () => swapSVG(settingsSVG, 'settings'));
             settingsBtn.addEventListener('click', () => {
                 directorySection.classList.remove('active');
                 editorSection.classList.remove('active');
                 settingsSection.classList.add('active');
+
+                video.pause();
             });
         
-            recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
-            recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
-            recordBtn.addEventListener('click', () => {
-                directorySection.classList.remove('active');
-                settingsSection.classList.remove('active');
-                editorSection.classList.add('active');
-            });
+            // // change the SVGs on hover, change active content on click
+            // recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
+            // recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
+            // recordBtn.addEventListener('click', () => {
+            //     directorySection.classList.remove('active');
+            //     settingsSection.classList.remove('active');
+            //     editorSection.classList.add('active');
+            // });
         
+            // change the SVG on click, set nav bar to active
             navExpander.addEventListener('click', () => {
                 navBar.classList.toggle('active');
         
@@ -146,6 +151,7 @@ async function init() {
             });
         }
     
+        // handles editor section event listeners
         function editorSectionInit() {
             /* ---------- video container event listeners ---------- */
             // changes SVGs, accounts for exiting fullscreen using ESC key
@@ -159,11 +165,11 @@ async function init() {
             });
     
             /* ---------- playback bar event listeners ---------- */
-            
             // changes video time based on timeline bounds and playblack slider click location
             playbackInput.addEventListener('input', () => {
                 // make sure clicks on the playback slider are within the timeline's start and end times
                 if (playbackInput.value < timelineState.getStartTime() || playbackInput.value >= timelineState.getEndTime()) {
+                    // update the timeline slider and video time
                     timelineInput.value = timelineState.getStartTime();
                     video.currentTime = timelineState.getStartTime();
                 }
@@ -172,19 +178,21 @@ async function init() {
                     video.currentTime = playbackInput.value;
                 }
     
+                // update the current video time text
                 timeSpan.textContent = getTimeText(playbackInput.value);
-            });
-    
-            // revert the hover hightlight
-            playbackInput.addEventListener('mouseleave', () => {
-                playbackInput.style.backgroundImage = 'none';
             });
     
             // create a hover highlight based on pointer location
             playbackInput.addEventListener('mousemove', (pointer) => {
-                const percentage = getPercentage(pointer, playbackInputBox) * 100;
+                playbackInputBox = playbackInput.getBoundingClientRect();
+                playbackInputPct = getPercentage(pointer, playbackInputBox) * 100;
                 
-                playbackInput.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${percentage}%, transparent ${percentage}%)`;
+                playbackInput.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${playbackInputPct}%, transparent ${playbackInputPct}%)`;
+            });
+
+            // revert the hover hightlight
+            playbackInput.addEventListener('mouseleave', () => {
+                playbackInput.style.backgroundImage = 'none';
             });
     
             // play/pause the video, update SVGs
@@ -192,71 +200,51 @@ async function init() {
     
             // update volume mute and SVG
             volumeBtn.addEventListener('click', () => {
-                // unmute if the video is muted and change to the correct SVG
+                // unmute if the video is muted
                 if (video.muted) {
                     video.muted = false;
     
+                    // change volume to 0.1 if it was 0
                     if (video.volume === 0) {
                         video.volume = 0.1;
-                        swapSVG(volumeSVG, 'volume-down');
-                    }
-                    else {
-                        if (video.volume > 0.6) {
-                            swapSVG(volumeSVG, 'volume-up');
-                        }
-                        else {
-                            if (video.volume > 0.1) {
-                                swapSVG(volumeSVG, 'volume-down');
-                            }
-                            else {
-                                swapSVG(volumeSVG, 'volume-mute');
-                            }   
-                        }
+                        settingsCache['volume'] = video.volume;
                     }
     
                     // update the volume input slider to match volume
                     volumeInput.stepUp(video.volume * 100);
-                    settingsCache['volume'] = video.volume;
                 }
                 else {
                     // mute the video
                     video.muted = true;
-                    // change to the correct SVG
-                    swapSVG(volumeSVG, 'volume-off');
+
                     // update the volume input slider to match volume
                     volumeInput.stepDown(video.volume * 100);
-                    settingsCache['volume'] = 0;
                 }
+
+                // cache the mute status
+                settingsCache['volumeMuted'] = video.muted;
+
+                // change the volume SVG
+                setVolumeSVG();
             });
     
-            // update volume and SVG based on volume slider input
+            // update based on volume slider input
             volumeInput.addEventListener('input', () => {
-                // change the video volume
-                video.volume = volumeInput.value;
-                settingsCache['volume'] = video.volume;
-
-                // mute the video and change to the correct SVG if volume is 0
-                if (video.volume === 0) {
+                // mute video if volume is 0
+                if (volumeInput.value == 0) {
                     video.muted = true;
-    
-                    volumeSVG.setAttribute('href', 'assets/svg/volume-off.svg#volume-off');
                 }
                 else {
-                    // unmute the video and change to the correct SVG
                     video.muted = false;
-    
-                    if (video.volume > 0.6) {
-                        swapSVG(volumeSVG, 'volume-up');
-                    }
-                    else {
-                        if (video.volume > 0.1) {
-                            swapSVG(volumeSVG, 'volume-down');
-                        }
-                        else {
-                            swapSVG(volumeSVG, 'volume-mute');
-                        }
-                    }
                 }
+
+                // set the video volume and cache volume data
+                video.volume = volumeInput.value;
+                settingsCache['volume'] = video.volume;
+                settingsCache['volumeMuted'] = video.muted;
+
+                // change the volume SVG
+                setVolumeSVG();
             });
     
             // change playback speed/text based on speed slider input
@@ -304,7 +292,7 @@ async function init() {
             });
     
             /* ---------- timeline event listeners ---------- */
-            // resize timeline viewbox
+            // resize timeline viewbox on window resize
             window.addEventListener('resize', () => {
                 timelineSVG.setAttribute('viewbox', `0 0 ${timelineSVG.getBoundingClientRect().width} 60`);
     
@@ -313,24 +301,29 @@ async function init() {
                 }
             });
     
+
+
+
             // changes video time based on timeline bounds and playblack slider click location
             timelineInput.addEventListener('input', () => {
                 // make sure clicks on the playback slider are within the timeline's start and end times
                 if (timelineInput.value < timelineState.getStartTime() || timelineInput.value >= timelineState.getEndTime()) {
-                    video.currentTime = timelineState.getStartTime();
+                    // update the playback slider and video time
                     playbackInput.value = timelineState.getStartTime();
+                    video.currentTime = timelineState.getStartTime();
                 }
                 else {
-                    video.currentTime = timelineInput.value;
                     playbackInput.value = timelineInput.value;
+                    video.currentTime = timelineInput.value;
                 }
     
+                // update the current video time text
                 timeSpan.textContent = getTimeText(timelineInput.value);
             });
     
             // change the video time based on the click location of the timeline
             timelineSVG.addEventListener('click', (pointer) => {
-                const timelineBox = timelineSVG.getBoundingClientRect();
+                timelineBox = timelineSVG.getBoundingClientRect();
     
                 const newTime = (timelineState.getDuration() * getPercentage(pointer, timelineBox)) + timelineState.getStartTime();
     
@@ -414,6 +407,9 @@ async function init() {
                 }
             });
     
+
+
+
             /* ---------- video event listeners ---------- */
             // play/pause the video, update SVGs
             video.addEventListener('click', () => playPauseVideo());
@@ -434,6 +430,7 @@ async function init() {
                         timelineInput.value = video.currentTime;
                     }
     
+                    // update the video time text
                     timeSpan.textContent = getTimeText(video.currentTime);
                 }
             });
@@ -441,220 +438,249 @@ async function init() {
             // wait for the video meta data to load 
             video.addEventListener('loadedmetadata', () => {
                 timelineState = new TimelineState(0, video.duration);
+                drawTicks();
     
-                // update playback slider range
-                playbackInput.max = video.duration;
-                playbackInput.value = 0;
-    
-                // sliding to 0 is buggy if the step is too small /* change with animation? */
-                if (video.duration < 60) {
-                    playbackInput.step = 0.1;
-                }
-                else {
-                    playbackInput.step = 0.01;
-                }
-    
-                // update timeline slider range
+                // update timeline and playback slider range
                 timelineInput.min = 0;
+
+                playbackInput.max = video.duration;
                 timelineInput.max = video.duration;
+
+                playbackInput.value = 0;
                 timelineInput.value = 0;
     
                 // sliding to 0 is buggy if the step is too small /* change with animation? */
                 if (video.duration < 60) {
+                    playbackInput.step = 0.1;
                     timelineInput.step = 0.1;
+                }
+                else {
+                    playbackInput.step = 0.01;
                     timelineInput.step = 0.01;
                 }
-    
-                drawTicks();
-    
-                // change the default volume
-                video.volume = settingsCache['volume'];
-                volumeInput.stepUp(video.volume * 100);
-                // swapSVG(volumeSVG, 'volume-down');
     
                 // set the default timer/duration
                 timeSpan.textContent = '0:00';
                 durationSpan.textContent = `/${getTimeText(video.duration)}`;
     
                 videoMetaDataLoaded = true;
+
+                // auto play video
+                playPauseVideo();
             });
-        }
-
-        // draws the interval ticks on the timeline
-        function drawTicks() {
-            // get the current timeline state variables
-            const startTime = timelineState.getStartTime();
-            const endTime = timelineState.getEndTime();
-            const interval = timelineState.getInterval();
-            const subInterval = timelineState.getSubInterval();
-            const subIntervalFactor = interval / subInterval;
-            const timelineBox = timelineSVG.getBoundingClientRect();
-
-            // get the expected number of ticks in the timeline
-            const numTicks = ((endTime - (endTime % interval)) - (startTime - (startTime % interval))) / interval;
-
-            // get the time of the first tick (e.g. 2:00, 5:00, etc.)
-            const firstTick = (startTime - (startTime % interval)) / interval;
-
-            // clear out the existing ticks in the SVG
-            while (timelineSVG.firstElementChild)
-            {
-                timelineSVG.removeChild(timelineSVG.lastElementChild);
-            }
-
-            for (let i = 0; i < numTicks + 1; i++) {
-                // calculate the location of each tick
-                const x = (-(startTime % interval) + (interval * i)) / (endTime - startTime);
-
-                // not necessary but just removes unseen lines
-                if (x > -1) {
-                    // generate the tick line
-                    const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    tickLine.setAttribute('x1', x * timelineBox.width);
-                    tickLine.setAttribute('y1', 10);
-                    tickLine.setAttribute('x2', x * timelineBox.width);
-                    tickLine.setAttribute('y2', 50);
-                    timelineSVG.appendChild(tickLine);
-
-                    // generate the time text
-                    const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    tickText.setAttribute('x', x * timelineBox.width + 5);
-                    tickText.setAttribute('y', 45);
-                    // tickText.textContent = `${Math.floor((interval * (i + firstTick)) / 60)}:${Math.floor((interval * (i + firstTick)) % 60) < 10 ? '0' : ''}${Math.floor((interval * (i + firstTick)) % 60)}`;
-                    tickText.textContent = getTimeText(interval * (i + firstTick));
-                    timelineSVG.appendChild(tickText);
-                }
-
-                for (let j = 0; j < subIntervalFactor; j++)
-                {
-                    // calculate the location of each sub tick
-                    const x2 = interval / ((endTime - startTime) * subIntervalFactor);
-
-                    // again check negative and if the sub tick will collide with a regular tick
-                    if (((x2 * j) + x) > -1 && ((x2 * j) % x) != 0) {
-                        // generate the sub tick line
-                        const subTickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        subTickLine.setAttribute('x1', (x + x2 * j) * timelineBox.width);
-                        subTickLine.setAttribute('y1', 15);
-                        subTickLine.setAttribute('x2', (x + x2 * j) * timelineBox.width);
-                        subTickLine.setAttribute('y2', 30);
-                        timelineSVG.appendChild(subTickLine);
-                    }
-                }
-            }
-        }
-
-        // play/pause the video
-        function playPauseVideo() {
-            if (video.paused || video.ended) {
-                video.play();
-                swapSVG(playPauseSVG, 'pause');
-            }
-            else {
-                video.pause();
-                swapSVG(playPauseSVG, 'play-arrow');
-            }
-        }
-
-        // gets the time text from the number of seconds
-        function getTimeText(time) {
-            const hours = Math.floor(time / 3600);
-            const minutes = Math.floor((time % 3600) / 60);
-            const seconds = Math.floor(time % 60);
-        
-            if (hours > 0) {
-                return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            }
-            else {
-                return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            }
-        }
-
-        // gets the click percentage in a bounding box
-        function getPercentage(pointer, box) {
-            return (pointer.clientX - box.left) / box.width;
         }
     }
 
+    // handles loading and saving settings
     function postSettingsFetch() {
-        settingsSectionInit();
-    
-        function settingsSectionInit() {
-            for (const setting of settingsInputSelect) {
+        // change the default volume
+        video.volume = settingsCache['volume'];
+        video.muted = settingsCache['volumeMuted']
+        if (!video.muted) {
+            volumeInput.stepUp(video.volume * 100);
+        }
+        
+        setVolumeSVG();
+
+        for (const setting of settingsInputSelect) {
+            // load each settings initial value from stored settings
+            setting.value = settingsCache[setting.name];
+
+            // on change, validate the setting, save it, and set the saved value
+            setting.addEventListener('change', async () => {
+                settingsCache[setting.name] = await window.settingsAPI.setSetting(setting.name, setting.value);
                 setting.value = settingsCache[setting.name];
+            });
+        }
 
-                setting.addEventListener('change', async () => {
-                    settingsCache[setting.name] = await window.settingsAPI.setSetting(setting.name, setting.value);
-                    setting.value = settingsCache[setting.name];
-                });
-            }
-    
+        // load the initial value from stored settings
+        saveLocationInput.value = settingsCache[saveLocationInput.name];
+
+        // on change, select directory from dialog, save it, and set the saved value
+        saveLocationInput.addEventListener('click', async () => {
+            settingsCache[saveLocationInput.name] = await window.settingsAPI.setSetting(saveLocationInput.name, saveLocationInput.value);
             saveLocationInput.value = settingsCache[saveLocationInput.name];
-            saveLocationInput.addEventListener('click', async () => {
-                settingsCache[saveLocationInput.name] = await window.settingsAPI.setSetting(saveLocationInput.name, saveLocationInput.value);
-                saveLocationInput.value = settingsCache[saveLocationInput.name];
-            });
+        });
 
-            window.settingsAPI.onGetVolume(() => {
-                // window.settingsAPI.setAllSettings(settings);
-                window.settingsAPI.setVolume(settingsCache['volume']);
-            });
-        }
+        // send the video player volume when requested
+        window.settingsAPI.onGetVolumeSettings(() => {
+            window.settingsAPI.setVolumeSettings({ 'volume': settingsCache['volume'], 'volumeMuted': settingsCache['volumeMuted'] });
+        });
     }
 
-    function postFilesFetch() {
-        directorySectionInit();
+    // handles loading of the video galleries
+    function postVideosDataFetch() {
+        // get the current date
+        const currentDate = new Date();
 
-        function directorySectionInit() {
-            const currentDate = new Date();
-
-            while (capturesGallery.firstElementChild)
-            {
-                capturesGallery.removeChild(capturesGallery.lastElementChild);
-            }
-        
-            for (const file of files) {
-                const temp = videoPreviewTemplate.content.cloneNode(true);
+        // clear the captures gallery
+        while (capturesGallery.firstElementChild)
+        {
+            capturesGallery.removeChild(capturesGallery.lastElementChild);
+        }
     
-                const differenceInMs = currentDate - file['created'];
+        for (const videoData of videosData) {
+            // make clone of the video preview template
+            const videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
+            let headerText;
 
-                const differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
-                const differenceInHours = Math.floor(differenceInMinutes / 60);
-                const differenceInDays = Math.floor(differenceInHours / 24);
+            // calculate the age of the file relative to the current time
+            const msDiff = currentDate - videoData['created'];
+            const minDiff = Math.floor(msDiff / 60000);
+            const hourDiff = Math.floor(minDiff / 60);
+            const dayDiff = Math.floor(hourDiff / 24);
 
-                temp.querySelector('.video-preview').dataset.src = file['filePath'];
-                temp.querySelector('img').setAttribute('src', file['thumbnail']);
-                // temp.querySelector('h4').textContent = 'GAME - 4 Hours Ago';
-                temp.querySelector('p').textContent = file['fileName'];
-        
-                if (differenceInDays > 0) {
-                    temp.querySelector('h4').textContent = `GAME - ${differenceInDays} day${differenceInDays > 1 ? 's' : ''} ago`;
-                } else if (differenceInHours > 0) {
-                    temp.querySelector('h4').textContent = `GAME - ${differenceInHours} hour${differenceInHours > 1 ? 's' : ''} ago`;
-                } else {
-                    temp.querySelector('h4').textContent = `GAME - ${differenceInMinutes} minute${differenceInMinutes !== 1 ? 's' : ''} ago`;
+            if (dayDiff > 0) {
+                headerText = `GAME - ${dayDiff} day${dayDiff > 1 ? 's' : ''} ago`;
+            }
+            else {
+                if (hourDiff > 0) {
+                    headerText = `GAME - ${hourDiff} hour${hourDiff > 1 ? 's' : ''} ago`;
                 }
-
-                temp.querySelector('.video-preview').addEventListener('click', () => {
-                    video.setAttribute('src', file['filePath']);
-                    directorySection.classList.remove('active');
-                    settingsSection.classList.remove('active');
-                    editorSection.classList.add('active');
-    
-                    videoMetaDataLoaded = false;
-                });
-    
-                capturesGallery.appendChild(temp);
+                else {
+                    headerText = `GAME - ${minDiff} minute${minDiff !== 1 ? 's' : ''} ago`;
+                }
             }
+
+            // fill in video data to the template
+            videoPreviewClone.querySelector('.video-preview').dataset.src = videoData['path'];
+            videoPreviewClone.querySelector('img').setAttribute('src', videoData['thumbnailPath']);
+            videoPreviewClone.querySelector('h4').textContent = headerText;
+            videoPreviewClone.querySelector('p').textContent = videoData['nameExt'];
+    
+            // on click, open the video in the editor
+            videoPreviewClone.querySelector('.video-preview').addEventListener('click', () => {
+                video.setAttribute('src', videoData['path']);
+
+                directorySection.classList.remove('active');
+                settingsSection.classList.remove('active');
+                editorSection.classList.add('active');
+
+                videoMetaDataLoaded = false;
+            });
+
+            // add the video preview to the gallery
+            capturesGallery.appendChild(videoPreviewClone);
         }
     }
 
-
-
+    // gets the click percentage in a bounding box
+    function getPercentage(pointer, box) {
+        return (pointer.clientX - box.left) / box.width;
+    }
 
     // swaps the SVG of an element
     function swapSVG(elementSVG, name) {
         elementSVG.setAttribute('href', `assets/svg/${name}.svg#${name}`);
+    }
+
+    // draws the interval ticks on the timeline
+    function drawTicks() {
+        // get the current timeline state variables
+        const startTime = timelineState.getStartTime();
+        const endTime = timelineState.getEndTime();
+        const interval = timelineState.getInterval();
+        const subInterval = timelineState.getSubInterval();
+        const subIntervalFactor = interval / subInterval;
+        const timelineBox = timelineSVG.getBoundingClientRect();
+
+        // get the expected number of ticks in the timeline
+        const numTicks = ((endTime - (endTime % interval)) - (startTime - (startTime % interval))) / interval;
+
+        // get the time of the first tick (e.g. 2:00, 5:00, etc.)
+        const firstTick = (startTime - (startTime % interval)) / interval;
+
+        // clear out the existing ticks in the SVG
+        while (timelineSVG.firstElementChild)
+        {
+            timelineSVG.removeChild(timelineSVG.lastElementChild);
+        }
+
+        for (let i = 0; i < numTicks + 1; i++) {
+            // calculate the location of each tick
+            const x = (-(startTime % interval) + (interval * i)) / (endTime - startTime);
+
+            // not necessary but just removes unseen lines
+            if (x > -1) {
+                // generate the tick line
+                const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                tickLine.setAttribute('x1', x * timelineBox.width);
+                tickLine.setAttribute('y1', 10);
+                tickLine.setAttribute('x2', x * timelineBox.width);
+                tickLine.setAttribute('y2', 50);
+                timelineSVG.appendChild(tickLine);
+
+                // generate the time text
+                const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                tickText.setAttribute('x', x * timelineBox.width + 5);
+                tickText.setAttribute('y', 45);
+                tickText.textContent = getTimeText(interval * (i + firstTick));
+                timelineSVG.appendChild(tickText);
+            }
+
+            for (let j = 0; j < subIntervalFactor; j++)
+            {
+                // calculate the location of each sub tick
+                const x2 = interval / ((endTime - startTime) * subIntervalFactor);
+
+                // again check negative and if the sub tick will collide with a regular tick
+                if (((x2 * j) + x) > -1 && ((x2 * j) % x) != 0) {
+                    // generate the sub tick line
+                    const subTickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    subTickLine.setAttribute('x1', (x + x2 * j) * timelineBox.width);
+                    subTickLine.setAttribute('y1', 15);
+                    subTickLine.setAttribute('x2', (x + x2 * j) * timelineBox.width);
+                    subTickLine.setAttribute('y2', 30);
+                    timelineSVG.appendChild(subTickLine);
+                }
+            }
+        }
+    }
+
+    // gets the time text from the number of seconds
+    function getTimeText(time) {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = Math.floor(time % 60);
+    
+        if (hours > 0) {
+            return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        else {
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    }
+
+    // set the SVG based on volume
+    function setVolumeSVG() {
+        if (video.muted) {
+            swapSVG(volumeSVG, 'volume-off');
+        }
+        else {
+            if (video.volume > 0.6) {
+                swapSVG(volumeSVG, 'volume-up');
+            }
+            else {
+                if (video.volume > 0.1) {
+                    swapSVG(volumeSVG, 'volume-down');
+                }
+                else {
+                    swapSVG(volumeSVG, 'volume-mute');
+                }
+            }
+        }
+    }
+
+    // play/pause the video and change to the right SVG
+    function playPauseVideo() {
+        if (video.paused || video.ended) {
+            video.play();
+            swapSVG(playPauseSVG, 'pause');
+        }
+        else {
+            video.pause();
+            swapSVG(playPauseSVG, 'play-arrow');
+        }
     }
 }
 

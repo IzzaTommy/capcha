@@ -25,16 +25,16 @@ contextBridge.exposeInMainWorld('titleBarAPI', {
 });
 
 contextBridge.exposeInMainWorld('settingsAPI', {
-    getAllSettings: () => ipcRenderer.invoke('settings:getAll'),
+    getAllSettings: () => ipcRenderer.invoke('settings:getAllSettings'),
 
-    setSetting: (key, value) => ipcRenderer.invoke('settings:set', key, value),
-    setVolume: (value) => ipcRenderer.send('settings:setVolume', value),
+    setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
+    setVolumeSettings: (volumeSettings) => ipcRenderer.send('settings:setVolumeSettings', volumeSettings),
 
-    onGetVolume: (callback) => ipcRenderer.on('settings:getVolume', callback)
+    onGetVolumeSettings: (callback) => ipcRenderer.on('settings:getVolumeSettings', callback)
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {
-    getAllFiles: (directory) => ipcRenderer.invoke('files:getAll', directory)
+    getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData')
 });
 
 
