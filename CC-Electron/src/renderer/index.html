@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="renderer.js"></script>
-    <link rel="shortcut icon" href="assets/svg/capcraft-logo-favicon.svg" type="image/x-icon">
-    <title>CapCraft</title>
+    <link rel="shortcut icon" href="../assets/favicon/capcha-favicon.svg" type="image/x-icon">
+    <title>CapCha</title>
 </head>
 <body>
     <div id="title-bar">
         <button id="minimize-trigger" class="tb-btn">
             <svg>
-                <use href="assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
+                <use href="../assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
             </svg>
         </button>
 
         <button id="maximize-trigger" class="tb-btn">
             <svg>
-                <use href="assets/svg/expand-solid.svg#expand-solid"></use>
+                <use href="../assets/svg/expand-solid.svg#expand-solid"></use>
             </svg>
         </button>
 
         <button id="close-trigger" class="tb-btn">
             <svg>
-                <use href="assets/svg/xmark-solid.svg#xmark-solid"></use>
+                <use href="../assets/svg/xmark-solid.svg#xmark-solid"></use>
             </svg>
         </button>
     </div>
@@ -34,17 +34,17 @@
             <nav id="nav-bar">
                 <div id="logo-display">
                     <svg>
-                        <use href="assets/svg/capcraft-logo.svg#capcraft-logo"></use>
+                        <use href="../assets/svg/capcha.svg#capcha"></use>
                     </svg>
 
-                    <h1>CapCraft</h1>
+                    <h1>CapCha</h1>
                 </div>
 
                 <hr>
 
                 <button id="directory-trigger" class="nb-btn">
                     <svg>
-                        <use href="assets/svg/folder.svg#folder"></use>
+                        <use href="../assets/svg/folder.svg#folder"></use>
                     </svg>
 
                     <span>Files</span>
@@ -52,7 +52,7 @@
     
                 <button id="settings-trigger" class="nb-btn">
                     <svg>
-                        <use href="assets/svg/settings.svg#settings"></use>
+                        <use href="../assets/svg/settings.svg#settings"></use>
                     </svg>
 
                     <span>Settings</span>
@@ -60,7 +60,7 @@
     
                 <button id="record-trigger" class="nb-btn">
                     <svg>
-                        <use href="assets/svg/record.svg#record"></use>
+                        <use href="../assets/svg/record.svg#record"></use>
                     </svg>
 
                     <span>Record</span>
@@ -68,13 +68,13 @@
             </nav>
             <div id="nav-expander">
                 <svg>
-                    <use href="assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
+                    <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                 </svg>
             </div>
         </div>
 
         <div id="content-panel">
-            <section id="directory-section" class="cp-cl1">
+            <section id="directory-section" class="cp-cl1 active">
                 <h2>Directory</h2>
 
                 <hr>
@@ -88,7 +88,7 @@
                         <div id="captures-carousel" class="carousel">
                             <div id="captures-left-jumper" class="jumper" >
                                 <svg>
-                                    <use href="assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
+                                    <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
                             </div>
 
@@ -102,12 +102,12 @@
                                         <div class="video-options">
                                             <button class="vo-btn">
                                                 <svg>
-                                                    <use href="assets/svg/edit.svg#edit"></use>
+                                                    <use href="../assets/svg/edit.svg#edit"></use>
                                                 </svg>
                                             </button>
                                             <button class="vo-btn">
                                                 <svg>
-                                                    <use href="assets/svg/delete.svg#delete"></use>
+                                                    <use href="../assets/svg/delete.svg#delete"></use>
                                                 </svg>
                                             </button>
                                         </div>
@@ -117,7 +117,7 @@
 
                             <div id="captures-right-jumper" class="jumper">
                                 <svg>
-                                    <use href="assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
+                                    <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
                             </div>
                         </div>
@@ -131,52 +131,17 @@
                         <div id="clips-carousel" class="carousel">
                             <div id="clips-left-jumper" class="jumper" >
                                 <svg>
-                                    <use href="assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
+                                    <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
                             </div>
 
                             <div class="gallery">
-                                <!-- <div class="video-preview">
-                                    <img class="video-thumbnail" src="assets/example-thumbnail.png" alt="">
-
-                                    <h4>VALORANT - 4 hours ago</h4>
-                                    <p>VALORANT_FULL_1829183723_NEON</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="video-preview">
-                                    <img class="video-thumbnail" src="assets/example-thumbnail.png" alt="">
-
-                                    <h4>VALORANT - 4 hours ago</h4>
-                                    <p>VALORANT_FULL_1829183723_NEON</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div> -->
+                                <!-- <h4>Empty!</h4> -->
                             </div>
 
                             <div id="clips-right-jumper" class="jumper">
                                 <svg>
-                                    <use href="assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
+                                    <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
                             </div>
                         </div>
@@ -184,7 +149,7 @@
                 </div>
             </section>
 
-            <section id="editor-section" class="cp-cl1 active">
+            <section id="editor-section" class="cp-cl1">
                 <h2>Editor</h2>
 
                 <hr>
@@ -201,13 +166,13 @@
                             <div id="playback-bar">
                                 <button id="play-pause-control" class="pb-btn">
                                     <svg>
-                                        <use href="assets/svg/play-arrow.svg#play-arrow"></use>
+                                        <use href="../assets/svg/play-arrow.svg#play-arrow"></use>
                                     </svg>
                                 </button>
 
                                 <button id="volume-control" class="pb-btn">
                                     <svg>
-                                        <use href="assets/svg/volume-down.svg#volume-down"></use>
+                                        <use href="../assets/svg/volume-down.svg#volume-down"></use>
                                     </svg>
                                 </button>
 
@@ -227,7 +192,7 @@
                                 
                                 <button id="fullscreen-control" class="pb-btn">
                                     <svg>
-                                        <use href="assets/svg/fullscreen.svg#fullscreen"></use>
+                                        <use href="../assets/svg/fullscreen.svg#fullscreen"></use>
                                     </svg>
                                 </button>
                             </div>
@@ -257,7 +222,7 @@
 
                             <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/folder-open-solid.svg#folder-open-solid"></use>
+                                    <use href="../assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
 
                                 <input type="text" name="saveLocation" readonly>
@@ -271,7 +236,7 @@
 
                             <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/storage.svg#storage"></use>
+                                    <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
                                 <select name="storageLimit">
@@ -294,7 +259,7 @@
 
                             <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/draft.svg#draft"></use>
+                                    <use href="../assets/svg/draft.svg#draft"></use>
                                 </svg>
 
                                 <select name="fileExtension">
@@ -312,7 +277,7 @@
 
                             <div class="pill">
                                 <svg>
-                                    <use href="assets/svg/compress.svg#compress"></use>
+                                    <use href="../assets/svg/compress.svg#compress"></use>
                                 </svg>
 
                                 <select name="encoder">
@@ -337,7 +302,7 @@
 
                                 <div class="pill">
                                     <svg>
-                                        <use href="assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
 
                                     <input type="text" name="resolutionWidth">
@@ -348,7 +313,7 @@
 
                                 <div class="pill">
                                     <svg>
-                                        <use href="assets/svg/height.svg#height"></use>
+                                        <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
 
                                     <input type="text" name="resolutionHeight">
@@ -362,7 +327,7 @@
 
                                 <div class="pill">
                                     <svg>
-                                        <use href="assets/svg/autofps-select.svg#autofps-select"></use>
+                                        <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
 
                                     <select name="framerate">
@@ -380,7 +345,7 @@
 
                                 <div class="pill">
                                     <svg>
-                                        <use href="assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
+                                        <use href="../assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
                                     </svg>
 
                                     <select name="bitrate">

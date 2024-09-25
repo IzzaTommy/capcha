@@ -30,13 +30,13 @@ contextBridge.exposeInMainWorld('settingsAPI', {
     setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
     setVolumeSettings: (volumeSettings) => ipcRenderer.send('settings:setVolumeSettings', volumeSettings),
 
-    onGetVolumeSettings: (callback) => ipcRenderer.on('settings:getVolumeSettings', callback)
+    reqVolumeSettings: (callback) => ipcRenderer.on('settings:reqVolumeSettings', callback)
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {
     getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
 
-    onNewSaveLocation: (callback) => ipcRenderer.on('files:newSaveLocation', callback)
+    reqInitCarousel: (callback) => ipcRenderer.on('files:reqInitCarousel', callback)
 });
 
 

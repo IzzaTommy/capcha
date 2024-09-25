@@ -99,7 +99,7 @@ export async function initVariables() {
     [settingsCache, videosData] = await Promise.all([window.settingsAPI.getAllSettings(), window.filesAPI.getAllVideosData()]);
 }
 
-window.filesAPI.onNewSaveLocation(async () => {
+window.filesAPI.reqInitCarousel(async () => {
     videosData = await window.filesAPI.getAllVideosData();
     initCarousel();
 });

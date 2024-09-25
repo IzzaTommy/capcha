@@ -233,6 +233,6 @@ function initVideoContainer() {
 }
 
 // send the video player volume when requested
-window.settingsAPI.onGetVolumeSettings(() => {
+window.settingsAPI.reqVolumeSettings(() => {
     window.settingsAPI.setVolumeSettings({ 'volume': settingsCache['volume'], 'volumeMuted': settingsCache['volumeMuted'] });
 });

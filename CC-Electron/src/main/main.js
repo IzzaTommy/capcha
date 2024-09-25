@@ -99,7 +99,7 @@ function createWindow() {
         minWidth: 1280,
         minHeight: 900,
         show: false,
-        icon: path.join(__dirname, '..', '..', 'diagrams', 'CapCraft Window Logo.png'),
+        icon: path.join(__dirname, '..', 'assets', 'app-icon', 'capcha-app-icon.png'),
         frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -117,7 +117,7 @@ function createWindow() {
     mainWindow.on('close', (event) => {
         event.preventDefault();
 
-        mainWindow.webContents.send('settings:getVolumeSettings');
+        mainWindow.webContents.send('settings:reqVolumeSettings');
     });
 }
 
@@ -274,7 +274,7 @@ function initIPC() {
                         console.error('Error reseting directory!');
                     }
 
-                    mainWindow.webContents.send('files:newSaveLocation');
+                    mainWindow.webContents.send('files:reqInitCarousel');
                 }
 
                 break;

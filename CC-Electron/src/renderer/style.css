@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "Lexend";
-    src: url("assets/font/Lexend/Lexend-VariableFont_wght.ttf");
+    src: url("../assets/font/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
 * {
@@ -225,6 +225,7 @@
 
     /* ==== csl -> Carousel ==== */
     --csl-bradius: var(--def-bradius);
+    --csl-height: calc(2 * var(--gl-vpadding) + 2 * var(--vpv-padding) + var(--vt-height) + 3 * var(--vpv-vgap) + var(--def-h4-fsize) + var(--def-p-fsize) + 2 * var(--vo-btn-padding) + var(--vo-btn-svg-length) + var(--sb-length));
 
     /* ==== jm -> Jumper ==== */
     --jm-svg-length: 15px;
@@ -245,7 +246,7 @@
     /* ==== vt -> Video Thumbnail ==== */
     --vt-bradius: var(--def-bradius);
     --vt-height: calc((var(--vt-width) * 9) / 16);
-    --vt-width: 311px;
+    --vt-width: 256px;
 
     /* ==== vo -> Video Options ==== */
     --vo-hgap: 10px;
@@ -941,8 +942,9 @@ body {
     border-radius: var(--csl-bradius);
     display: flex;
     flex-flow: row nowrap;
+    height: var(--csl-height);
     width: 100%;
-    
+
     background-color: var(--pmc-sh7);
     overflow: hidden;
 }
@@ -1025,6 +1027,7 @@ body {
     color: var(--cpc-sh1);
     font-size: var(--def-p-fsize);
     font-weight: var(--def-p-fweight);
+    line-height: 1;
 }
 
 .video-options {

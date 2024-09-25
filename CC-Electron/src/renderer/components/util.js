@@ -18,11 +18,13 @@ function getPercentage(pointer, box) {
 }
 
 // swaps the SVG of an element
+//set
 function swapSVG(elementSVG, name) {
-    elementSVG.setAttribute('href', `assets/svg/${name}.svg#${name}`);
+    elementSVG.setAttribute('href', `../assets/svg/${name}.svg#${name}`);
 }
 
 // draws the interval ticks on the timeline
+//set
 function drawTicks() {
     // get the current timeline state variables
     const startTime = timelineState.getStartTime();
@@ -120,6 +122,7 @@ function setVolumeSVG() {
 }
 
 // play/pause the video and change to the right SVG
+//set
 function playPauseVideo() {
     if (video.paused || video.ended) {
         video.play();
