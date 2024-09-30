@@ -1,0 +1,75 @@
+.settings-group {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--stg-hgap);
+}
+
+.setting {
+    align-items: start;
+    border-radius: var(--st-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--st-vgap);
+    padding: var(--st-vpadding) var(--st-hpadding);
+}
+
+
+.setting:hover {
+    background-color: var(--pmc-sh7);
+}
+
+.setting > h4 {
+    flex: 0 0 fit-content;
+
+    color: var(--cpc-sh1);
+    font-size: var(--def-h4-fsize);
+    font-weight: var(--def-h4-fweight);
+}
+
+.setting > p {
+    flex: 0 0 fit-content;
+
+    color: var(--cpc-sh1);
+    font-size: var(--def-p-fsize);
+    font-weight: var(--def-p-fweight);
+}
+
+.pill {
+    border: var(--pl-bwidth) solid var(--pmc-sh7);
+    border-radius: var(--pl-bradius);
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--pmc-sh7);
+    overflow: hidden;
+}
+
+.pill > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--pl-svg-length);
+    width: var(--pl-svg-length);
+    margin: var(--pl-svg-margin);
+
+    fill: var(--cpc-sh1);
+}
+
+.pill > input, .pill > select {
+    border: none;
+    box-sizing: content-box;
+    flex: 0 0 auto;
+    padding-right: var(--pl-inputselect-hpadding);
+    padding-left: var(--pl-inputselect-hpadding);
+    width: var(--pl-inputselect-width);
+
+    background-color: var(--pmc-sh2);
+    color: var(--cpc-sh1);
+}
+
+#save-location-setting > .pill > input {
+    width: 500px;
+}

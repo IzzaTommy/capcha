@@ -1,10 +1,10 @@
-export class TimelineState {
-    // constructor(initStartTime, initEndTime) {
-    //     this.startTime = initStartTime;
-    //     this.endTime = initEndTime;
-    //     this.duration = this.endTime -  this.startTime;
-    //     [this.interval, this.subInterval, this.clipLength] = this.setTimings();
-    // }
+export class carouselState {
+    constructor(initStartTime, initEndTime) {
+        this.startTime = initStartTime;
+        this.endTime = initEndTime;
+        this.duration = this.endTime -  this.startTime;
+        [this.interval, this.subInterval, this.clipLength] = this.setTimings();
+    }
 
     update(newStartTime, newEndTime) {
         this.startTime = newStartTime;

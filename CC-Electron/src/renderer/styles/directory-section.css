@@ -1,0 +1,122 @@
+.carousel {
+    border-radius: var(--csl-bradius);
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    height: var(--csl-height);
+
+    background-color: var(--pmc-sh7);
+    overflow: hidden;
+}
+
+.jumper {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+.jumper:hover {
+    background-color: var(--cpc-sh1);
+}
+
+.jumper > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--jm-svg-length);
+    width: var(--jm-svg-length);
+
+    fill: var(--cpc-sh1);
+}
+
+.gallery {
+    align-items: start;
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: row nowrap;
+    margin-right: var(--gl-hmargin);
+    margin-left: var(--gl-hmargin);
+    padding-top: var(--gl-vpadding);
+    padding-bottom: var(--gl-vpadding);
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.gallery::-webkit-scrollbar-track {
+    margin: var(--gl-sb-track-margin);
+}
+
+.video-preview {
+    border-radius: var(--vpv-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--vpv-vgap);
+    padding: var(--vpv-padding);
+
+    scroll-snap-align: center;
+}
+
+.video-preview:hover {
+    background-color: var(--pmc-sh1);
+}
+
+.video-thumbnail {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--vt-bradius);
+    flex: 0 0 auto;
+    height: var(--vt-height);
+    background-color: black;
+    object-fit: contain;
+}
+
+.video-preview > h4 {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--def-h4-fsize);
+    font-weight: var(--def-h4-fweight);
+    line-height: 1;
+}
+
+.video-preview > p {
+    flex: 0 0 fit-content;
+    margin: 0;
+
+    color: var(--cpc-sh1);
+    font-size: var(--def-p-fsize);
+    font-weight: var(--def-p-fweight);
+    line-height: 1;
+}
+
+.video-options {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--vo-hgap);
+}
+
+.vo-btn {
+    border: none;
+    border-radius: var(--vo-btn-bradius);
+    flex: 0 0 fit-content;
+    margin: 0;
+    padding: var(--vo-btn-padding);
+
+    background-color: var(--pmc-sh7);
+}
+
+.vo-btn:hover {
+    background-color: var(--pmc-sh1);
+}
+
+.vo-btn > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--vo-btn-svg-length);
+    width: var(--vo-btn-svg-length);
+
+    fill: var(--cpc-sh1);
+}

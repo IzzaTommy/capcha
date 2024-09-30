@@ -1,0 +1,116 @@
+#nav-panel {
+    border-radius: 0 var(--np-bradius) 0 0;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--pmc-sh7);
+    overflow: hidden;
+}
+
+#nav-bar {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--nb-vgap);
+    padding: var(--nb-padding);
+}
+
+#logo-display {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--ld-hgap);
+}
+
+#logo-display > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--ld-svg-length);
+    width: var(--ld-svg-length);
+
+    fill: var(--cpc-sh1);
+}
+
+#logo-display > h1 {
+    display: none;
+    flex: 0 0 fit-content;
+
+    color: var(--cpc-sh1);
+    font-size: var(--ld-h1-fsize);
+    font-weight: var(--ld-h1-fweight);
+}
+
+#nav-bar.active > #logo-display > h1 {
+    display: block;
+}
+
+#nav-bar > hr {
+    flex: 0 0 auto;
+    height: var(--def-hr-height);
+    margin-left: var(--nb-hr-lmargin);
+    width: var(--nb-hr-width);
+
+    background-color: var(--cpc-sh4);
+}
+
+.nb-btn {
+    align-items: center;
+    border-radius: var(--nb-btn-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--nb-btn-hgap);
+    margin-right: var(--nb-btn-hmargin);
+    margin-left: var(--nb-btn-hmargin);
+    padding: var(--nb-btn-padding);
+
+    background-color: transparent;
+}
+
+.nb-btn:hover {
+    background-color: var(--pmc-sh1);
+}
+
+.nb-btn > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--nb-btn-svg-length);
+    width: var(--nb-btn-svg-length);
+
+    fill: var(--cpc-sh1);
+}
+
+.nb-btn > span {
+    display: none;
+    flex: 0 0 fit-content;
+
+    color: var(--cpc-sh1);
+    font-size: var(--nb-btn-span-fsize);
+    font-weight: var(--nb-btn-span-fweight);
+}
+
+#nav-bar.active > .nb-btn > span {
+    display: block;
+}
+
+#nav-expander {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+#nav-expander:hover {
+    background-color: var(--cpc-sh1);
+}
+
+#nav-expander > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--ne-svg-length);
+    width: var(--ne-svg-length);
+
+    fill: var(--cpc-sh1);
+}

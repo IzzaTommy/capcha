@@ -1,0 +1,36 @@
+@font-face {
+    font-family: "Lexend";
+    src: url("../../assets/font/Lexend/Lexend-VariableFont_wght.ttf");
+}
+
+* {
+    font-family: "Lexend", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+:root {
+    /* ==== pmc -> Primary Color (shade/transparent) ==== */
+    --pmc-sh1: #656565;
+    --pmc-sh2: #5a5a5a;
+    --pmc-sh3: #535c68;
+    --pmc-sh4: #4a4c51;
+    --pmc-sh5: #414344;
+    --pmc-sh6: #3a3a3a;
+    --pmc-sh7: #373737;
+    --pmc-tp1: rgba(137, 137, 137, 0.4);
+    --pmc-tp2: rgba(114, 114, 114, 0.5);
+
+    /* ==== scc -> Secondary Color (transparent) ==== */
+    --scc-tp1: rgba(0, 0, 0, 0.75);
+
+    /* ==== cpc -> Complementary Color (shade) ==== */
+    --cpc-sh1: #dddddd;
+    --cpc-sh2: #cccccc;
+    --cpc-sh4: #b3b3b3;
+    --cpc-sh5: #9b9b9b;
+    --cpc-sh5: #8e8e8e;
+
+    /* ==== acc -> Accent Color (shade) ==== */
+    --acc-sh1: #00a9ff;
+}

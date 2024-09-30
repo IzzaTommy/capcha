@@ -1,0 +1,256 @@
+/* * {
+    outline: 1px solid yellow;
+} */
+
+:root {
+    /* ==== def -> Default ==== */
+    --def-bradius: 10px;
+
+    --def-h4-fsize: 17px;
+    --def-h4-fweight: 350;
+
+    --def-hr-height: 1.5px;
+
+    --def-p-fsize: 11px;
+    --def-p-fweight: 300;
+    
+    /* ==== tb -> Title Bar ==== */
+    --tb-p-lmargin: 10px;
+
+    --tb-btn-hpadding: 15px;
+    --tb-btn-vpadding: 7.5px;
+
+    --tb-btn-svg-length: 10px;
+
+    /* ==== cla -> Client Area ==== */
+    --cla-hgap: 12px;
+
+    /* ==== nb -> Nav(igation) Bar ==== */
+    --nb-vgap: 10px;
+    --nb-padding: 10px;
+
+    --nb-hr-lmargin: calc(-1 * var(--nb-padding) / 2);
+    --nb-hr-width: calc(100% + var(--nb-padding));
+
+    --nb-btn-bradius: var(--def-bradius);
+    --nb-btn-hgap: 40px;
+    --nb-btn-hmargin: calc((var(--ld-svg-length) - var(--nb-btn-svg-length) - 2 * var(--nb-btn-padding)) / 2);
+    --nb-btn-padding: 10px;
+
+    --nb-btn-span-fsize: 20px;
+    --nb-btn-span-fweight: 400;
+
+    --nb-btn-svg-length: 30px;
+
+    /* ==== ld -> Logo Display ==== */
+    --ld-hgap: 20px;
+
+    --ld-h1-fsize: 28px;
+    --ld-h1-fweight: 600;
+
+    --ld-svg-length: 60px;
+
+    /* ==== np -> Nav(igation) Panel ==== */
+    --np-bradius: var(--def-bradius);
+
+    /* ==== ne -> Nav(igation) Expander ==== */
+    --ne-svg-length: 15px;
+
+    /* ==== cp -> Content Panel ==== */
+    --cp-bradius: var(--def-bradius);
+
+    /* ==== cl1 -> Container Level 1 ==== */
+    --cl1-vgap: var(--nb-vgap);
+    --cl1-hpadding: calc(var(--nb-padding) + var(--ne-svg-length));
+    --cl1-vpadding: var(--nb-padding);
+
+    --cl1-h2-fsize: 60px;
+    --cl1-h2-fweight: 600;
+
+    --cl1-hr-lmargin: var(--nb-hr-lmargin);
+    --cl1-hr-width: calc(100% + var(--cl1-hpadding));
+
+    /* ==== cl2 -> Container Level 2 ==== */
+    --cl2-bradius: var(--def-bradius);
+    --cl2-vgap: 30px;
+    --cl2-hpadding: var(--cl1-hpadding);
+    --cl2-vpadding: var(--cl1-vpadding);
+
+    --cl2-sb-track-margin: calc(var(--cl2-vpadding) - var(--sb-thumb-bwidth));
+
+    /* ==== cl3 -> Container Level 3 ==== */
+    --cl3-vgap: var(--nb-vgap);
+
+    --cl3-h3-fsize: 40px;
+    --cl3-h3-fweight: 500;
+
+    --cl3-hr-lmargin: var(--nb-hr-lmargin);
+    --cl3-hr-width: calc(100% + var(--cl2-hpadding));
+
+    /* ==== stg -> Settings Group ==== */
+    --stg-hgap: 30px;
+
+    /* ==== st -> Setting ==== */
+    --st-bradius: var(--def-bradius);
+    --st-vgap: 5px;
+    --st-hpadding: var(--cl2-hpadding);
+    --st-vpadding: var(--cl2-vpadding);
+
+    /* ==== vc -> Video Container ==== */
+    --vc-bradius: var(--def-bradius);
+    --vc-height: 75%;
+    --vc-width: 80%;
+
+    /* ==== ps -> Playback Slider ==== */
+    --ps-hmargin: 6px;
+    /* --ps-width: var(--vc-width); */
+    --ps-width: 9000px;
+
+    --ps-thumb-height: 3px;
+    --ps-thumb-hover-height: 8px;
+
+    /* ==== pb -> Playback Bar ==== */
+
+    --pb-btn-bradius: 5px;
+    --pb-btn-margin: 3px;
+    
+    --pb-btn-span-fsize: 20px;
+    --pb-btn-span-fweight: 400;
+    --pb-btn-span-hpadding: var(--pb-btn-span-vpadding);
+    --pb-btn-span-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-btn-span-fsize)) / 2);
+
+    --pb-btn-span1-width: 3ch;
+
+    --pb-btn-svg-length: 40px;
+
+    --pb-input-thumb-height: 16px;
+    --pb-input-thumb-tmargin: calc(-1 * (var(--pb-input-thumb-height) - var(--pb-input-track-height)) / 2);
+
+    --pb-input-track-height: 4px;
+
+    /* ==== vs -> Volume Slider ==== */
+    --vs-rmargin: var(--vs-vpadding);
+    --vs-vpadding: calc((var(--pb-btn-svg-length) - var(--pb-input-thumb-height)) / 2);
+    --vs-width: 100px;
+
+    --vs-thumb-bradius: calc(var(--pb-input-thumb-height) / 2);
+    --vs-thumb-width: var(--pb-input-thumb-height);
+
+    /* ==== ss -> Speed Slider ==== */
+    --ss-vpadding: var(--vs-vpadding);
+    --ss-width: 150px;
+
+    --ss-thumb-bradius: calc(var(--ss-thumb-width) / 2);
+    --ss-thumb-width: 4px;
+
+    /* ==== ti -> Time Indicator ==== */
+    --ti-span-hpadding: var(--ti-span-vpadding);
+    --ti-span-vpadding: calc((var(--pb-btn-svg-length) - var(--ti-span-fsize)) / 2);
+    --ti-span-fsize: 15px;
+    --ti-span-fweight: 400;
+
+    --ti-span1-width: 5ch;
+
+    /* ==== tc -> Timeline Container ==== */
+    --tc-bradius: var(--def-bradius);
+    --tc-height: 60px;
+    --tc-width: var(--vc-width);
+
+    /* ==== tl -> Timeline ==== */
+    --tl-swidth: 1px;
+
+    --tl-text-fsize: 12px;
+    --tl-text-fweight: 10;
+
+    /* ==== tls -> Timeline Slider ==== */
+    --tls-thumb-bradius: calc(var(--tls-thumb-width) / 2);
+    --tls-thumb-height: calc(-2 * var(--tls-thumb-tmargin) + var(--tc-height));
+    --tls-thumb-tmargin: -12px;
+    --tls-thumb-width: 4px;
+
+    --tls-track-height: var(--tc-height);
+
+    /* ==== tm -> Timeline Marker ==== */
+    --tm-height: var(--tc-height);
+
+    /* ==== pl -> Pill ==== */
+    --pl-bradius: var(--def-bradius);
+    --pl-bwidth: 1px;
+
+    --pl-inputselect-hpadding: 10px;
+    --pl-inputselect-width: 110px;
+
+    --pl-svg-length: 25px;
+    --pl-svg-margin: 5px;
+
+    /* ==== csl -> Carousel ==== */
+    --csl-bradius: var(--def-bradius);
+    --csl-height: calc(2 * var(--gl-vpadding) + 2 * var(--vpv-padding) + var(--vt-height) + 3 * var(--vpv-vgap) + var(--def-h4-fsize) + var(--def-p-fsize) + 2 * var(--vo-btn-padding) + var(--vo-btn-svg-length) + var(--sb-length));
+
+    /* ==== jm -> Jumper ==== */
+    --jm-svg-length: 15px;
+
+    /* ==== gl -> Gallery ==== */
+    --gl-hmargin: 10px;
+    --gl-vpadding: 10px;
+
+    --gl-sb-track-margin: calc(-1 * var(--sb-thumb-bwidth));
+
+    /* ==== vpv -> Video Preview ==== */
+    --vpv-bradius: var(--def-bradius);
+    --vpv-vgap: 10px;
+    --vpv-padding: 10px;
+
+    /* ==== vt -> Video Thumbnail ==== */
+    --vt-bradius: var(--def-bradius);
+    --vt-height: 144px;
+
+    /* ==== vo -> Video Options ==== */
+    --vo-hgap: 10px;
+
+    --vo-btn-bradius: 5px;
+    --vo-btn-padding: 2px;
+
+    --vo-btn-svg-length: 30px;
+
+    /* ==== sb -> Scroll Bar ==== */
+    --sb-length: 20px;
+
+    --sb-thumb-bwidth: calc((var(--sb-length) - 6px) / 2);
+    --sb-thumb-bradius: calc(var(--sb-length) / 2);
+}
+
+::-webkit-scrollbar {
+    height: var(--sb-length);
+    width: var(--sb-length);
+}
+
+::-webkit-scrollbar-thumb {
+    border: var(--sb-thumb-bwidth) solid transparent;
+    border-radius: var(--sb-thumb-bradius);
+
+    background-clip: padding-box;
+    background-color: var(--cpc-sh1);
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    margin: 0;
+
+    background-color: var(--pmc-sh3);
+}
+
+
+
+
+
+
+
+
+

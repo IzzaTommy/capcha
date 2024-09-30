@@ -12,9 +12,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
 
 import { getPercentage, swapSVG, drawTicks, getTimeText, setVolumeSVG, playPauseVideo } from './util.js';
 
-export { initSettingsSection }
+export { initSettingsContainer }
 
-function initSettingsSection() {
+function initSettingsContainer() {
     for (const setting of settingsInputSelect) {
         // load each settings initial value from stored settings
         setting.value = settingsCache[setting.name];

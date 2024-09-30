@@ -1,5 +1,5 @@
 import { TimelineState } from './timelineState.js';
-import { initCarousel } from './carousel.js';
+import { initCarouselContainer } from './directorySection.js';
 
 export { GROW_FACTOR, REDUCE_FACTOR, 
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
@@ -27,7 +27,8 @@ timelineSVG, timelineInput, timelineState,
 settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
 flags,
 settingsCache,
-videosData;
+videosData,
+capturesCarouselState, clipsCarouselState;
 
 export async function initVariables() {
     /* ========== elements ========== */
@@ -83,7 +84,7 @@ export async function initVariables() {
     timelineSVG = document.querySelector('#timeline-marker');
     timelineInput = document.querySelector('#timeline-slider');
 
-    timelineState = new TimelineState(0, video.duration);
+    timelineState = new TimelineState();
 
     /* ---------- settings section elements ---------- */
     settingsInputSelect = document.querySelectorAll(':not(#save-location-setting).setting > div > input, .setting > div > select');
@@ -101,5 +102,5 @@ export async function initVariables() {
 
 window.filesAPI.reqInitCarousel(async () => {
     videosData = await window.filesAPI.getAllVideosData();
-    initCarousel();
+    initCarouselContainer();
 });

@@ -5,14 +5,16 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
+import { spawn } from 'child_process';
 
 // global variables
 const THUMBNAIL_SIZE = '320x180';
 const __dirname = import.meta.dirname;
 const defVideoDirectory = path.join(app.getPath('videos'), 'CapCha');
 const defThumbnailDirectory = path.join(app.getPath('userData'), 'thumbnails');
+const obsExecutablePath = path.join(__dirname, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 
-const ws = new WebSocket('ws://localhost:4444');
+let ws;
 const store = new Store({
     defaults: {
         theme: 'dark',
@@ -92,6 +94,21 @@ const store = new Store({
 });
 
 let mainWindow;
+let obsProcess;
+
+function initOBS() {
+    obsProcess = spawn(obsExecutablePath, [
+        '--portable',
+        '--multi',
+        '--minimize-to-tray'
+    ], {
+        cwd: path.dirname(obsExecutablePath),
+    });
+
+    setTimeout(() => {
+        initWebSocket();
+    }, 5000);
+}
 
 // sets up the basic window and closing event
 function createWindow() {
@@ -123,6 +140,8 @@ function createWindow() {
 
 // sets up the websocket channel listeners
 function initWebSocket() {
+    ws = new WebSocket('ws://localhost:4444');
+
     ws.on('open', () => {
         console.log('Connected to OBS WebSocket');
 
@@ -379,8 +398,9 @@ function initIPC() {
 
 // loads the app when ready
 app.whenReady().then(() => {
+    initOBS();
     createWindow();
-    initWebSocket();
+    // initWebSocket();
     initIPC();
 });
 
@@ -396,4 +416,8 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
+});
+
+app.on('before-quit', () => {
+    obsProcess.kill('SIGTERM');
 });

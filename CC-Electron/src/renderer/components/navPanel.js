@@ -38,14 +38,15 @@ function initNavPanel() {
         video.pause();
     });
 
-    // // change the SVGs on hover, change active content on click
-    // recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
-    // recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
-    // recordBtn.addEventListener('click', () => {
-    //     directorySection.classList.remove('active');
-    //     settingsSection.classList.remove('active');
-    //     editorSection.classList.add('active');
-    // });
+    // change the SVGs on hover, change active content on click
+    recordBtn.addEventListener('mouseenter', () => swapSVG(recordSVG, 'record-solid'));
+    recordBtn.addEventListener('mouseleave', () => swapSVG(recordSVG, 'record'));
+    recordBtn.addEventListener('click', () => {
+        // directorySection.classList.remove('active');
+        // settingsSection.classList.remove('active');
+        // editorSection.classList.add('active');
+        window.webSocketAPI.startRecord();
+    });
 
     if (settingsCache['navBarActive'] === true) {
         navBar.classList.toggle('active');

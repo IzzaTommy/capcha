@@ -1,10 +1,9 @@
 import { initVariables } from './components/variables.js';
 import { initTitleBar } from './components/titleBar.js';
 import { initNavPanel } from './components/navPanel.js';
-import { initVideoContainer } from './components/videoContainer.js';
-import { initTimelineContainer } from './components/timelineContainer.js';
-import { initSettingsSection } from './components/settingsSection.js';
-import { initCarousel } from './components/carousel.js';
+import { initVideoContainer, initTimelineContainer } from './components/editorSection.js';
+import { initSettingsContainer } from './components/settingsSection.js';
+import { initCarouselContainer } from './components/directorySection.js';
 
 // wait for DOM to finish loading
 window.addEventListener('DOMContentLoaded', init);
@@ -15,6 +14,6 @@ async function init() {
     initNavPanel();
     initVideoContainer();
     initTimelineContainer();
-    initSettingsSection();
-    initCarousel();
+    initSettingsContainer();
+    initCarouselContainer();
 }

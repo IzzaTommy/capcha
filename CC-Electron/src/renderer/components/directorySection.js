@@ -12,10 +12,10 @@ import { GROW_FACTOR, REDUCE_FACTOR,
 
 import { getPercentage, swapSVG, drawTicks, getTimeText, setVolumeSVG, playPauseVideo } from './util.js';
 
-export { initCarousel }
+export { initCarouselContainer }
 
 // handles loading of the video galleries
-function initCarousel() {
+function initCarouselContainer() {
     // get the current date
     const currentDate = new Date();
 
@@ -68,4 +68,48 @@ function initCarousel() {
         // add the video preview to the gallery
         capturesGallery.appendChild(videoPreviewClone);
     }
+
+
+
+
+
+
+
+
+    const x = capturesGallery.getBoundingClientRect().width;
+    const y = 275.98;
+    const z = Math.floor(x / (y + 5));
+    const i = (x - (z * y)) / (z - 1);
+
+    capturesGallery.style.gap = `${i}px`;
 }
+
+window.addEventListener('resize', () => {
+    const x = capturesGallery.getBoundingClientRect().width;
+    const y = 275.98;
+    const z = Math.floor(x / (y + 5));
+    const i = (x - (z * y)) / (z - 1);
+
+    capturesGallery.style.gap = `${i}px`;
+})
+
+const leftJumper = document.querySelector('#captures-left-jumper');
+const rightJumper = document.querySelector('#captures-right-jumper');
+
+leftJumper.addEventListener('click', () => {
+    const x = capturesGallery.getBoundingClientRect().width;
+    const y = 275.98;
+    const z = Math.floor(x / (y + 5));
+    const i = (x - (z * y)) / (z - 1);
+
+    capturesGallery.scrollBy({left: -(z) * y + (z - 1) * i, behavior: 'smooth'});
+});
+
+rightJumper.addEventListener('click', () => {
+    const x = capturesGallery.getBoundingClientRect().width;
+    const y = 275.98;
+    const z = Math.floor(x / (y + 5));
+    const i = (x - (z * y)) / (z - 1);
+
+    capturesGallery.scrollBy({left: (z) * y + (z - 1) * i, behavior: 'smooth'});
+});
