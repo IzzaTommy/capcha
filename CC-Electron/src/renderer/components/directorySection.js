@@ -4,9 +4,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directorySection, editorSection, settingsSection, 
     videoContainer, video, playbackInput, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
+    timelineSVG, timelineInput, timelineState,  
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 
@@ -49,13 +49,13 @@ function initCarouselContainer() {
         }
 
         // fill in video data to the template
-        videoPreviewClone.querySelector('.video-preview').dataset.src = videoData['path'];
+        videoPreviewClone.querySelector('.video-preview-ctr').dataset.src = videoData['path'];
         videoPreviewClone.querySelector('img').setAttribute('src', videoData['thumbnailPath']);
         videoPreviewClone.querySelector('h4').textContent = headerText;
         videoPreviewClone.querySelector('p').textContent = videoData['nameExt'];
 
         // on click, open the video in the editor
-        videoPreviewClone.querySelector('.video-preview').addEventListener('click', () => {
+        videoPreviewClone.querySelector('.video-preview-ctr').addEventListener('click', () => {
             video.setAttribute('src', videoData['path']);
 
             directorySection.classList.remove('active');
@@ -76,7 +76,7 @@ function initCarouselContainer() {
 
 
 
-    const x = capturesGallery.getBoundingClientRect().width;
+    const x = boxes['galleryBox'].width;
     const y = 275.98;
     const z = Math.floor(x / (y + 5));
     const i = (x - (z * y)) / (z - 1);
@@ -84,32 +84,15 @@ function initCarouselContainer() {
     capturesGallery.style.gap = `${i}px`;
 }
 
-window.addEventListener('resize', () => {
-    const x = capturesGallery.getBoundingClientRect().width;
-    const y = 275.98;
-    const z = Math.floor(x / (y + 5));
-    const i = (x - (z * y)) / (z - 1);
 
-    capturesGallery.style.gap = `${i}px`;
-})
 
-const leftJumper = document.querySelector('#captures-left-jumper');
-const rightJumper = document.querySelector('#captures-right-jumper');
+const leftJumper = document.querySelector('#btn-captures-directory-left');
+const rightJumper = document.querySelector('#btn-captures-directory-right');
 
 leftJumper.addEventListener('click', () => {
-    const x = capturesGallery.getBoundingClientRect().width;
-    const y = 275.98;
-    const z = Math.floor(x / (y + 5));
-    const i = (x - (z * y)) / (z - 1);
-
-    capturesGallery.scrollBy({left: -(z) * y + (z - 1) * i, behavior: 'smooth'});
+    capturesGallery.scrollBy({left: -boxes['galleryBox'].width, behavior: 'smooth'});
 });
 
 rightJumper.addEventListener('click', () => {
-    const x = capturesGallery.getBoundingClientRect().width;
-    const y = 275.98;
-    const z = Math.floor(x / (y + 5));
-    const i = (x - (z * y)) / (z - 1);
-
-    capturesGallery.scrollBy({left: (z) * y + (z - 1) * i, behavior: 'smooth'});
+    capturesGallery.scrollBy({left: boxes['galleryBox'].width, behavior: 'smooth'});
 });

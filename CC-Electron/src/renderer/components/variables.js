@@ -9,7 +9,7 @@ export { GROW_FACTOR, REDUCE_FACTOR,
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
     timelineSVG, timelineInput, timelineState, 
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData }
 
@@ -25,77 +25,83 @@ videoContainer, video, playbackInput,
 playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
 timelineSVG, timelineInput, timelineState, 
 settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-flags,
-settingsCache,
-videosData,
-capturesCarouselState, clipsCarouselState;
+flags, boxes, 
+settingsCache, 
+videosData;
 
 export async function initVariables() {
     /* ========== elements ========== */
     /* ---------- title bar elements ---------- */
-    minimizeBtn = document.querySelector('#minimize-trigger');
-    maximizeBtn = document.querySelector('#maximize-trigger');
-    closeBtn = document.querySelector('#close-trigger');
+    minimizeBtn = document.querySelector('#btn-minimize');
+    maximizeBtn = document.querySelector('#btn-maximize');
+    closeBtn = document.querySelector('#btn-close');
 
     /* ---------- nav panel elements ---------- */
-    navBar = document.querySelector('#nav-bar');
+    navBar = document.querySelector('#bar-nav');
 
-    directoryBtn = document.querySelector('#directory-trigger');
+    directoryBtn = document.querySelector('#btn-directory');
     directorySVG = directoryBtn.querySelector('svg > use');
 
-    settingsBtn = document.querySelector('#settings-trigger');
+    settingsBtn = document.querySelector('#btn-settings');
     settingsSVG = settingsBtn.querySelector('svg > use');
 
-    recordBtn = document.querySelector('#record-trigger');
+    recordBtn = document.querySelector('#btn-record');
     recordSVG = recordBtn.querySelector('svg > use');
 
-    navExpander = document.querySelector('#nav-expander');
+    navExpander = document.querySelector('#btn-nav-toggle');
     navExpanderSVG = navExpander.querySelector('svg > use');
 
     /* ---------- content panel elements ---------- */
-    directorySection = document.getElementById('directory-section');
-    editorSection = document.getElementById('editor-section');
-    settingsSection = document.getElementById('settings-section');
+    directorySection = document.getElementById('ctr1-directory');
+    editorSection = document.getElementById('ctr1-editor');
+    settingsSection = document.getElementById('ctr1-settings');
 
     /* ---------- editor section elements ---------- */
-    videoContainer = document.querySelector('#video-container');
+    videoContainer = document.querySelector('#ctr-video');
 
-    video = document.querySelector('#video-player');
+    video = document.querySelector('#player-video');
 
-    playbackInput = document.querySelector('#playback-slider');
+    playbackInput = document.querySelector('#slider-playback');
 
-    playPauseBtn = document.querySelector('#play-pause-control');
+    playPauseBtn = document.querySelector('#btn-play-pause');
     playPauseSVG = playPauseBtn.querySelector('svg > use');
 
-    volumeBtn = document.querySelector('#volume-control');
+    volumeBtn = document.querySelector('#btn-volume');
     volumeSVG = volumeBtn.querySelector('svg > use');
-    volumeInput = document.querySelector('#volume-slider');
+    volumeInput = document.querySelector('#slider-volume');
 
-    timeSpan = document.querySelector('#current-time');
-    durationSpan = document.querySelector('#total-time');
+    timeSpan = document.querySelector('#label-current-time');
+    durationSpan = document.querySelector('#label-total-time');
 
-    speedInput = document.querySelector('#speed-slider');
-    speedBtn = document.querySelector('#speed-control');
-    speedSpan = speedBtn.querySelector('#current-speed');
+    speedInput = document.querySelector('#slider-speed');
+    speedBtn = document.querySelector('#btn-speed');
+    speedSpan = speedBtn.querySelector('#label-speed');
 
-    fullscreenBtn = document.querySelector('#fullscreen-control');
+    fullscreenBtn = document.querySelector('#btn-fullscreen');
     fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
-    timelineSVG = document.querySelector('#timeline-marker');
-    timelineInput = document.querySelector('#timeline-slider');
+    timelineSVG = document.querySelector('#marker-timeline');
+    timelineInput = document.querySelector('#slider-timeline');
 
     timelineState = new TimelineState();
 
     /* ---------- settings section elements ---------- */
-    settingsInputSelect = document.querySelectorAll(':not(#save-location-setting).setting > div > input, .setting > div > select');
-    saveLocationInput = document.querySelector('#save-location-setting > div > input');
+    settingsInputSelect = document.querySelectorAll(':not(#ctr-save-location).setting-ctr > div > input, .setting-ctr > div > select');
+    saveLocationInput = document.querySelector('#ctr-save-location > div > input');
 
     /* ---------- directory section elements ---------- */
-    capturesGallery = document.querySelector('#captures-carousel > .gallery');
+    capturesGallery = document.querySelector('#gallery-captures-directory');
     videoPreviewTemplate = document.getElementsByTagName('template')[0];
 
     /* ---------- boolean flags ---------- */
     flags = { videoMetaDataLoaded: false };
+
+    /* ---------- element bounding client rectangles ---------- */
+    boxes = { 
+        timelineInputBox: timelineInput.getBoundingClientRect(),
+        playbackInputBox: playbackInput.getBoundingClientRect(),
+        galleryBox: capturesGallery.getBoundingClientRect()
+     };
 
     [settingsCache, videosData] = await Promise.all([window.settingsAPI.getAllSettings(), window.filesAPI.getAllVideosData()]);
 }

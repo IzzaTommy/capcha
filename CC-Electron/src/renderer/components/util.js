@@ -4,9 +4,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directorySection, editorSection, settingsSection, 
     videoContainer, video, playbackInput, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
+    timelineSVG, timelineInput, timelineState,  
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 
@@ -32,7 +32,6 @@ function drawTicks() {
     const interval = timelineState.getInterval();
     const subInterval = timelineState.getSubInterval();
     const subIntervalFactor = interval / subInterval;
-    const timelineBox = timelineSVG.getBoundingClientRect();
 
     // get the expected number of ticks in the timeline
     const numTicks = ((endTime - (endTime % interval)) - (startTime - (startTime % interval))) / interval;
@@ -54,15 +53,15 @@ function drawTicks() {
         if (x > -1) {
             // generate the tick line
             const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            tickLine.setAttribute('x1', x * timelineBox.width);
+            tickLine.setAttribute('x1', x * boxes['timelineInputBox'].width);
             tickLine.setAttribute('y1', 10);
-            tickLine.setAttribute('x2', x * timelineBox.width);
+            tickLine.setAttribute('x2', x * boxes['timelineInputBox'].width);
             tickLine.setAttribute('y2', 50);
             timelineSVG.appendChild(tickLine);
 
             // generate the time text
             const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            tickText.setAttribute('x', x * timelineBox.width + 5);
+            tickText.setAttribute('x', x * boxes['timelineInputBox'].width + 5);
             tickText.setAttribute('y', 45);
             tickText.textContent = getTimeText(interval * (i + firstTick));
             timelineSVG.appendChild(tickText);
@@ -77,9 +76,9 @@ function drawTicks() {
             if (((x2 * j) + x) > -1 && ((x2 * j) % x) != 0) {
                 // generate the sub tick line
                 const subTickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                subTickLine.setAttribute('x1', (x + x2 * j) * timelineBox.width);
+                subTickLine.setAttribute('x1', (x + x2 * j) * boxes['timelineInputBox'].width);
                 subTickLine.setAttribute('y1', 15);
-                subTickLine.setAttribute('x2', (x + x2 * j) * timelineBox.width);
+                subTickLine.setAttribute('x2', (x + x2 * j) * boxes['timelineInputBox'].width);
                 subTickLine.setAttribute('y2', 30);
                 timelineSVG.appendChild(subTickLine);
             }

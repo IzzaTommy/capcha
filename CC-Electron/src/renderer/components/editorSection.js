@@ -4,9 +4,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directorySection, editorSection, settingsSection, 
     videoContainer, video, playbackInput, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
+    timelineSVG, timelineInput, timelineState,  
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 
@@ -105,8 +105,7 @@ function initVideoContainer() {
 
     // create a hover highlight based on pointer location
     playbackInput.addEventListener('mousemove', (pointer) => {
-        const playbackInputBox = playbackInput.getBoundingClientRect();
-        const playbackInputPct = getPercentage(pointer, playbackInputBox) * 100;
+        const playbackInputPct = getPercentage(pointer, boxes['playbackInputBox']) * 100;
         
         playbackInput.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${playbackInputPct}%, transparent ${playbackInputPct}%)`;
     });
@@ -213,15 +212,6 @@ function initVideoContainer() {
     });
 
     /* ---------- timeline event listeners ---------- */
-    // resize timeline viewbox on window resize
-    window.addEventListener('resize', () => {
-        timelineSVG.setAttribute('viewbox', `0 0 ${timelineSVG.getBoundingClientRect().width} 60`);
-
-        if (flags['videoMetaDataLoaded']) {
-            drawTicks();
-        }
-    });
-
     // change the default volume
     video.volume = settingsCache['volume'];
     video.muted = settingsCache['volumeMuted']
@@ -252,16 +242,15 @@ function initTimelineContainer() {
 
     // "zoom" in and out of the timeline with the scroll wheel
     timelineInput.addEventListener('wheel', (pointer) => {
-        const timelineBox = timelineInput.getBoundingClientRect();
         // get the timeline's start time, end time, and content box
         const startTime = timelineState.getStartTime();
         const endTime = timelineState.getEndTime();
         const duration = timelineState.getDuration();
 
         // check if the scroll was within the timeline range
-        if (pointer.clientX > timelineBox.left && pointer.clientX < timelineBox.right) {
+        if (pointer.clientX > boxes['timelineInputBox'].left && pointer.clientX < boxes['timelineInputBox'].right) {
             // get the percentage of the timeline where the event occurred
-            const percentage = getPercentage(pointer, timelineBox);
+            const percentage = getPercentage(pointer, boxes['timelineInputBox']);
 
             // check if the pointer scrolled up ("zoom in")
             if (pointer.deltaY < 0) {

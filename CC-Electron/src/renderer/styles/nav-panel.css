@@ -1,4 +1,4 @@
-#nav-panel {
+#block-nav {
     border-radius: 0 var(--np-bradius) 0 0;
     display: flex;
     flex: 0 0 fit-content;
@@ -8,7 +8,7 @@
     overflow: hidden;
 }
 
-#nav-bar {
+#bar-nav {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
@@ -16,7 +16,7 @@
     padding: var(--nb-padding);
 }
 
-#logo-display {
+#display-logo {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
@@ -24,7 +24,7 @@
     gap: var(--ld-hgap);
 }
 
-#logo-display > svg {
+#display-logo > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--ld-svg-length);
@@ -33,7 +33,7 @@
     fill: var(--cpc-sh1);
 }
 
-#logo-display > h1 {
+#display-logo > h1 {
     display: none;
     flex: 0 0 fit-content;
 
@@ -42,11 +42,11 @@
     font-weight: var(--ld-h1-fweight);
 }
 
-#nav-bar.active > #logo-display > h1 {
+#bar-nav.active > #display-logo > h1 {
     display: block;
 }
 
-#nav-bar > hr {
+#bar-nav > hr {
     flex: 0 0 auto;
     height: var(--def-hr-height);
     margin-left: var(--nb-hr-lmargin);
@@ -55,7 +55,7 @@
     background-color: var(--cpc-sh4);
 }
 
-.nb-btn {
+.nav-btn {
     align-items: center;
     border-radius: var(--nb-btn-bradius);
     display: flex;
@@ -69,11 +69,11 @@
     background-color: transparent;
 }
 
-.nb-btn:hover {
+.nav-btn:hover {
     background-color: var(--pmc-sh1);
 }
 
-.nb-btn > svg {
+.nav-btn > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--nb-btn-svg-length);
@@ -82,7 +82,7 @@
     fill: var(--cpc-sh1);
 }
 
-.nb-btn > span {
+.nav-btn > span {
     display: none;
     flex: 0 0 fit-content;
 
@@ -91,22 +91,22 @@
     font-weight: var(--nb-btn-span-fweight);
 }
 
-#nav-bar.active > .nb-btn > span {
+#bar-nav.active > .nav-btn > span {
     display: block;
 }
 
-#nav-expander {
+#btn-nav-toggle {
     align-items: center;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 }
 
-#nav-expander:hover {
+#btn-nav-toggle:hover {
     background-color: var(--cpc-sh1);
 }
 
-#nav-expander > svg {
+#btn-nav-toggle > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--ne-svg-length);

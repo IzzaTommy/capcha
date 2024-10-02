@@ -1,4 +1,5 @@
 import { initVariables } from './components/variables.js';
+import { initWindow } from './components/window.js';
 import { initTitleBar } from './components/titleBar.js';
 import { initNavPanel } from './components/navPanel.js';
 import { initVideoContainer, initTimelineContainer } from './components/editorSection.js';
@@ -10,6 +11,7 @@ window.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     await initVariables();
+    initWindow();
     initTitleBar();
     initNavPanel();
     initVideoContainer();

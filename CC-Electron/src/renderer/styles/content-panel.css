@@ -1,24 +1,29 @@
-#content-panel {
+#block-content {
     border-radius: var(--cp-bradius) 0 0;
     flex: 1 1 fit-content;
 
     background-color: var(--pmc-sh4);
     overflow: hidden; /* for vertical/horizontal scroll */
+    position: relative;
 }
 
-.cp-cl1 {
-    display: none;
+.content-ctr1 {
+    position: absolute;
+    display: flex;
+    visibility: hidden;
+    width: 100%;
+
     flex-flow: column nowrap;
     gap: var(--cl1-vgap);
     height: 100%; /* for vertical scroll */
     padding: var(--cl1-vpadding) var(--cl1-hpadding);
 }
 
-.cp-cl1.active {
-    display: flex;
+.content-ctr1.active {
+    visibility: visible;
 }
 
-.cp-cl1 > h2 {
+.content-ctr1 > h2 {
     flex: 0 0 fit-content;
 
     color: var(--cpc-sh1);
@@ -26,7 +31,7 @@
     font-weight: var(--cl1-h2-fweight);
 }
 
-.cp-cl1 > hr {
+.content-ctr1 > hr {
     flex: 0 0 auto;
     height: var(--def-hr-height);
     margin-left: var(--cl1-hr-lmargin);
@@ -35,7 +40,7 @@
     background-color: var(--cpc-sh4);
 }
 
-.cp-cl2 {
+.content-ctr2 {
     border-radius: var(--cl2-bradius);
     display: flex;
     flex: 1 1 fit-content;
@@ -49,18 +54,18 @@
     scrollbar-gutter: stable;
 }
 
-.cp-cl2::-webkit-scrollbar-track {
+.content-ctr2::-webkit-scrollbar-track {
     margin: var(--cl2-sb-track-margin);
 }
 
-.cp-cl3  {
+.content-ctr3 {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
     gap: var(--cl3-vgap);
 }
 
-.cp-cl3 > h3 {
+.content-ctr3 > h3 {
     flex: 0 0 fit-content;
 
     color: var(--cpc-sh1);
@@ -68,7 +73,7 @@
     font-weight: var(--cl3-h3-fweight);
 }
 
-.cp-cl3 > hr {
+.content-ctr3 > hr {
     flex: 0 0 auto;
     height: var(--def-hr-height);
     margin-left: var(--cl3-hr-lmargin);

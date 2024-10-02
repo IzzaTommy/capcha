@@ -4,9 +4,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directorySection, editorSection, settingsSection, 
     videoContainer, video, playbackInput, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
+    timelineSVG, timelineInput, timelineState,  
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 

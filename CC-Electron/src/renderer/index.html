@@ -9,32 +9,32 @@
     <title>CapCha</title>
 </head>
 <body>
-    <div id="title-bar">
-        <p id="version">CC-0.1.1</p>
+    <div id="bar-title">
+        <p id="label-version">CC-0.1.1</p>
 
-        <button id="minimize-trigger" class="tb-btn">
+        <button id="btn-minimize" class="title-btn">
             <svg>
                 <use href="../assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
             </svg>
         </button>
 
-        <button id="maximize-trigger" class="tb-btn">
+        <button id="btn-maximize" class="title-btn">
             <svg>
                 <use href="../assets/svg/expand-solid.svg#expand-solid"></use>
             </svg>
         </button>
 
-        <button id="close-trigger" class="tb-btn">
+        <button id="btn-close" class="title-btn">
             <svg>
                 <use href="../assets/svg/xmark-solid.svg#xmark-solid"></use>
             </svg>
         </button>
     </div>
 
-    <div id="client-area">
-        <div id="nav-panel">
-            <nav id="nav-bar">
-                <div id="logo-display">
+    <div id="area-client">
+        <div id="block-nav">
+            <nav id="bar-nav">
+                <div id="display-logo">
                     <svg>
                         <use href="../assets/svg/capcha.svg#capcha"></use>
                     </svg>
@@ -44,7 +44,7 @@
 
                 <hr>
 
-                <button id="directory-trigger" class="nb-btn">
+                <button id="btn-directory" class="nav-btn">
                     <svg>
                         <use href="../assets/svg/folder.svg#folder"></use>
                     </svg>
@@ -52,7 +52,7 @@
                     <span>Files</span>
                 </button>
     
-                <button id="settings-trigger" class="nb-btn">
+                <button id="btn-settings" class="nav-btn">
                     <svg>
                         <use href="../assets/svg/settings.svg#settings"></use>
                     </svg>
@@ -60,7 +60,7 @@
                     <span>Settings</span>
                 </button>
     
-                <button id="record-trigger" class="nb-btn">
+                <button id="btn-record" class="nav-btn">
                     <svg>
                         <use href="../assets/svg/record.svg#record"></use>
                     </svg>
@@ -68,46 +68,46 @@
                     <span>Record</span>
                 </button>
             </nav>
-            <div id="nav-expander">
+            <button id="btn-nav-toggle">
                 <svg>
                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                 </svg>
-            </div>
+            </button>
         </div>
 
-        <div id="content-panel">
-            <section id="directory-section" class="cp-cl1 active">
+        <div id="block-content">
+            <section id="ctr1-directory" class="content-ctr1 active">
                 <h2>Directory</h2>
 
                 <hr>
 
-                <div id="directory-container" class="cp-cl2">
-                    <div id="captures-carousel-container" class="cp-cl3">
+                <div id="ctr2-directory" class="content-ctr2">
+                    <div id="ctr3-captures-directory" class="content-ctr3">
                         <h3>Captures</h3>
                         
                         <hr>
 
-                        <div id="captures-carousel" class="carousel">
-                            <div id="captures-left-jumper" class="jumper" >
+                        <div class="directory-ctr">
+                            <button id="btn-captures-directory-left" class="directory-btn" >
                                 <svg>
                                     <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
-                            </div>
+                            </button>
 
-                            <div class="gallery">
+                            <div id="gallery-captures-directory" class="directory-gallery">
                                 <template>
-                                    <div class="video-preview" data-src="">
+                                    <div class="video-preview-ctr" data-src="">
                                         <img class="video-thumbnail" src="" alt="">
                                         
                                         <h4></h4>
                                         <p></p>
-                                        <div class="video-options">
-                                            <button class="vo-btn">
+                                        <div class="video-options-ctr">
+                                            <button class="video-options-btn">
                                                 <svg>
                                                     <use href="../assets/svg/edit.svg#edit"></use>
                                                 </svg>
                                             </button>
-                                            <button class="vo-btn">
+                                            <button class="video-options-btn">
                                                 <svg>
                                                     <use href="../assets/svg/delete.svg#delete"></use>
                                                 </svg>
@@ -115,237 +115,83 @@
                                         </div>
                                     </div>
                                 </template>
-     
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="video-preview" data-src="">
-                                    <img class="video-thumbnail" src="CC Edit Page WireFrame.jpg" alt="">
-                                    
-                                    <h4>game - time</h4>
-                                    <p>name</p>
-                                    <div class="video-options">
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-                                        <button class="vo-btn">
-                                            <svg>
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
 
-                            <div id="captures-right-jumper" class="jumper">
+                            <button id="btn-captures-directory-right" class="directory-btn">
                                 <svg>
                                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
-                            </div>
+                            </button>
                         </div>
                     </div>
 
-                    <div id="clips-carousel-container" class="cp-cl3">
+                    <div id="ctr3-clips-carousel" class="content-ctr3">
                         <h3>Clips</h3>
 
                         <hr>
 
-                        <div id="clips-carousel" class="carousel">
-                            <div id="clips-left-jumper" class="jumper" >
+                        <div class="directory-ctr">
+                            <button id="btn-clips-directory-left" class="directory-btn" >
                                 <svg>
                                     <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
+                            </button>
+
+                            <div id="gallery-clips-directory" class="directory-gallery">                                
                             </div>
 
-                            <div class="gallery">
-                                <!-- <h4>Empty!</h4> -->
-                                
-                            </div>
-
-                            <div id="clips-right-jumper" class="jumper">
+                            <button id="btn-captures-directory-right" class="directory-btn">
                                 <svg>
                                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="editor-section" class="cp-cl1">
+            <section id="ctr1-editor" class="content-ctr1">
                 <h2>Editor</h2>
 
                 <hr>
 
-                <div id="editor-container" class="cp-cl2">
-                    <div id="video-container">
-                        <video id="video-player">
+                <div id="ctr2-editor" class="content-ctr2">
+                    <div id="ctr-video">
+                        <video id="player-video">
                             <source src="" type="video/mp4">
                         </video>
 
-                        <div id="playback-controller">
-                            <input id="playback-slider" type="range" min="0" max="100" value="0" step="0.01">
+                        <div id="ctr-playback">
+                            <input id="slider-playback" type="range">
 
-                            <div id="playback-bar">
-                                <button id="play-pause-control" class="pb-btn">
+                            <div id="bar-playback">
+                                <button id="btn-play-pause" class="playback-btn">
                                     <svg>
                                         <use href="../assets/svg/play-arrow.svg#play-arrow"></use>
                                     </svg>
                                 </button>
 
-                                <button id="volume-control" class="pb-btn">
+                                <button id="btn-volume" class="playback-btn">
                                     <svg>
                                         <use href="../assets/svg/volume-down.svg#volume-down"></use>
                                     </svg>
                                 </button>
 
-                                <input id="volume-slider" class="pb-input" type="range" min="0" max="1" value="0" step="0.01">
+                                <input id="slider-volume" class="playback-input" type="range" min="0" max="1" value="0" step="0.01">
 
-                                <div id="time-indicator">
-                                    <span id="current-time" class="ti-span">88:88</span>
-                                    <span id="total-time" class="ti-span">/88:88</span>
+                                <div id="ctr-time">
+                                    <span id="label-current-time" class="time-label">88:88</span>
+                                    <span id="label-total-time" class="time-label">/88:88</span>
                                 </div>
 
-                                <input id="speed-slider" class="pb-input" type="range" min="-2" max="4" value="1" step="1">
+                                <input id="slider-speed" class="playback-input" type="range" min="-2" max="4" value="1" step="1">
 
-                                <button id="speed-control" class="pb-btn">
-                                    <span id="current-speed">1</span>
-                                    <span>X</span>
+                                <button id="btn-speed" class="playback-btn">
+                                    <span id="label-speed">1</span>
+                                    <span id="label-multiplier">X</span>
                                 </button>
                                 
-                                <button id="fullscreen-control" class="pb-btn">
+                                <button id="btn-fullscreen" class="playback-btn">
                                     <svg>
                                         <use href="../assets/svg/fullscreen.svg#fullscreen"></use>
                                     </svg>
@@ -354,28 +200,28 @@
                         </div>
                     </div>
 
-                    <div id="timeline-container">
-                        <svg id="timeline-marker"></svg>
-                        <input id="timeline-slider" type="range" min="0" max="100" value="0" step="0.01">
+                    <div id="ctr-timeline">
+                        <svg id="marker-timeline"></svg>
+                        <input id="slider-timeline" type="range">
                     </div>
                 </div>
             </section>
 
-            <section id="settings-section" class="cp-cl1">
+            <section id="ctr1-settings" class="content-ctr1">
                 <h2>Settings</h2>
 
                 <hr>
 
-                <div id="settings-container" class="cp-cl2">
-                    <div id="files-settings-container" class="cp-cl3">
+                <div id="ctr2-settings" class="content-ctr2">
+                    <div id="ctr3-files-settings" class="content-ctr3">
                         <h3>Files</h3>
 
                         <hr>
 
-                        <div id="save-location-setting" class="setting">
+                        <div id="ctr-save-location" class="setting-ctr">
                             <h4>Video Save Location</h4>
 
-                            <div class="pill">
+                            <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
@@ -386,10 +232,10 @@
                             <p>Your videos and configuration file will be saved in this location.</p>
                         </div>
 
-                        <div id="storage-limit-setting" class="setting">
+                        <div id="ctr-storage-limit" class="setting-ctr">
                             <h4>Storage Limit</h4>
 
-                            <div class="pill">
+                            <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
@@ -409,10 +255,10 @@
                             <p>When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
                         </div>
 
-                        <div id="file-extension-setting" class="setting">
+                        <div id="ctr-file-extension" class="setting-ctr">
                             <h4>File Extension</h4>
 
-                            <div class="pill">
+                            <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/draft.svg#draft"></use>
                                 </svg>
@@ -427,10 +273,10 @@
                             <p>Your videos will be saved with this extension.</p>
                         </div>
 
-                        <div id="encoder-setting" class="setting">
+                        <div id="ctr-encoder-setting" class="setting-ctr">
                             <h4>Encoder</h4>
 
-                            <div class="pill">
+                            <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/compress.svg#compress"></use>
                                 </svg>
@@ -446,16 +292,16 @@
                         </div>
                     </div>
                     
-                    <div id="video-settings-container" class="cp-cl3">
+                    <div id="ctr3-video-settings" class="content-ctr3">
                         <h3>Video</h3>
 
                         <hr>
 
-                        <div class="settings-group">
-                            <div id="resolution-width-setting" class="setting">
+                        <div class="settings-group-ctr">
+                            <div id="ctr-resolution-width" class="setting-ctr">
                                 <h4>Width</h4>
 
-                                <div class="pill">
+                                <div class="setting-pill">
                                     <svg>
                                         <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
@@ -463,10 +309,10 @@
                                     <input type="text" name="resolutionWidth">
                                 </div>
                             </div>   
-                            <div id="resolution-height-setting" class="setting">
+                            <div id="ctr-resolution-height" class="setting-ctr">
                                 <h4>Height</h4>
 
-                                <div class="pill">
+                                <div class="setting-pill">
                                     <svg>
                                         <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
@@ -476,11 +322,11 @@
                             </div>
                         </div>
 
-                        <div class="settings-group">
-                            <div id="framerate-setting" class="setting">
+                        <div class="settings-group-ctr">
+                            <div id="ctr-framerate" class="setting-ctr">
                                 <h4>Framerate</h4>
 
-                                <div class="pill">
+                                <div class="setting-pill">
                                     <svg>
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
@@ -495,10 +341,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="bitrate-setting" class="setting">
+                            <div id="ctr-bitrate" class="setting-ctr">
                                 <h4>Bitrate</h4>
 
-                                <div class="pill">
+                                <div class="setting-pill">
                                     <svg>
                                         <use href="../assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
                                     </svg>

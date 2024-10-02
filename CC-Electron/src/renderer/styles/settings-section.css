@@ -1,11 +1,11 @@
-.settings-group {
+.settings-group-ctr {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
     gap: var(--stg-hgap);
 }
 
-.setting {
+.setting-ctr {
     align-items: start;
     border-radius: var(--st-bradius);
     display: flex;
@@ -16,11 +16,11 @@
 }
 
 
-.setting:hover {
+.setting-ctr:hover {
     background-color: var(--pmc-sh7);
 }
 
-.setting > h4 {
+.setting-ctr > h4 {
     flex: 0 0 fit-content;
 
     color: var(--cpc-sh1);
@@ -28,7 +28,7 @@
     font-weight: var(--def-h4-fweight);
 }
 
-.setting > p {
+.setting-ctr > p {
     flex: 0 0 fit-content;
 
     color: var(--cpc-sh1);
@@ -36,7 +36,7 @@
     font-weight: var(--def-p-fweight);
 }
 
-.pill {
+.setting-pill {
     border: var(--pl-bwidth) solid var(--pmc-sh7);
     border-radius: var(--pl-bradius);
 
@@ -48,7 +48,7 @@
     overflow: hidden;
 }
 
-.pill > svg {
+.setting-pill > svg {
     display: block;
     flex: 0 0 auto;
     height: var(--pl-svg-length);
@@ -58,7 +58,7 @@
     fill: var(--cpc-sh1);
 }
 
-.pill > input, .pill > select {
+.setting-pill > input, .setting-pill > select {
     border: none;
     box-sizing: content-box;
     flex: 0 0 auto;
@@ -70,6 +70,6 @@
     color: var(--cpc-sh1);
 }
 
-#save-location-setting > .pill > input {
+#ctr-save-location > .setting-pill > input {
     width: 500px;
 }

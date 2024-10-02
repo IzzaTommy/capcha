@@ -4,9 +4,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directorySection, editorSection, settingsSection, 
     videoContainer, video, playbackInput, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
+    timelineSVG, timelineInput, timelineState,  
     settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
-    flags, 
+    flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 
@@ -66,10 +66,21 @@ function initNavPanel() {
             settingsCache['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', false);
         }
 
-        timelineSVG.setAttribute('viewbox', `0 0 ${timelineSVG.getBoundingClientRect().width} 60`);
+        boxes['timelineInputBox'] = timelineInput.getBoundingClientRect();
+        boxes['playbackInputBox'] = playbackInput.getBoundingClientRect();
+        boxes['galleryBox'] = capturesGallery.getBoundingClientRect();
+
+        timelineSVG.setAttribute('viewbox', `0 0 ${boxes['timelineInputBox'].width} 60`);
 
         if (flags['videoMetaDataLoaded']) {
             drawTicks();
         }
+
+        const x = boxes['galleryBox'].width;
+        const y = 275.98;
+        const z = Math.floor(x / (y + 5));
+        const i = (x - (z * y)) / (z - 1);
+    
+        capturesGallery.style.gap = `${i}px`;
     });
 }
