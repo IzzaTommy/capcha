@@ -1,35 +1,42 @@
 import { TimelineState } from './timelineState.js';
-import { initCarouselContainer } from './directorySection.js';
+import { initDirectoryContainer, loadGallery } from './directoryContainer.js';
 
 export { GROW_FACTOR, REDUCE_FACTOR, 
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
-    navExpander, navExpanderSVG, 
-    directorySection, editorSection, settingsSection, 
-    videoContainer, video, playbackInput, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState, 
-    settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
+    navToggleBtn, navToggleSVG, 
+    directoryContainer1, editorContainer1, settingsContainer1, 
+    videoContainer, videoPlayer, playbackSlider, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    timelineMarker, timelineSlider, timelineState, 
+    allSettingPill, saveLocationSettingPill, 
+    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     settingsCache, 
     videosData }
 
-// ========== constants ========== */
+/* ========== constants ========== */
 const GROW_FACTOR = 0.15;
 const REDUCE_FACTOR = 0.1;
 
+/* ========== style ==========*/
+let style;
+
 /* ========== elements ========== */
 let minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
-navExpander, navExpanderSVG, 
-directorySection, editorSection, settingsSection, 
-videoContainer, video, playbackInput, 
-playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-timelineSVG, timelineInput, timelineState, 
-settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
+navToggleBtn, navToggleSVG, 
+directoryContainer1, editorContainer1, settingsContainer1, 
+videoContainer, videoPlayer, playbackSlider, 
+playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+timelineMarker, timelineSlider, timelineState, 
+allSettingPill, saveLocationSettingPill, 
+capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
 flags, boxes, 
 settingsCache, 
 videosData;
 
 export async function initVariables() {
+    style = getComputedStyle(document.documentElement);
+
     /* ========== elements ========== */
     /* ---------- title bar elements ---------- */
     minimizeBtn = document.querySelector('#btn-minimize');
@@ -48,65 +55,68 @@ export async function initVariables() {
     recordBtn = document.querySelector('#btn-record');
     recordSVG = recordBtn.querySelector('svg > use');
 
-    navExpander = document.querySelector('#btn-nav-toggle');
-    navExpanderSVG = navExpander.querySelector('svg > use');
+    navToggleBtn = document.querySelector('#btn-nav-toggle');
+    navToggleSVG = navToggleBtn.querySelector('svg > use');
 
     /* ---------- content panel elements ---------- */
-    directorySection = document.getElementById('ctr1-directory');
-    editorSection = document.getElementById('ctr1-editor');
-    settingsSection = document.getElementById('ctr1-settings');
+    directoryContainer1 = document.getElementById('ctr1-directory');
+    editorContainer1 = document.getElementById('ctr1-editor');
+    settingsContainer1 = document.getElementById('ctr1-settings');
 
     /* ---------- editor section elements ---------- */
     videoContainer = document.querySelector('#ctr-video');
 
-    video = document.querySelector('#player-video');
+    videoPlayer = document.querySelector('#player-video');
 
-    playbackInput = document.querySelector('#slider-playback');
+    playbackSlider = document.querySelector('#slider-playback');
 
     playPauseBtn = document.querySelector('#btn-play-pause');
     playPauseSVG = playPauseBtn.querySelector('svg > use');
 
     volumeBtn = document.querySelector('#btn-volume');
     volumeSVG = volumeBtn.querySelector('svg > use');
-    volumeInput = document.querySelector('#slider-volume');
+    volumeSlider = document.querySelector('#slider-volume');
 
-    timeSpan = document.querySelector('#label-current-time');
-    durationSpan = document.querySelector('#label-total-time');
+    currentTimeLabel = document.querySelector('#label-current-time');
+    totalTimeLabel = document.querySelector('#label-total-time');
 
-    speedInput = document.querySelector('#slider-speed');
+    speedSlider = document.querySelector('#slider-speed');
     speedBtn = document.querySelector('#btn-speed');
-    speedSpan = speedBtn.querySelector('#label-speed');
+    speedLabel = speedBtn.querySelector('#label-speed');
 
     fullscreenBtn = document.querySelector('#btn-fullscreen');
     fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
-    timelineSVG = document.querySelector('#marker-timeline');
-    timelineInput = document.querySelector('#slider-timeline');
+    timelineMarker = document.querySelector('#marker-timeline');
+    timelineSlider = document.querySelector('#slider-timeline');
 
     timelineState = new TimelineState();
 
     /* ---------- settings section elements ---------- */
-    settingsInputSelect = document.querySelectorAll(':not(#ctr-save-location).setting-ctr > div > input, .setting-ctr > div > select');
-    saveLocationInput = document.querySelector('#ctr-save-location > div > input');
+    allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='saveLocation']), .setting-pill > select`);
+    saveLocationSettingPill = document.querySelector(`.setting-pill > input[name='saveLocation']`);
 
     /* ---------- directory section elements ---------- */
-    capturesGallery = document.querySelector('#gallery-captures-directory');
+    capturesGallery = document.querySelector('#gallery-captures');
     videoPreviewTemplate = document.getElementsByTagName('template')[0];
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vt-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpv-padding'));
+    capturesLeftBtn = document.querySelector('#btn-captures-left');
+    capturesRightBtn = document.querySelector('#btn-captures-right');
 
     /* ---------- boolean flags ---------- */
     flags = { videoMetaDataLoaded: false };
 
     /* ---------- element bounding client rectangles ---------- */
     boxes = { 
-        timelineInputBox: timelineInput.getBoundingClientRect(),
-        playbackInputBox: playbackInput.getBoundingClientRect(),
+        timelineSliderBox: timelineSlider.getBoundingClientRect(),
+        playbackSliderBox: playbackSlider.getBoundingClientRect(),
         galleryBox: capturesGallery.getBoundingClientRect()
      };
 
     [settingsCache, videosData] = await Promise.all([window.settingsAPI.getAllSettings(), window.filesAPI.getAllVideosData()]);
 }
 
-window.filesAPI.reqInitCarousel(async () => {
+window.filesAPI.reqInitDirectory(async () => {
     videosData = await window.filesAPI.getAllVideosData();
-    initCarouselContainer();
+    loadGallery();
 });

@@ -13,16 +13,13 @@ import { GROW_FACTOR, REDUCE_FACTOR,
 
 import { getClickPercentage, setSVG, setTicks, getReadableTime, setVolumeSVG, setVideoState, setBoxWidths, setGalleryGap } from './shared.js';
 
-export { initTitleBar }
+export { initViewport }
 
-// handles title bar button event listeners
-function initTitleBar() {
-    loadTitleBarEL();
+function initViewport() {
+    loadViewportEL();
 }
 
-function loadTitleBarEL() {
-    // API calls for window manipulation
-    minimizeBtn.addEventListener('click', window.titleBarAPI.minimize);
-    maximizeBtn.addEventListener('click', window.titleBarAPI.maximize);
-    closeBtn.addEventListener('click', window.titleBarAPI.close);
+function loadViewportEL() {
+    // resize timeline viewbox on window resize
+    window.addEventListener('resize', setBoxWidths);
 }

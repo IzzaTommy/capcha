@@ -1,21 +1,40 @@
 import { GROW_FACTOR, REDUCE_FACTOR, 
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
-    navExpander, navExpanderSVG, 
-    directorySection, editorSection, settingsSection, 
-    videoContainer, video, playbackInput, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeInput, timeSpan, durationSpan, speedInput, speedBtn, speedSpan, fullscreenBtn, fullscreenSVG, 
-    timelineSVG, timelineInput, timelineState,  
-    settingsInputSelect, saveLocationInput, capturesGallery, videoPreviewTemplate, 
+    navToggleBtn, navToggleSVG, 
+    directoryContainer1, editorContainer1, settingsContainer1, 
+    videoContainer, videoPlayer, playbackSlider, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    timelineMarker, timelineSlider, timelineState,  
+    allSettingPill, saveLocationSettingPill, 
+    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     settingsCache, 
     videosData } from './variables.js';
 
-import { getPercentage, swapSVG, drawTicks, getTimeText, setVolumeSVG, playPauseVideo } from './util.js';
+import { getClickPercentage, setSVG, setTicks, getReadableTime, setVolumeSVG, setVideoState, setBoxWidths, setGalleryGap } from './shared.js';
 
-export { initCarouselContainer }
+export { initDirectoryContainer, loadGallery }
 
 // handles loading of the video galleries
-function initCarouselContainer() {
+function initDirectoryContainer() {
+    loadDirectoryEL();
+
+    setGalleryGap();
+    
+    loadGallery();
+}
+
+function loadDirectoryEL() {
+    capturesLeftBtn.addEventListener('click', () => {
+        capturesGallery.scrollBy({left: -boxes['galleryBox'].width, behavior: 'smooth'});
+    });
+    
+    capturesRightBtn.addEventListener('click', () => {
+        capturesGallery.scrollBy({left: boxes['galleryBox'].width, behavior: 'smooth'});
+    });
+}
+
+function loadGallery() {
     // get the current date
     const currentDate = new Date();
 
@@ -56,11 +75,11 @@ function initCarouselContainer() {
 
         // on click, open the video in the editor
         videoPreviewClone.querySelector('.video-preview-ctr').addEventListener('click', () => {
-            video.setAttribute('src', videoData['path']);
+            videoPlayer.setAttribute('src', videoData['path']);
 
-            directorySection.classList.remove('active');
-            settingsSection.classList.remove('active');
-            editorSection.classList.add('active');
+            directoryContainer1.classList.remove('active');
+            settingsContainer1.classList.remove('active');
+            editorContainer1.classList.add('active');
 
             flags['videoMetaDataLoaded'] = false;
         });
@@ -68,31 +87,4 @@ function initCarouselContainer() {
         // add the video preview to the gallery
         capturesGallery.appendChild(videoPreviewClone);
     }
-
-
-
-
-
-
-
-
-    const x = boxes['galleryBox'].width;
-    const y = 275.98;
-    const z = Math.floor(x / (y + 5));
-    const i = (x - (z * y)) / (z - 1);
-
-    capturesGallery.style.gap = `${i}px`;
 }
-
-
-
-const leftJumper = document.querySelector('#btn-captures-directory-left');
-const rightJumper = document.querySelector('#btn-captures-directory-right');
-
-leftJumper.addEventListener('click', () => {
-    capturesGallery.scrollBy({left: -boxes['galleryBox'].width, behavior: 'smooth'});
-});
-
-rightJumper.addEventListener('click', () => {
-    capturesGallery.scrollBy({left: boxes['galleryBox'].width, behavior: 'smooth'});
-});

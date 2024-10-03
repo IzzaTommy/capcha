@@ -293,7 +293,7 @@ function initIPC() {
                         console.error('Error reseting directory!');
                     }
 
-                    mainWindow.webContents.send('files:reqInitCarousel');
+                    mainWindow.webContents.send('files:reqInitDirectory');
                 }
 
                 break;

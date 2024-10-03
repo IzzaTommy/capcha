@@ -55,7 +55,7 @@
     gap: var(--vpv-vgap);
     padding: var(--vpv-padding);
 
-    scroll-snap-align: center;
+    scroll-snap-align: start;
 }
 
 .video-preview-ctr:hover {
@@ -67,6 +67,7 @@
     border-radius: var(--vt-bradius);
     flex: 0 0 auto;
     height: var(--vt-height);
+
     background-color: black;
     object-fit: contain;
 }

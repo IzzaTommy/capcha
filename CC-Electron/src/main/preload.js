@@ -36,7 +36,7 @@ contextBridge.exposeInMainWorld('settingsAPI', {
 contextBridge.exposeInMainWorld('filesAPI', {
     getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
 
-    reqInitCarousel: (callback) => ipcRenderer.on('files:reqInitCarousel', callback)
+    reqInitDirectory: (callback) => ipcRenderer.on('files:reqInitDirectory', callback)
 });
 
 

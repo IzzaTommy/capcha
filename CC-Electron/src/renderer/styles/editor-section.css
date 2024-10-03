@@ -1,4 +1,4 @@
-#editor-container {
+#ctr2-editor {
     align-items: center;
 }
 
@@ -12,6 +12,8 @@
 
     background-color: black;
     overflow: hidden;
+
+    cursor: pointer;
 }
 
 #player-video {
@@ -77,10 +79,17 @@
     border-radius: var(--pb-btn-bradius);
     flex: 0 0 fit-content;
     margin: var(--pb-btn-margin);
+
+    cursor: pointer;
+}
+
+#btn-volume {
+    margin-right: 0;
 }
 
 #btn-speed {
     justify-content: end;
+    margin-left: 0;
 }
 
 #btn-speed, 
@@ -157,7 +166,7 @@
 
 #slider-volume {
     display: none;
-    margin-right:var(--vs-rmargin);
+    margin-right: var(--vs-rmargin);
     padding-top: var(--vs-vpadding);
     padding-bottom: var(--vs-vpadding);
     width: var(--vs-width);
