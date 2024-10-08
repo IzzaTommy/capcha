@@ -6,9 +6,9 @@
 @import url('styles/theme-variables.css');
 @import url('styles/layout-variables.css');
 @import url('styles/title-bar.css');
-@import url('styles/nav-panel.css');
-@import url('styles/editor-section.css');
-@import url('styles/settings-section.css');
-@import url('styles/directory-section.css');
+@import url('styles/nav-block.css');
+@import url('styles/editor-container.css');
+@import url('styles/settings-container.css');
+@import url('styles/directory-container.css');
 @import url('styles/client-area.css');
-@import url('styles/content-panel.css');
+@import url('styles/content-block.css');

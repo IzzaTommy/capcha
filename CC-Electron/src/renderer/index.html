@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,6 +60,8 @@
                     <span>Settings</span>
                 </button>
     
+                <span>88:88</span>
+                
                 <button id="btn-record" class="nav-btn">
                     <svg>
                         <use href="../assets/svg/record.svg#record"></use>
@@ -102,11 +104,11 @@
                                         <h4></h4>
                                         <p></p>
                                         <div class="video-options-ctr">
-                                            <button class="video-options-btn">
+                                            <!-- <button class="video-options-btn">
                                                 <svg>
                                                     <use href="../assets/svg/edit.svg#edit"></use>
                                                 </svg>
-                                            </button>
+                                            </button> -->
                                             <button class="video-options-btn">
                                                 <svg>
                                                     <use href="../assets/svg/delete.svg#delete"></use>
@@ -187,8 +189,8 @@
                                 <input id="slider-speed" class="playback-input" type="range" min="-2" max="4" value="1" step="1">
 
                                 <button id="btn-speed" class="playback-btn">
-                                    <span id="label-speed">1</span>
-                                    <span id="label-multiplier">X</span>
+                                    <span id="label-current-speed" class="speed-label">1</span>
+                                    <span id="label-multiplier" class="speed-label">X</span>
                                 </button>
                                 
                                 <button id="btn-fullscreen" class="playback-btn">
@@ -213,6 +215,31 @@
                 <hr>
 
                 <div id="ctr2-settings" class="content-ctr2">
+                    <div id="ctr3-appearance-settings" class="content-ctr3">
+                        <h3>Appearance</h3>
+
+                        <hr>
+
+                        <div id="ctr-dark-mode" class="setting-ctr">
+                            <h4>Dark Mode</h4>
+
+                            <div class="setting-pill">
+                                <svg>
+                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                </svg>
+
+                                <label class="setting-toggle-switch">
+                                    <input type="checkbox" name="dark-mode">
+                                    <svg>
+                                        <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <p>Easier on the eyes.</p>
+                        </div>
+                    </div>
+
                     <div id="ctr3-files-settings" class="content-ctr3">
                         <h3>Files</h3>
 
@@ -297,6 +324,23 @@
 
                         <hr>
 
+                        <div id="ctr-capture-display" class="setting-ctr">
+                            <h4>Capture Display</h4>
+
+                            <div class="setting-pill">
+                                <svg>
+                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                </svg>
+
+                                <select name="captureDisplay">
+                                    <option value="temp1">temp1</option>
+                                    <option value="temp2">temp2</option>
+                                </select>
+                            </div>
+
+                            <p>Which display will be captured?</p>
+                        </div>
+
                         <div class="settings-group-ctr">
                             <div id="ctr-resolution-width" class="setting-ctr">
                                 <h4>Width</h4>
@@ -358,6 +402,78 @@
                                         <option value="30">30 Mbps</option>
                                         <option value="50">50 Mbps</option>
                                         <option value="100">100 Mbps</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="ctr-auto-record" class="setting-ctr">
+                            <h4>Automatic Recording</h4>
+
+                            <div class="setting-pill">
+                                <svg>
+                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                </svg>
+
+                                <label class="setting-toggle-switch">
+                                    <input type="checkbox" name="auto-record">
+                                    <svg>
+                                        <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
+                                    </svg>
+                                </label>
+                            </div>
+
+                            <p>Automatically record when gameplay is detected.</p>
+                        </div>
+                    </div>
+
+                    <div id="ctr3-input-settings" class="content-ctr3">
+                        <h3>Input</h3>
+
+                        <hr>
+
+                        <div class="settings-group-ctr">
+                            <div id="ctr-input-audio" class="setting-ctr">
+                                <h4>Audio</h4>
+
+                                <div class="setting-pill">
+                                    <svg>
+                                        <use href="../assets/svg/width.svg#width"></use>
+                                    </svg>
+
+                                    <select name="audio">
+                                        <option value="none">None</option>
+                                        <option value="default">Default</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="ctr-input-microphone" class="setting-ctr">
+                                <h4>Microphone</h4>
+
+                                <div class="setting-pill">
+                                    <svg>
+                                        <use href="../assets/svg/height.svg#height"></use>
+                                    </svg>
+
+                                    <select name="microphone">
+                                        <option value="none">None</option>
+                                        <option value="default">Default</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="ctr-input-webcam" class="setting-ctr">
+                                <h4>Webcam</h4>
+
+                                <div class="setting-pill">
+                                    <svg>
+                                        <use href="../assets/svg/height.svg#height"></use>
+                                    </svg>
+
+                                    <select name="webcam">
+                                        <option value="none">None</option>
+                                        <option value="default">Default</option>
                                     </select>
                                 </div>
                             </div>

@@ -9,28 +9,322 @@
     font-style: normal;
 }
 
-:root {
-    /* ==== pmc -> Primary Color (shade/transparent) ==== */
-    --pmc-sh1: #656565;
-    --pmc-sh2: #5a5a5a;
-    --pmc-sh3: #535c68;
-    --pmc-sh4: #4a4c51;
-    --pmc-sh5: #414344;
-    --pmc-sh6: #3a3a3a;
-    --pmc-sh7: #373737;
-    --pmc-tp1: rgba(137, 137, 137, 0.4);
-    --pmc-tp2: rgba(114, 114, 114, 0.5);
+html {
+    --blue-300: #00a9ff;
 
-    /* ==== scc -> Secondary Color (transparent) ==== */
-    --scc-tp1: rgba(0, 0, 0, 0.75);
+    --green-500: #2da347;
 
-    /* ==== cpc -> Complementary Color (shade) ==== */
-    --cpc-sh1: #dddddd;
-    --cpc-sh2: #cccccc;
-    --cpc-sh4: #b3b3b3;
-    --cpc-sh5: #9b9b9b;
-    --cpc-sh5: #8e8e8e;
+    --red-500: #dd3a3a;
+}
 
-    /* ==== acc -> Accent Color (shade) ==== */
-    --acc-sh1: #00a9ff;
+html {
+    --gray-100: #5a5a5a;
+    --gray-200: #575757;
+    --gray-500: #505050;
+    --gray-600: #3c3c3c;
+    --gray-700: #3a3a3a;
+    --gray-800: #373737;
+    --gray-tp1: rgba(137, 137, 137, 0.4);
+    --gray-tp2: rgba(114, 114, 114, 0.5);
+
+    --gray-blue-300: #5f646a;
+    --gray-blue-400: #4a4c51;
+    --gray-blue-500: #414344;
+
+    --black-900-t75: rgba(0, 0, 0, 0.75);
+
+    --white-100: #dddddd;
+    --white-200: #cccccc;
+    --white-400: #b3b3b3;
+    --white-500: #8e8e8e;
+}
+
+html[data-theme='dark'] {
+    /* ==== sbar -> Scroll Bar ==== */
+    --sbar-thumb-bgcolor: var(--white-100);
+
+    /* ==== body -> Body ==== */
+    --body-bgcolor: var(--gray-blue-300);
+
+    /* ==== tbtn -> Title Button ==== */
+    --tbtn-hover-bgcolor: var(--gray-700);
+
+    --tbtn-svg-fill: var(--white-200);
+
+    /* ==== vlabel -> Version Label ==== */
+    --vlabel-color: var(--white-100);
+
+    /* ==== nblock -> Nav(igation) Block ==== */
+    --nblock-bgcolor: var(--gray-800);
+
+    /* ==== nbar -> Nav(igation) Bar ==== */
+    --nbar-hr-bgcolor: var(--white-400);
+
+    /* ==== ldp -> Logo Display ==== */
+    --ldp-svg-fill: var(--white-100);
+
+    --ldp-h1-color: var(--white-100);
+
+    /* ==== nbtn -> Nav(igation) Button ==== */
+    --nbtn-hover-bgcolor: var(--gray-200);
+
+    --nbtn-span-color: var(--white-100);
+
+    --nbtn-svg-fill: var(--white-100);
+
+    /* ==== nt -> Nav(igation) Toggle ==== */
+    --ntbtn-hover-bgcolor: var(--gray-500);
+
+    --ntbtn-svg-fill: var(--white-100);
+
+    /* ==== cb -> Content Block ==== */
+    --cblock-bgcolor: var(--gray-blue-400);
+
+    /* ==== ctr1 -> Container 1 ==== */
+    --cctr1-h2-color: var(--white-100);
+
+    --cctr1-hr-bgcolor: var(--white-400);
+
+    /* ==== ctr2 -> Container 2 ==== */
+    --cctr2-bgcolor: var(--gray-blue-500);
+
+    /* ==== ctr3 -> Container 3 ==== */
+    --cctr3-h3-color: var(--white-100);
+
+    --cctr3-hr-bgcolor: var(--white-500);
+
+    /* ==== dctr -> Directory Container ==== */
+    --dctr-bgcolor: var(--gray-800);
+
+    /* ==== dbtn -> Directory Button ==== */
+    --dbtn-hover-bgcolor: var(--gray-500);
+    --dbtn-svg-fill: var(--white-100);
+
+    /* ==== vpctr -> Video Preview Container ==== */
+    --vpctr-hover-bgcolor: var(--gray-500);
+
+    --vpctr-h4-color: var(--white-100);
+
+    --vpctr-p-color: var(--white-100);
+
+    /* ==== vobtn -> Video Options Button ==== */
+    --vobtn-hover-bgcolor: var(--red-500);
+
+    --vobtn-svg-fill: var(--white-100);
+
+    /* ==== psl -> Playback Slider ==== */
+    --psl-thumb-bshadowcolor: var(--blue-300);
+    --psl-track-bgcolor: var(--gray-tp1);
+
+    /* ==== pbtn -> Playback Button ==== */
+    --pbtn-hover-bgcolor: var(--gray-tp2);
+
+    --pbtn-svg-fill: var(--white-100);
+
+    /* ==== slabel -> Speed Label ==== */
+    --slabel-color: var(--white-100);
+
+    /* ==== pinput -> Playback Input ==== */
+    --pinput-thumb-bgcolor: var(--blue-300);
+
+    /* ==== vsl -> Volume Slider ==== */
+    --vsl-thumb-bshadowcolor: var(--blue-300);
+    --vsl-track-bgcolor: var(--white-100);
+
+    /* ==== tlabel -> Time Label ==== */
+    --tlabel-color: var(--white-100);
+
+    /* ==== tctr -> Timeline Container ==== */
+    --tctr-bgcolor: var(--gray-800);
+
+    /* ==== tmarker -> Timeline Marker ==== */
+    --tmarker-fill: var(--white-500);
+    --tmarker-stroke: var(--white-500);
+
+    --tmarker-text-fill: var(--white-100);
+    --tmarker-text-stroke: var(--white-100);
+
+    /* ==== tls -> Timeline Slider ==== */
+    --tslider-thumb-bgcolor: var(--white-100);
+
+    /* ==== sctr -> Setting Container ==== */
+    --sctr-hover-bgcolor: var(--gray-600);
+
+    --sctr-h4-color: var(--white-100);
+
+    --sctr-p-color: var(--white-100);
+
+    /* ==== spill -> Setting Pill ==== */
+    --spill-bgcolor: var(--gray-800);
+
+    --spill-inputselect-bgcolor: var(--gray-100);
+    --spill-inputselect-color: var(--white-100);
+
+    --spill-svg-fill: var(--white-100);
+    --spill-svg-active-fill: var(--green-500);
+
+    /* ==== stswitch -> Setting Toggle Switch ==== */
+    --stswitch-bgcolor: var(--gray-100);
+    --stswitch-active-bgcolor: var(--green-500);
+
+    --stswitch-svg-bgcolor: var(--white-100);
+    --stswitch-svg-fill: var(--gray-100);
+}
+
+
+html[data-theme='light'] {
+    /* ==== sbar -> Scroll Bar ==== */
+    --sbar-thumb-bgcolor: #222222;
+
+    /* ==== body -> Body ==== */
+    --body-bgcolor: #dddddd;
+
+    /* ==== tbtn -> Title Button ==== */
+    --tbtn-hover-bgcolor: #989898;
+
+    --tbtn-svg-fill: #000000;
+
+    /* ==== vlabel -> Version Label ==== */
+    --vlabel-color: #222222;
+
+    /* ==== nblock -> Nav(igation) Block ==== */
+    --nblock-bgcolor: #c4c7cc;
+
+    /* ==== nbar -> Nav(igation) Bar ==== */
+    --nbar-hr-bgcolor: #222222;
+
+    /* ==== ldp -> Logo Display ==== */
+    --ldp-svg-fill: #222222;
+
+    --ldp-h1-color: #222222;
+
+    /* ==== nbtn -> Nav(igation) Button ==== */
+    --nbtn-hover-bgcolor: #9f9f9f;
+
+    --nbtn-span-color: #222222;
+
+    --nbtn-svg-fill: #222222;
+
+    /* ==== nt -> Nav(igation) Toggle ==== */
+    --ntbtn-hover-bgcolor: #b6b8bb;
+
+    --ntbtn-svg-fill: #222222;
+
+    /* ==== cb -> Content Block ==== */
+    --cblock-bgcolor: #c4c7cc;
+
+    /* ==== ctr1 -> Container 1 ==== */
+    --cctr1-h2-color: #222222;
+
+    --cctr1-hr-bgcolor: #222222;
+
+    /* ==== ctr2 -> Container 2 ==== */
+    --cctr2-bgcolor: #b6b8bb;
+
+    /* ==== ctr3 -> Container 3 ==== */
+    --cctr3-h3-color: #222222;
+
+    --cctr3-hr-bgcolor: #222222;
+
+    /* ==== dctr -> Directory Container ==== */
+    --dctr-bgcolor: #c4c7cc;
+
+    /* ==== dbtn -> Directory Button ==== */
+    --dbtn-hover-bgcolor: #b6b8bb;
+    --dbtn-svg-fill: #222222;
+
+    /* ==== vpctr -> Video Preview Container ==== */
+    --vpctr-hover-bgcolor: #b6b8bb;
+
+    --vpctr-h4-color: #222222;
+
+    --vpctr-p-color: #222222;
+
+    /* ==== vobtn -> Video Options Button ==== */
+    --vobtn-hover-bgcolor: var(--red-500);
+
+    --vobtn-svg-fill: #222222;
+
+    /* ==== psl -> Playback Slider ==== */
+    --psl-thumb-bshadowcolor: var(--blue-300);
+    --psl-track-bgcolor: var(--gray-tp1);
+
+    /* ==== pbtn -> Playback Button ==== */
+    --pbtn-hover-bgcolor: var(--gray-tp2);
+
+    --pbtn-svg-fill: #222222;
+
+    /* ==== slabel -> Speed Label ==== */
+    --slabel-color: #222222;
+
+    /* ==== pinput -> Playback Input ==== */
+    --pinput-thumb-bgcolor: var(--blue-300);
+
+    /* ==== vsl -> Volume Slider ==== */
+    --vsl-thumb-bshadowcolor: var(--blue-300);
+    --vsl-track-bgcolor: #222222;
+
+    /* ==== tlabel -> Time Label ==== */
+    --tlabel-color: #222222;
+
+    /* ==== tctr -> Timeline Container ==== */
+    --tctr-bgcolor: #c4c7cc;
+
+    /* ==== tmarker -> Timeline Marker ==== */
+    --tmarker-fill: #222222;
+    --tmarker-stroke: #222222;
+
+    --tmarker-text-fill: #222222;
+    --tmarker-text-stroke: #222222;
+
+    /* ==== tls -> Timeline Slider ==== */
+    --tslider-thumb-bgcolor: #222222;
+
+    /* ==== sctr -> Setting Container ==== */
+    --sctr-hover-bgcolor: #989898;
+
+    --sctr-h4-color: #222222;
+
+    --sctr-p-color: #222222;
+
+    /* ==== spill -> Setting Pill ==== */
+    --spill-bgcolor: #c4c7cc;
+
+    --spill-inputselect-bgcolor: #acb5c4;
+    --spill-inputselect-color: #222222;
+
+    --spill-svg-fill: #222222;
+    --spill-svg-active-fill: var(--green-500);
+
+    /* ==== stswitch -> Setting Toggle Switch ==== */
+    --stswitch-bgcolor: #acb5c4;
+    --stswitch-active-bgcolor: var(--green-500);
+
+    --stswitch-svg-bgcolor: #222222;
+    --stswitch-svg-fill: #acb5c4;
+}
+
+html {
+    /* --sbar-thumb-transition: background-color 10s ease 0s; */
+
+    --pctr-transition: opacity 0.2s ease 0s;
+
+    --pslider-thumb-transition: height 0.2s ease 0s;
+
+    --pbtn-transition: background-color 0.3s ease 0s;
+    --pbtn-svg-transition: fill 0.3s ease 0s;
+
+    --nbtn-transition: background-color 0.3s ease 0s;
+
+    --ntbtn-transition: background-color 0.3s ease 0s;
+
+    --sctr-transition: background-color 0.3s ease 0s;
+
+    --stswitch-transition: background-color 0.3s ease 0s;
+    --stswitch-svg-transition: transform 0.3s ease 0s;
+
+    --vpctr-transition: background-color 0.2s ease 0s;
+    --vobtn-transition: background-color 0.2s ease 0s;
+
+    --dbtn-transition: background-color 0.3s ease 0s;
 }

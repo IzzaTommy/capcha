@@ -1,0 +1,83 @@
+#block-content {
+    border-radius: var(--cblock-bradius) 0 0;
+    flex: 1 1 fit-content;
+
+    background-color: var(--cblock-bgcolor);
+    overflow: hidden; /* for vertical/horizontal scroll */
+    position: relative;
+}
+
+.content-ctr1 {
+    position: absolute;
+    display: flex;
+    visibility: hidden;
+    width: 100%;
+
+    flex-flow: column nowrap;
+    gap: var(--cctr1-vgap);
+    height: 100%; /* for vertical scroll */
+    padding: var(--cctr1-vpadding) var(--cctr1-hpadding);
+}
+
+.content-ctr1.active {
+    visibility: visible;
+}
+
+.content-ctr1 > h2 {
+    flex: 0 0 fit-content;
+
+    color: var(--cctr1-h2-color);
+    font-size: var(--cctr1-h2-fsize);
+    font-weight: var(--cctr1-h2-fweight);
+}
+
+.content-ctr1 > hr {
+    flex: 0 0 auto;
+    height: var(--cctr1-hr-height);
+    margin-left: var(--cctr1-hr-lmargin);
+    width: var(--cctr1-hr-width);
+
+    background-color: var(--cctr1-hr-bgcolor);
+}
+
+.content-ctr2 {
+    border-radius: var(--cctr2-bradius);
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--cctr2-vgap);
+    padding: var(--cctr2-vpadding) var(--cctr2-hpadding);
+
+    background-color: var(--cctr2-bgcolor);
+    overflow-y: auto; /* for vertical scroll */
+
+    scrollbar-gutter: stable;
+}
+
+.content-ctr2::-webkit-scrollbar-track {
+    margin: var(--cctr2-sb-track-margin);
+}
+
+.content-ctr3 {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--cctr3-vgap);
+}
+
+.content-ctr3 > h3 {
+    flex: 0 0 fit-content;
+
+    color: var(--cctr3-h3-color);
+    font-size: var(--cctr3-h3-fsize);
+    font-weight: var(--cctr3-h3-fweight);
+}
+
+.content-ctr3 > hr {
+    flex: 0 0 auto;
+    height: var(--cctr3-hr-height);
+    margin-left: var(--cctr3-hr-lmargin);
+    width: var(--cctr3-hr-width);
+
+    background-color: var(--cctr3-hr-bgcolor);
+}

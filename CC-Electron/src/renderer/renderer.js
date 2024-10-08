@@ -16,6 +16,6 @@ async function init() {
     initnavBlock();
     initVideoContainer();
     initTimelineContainer();
-    initSettingsContainer();
+    // initSettingsContainer();
     initDirectoryContainer();
 }

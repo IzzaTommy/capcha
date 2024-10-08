@@ -1,11 +1,11 @@
 .directory-ctr {
-    border-radius: var(--csl-bradius);
+    border-radius: var(--dctr-bradius);
     display: flex;
     flex: 0 0 auto;
     flex-flow: row nowrap;
-    height: var(--csl-height);
+    height: var(--dctr-height);
 
-    background-color: var(--pmc-sh7);
+    background-color: var(--dctr-bgcolor);
     overflow: hidden;
 }
 
@@ -14,19 +14,21 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
+
+    transition: var(--dbtn-transition);
 }
 
 .directory-btn:hover {
-    background-color: var(--cpc-sh1);
+    background-color: var(--dbtn-hover-bgcolor);
 }
 
 .directory-btn > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--jm-svg-length);
-    width: var(--jm-svg-length);
+    height: var(--dbtn-svg-length);
+    width: var(--dbtn-svg-length);
 
-    fill: var(--cpc-sh1);
+    fill: var(--dbtn-svg-fill);
 }
 
 .directory-gallery {
@@ -34,39 +36,40 @@
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
-    margin-right: var(--gl-hmargin);
-    margin-left: var(--gl-hmargin);
-    padding-top: var(--gl-vpadding);
-    padding-bottom: var(--gl-vpadding);
+    margin-right: var(--dgl-hmargin);
+    margin-left: var(--dgl-hmargin);
+    padding-top: var(--dgl-vpadding);
+    padding-bottom: var(--dgl-vpadding);
 
     overflow-x: auto;
     scroll-snap-type: x mandatory;
 }
 
 .directory-gallery::-webkit-scrollbar-track {
-    margin: var(--gl-sb-track-margin);
+    margin: var(--dgl-sb-track-margin);
 }
 
 .video-preview-ctr {
-    border-radius: var(--vpv-bradius);
+    border-radius: var(--vpctr-bradius);
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--vpv-vgap);
-    padding: var(--vpv-padding);
+    gap: var(--vpctr-vgap);
+    padding: var(--vpctr-padding);
 
     scroll-snap-align: start;
+    transition: var(--vpctr-transition);
 }
 
 .video-preview-ctr:hover {
-    background-color: var(--pmc-sh1);
+    background-color: var(--vpctr-hover-bgcolor);
 }
 
 .video-thumbnail {
     aspect-ratio: 16 / 9;
-    border-radius: var(--vt-bradius);
+    border-radius: var(--vtn-bradius);
     flex: 0 0 auto;
-    height: var(--vt-height);
+    height: var(--vtn-height);
 
     background-color: black;
     object-fit: contain;
@@ -76,9 +79,9 @@
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--cpc-sh1);
-    font-size: var(--def-h4-fsize);
-    font-weight: var(--def-h4-fweight);
+    color: var(--vpctr-h4-color);
+    font-size: var(--vpctr-h4-fsize);
+    font-weight: var(--vpctr-h4-fweight);
     line-height: 1;
 }
 
@@ -86,9 +89,9 @@
     flex: 0 0 fit-content;
     margin: 0;
 
-    color: var(--cpc-sh1);
-    font-size: var(--def-p-fsize);
-    font-weight: var(--def-p-fweight);
+    color: var(--vpctr-p-color);
+    font-size: var(--vpctr-p-fsize);
+    font-weight: var(--vpctr-p-fweight);
     line-height: 1;
 }
 
@@ -96,28 +99,28 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--vo-hgap);
+    gap: var(--voctr-hgap);
 }
 
 .video-options-btn {
     border: none;
-    border-radius: var(--vo-btn-bradius);
+    border-radius: var(--vobtn-bradius);
     flex: 0 0 fit-content;
     margin: 0;
-    padding: var(--vo-btn-padding);
+    padding: var(--vobtn-padding);
 
-    background-color: var(--pmc-sh7);
+    transition: var(--vobtn-transition);
 }
 
 .video-options-btn:hover {
-    background-color: var(--pmc-sh1);
+    background-color: var(--vobtn-hover-bgcolor);
 }
 
 .video-options-btn > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--vo-btn-svg-length);
-    width: var(--vo-btn-svg-length);
+    height: var(--vobtn-svg-length);
+    width: var(--vobtn-svg-length);
 
-    fill: var(--cpc-sh1);
+    fill: var(--vobtn-svg-fill);
 }

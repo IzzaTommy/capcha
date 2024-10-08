@@ -1,0 +1,124 @@
+#block-nav {
+    border-radius: 0 var(--nblock-bradius) 0 0;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--nblock-bgcolor);
+    overflow: hidden;
+}
+
+#bar-nav {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--nbar-vgap);
+    padding: var(--nbar-padding);
+}
+
+#display-logo {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--ldp-hgap);
+}
+
+#display-logo > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--ldp-svg-length);
+    width: var(--ldp-svg-length);
+
+    fill: var(--ldp-svg-fill);
+    /* fill: #B7C9A4; */
+}
+
+#display-logo > h1 {
+    display: none;
+    flex: 0 0 fit-content;
+
+    color: var(--ldp-h1-color);
+    font-size: var(--ldp-h1-fsize);
+    font-weight: var(--ldp-h1-fweight);
+}
+
+#bar-nav.active > #display-logo > h1 {
+    display: block;
+}
+
+#bar-nav > hr {
+    flex: 0 0 auto;
+    height: var(--nbar-hr-height);
+    margin-left: var(--nbar-hr-lmargin);
+    width: var(--nbar-hr-width);
+
+    background-color: var(--nbar-hr-bgcolor);
+}
+
+.nav-btn {
+    align-items: center;
+    border-radius: var(--nbtn-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--nbtn-hgap);
+    margin-right: var(--nbtn-hmargin);
+    margin-left: var(--nbtn-hmargin);
+    padding: var(--nbtn-padding);
+
+    background-color: transparent;
+    transition: var(--nbtn-transition);
+}
+
+#btn-record {
+    margin-top: auto;
+}
+
+.nav-btn:hover {
+    background-color: var(--nbtn-hover-bgcolor);
+}
+
+.nav-btn > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--nbtn-svg-length);
+    width: var(--nbtn-svg-length);
+
+    fill: var(--nbtn-svg-fill);
+}
+
+.nav-btn > span {
+    display: none;
+    flex: 0 0 fit-content;
+
+    color: var(--nbtn-span-color);
+    font-size: var(--nbtn-span-fsize);
+    font-weight: var(--nbtn-span-fweight);
+}
+
+#bar-nav.active > .nav-btn > span {
+    display: block;
+}
+
+#btn-nav-toggle {
+    align-items: center;
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    transition: var(--ntbtn-transition);
+}
+
+#btn-nav-toggle:hover {
+    background-color: var(--ntbtn-hover-bgcolor);
+}
+
+#btn-nav-toggle > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--ntbtn-svg-length);
+    width: var(--ntbtn-svg-length);
+
+    fill: var(--ntbtn-svg-fill);
+}

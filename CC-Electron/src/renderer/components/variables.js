@@ -5,7 +5,7 @@ export { GROW_FACTOR, REDUCE_FACTOR,
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackSlider, 
+    videoContainer, videoPlayer, playbackContainer, playbackSlider, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineMarker, timelineSlider, timelineState, 
     allSettingPill, saveLocationSettingPill, 
@@ -25,7 +25,7 @@ let style;
 let minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
 navToggleBtn, navToggleSVG, 
 directoryContainer1, editorContainer1, settingsContainer1, 
-videoContainer, videoPlayer, playbackSlider, 
+videoContainer, videoPlayer, playbackContainer, playbackSlider, 
 playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
 timelineMarker, timelineSlider, timelineState, 
 allSettingPill, saveLocationSettingPill, 
@@ -68,6 +68,8 @@ export async function initVariables() {
 
     videoPlayer = document.querySelector('#player-video');
 
+    playbackContainer = document.querySelector('#ctr-playback');
+
     playbackSlider = document.querySelector('#slider-playback');
 
     playPauseBtn = document.querySelector('#btn-play-pause');
@@ -82,7 +84,7 @@ export async function initVariables() {
 
     speedSlider = document.querySelector('#slider-speed');
     speedBtn = document.querySelector('#btn-speed');
-    speedLabel = speedBtn.querySelector('#label-speed');
+    speedLabel = speedBtn.querySelector('#label-current-speed');
 
     fullscreenBtn = document.querySelector('#btn-fullscreen');
     fullscreenSVG = fullscreenBtn.querySelector('svg > use');
@@ -99,7 +101,7 @@ export async function initVariables() {
     /* ---------- directory section elements ---------- */
     capturesGallery = document.querySelector('#gallery-captures');
     videoPreviewTemplate = document.getElementsByTagName('template')[0];
-    videoPreviewWidth = parseInt(style.getPropertyValue('--vt-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpv-padding'));
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vtn-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
     capturesLeftBtn = document.querySelector('#btn-captures-left');
     capturesRightBtn = document.querySelector('#btn-captures-right');
 

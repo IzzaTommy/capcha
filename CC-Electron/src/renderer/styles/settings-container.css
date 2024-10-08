@@ -1,0 +1,114 @@
+.settings-group-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--sgroup-hgap);
+}
+
+.setting-ctr {
+    align-items: start;
+    align-self: start;
+    border-radius: var(--sctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--sctr-vgap);
+    padding: var(--sctr-vpadding) var(--sctr-hpadding);
+
+    transition: var(--sctr-transition);
+}
+
+.setting-ctr:hover {
+    background-color: var(--sctr-hover-bgcolor);
+}
+
+.setting-ctr > h4 {
+    flex: 0 0 fit-content;
+
+    color: var(--sctr-h4-color);
+    font-size: var(--sctr-h4-fsize);
+    font-weight: var(--sctr-h4-fweight);
+}
+
+.setting-ctr > p {
+    flex: 0 0 fit-content;
+
+    color: var(--sctr-p-color);
+    font-size: var(--sctr-p-fsize);
+    font-weight: var(--sctr-p-fweight);
+}
+
+.setting-pill {
+    border: var(--spill-bwidth) solid var(--pmc-sh8);
+    border-radius: var(--spill-bradius);
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--spill-bgcolor);
+    overflow: hidden;
+}
+
+.setting-pill > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--spill-svg-length);
+    width: var(--spill-svg-length);
+    margin: var(--spill-svg-margin);
+
+    fill: var(--spill-svg-fill);
+}
+
+.setting-pill > input, .setting-pill > select {
+    border: none;
+    box-sizing: content-box;
+    flex: 0 0 auto;
+    padding-right: var(--spill-inputselect-hpadding);
+    padding-left: var(--spill-inputselect-hpadding);
+    width: var(--spill-inputselect-width);
+
+    background-color: var(--spill-inputselect-bgcolor);
+    color: var(--spill-inputselect-color);
+}
+
+#ctr-save-location > .setting-pill > input {
+    width: 500px;
+}
+
+.setting-toggle-switch {
+    position: relative;
+
+    width: var(--stswitch-width);
+
+    background-color: var(--stswitch-bgcolor);
+    cursor: pointer;
+    transition: var(--stswitch-transition);
+}
+
+.setting-toggle-switch > input {
+    display: none;
+}
+
+.setting-toggle-switch:has(input:checked) {
+    background-color: var(--stswitch-active-bgcolor);
+}
+
+.setting-toggle-switch > input:checked + svg {
+    fill: var(--spill-svg-active-fill);
+    transform: translateX(var(--stswitch-svg-translateX));
+}
+
+.setting-toggle-switch > svg {
+    position: absolute;
+    inset: var(--stswitch-svg-inset);
+
+    border-radius: var(--stswitch-svg-bradius);
+    height: var(--stswitch-svg-height);
+    width: var(--stswitch-svg-width);
+
+    background-color: var(--stswitch-svg-bgcolor);
+    transition: var(--stswitch-svg-transition);
+
+    fill: var(--stswitch-svg-fill);
+}

@@ -2,7 +2,7 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackSlider, 
+    videoContainer, videoPlayer, playbackContainer, playbackSlider, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineMarker, timelineSlider, timelineState,  
     allSettingPill, saveLocationSettingPill, 
@@ -36,6 +36,10 @@ function loadVideoEL() {
     });
 
     /* ---------- video event listeners ---------- */
+    videoPlayer.addEventListener('pause', () => playbackContainer.style.opacity = "1");
+
+    videoPlayer.addEventListener('play', () => playbackContainer.style.opacity = "");
+
     // play/pause the video, update SVGs
     videoPlayer.addEventListener('click', () => setVideoState());
 

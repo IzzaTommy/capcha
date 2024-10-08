@@ -10,33 +10,36 @@
 
 #label-version {
     flex: 0 0 fit-content;
-    margin-right: auto;
-    margin-left: var(--tb-p-lmargin);
+    margin-left: var(--vlabel-lmargin);
 
-    color: var(--cpc-sh1);
-    font-size: var(--def-p-fsize);
-    font-weight: var(--def-p-fweight);
+    color: var(--vlabel-color);
+    font-size: var(--vlabel-fsize);
+    font-weight: var(--vlabel-fweight);
 }
 
 .title-btn {
     flex: 0 0 fit-content;
-    padding: var(--tb-btn-vpadding) var(--tb-btn-hpadding);
+    padding: var(--tbtn-vpadding) var(--tbtn-hpadding);
 
     -webkit-app-region: no-drag;
 }
 
+#btn-minimize {
+    margin-left: auto;
+}
+
 .title-btn:hover {
-    background-color: var(--pmc-sh6);
+    background-color: var(--tbtn-hover-bgcolor);
 }
 
 #btn-close:hover {
-    background-color: #FF0000;
+    background-color: #ff0000;
 }
 
 .title-btn > svg {
     display: block;
-    height: var(--tb-btn-svg-length);
-    width: var(--tb-btn-svg-length);
+    height: var(--tbtn-svg-length);
+    width: var(--tbtn-svg-length);
 
-    fill: var(--cpc-sh2);
+    fill: var(--tbtn-svg-fill);
 }
