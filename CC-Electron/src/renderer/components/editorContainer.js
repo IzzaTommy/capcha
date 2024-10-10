@@ -55,6 +55,7 @@ function loadVideoEL() {
 
             // update the scrubber, playback slider, and timer to match the current time
             if (playbackSlider.value != videoPlayer.currentTime || timelineSlider.value != videoPlayer.currentTime) {
+                console.log(videoPlayer.currentTime);
                 playbackSlider.value = videoPlayer.currentTime;
                 timelineSlider.value = videoPlayer.currentTime;
             }

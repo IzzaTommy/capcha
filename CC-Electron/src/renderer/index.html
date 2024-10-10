@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,12 +104,12 @@
                                         <h4></h4>
                                         <p></p>
                                         <div class="video-options-ctr">
-                                            <!-- <button class="video-options-btn">
+                                            <button class="video-options-btn video-rename-btn">
                                                 <svg>
                                                     <use href="../assets/svg/edit.svg#edit"></use>
                                                 </svg>
-                                            </button> -->
-                                            <button class="video-options-btn">
+                                            </button>
+                                            <button class="video-options-btn video-delete-btn">
                                                 <svg>
                                                     <use href="../assets/svg/delete.svg#delete"></use>
                                                 </svg>
@@ -117,6 +117,24 @@
                                         </div>
                                     </div>
                                 </template>
+                                <div class="video-preview-ctr" data-src="">
+                                    <img class="video-thumbnail" src="" alt="">
+                                    
+                                    <h4>asd</h4>
+                                    <p>asd</p>
+                                    <div class="video-options-ctr">
+                                        <button class="video-options-btn video-rename-btn">
+                                            <svg>
+                                                <use href="../assets/svg/edit.svg#edit"></use>
+                                            </svg>
+                                        </button>
+                                        <button class="video-options-btn video-delete-btn">
+                                            <svg>
+                                                <use href="../assets/svg/delete.svg#delete"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <button id="btn-captures-right" class="directory-btn">
@@ -229,7 +247,7 @@
                                 </svg>
 
                                 <label class="setting-toggle-switch">
-                                    <input type="checkbox" name="dark-mode">
+                                    <input type="checkbox" name="darkMode">
                                     <svg>
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
@@ -416,7 +434,7 @@
                                 </svg>
 
                                 <label class="setting-toggle-switch">
-                                    <input type="checkbox" name="auto-record">
+                                    <input type="checkbox" name="autoRecord">
                                     <svg>
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>

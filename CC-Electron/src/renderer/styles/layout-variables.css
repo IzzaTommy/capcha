@@ -65,7 +65,7 @@ html {
     --cctr1-vpadding: var(--nbar-padding);
 
     --cctr1-h2-fsize: 60px;
-    --cctr1-h2-fweight: 600;
+    --cctr1-h2-fweight: 500;
 
     --cctr1-hr-height: 1.5px;
     --cctr1-hr-lmargin: var(--nbar-hr-lmargin);
@@ -82,8 +82,8 @@ html {
     /* ==== ctr3 -> Container 3 ==== */
     --cctr3-vgap: var(--nbar-vgap);
 
-    --cctr3-h3-fsize: 40px;
-    --cctr3-h3-fweight: 500;
+    --cctr3-h3-fsize: 30px;
+    --cctr3-h3-fweight: 400;
 
     --cctr3-hr-height: 1.5px;
     --cctr3-hr-lmargin: var(--nbar-hr-lmargin);
@@ -92,6 +92,7 @@ html {
     /* ==== dctr -> Directory Container ==== */
     --dctr-bradius: 10px;
     --dctr-height: calc(2 * var(--dgl-vpadding) + 2 * var(--vpctr-padding) + var(--vtn-height) + 3 * var(--vpctr-vgap) + var(--vpctr-h4-fsize) + var(--vpctr-p-fsize) + 2 * var(--vobtn-padding) + var(--vobtn-svg-length) + var(--sbar-length));
+    --dctr-owidth: 1.5px;
 
     /* ==== dbtn -> Directory Button ==== */
     --dbtn-svg-length: 15px;
@@ -132,9 +133,10 @@ html {
     --vctr-width: 80%;
 
     /* ==== psl -> Playback Slider ==== */
+    --psl-bwidth: 10px;
     --psl-hmargin: 6px;
     /* --psl-width: var(--vctr-width); */
-    --psl-width: 9000px;
+    --psl-width: 100vw;
 
     --psl-thumb-height: 3px;
     --psl-thumb-hover-height: 8px;
@@ -165,8 +167,7 @@ html {
     --pinput-track-height: 4px;
 
     /* ==== vsl -> Volume Slider ==== */
-    --vsl-rmargin: var(--vsl-vpadding);
-    --vsl-vpadding: calc((var(--pbtn-svg-length) - var(--pinput-thumb-height)) / 2);
+    --vsl-vpadding: calc((var(--pbtn-svg-length) - var(--pinput-track-height)) / 2);
     --vsl-width: 100px;
 
     --vsl-thumb-bradius: calc(var(--pinput-thumb-height) / 2);
@@ -220,6 +221,7 @@ html {
     --sctr-vgap: 5px;
     --sctr-hpadding: var(--cctr2-hpadding);
     --sctr-vpadding: var(--cctr2-vpadding);
+    --sctr-owidth: 1.5px;
 
     --sctr-p-fsize: 11px;
     --sctr-p-fweight: 300;
@@ -229,13 +231,12 @@ html {
 
     /* ==== spill -> Setting Pill ==== */
     --spill-bradius: 10px;
-    --spill-bwidth: 1px;
 
     --spill-inputselect-hpadding: 10px;
     --spill-inputselect-width: 110px;
 
     --spill-svg-length: 25px;
-    --spill-svg-margin: calc(5px - var(--spill-bwidth));
+    --spill-svg-margin: 5px;
 
     /* ==== stswitch -> Setting Toggle Switch ==== */
     --stswitch-width: 66px;

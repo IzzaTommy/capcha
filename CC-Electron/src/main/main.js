@@ -17,29 +17,30 @@ const obsExecutablePath = path.join(__dirname, '..', '..', '..', 'build_x64', 'r
 let ws;
 const store = new Store({
     defaults: {
-        theme: 'dark',
-
         navBarActive: true,
         
         volume: 0.5,
         volumeMuted: true,
+
+        darkMode: true,
 
         saveLocation: defVideoDirectory,
         storageLimit: 100,
         fileExtension: '.mp4',
         encoder: 'jim_nvenc',
 
+        // captureDisplay: '',
         resolutionWidth: 2560,
         resolutionHeight: 1440,
         framerate: 60,
-        bitrate: 30
+        bitrate: 30,
+        autoRecord: false,
+
+        // audio: '',
+        // microphone: '',
+        // webcam: ''
     },
     schema: {
-        theme: {
-            type: 'string',
-            enum: ['light', 'dark']
-        },
-
         navBarActive: {
             type: 'boolean'
         },
@@ -50,6 +51,10 @@ const store = new Store({
             maximum: 1,
         },
         volumeMuted: {
+            type: 'boolean'
+        },
+
+        darkMode: {
             type: 'boolean'
         },
 
@@ -70,6 +75,9 @@ const store = new Store({
             enum: ['nvenc', 'jim_nvenc', 'h.264']
         },
 
+        captureDisplay: {
+            type: 'string'
+        },
         resolutionWidth: {
             type: 'number',
             minimum: 1,
@@ -89,6 +97,16 @@ const store = new Store({
             type: 'number',
             minimum: 3,
             maximum: 100
+        },
+        
+        audio: {
+            type: 'string'
+        },
+        microphone: {
+            type: 'string'
+        },
+        webcam: {
+            type: 'string'
         }
     }
 });

@@ -15,11 +15,13 @@
     gap: var(--sctr-vgap);
     padding: var(--sctr-vpadding) var(--sctr-hpadding);
 
+    outline: var(--sctr-owidth) solid transparent;
     transition: var(--sctr-transition);
 }
 
 .setting-ctr:hover {
     background-color: var(--sctr-hover-bgcolor);
+    outline-color: var(--sctr-hover-ocolor);
 }
 
 .setting-ctr > h4 {
@@ -39,7 +41,6 @@
 }
 
 .setting-pill {
-    border: var(--spill-bwidth) solid var(--pmc-sh8);
     border-radius: var(--spill-bradius);
 
     display: flex;
@@ -61,7 +62,6 @@
 }
 
 .setting-pill > input, .setting-pill > select {
-    border: none;
     box-sizing: content-box;
     flex: 0 0 auto;
     padding-right: var(--spill-inputselect-hpadding);

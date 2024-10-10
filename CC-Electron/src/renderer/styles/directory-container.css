@@ -6,6 +6,8 @@
     height: var(--dctr-height);
 
     background-color: var(--dctr-bgcolor);
+    outline: var(--dctr-owidth) solid var(--dctr-ocolor);
+
     overflow: hidden;
 }
 
@@ -103,7 +105,6 @@
 }
 
 .video-options-btn {
-    border: none;
     border-radius: var(--vobtn-bradius);
     flex: 0 0 fit-content;
     margin: 0;
@@ -112,8 +113,16 @@
     transition: var(--vobtn-transition);
 }
 
-.video-options-btn:hover {
-    background-color: var(--vobtn-hover-bgcolor);
+.video-rename-btn:hover {
+    background-color: var(--vrbtn-hover-bgcolor);
+}
+
+.video-delete-btn:hover {
+    background-color: var(--vdbtn-hover-bgcolor);
+}
+
+.video-options-btn:hover > svg {
+    fill: var(--vobtn-hover-svg-fill);
 }
 
 .video-options-btn > svg {
@@ -123,4 +132,5 @@
     width: var(--vobtn-svg-length);
 
     fill: var(--vobtn-svg-fill);
+    transition: var(--vobtn-svg-transition);
 }

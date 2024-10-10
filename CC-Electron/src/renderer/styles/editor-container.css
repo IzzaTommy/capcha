@@ -39,8 +39,11 @@
 }
 
 #slider-playback {
+    border-top: var(--psl-bwidth) solid transparent;
     flex: 0 0 fit-content;
     margin: 0 var(--psl-hmargin);
+
+    background-clip: padding-box;
     overflow: hidden;
 
     cursor: pointer;
@@ -53,6 +56,7 @@
     width: 0;
 
     box-shadow: calc(-1 * var(--psl-width)) 0 0 var(--psl-width) var(--psl-thumb-bshadowcolor);
+
     transition: var(--pslider-thumb-transition);
 
     -webkit-appearance: none;
@@ -74,7 +78,7 @@
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    background: linear-gradient(to top, var(--scc-tp1), transparent);
+    background: linear-gradient(to top, var(--pbar-lgradientcolor), transparent);
 }
 
 .playback-btn {
@@ -99,10 +103,6 @@
 #ctr-time {
     display: flex;
     flex-flow: row nowrap;
-}
-
-.playback-btn:hover {
-    background-color: var(--pbtn-hover-bgcolor);
 }
 
 .playback-btn > svg {
@@ -145,7 +145,7 @@
 }
 
 .playback-input {
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
 
     cursor: pointer;
     overflow: hidden;
@@ -169,19 +169,20 @@
 }
 
 #slider-volume {
-    display: none;
-    margin-right: var(--vsl-rmargin);
     padding-top: var(--vsl-vpadding);
     padding-bottom: var(--vsl-vpadding);
-    /* width: 0; */
-    /* transition: width 0.5s ease 0s; */
-    width: var(--vsl-width);
+    width: 0;
+
+    transition: var(--vsl-transition);
 }
 
 #btn-volume:hover + #slider-volume,
 #slider-volume:hover {
-    /* width: var(--vsl-width);  */
-    display: block;
+    width: var(--vsl-width); 
+}
+
+#btn-volume:has(+ #slider-volume:hover) > svg {
+    fill: white;
 }
 
 #slider-volume::-webkit-slider-thumb {
@@ -209,14 +210,18 @@
     margin-left: auto;
     padding-top: var(--ssl-vpadding);
     padding-bottom: var(--ssl-vpadding);
-    width: var(--ssl-width);
+    width: 0;
 
-    visibility: hidden;
+    transition: var(--ssl-transition);
 }
 
 #slider-speed:has(+ #btn-speed:hover),
 #slider-speed:hover {
-    visibility: visible;
+    width: var(--ssl-width);
+}
+
+#slider-speed:hover + #btn-speed > span {
+    color: white;
 }
 
 #slider-speed::-webkit-slider-thumb {

@@ -2,13 +2,14 @@ import { TimelineState } from './timelineState.js';
 import { initDirectoryContainer, loadGallery } from './directoryContainer.js';
 
 export { GROW_FACTOR, REDUCE_FACTOR, 
+    html, 
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
     videoContainer, videoPlayer, playbackContainer, playbackSlider, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineMarker, timelineSlider, timelineState, 
-    allSettingPill, saveLocationSettingPill, 
+    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     settingsCache, 
@@ -22,13 +23,14 @@ const REDUCE_FACTOR = 0.1;
 let style;
 
 /* ========== elements ========== */
-let minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+let html, 
+minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
 navToggleBtn, navToggleSVG, 
 directoryContainer1, editorContainer1, settingsContainer1, 
 videoContainer, videoPlayer, playbackContainer, playbackSlider, 
 playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
 timelineMarker, timelineSlider, timelineState, 
-allSettingPill, saveLocationSettingPill, 
+allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
 capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
 flags, boxes, 
 settingsCache, 
@@ -38,6 +40,9 @@ export async function initVariables() {
     style = getComputedStyle(document.documentElement);
 
     /* ========== elements ========== */
+    /* ---------- html element ---------- */
+    html = document.querySelector('html');
+    
     /* ---------- title bar elements ---------- */
     minimizeBtn = document.querySelector('#btn-minimize');
     maximizeBtn = document.querySelector('#btn-maximize');
@@ -96,7 +101,9 @@ export async function initVariables() {
 
     /* ---------- settings section elements ---------- */
     allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='saveLocation']), .setting-pill > select`);
+    allSettingToggleSwitch = document.querySelectorAll(`.setting-toggle-switch > input:not([name='darkMode'])`);
     saveLocationSettingPill = document.querySelector(`.setting-pill > input[name='saveLocation']`);
+    darkModeSettingToggleSwitch = document.querySelector(`.setting-toggle-switch > input[name='darkMode']`);
 
     /* ---------- directory section elements ---------- */
     capturesGallery = document.querySelector('#gallery-captures');
