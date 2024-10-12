@@ -6,9 +6,9 @@ export { GROW_FACTOR, REDUCE_FACTOR,
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackContainer, playbackSlider, 
+    videoContainer, videoPlayer, playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineMarker, timelineSlider, timelineState, 
+    timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
@@ -27,9 +27,9 @@ let html,
 minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
 navToggleBtn, navToggleSVG, 
 directoryContainer1, editorContainer1, settingsContainer1, 
-videoContainer, videoPlayer, playbackContainer, playbackSlider, 
+videoContainer, videoPlayer, playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
 playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-timelineMarker, timelineSlider, timelineState, 
+timelineTrack, timelineThumb, timelineState, 
 allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
 capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
 flags, boxes, 
@@ -76,6 +76,8 @@ export async function initVariables() {
     playbackContainer = document.querySelector('#ctr-playback');
 
     playbackSlider = document.querySelector('#slider-playback');
+    playbackTrack = document.querySelector('#track-playback');
+    playbackThumb = document.querySelector('#thumb-playback');
 
     playPauseBtn = document.querySelector('#btn-play-pause');
     playPauseSVG = playPauseBtn.querySelector('svg > use');
@@ -94,8 +96,8 @@ export async function initVariables() {
     fullscreenBtn = document.querySelector('#btn-fullscreen');
     fullscreenSVG = fullscreenBtn.querySelector('svg > use');
 
-    timelineMarker = document.querySelector('#marker-timeline');
-    timelineSlider = document.querySelector('#slider-timeline');
+    timelineTrack = document.querySelector('#track-timeline');
+    timelineThumb = document.querySelector('#thumb-timeline');
 
     timelineState = new TimelineState();
 
@@ -113,14 +115,20 @@ export async function initVariables() {
     capturesRightBtn = document.querySelector('#btn-captures-right');
 
     /* ---------- boolean flags ---------- */
-    flags = { videoMetaDataLoaded: false };
+    flags = { 
+        videoMetaDataLoaded: false,
+        timelineDragging: false,
+        playbackDragging: false
+     };
 
     /* ---------- element bounding client rectangles ---------- */
     boxes = { 
-        timelineSliderBox: timelineSlider.getBoundingClientRect(),
+        timelineTrackBox: timelineTrack.getBoundingClientRect(),
         playbackSliderBox: playbackSlider.getBoundingClientRect(),
         galleryBox: capturesGallery.getBoundingClientRect()
-     };
+    };
+
+    console.log(boxes);
 
     [settingsCache, videosData] = await Promise.all([window.settingsAPI.getAllSettings(), window.filesAPI.getAllVideosData()]);
 }

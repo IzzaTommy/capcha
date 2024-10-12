@@ -2,9 +2,9 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackContainer, playbackSlider, 
+    videoContainer, videoPlayer, playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineMarker, timelineSlider, timelineState,  
+    timelineTrack, timelineThumb, timelineState,  
     allSettingPill, saveLocationSettingPill, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
@@ -23,7 +23,10 @@ function initTimelineContainer() {
     loadTimelineEL();
 }
 
+let oldTime = 0;
+
 function loadVideoEL() {
+    
     /* ---------- video container event listeners ---------- */
     // changes SVGs, accounts for exiting fullscreen using ESC key
     videoContainer.addEventListener('fullscreenchange', () => {
@@ -36,7 +39,9 @@ function loadVideoEL() {
     });
 
     /* ---------- video event listeners ---------- */
-    videoPlayer.addEventListener('pause', () => playbackContainer.style.opacity = "1");
+    videoPlayer.addEventListener('pause', () => {
+        playbackContainer.style.opacity = "1";
+    });
 
     videoPlayer.addEventListener('play', () => playbackContainer.style.opacity = "");
 
@@ -46,6 +51,7 @@ function loadVideoEL() {
     // change the scrubber, playback slider, and time to match the current time
     videoPlayer.addEventListener('timeupdate', () => {
         if (flags['videoMetaDataLoaded']) {
+            console.log(oldTime, videoPlayer.currentTime, videoPlayer.duration);
             // check if the scrubber would be out of the timeline, put it back at the start
             // checking if the scrubber is before the start creates a race condition...
             if (videoPlayer.currentTime >= timelineState.getEndTime()) {
@@ -53,12 +59,12 @@ function loadVideoEL() {
                 videoPlayer.play();
             }
 
-            // update the scrubber, playback slider, and timer to match the current time
-            if (playbackSlider.value != videoPlayer.currentTime || timelineSlider.value != videoPlayer.currentTime) {
-                console.log(videoPlayer.currentTime);
-                playbackSlider.value = videoPlayer.currentTime;
-                timelineSlider.value = videoPlayer.currentTime;
-            }
+            playbackThumb.style.transition = `transform ${videoPlayer.currentTime - oldTime}s linear 0s`;
+            timelineThumb.style.transition = `transform ${videoPlayer.currentTime - oldTime}s linear 0s`;
+            updatePlaybackThumb();
+            updateTimelineThumb();
+
+            oldTime = videoPlayer.currentTime;
 
             // update the video time text
             currentTimeLabel.textContent = getReadableTime(videoPlayer.currentTime);
@@ -67,27 +73,12 @@ function loadVideoEL() {
 
     // wait for the video meta data to load 
     videoPlayer.addEventListener('loadedmetadata', () => {
+        playbackThumb.style.transition = '';
+        timelineThumb.style.transition = '';
+
+        oldTime = 0;
         timelineState.update(0, videoPlayer.duration);
         setTicks();
-
-        // update timeline and playback slider range
-        timelineSlider.min = 0;
-
-        playbackSlider.max = videoPlayer.duration;
-        timelineSlider.max = videoPlayer.duration;
-
-        playbackSlider.value = 0;
-        timelineSlider.value = 0;
-
-        // sliding to 0 is buggy if the step is too small /* change with animation? */
-        if (videoPlayer.duration < 60) {
-            playbackSlider.step = 0.1;
-            timelineSlider.step = 0.1;
-        }
-        else {
-            playbackSlider.step = 0.01;
-            timelineSlider.step = 0.01;
-        }
 
         // set the default timer/duration
         currentTimeLabel.textContent = '0:00';
@@ -100,33 +91,36 @@ function loadVideoEL() {
     });
 
     /* ---------- playback bar event listeners ---------- */
-    // changes video time based on timeline bounds and playblack slider click location
-    playbackSlider.addEventListener('input', () => {
+    // change the video time based on the click location of the timeline
+    playbackSlider.addEventListener('click', (pointer) => {
+        const test = videoPlayer.duration * getClickPercentage(pointer, boxes['playbackSliderBox']);
+
         // make sure clicks on the playback slider are within the timeline's start and end times
-        if (playbackSlider.value < timelineState.getStartTime() || playbackSlider.value >= timelineState.getEndTime()) {
+        if (test < timelineState.getStartTime() || test >= timelineState.getEndTime()) {
             // update the timeline slider and video time
-            timelineSlider.value = timelineState.getStartTime();
             videoPlayer.currentTime = timelineState.getStartTime();
         }
         else {
-            timelineSlider.value = playbackSlider.value;
-            videoPlayer.currentTime = playbackSlider.value;
+            videoPlayer.currentTime = test;
         }
 
-        // update the current video time text
-        currentTimeLabel.textContent = getReadableTime(playbackSlider.value);
+        playbackThumb.style.transition = '';
+        timelineThumb.style.transition = '';
+
+        updatePlaybackThumb();
+        updateTimelineThumb();
     });
 
     // create a hover highlight based on pointer location
     playbackSlider.addEventListener('mousemove', (pointer) => {
         const playbackSliderPct = getClickPercentage(pointer, boxes['playbackSliderBox']) * 100;
         
-        playbackSlider.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${playbackSliderPct}%, transparent ${playbackSliderPct}%)`;
+        playbackTrack.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${playbackSliderPct}%, transparent ${playbackSliderPct}%)`;
     });
 
     // revert the hover hightlight
     playbackSlider.addEventListener('mouseleave', () => {
-        playbackSlider.style.backgroundImage = 'none';
+        playbackTrack.style.backgroundImage = 'none';
     });
 
     // play/pause the video, update SVGs
@@ -225,7 +219,6 @@ function loadVideoEL() {
         }
     });
 
-    /* ---------- timeline event listeners ---------- */
     // change the default volume
     videoPlayer.volume = settingsCache['volume'];
     videoPlayer.muted = settingsCache['volumeMuted']
@@ -236,45 +229,67 @@ function loadVideoEL() {
     setVolumeSVG();
 }
 
+/* ---------- timeline event listeners ---------- */
 function loadTimelineEL() {
-    // changes video time based on timeline bounds and playblack slider click location
-    timelineSlider.addEventListener('input', () => {
-        // make sure clicks on the playback slider are within the timeline's start and end times
-        if (timelineSlider.value < timelineState.getStartTime() || timelineSlider.value >= timelineState.getEndTime()) {
-            // update the playback slider and video time
-            playbackSlider.value = timelineState.getStartTime();
-            videoPlayer.currentTime = timelineState.getStartTime();
-        }
-        else {
-            playbackSlider.value = timelineSlider.value;
-            videoPlayer.currentTime = timelineSlider.value;
-        }
+    // change the video time based on the click location of the timeline
+    timelineTrack.addEventListener('click', (pointer) => {
+        videoPlayer.currentTime = ((timelineState.getEndTime() - timelineState.getStartTime()) * getClickPercentage(pointer, boxes['timelineTrackBox'])) + timelineState.getStartTime();
 
-        // update the current video time text
-        currentTimeLabel.textContent = getReadableTime(timelineSlider.value);
+        playbackThumb.style.transition = '';
+        timelineThumb.style.transition = '';
+
+        updatePlaybackThumb();
+        updateTimelineThumb();
     });
 
     // "zoom" in and out of the timeline with the scroll wheel
-    timelineSlider.addEventListener('wheel', (pointer) => {
+    timelineTrack.addEventListener('wheel', (pointer) => {
         // get the timeline's start time, end time, and content box
         const startTime = timelineState.getStartTime();
         const endTime = timelineState.getEndTime();
         const duration = timelineState.getDuration();
 
         // check if the scroll was within the timeline range
-        if (pointer.clientX > boxes['timelineSliderBox'].left && pointer.clientX < boxes['timelineSliderBox'].right) {
+        if (pointer.clientX > boxes['timelineTrackBox'].left && pointer.clientX < boxes['timelineTrackBox'].right) {
             // get the percentage of the timeline where the event occurred
-            const percentage = getClickPercentage(pointer, boxes['timelineSliderBox']);
+            const percentage = getClickPercentage(pointer, boxes['timelineTrackBox']);
 
             // check if the pointer scrolled up ("zoom in")
             if (pointer.deltaY < 0) {
                 // check if timeline is not at maximum zoom
                 if (duration > 30) {
-                    // adjust the timeline start time, end time, and interval
+                    // calculate the new start/end times and duration
+                    const newStartTime = startTime + (REDUCE_FACTOR * duration * percentage);
+                    const newEndTime = endTime - (REDUCE_FACTOR * duration * (1 - percentage));
+                    const newDuration = newEndTime - newStartTime;
+
+                    // if the new duration would be less than 30s, then set the zoom to 30s
                     timelineState.update(
-                        startTime + (REDUCE_FACTOR * duration * percentage), 
-                        endTime - (REDUCE_FACTOR * duration * (1 - percentage))
+                        (newDuration < 30) ? newStartTime - (30 - newDuration) * percentage : newStartTime,
+                        (newDuration < 30) ? newStartTime - (30 - newDuration) * percentage + 30 : newEndTime
                     );
+
+                    // redraw the tick marks
+                    setTicks();
+
+                    // check if the scrubber would be out of the timeline, put it back in bounds
+                    if (videoPlayer.currentTime < timelineState.getStartTime()) {
+                        videoPlayer.currentTime = timelineState.getStartTime();
+                    } 
+                    else {
+                        if (videoPlayer.currentTime >= timelineState.getEndTime()) {
+                            videoPlayer.currentTime = timelineState.getEndTime();
+                        }
+                    }
+
+                    playbackThumb.style.transition = '';
+                    timelineThumb.style.transition = '';
+                    updatePlaybackThumb();
+                    updateTimelineThumb();
+
+                    currentTimeLabel.textContent = getReadableTime(videoPlayer.currentTime);
+
+                    
                 }
             }
             else {
@@ -299,34 +314,162 @@ function loadTimelineEL() {
                             (newEndTime > videoPlayer.duration) ? videoPlayer.duration : newEndTime
                         );
                     }
+
+                    // redraw the tick marks
+                    setTicks();
+
+                    // check if the scrubber would be out of the timeline, put it back in bounds
+                    if (videoPlayer.currentTime < timelineState.getStartTime()) {
+                        videoPlayer.currentTime = timelineState.getStartTime();
+                    } 
+                    else {
+                        if (videoPlayer.currentTime >= timelineState.getEndTime()) {
+                            videoPlayer.currentTime = timelineState.getEndTime();
+                        }
+                    }
+
+                    playbackThumb.style.transition = '';
+                    timelineThumb.style.transition = '';
+                    updatePlaybackThumb();
+                    updateTimelineThumb();
+
+                    currentTimeLabel.textContent = getReadableTime(videoPlayer.currentTime);
                 }
             }
+        }
+    });
 
-            // redraw the tick marks
-            setTicks();
+    timelineThumb.addEventListener('mousedown', () => {
+        flags['timelineDragging'] = true;
+    });
 
-            // check if the scrubber would be out of the timeline, put it back in bounds
-            if (videoPlayer.currentTime < timelineState.getStartTime()) {
-                videoPlayer.currentTime = timelineState.getStartTime();
-                playbackSlider.value = timelineState.getStartTime();
-                timelineSlider.value = timelineState.getStartTime();
-            } 
+    timelineTrack.addEventListener('mousedown', () => {
+        flags['timelineDragging'] = true;
+    });
+
+    playbackSlider.addEventListener('mousedown', () => {
+        flags['playbackDragging'] = true;
+    });
+
+    document.addEventListener('mouseup', () => {
+        flags['timelineDragging'] = false;
+        flags['playbackDragging'] = false;
+    });
+
+    document.addEventListener('mousemove', (pointer) => {
+        if (flags['timelineDragging']) {
+            // get the percentage of the timeline where the event occurred
+            let percentage;
+            // get the mouse X location relative to the timeline start
+            let pointerX = pointer.clientX - boxes['timelineTrackBox'].left;
+
+            // make sure the scrubber is within the bounds of the timeline
+            if (pointerX < 0) {
+                pointerX = 0;
+                percentage = 0;
+            }
             else {
-                if (videoPlayer.currentTime >= timelineState.getEndTime()) {
-                    videoPlayer.currentTime = timelineState.getEndTime();
-                    playbackSlider.value = timelineState.getEndTime();
-                    timelineSlider.value = timelineState.getEndTime();
+                if (pointerX > boxes['timelineTrackBox'].width) {
+                    pointerX = boxes['timelineTrackBox'].width;
+                    percentage = 1;
+                }
+                else {
+                    percentage = getClickPercentage(pointer, boxes['timelineTrackBox']);
                 }
             }
 
-            timelineSlider.min = timelineState.getStartTime();
-            timelineSlider.max = timelineState.getEndTime();
+            // move the scrubber to the right position
+            timelineThumb.style.transform = `translateX(${pointerX}px)`;
 
-            currentTimeLabel.textContent = getReadableTime(timelineSlider.value);
+            // update the video time based on position of the scrubber
+            videoPlayer.currentTime = timelineState.getStartTime() + (percentage * (timelineState.getEndTime() - timelineState.getStartTime()));
+
+            playbackThumb.style.transition = '';
+            timelineThumb.style.transition = '';
+            updatePlaybackThumb();
+            updateTimelineThumb();
+        }
+        
+        if (flags['playbackDragging']) {
+            // get the percentage of the timeline where the event occurred
+            let percentage;
+            // get the mouse X location relative to the timeline start
+            let pointerX = pointer.clientX - boxes['playbackSliderBox'].left;
+
+            // make sure the scrubber is within the bounds of the timeline
+            if (pointerX < 0) {
+                pointerX = 0;
+                percentage = 0;
+            }
+            else {
+                if (pointerX > boxes['playbackSliderBox'].width) {
+                    pointerX = boxes['playbackSliderBox'].width;
+                    percentage = 1;
+                }
+                else {
+                    percentage = getClickPercentage(pointer, boxes['playbackSliderBox']);
+                }
+            }
+
+            // move the scrubber to the right position
+            playbackThumb.style.transform = `translateX(${pointerX}px)`;
+
+            // update the video time based on position of the scrubber
+            videoPlayer.currentTime = percentage * videoPlayer.duration;
+
+            playbackThumb.style.transition = '';
+            timelineThumb.style.transition = '';
+            updatePlaybackThumb();
+            updateTimelineThumb();
         }
     });
 }
+
 // send the video player volume when requested
 window.settingsAPI.reqVolumeSettings(() => {
     window.settingsAPI.setVolumeSettings({ 'volume': settingsCache['volume'], 'volumeMuted': settingsCache['volumeMuted'] });
 });
+
+
+
+
+
+
+
+
+// gets the scrubber percentage in the timeline bounding box
+function getThumbPercentage() {
+    return (videoPlayer.currentTime - timelineState.getStartTime()) / timelineState.getDuration();
+}
+
+// updates the scrubber location
+function updateTimelineThumb() {
+    if (getThumbPercentage() < 0)
+    {
+        timelineThumb.style.transform = `translateX(0px)`;
+    }
+    else {
+        if (getThumbPercentage() > 1) {
+            timelineThumb.style.transform = `translateX(${boxes['timelineTrackBox'].width}px)`;
+        }
+        else {
+            timelineThumb.style.transform = `translateX(${getThumbPercentage() * boxes['timelineTrackBox'].width}px)`;
+        }
+    }
+}
+
+// updates the scrubber location
+function updatePlaybackThumb() {
+    if (videoPlayer.currentTime / videoPlayer.duration < 0)
+    {
+        playbackThumb.style.transform = `translateX(0px)`;
+    }
+    else {
+        if (videoPlayer.currentTime / videoPlayer.duration > 1) {
+            playbackThumb.style.transform = `translateX(${boxes['playbackSliderBox'].width}px)`;
+        }
+        else {
+            playbackThumb.style.transform = `translateX(${videoPlayer.currentTime / videoPlayer.duration * boxes['playbackSliderBox'].width}px)`;
+        }
+    }
+}

@@ -134,12 +134,12 @@ html {
 
     /* ==== psl -> Playback Slider ==== */
     --psl-bwidth: 10px;
+    --psl-height: 3px;
     --psl-hmargin: 6px;
-    /* --psl-width: var(--vctr-width); */
-    --psl-width: 100vw;
+    --psl-hover-height: 8px;
 
-    --psl-thumb-height: 3px;
-    --psl-thumb-hover-height: 8px;
+    /* ==== pthumb -> Playback Thumb ==== */
+    --pthumb-bswidth: 100vw;
 
     /* ==== pbtn -> Playback Button ==== */
     --pbtn-bradius: 5px;
@@ -193,25 +193,24 @@ html {
     --ttlabel-hpadding: var(--ctlabel-hpadding);
     --ttlabel-vpadding: var(--ctlabel-vpadding);
 
-    /* ==== tctr -> Timeline Container ==== */
-    --tctr-bradius: 10px;
-    --tctr-height: 60px;
-    --tctr-width: var(--vctr-width);
+    /* ==== tslider -> Timeline Slider ==== */
+    --tslider-bradius: 10px;
+    --tslider-height: 60px;
+    --tslider-width: var(--vctr-width);
 
-    /* ==== tmarker -> Timeline Marker ==== */
-    --tmarker-height: var(--tctr-height);
-    --tmarker-swidth: 1px;
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-height: var(--tslider-height);
+    --ttrack-swidth: 1px;
 
-    --tmarker-text-fsize: 12px;
-    --tmarker-text-fweight: 10;
+    --ttrack-text-fsize: 12px;
+    --ttrack-text-fweight: 10;
 
-    /* ==== tls -> Timeline Slider ==== */
-    --tslider-thumb-bradius: calc(var(--tslider-thumb-width) / 2);
-    --tslider-thumb-height: calc(-2 * var(--tslider-thumb-tmargin) + var(--tctr-height));
-    --tslider-thumb-tmargin: -12px;
-    --tslider-thumb-width: 4px;
-
-    --tslider-track-height: var(--tctr-height);
+    /* ==== tthumb -> Timeline Thumb ==== */
+    --tthumb-bradius: calc(var(--tthumb-width) / 2);
+    --tthumb-height: calc(-2 * var(--tthumb-tinset) + var(--tslider-height));
+    --tthumb-tinset: -12px;
+    --tthumb-linset: calc(var(--tthumb-width) / -2);
+    --tthumb-width: 4px;
 
     /* ==== sgroup -> Settings Group ==== */
     --sgroup-hgap: 30px;

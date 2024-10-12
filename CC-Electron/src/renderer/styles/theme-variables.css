@@ -120,8 +120,10 @@ html[data-theme='dark'] {
     --vobtn-hover-svg-fill: white;
 
     /* ==== psl -> Playback Slider ==== */
-    --psl-thumb-bshadowcolor: var(--blue-300);
-    --psl-track-bgcolor: var(--gray-tp1);
+    --pthumb-bscolor: var(--blue-300);
+
+    /* ==== ptrack -> Playback Track ==== */
+    --ptrack-bgcolor: var(--gray-tp1);
 
     /* ==== pbar -> Playback Bar ==== */
     --pbar-lgradientcolor: var(--black-900-t75);
@@ -143,17 +145,17 @@ html[data-theme='dark'] {
     --tlabel-color: var(--white-100);
 
     /* ==== tctr -> Timeline Container ==== */
-    --tctr-bgcolor: var(--gray-800);
+    --tslider-bgcolor: var(--gray-800);
 
-    /* ==== tmarker -> Timeline Marker ==== */
-    --tmarker-fill: var(--white-500);
-    --tmarker-stroke: var(--white-500);
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-fill: var(--white-500);
+    --ttrack-stroke: var(--white-500);
 
-    --tmarker-text-fill: var(--white-100);
-    --tmarker-text-stroke: var(--white-100);
+    --ttrack-text-fill: var(--white-100);
+    --ttrack-text-stroke: var(--white-100);
 
     /* ==== tls -> Timeline Slider ==== */
-    --tslider-thumb-bgcolor: var(--white-100);
+    --tthumb-bgcolor: var(--white-100);
 
     /* ==== sctr -> Setting Container ==== */
     --sctr-hover-bgcolor: var(--gray-600);
@@ -262,9 +264,11 @@ html[data-theme='light'] {
     --vobtn-svg-fill: #363636;
     --vobtn-hover-svg-fill: white;
 
-    /* ==== psl -> Playback Slider ==== */
-    --psl-thumb-bshadowcolor: var(--blue-300);
-    --psl-track-bgcolor: var(--gray-tp1);
+    /* ==== pthumb -> Playback Thumb ==== */
+    --pthumb-bscolor: var(--blue-300);
+
+    /* ==== ptrack -> Playback Track ==== */
+    --ptrack-bgcolor: var(--gray-tp1);
 
     /* ==== pbar -> Playback Bar ==== */
     --pbar-lgradientcolor: var(--black-900-t75);
@@ -286,17 +290,17 @@ html[data-theme='light'] {
     --tlabel-color: var(--white-100);
 
     /* ==== tctr -> Timeline Container ==== */
-    --tctr-bgcolor: #dfe1e5;
+    --tslider-bgcolor: #dfe1e5;
 
-    /* ==== tmarker -> Timeline Marker ==== */
-    --tmarker-fill: #797b7e;
-    --tmarker-stroke: #797b7e;
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-fill: #797b7e;
+    --ttrack-stroke: #797b7e;
 
-    --tmarker-text-fill: #363636;
-    --tmarker-text-stroke: #363636;
+    --ttrack-text-fill: #363636;
+    --ttrack-text-stroke: #363636;
 
     /* ==== tls -> Timeline Slider ==== */
-    --tslider-thumb-bgcolor: #1a69e0;
+    --tthumb-bgcolor: #1a69e0;
 
     /* ==== sctr -> Setting Container ==== */
     --sctr-hover-bgcolor: transparent;
@@ -328,7 +332,7 @@ html {
 
     --pctr-transition: opacity 0.2s ease 0s;
 
-    --pslider-thumb-transition: height 0.2s ease 0s;
+    --pthumb-transition: height 0.2s ease 0s;
 
     --pbtn-transition: background-color 0.3s ease 0s;
     --pbtn-svg-transition: fill 0.3s ease 0s;

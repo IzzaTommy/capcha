@@ -4,7 +4,7 @@ import { GROW_FACTOR, REDUCE_FACTOR,
     directoryContainer1, editorContainer1, settingsContainer1, 
     videoContainer, videoPlayer, playbackSlider, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineMarker, timelineSlider, timelineState,  
+    timelineTrack, timelineThumb, timelineState,  
     allSettingPill, saveLocationSettingPill, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
@@ -41,9 +41,9 @@ function setTicks() {
     const firstTick = (startTime - (startTime % interval)) / interval;
 
     // clear out the existing ticks in the SVG
-    while (timelineMarker.firstElementChild)
+    while (timelineTrack.firstElementChild)
     {
-        timelineMarker.removeChild(timelineMarker.lastElementChild);
+        timelineTrack.removeChild(timelineTrack.lastElementChild);
     }
 
     for (let i = 0; i < numTicks + 1; i++) {
@@ -54,18 +54,18 @@ function setTicks() {
         if (x > -1) {
             // generate the tick line
             const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            tickLine.setAttribute('x1', x * boxes['timelineSliderBox'].width);
+            tickLine.setAttribute('x1', x * boxes['timelineTrackBox'].width);
             tickLine.setAttribute('y1', 10);
-            tickLine.setAttribute('x2', x * boxes['timelineSliderBox'].width);
+            tickLine.setAttribute('x2', x * boxes['timelineTrackBox'].width);
             tickLine.setAttribute('y2', 50);
-            timelineMarker.appendChild(tickLine);
+            timelineTrack.appendChild(tickLine);
 
             // generate the time text
             const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            tickText.setAttribute('x', x * boxes['timelineSliderBox'].width + 5);
+            tickText.setAttribute('x', x * boxes['timelineTrackBox'].width + 5);
             tickText.setAttribute('y', 45);
             tickText.textContent = getReadableTime(interval * (i + firstTick));
-            timelineMarker.appendChild(tickText);
+            timelineTrack.appendChild(tickText);
         }
 
         for (let j = 0; j < subIntervalFactor; j++)
@@ -77,11 +77,11 @@ function setTicks() {
             if (((x2 * j) + x) > -1 && ((x2 * j) % x) != 0) {
                 // generate the sub tick line
                 const subTickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                subTickLine.setAttribute('x1', (x + x2 * j) * boxes['timelineSliderBox'].width);
+                subTickLine.setAttribute('x1', (x + x2 * j) * boxes['timelineTrackBox'].width);
                 subTickLine.setAttribute('y1', 15);
-                subTickLine.setAttribute('x2', (x + x2 * j) * boxes['timelineSliderBox'].width);
+                subTickLine.setAttribute('x2', (x + x2 * j) * boxes['timelineTrackBox'].width);
                 subTickLine.setAttribute('y2', 30);
-                timelineMarker.appendChild(subTickLine);
+                timelineTrack.appendChild(subTickLine);
             }
         }
     }
@@ -138,12 +138,12 @@ function setVideoState() {
 // SHARED BETWEEN VIEWPORT, NAVBLOCK
 function setBoxWidths() {
     // update the timeline, playback, and gallery boxes
-    boxes['timelineSliderBox'] = timelineSlider.getBoundingClientRect();
+    boxes['timelineTrackBox'] = timelineTrack.getBoundingClientRect();
     boxes['playbackSliderBox'] = playbackSlider.getBoundingClientRect();
     boxes['galleryBox'] = capturesGallery.getBoundingClientRect();
 
     // update the timeline marker viewbox
-    timelineMarker.setAttribute('viewbox', `0 0 ${boxes['timelineSliderBox'].width} 60`);
+    timelineTrack.setAttribute('viewbox', `0 0 ${boxes['timelineTrackBox'].width} 60`);
 
     // reset the ticks on the timeline marker
     if (flags['videoMetaDataLoaded']) {

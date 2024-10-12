@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,7 +78,7 @@
         </div>
 
         <div id="block-content">
-            <section id="ctr1-directory" class="content-ctr1 active">
+            <section id="ctr1-directory" class="content-ctr1">
                 <h2>Directory</h2>
 
                 <hr>
@@ -170,7 +170,7 @@
                 </div>
             </section>
 
-            <section id="ctr1-editor" class="content-ctr1">
+            <section id="ctr1-editor" class="content-ctr1 active">
                 <h2>Editor</h2>
 
                 <hr>
@@ -182,7 +182,11 @@
                         </video>
 
                         <div id="ctr-playback">
-                            <input id="slider-playback" type="range">
+                            <!-- <input id="slider-playback" type="range"> -->
+                             <div id="slider-playback">
+                                <div id="track-playback"></div>
+                                <div id="thumb-playback"></div>
+                             </div>
 
                             <div id="bar-playback">
                                 <button id="btn-play-pause" class="playback-btn">
@@ -220,9 +224,14 @@
                         </div>
                     </div>
 
-                    <div id="ctr-timeline">
+                    <!-- <div id="ctr-timeline">
                         <svg id="marker-timeline"></svg>
                         <input id="slider-timeline" type="range">
+                    </div> -->
+
+                    <div id="slider-timeline">
+                        <svg id="track-timeline"></svg>
+                        <div id="thumb-timeline"></div>
                     </div>
                 </div>
             </section>
