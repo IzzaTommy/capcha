@@ -15,24 +15,33 @@ import {
     data 
 } from './variables.js';
 
-import { setAllThumbs, setTicks, resizePlaybackSlider, resizeTimelineSlider } from './editorContainer.js';
-import { resizeGallery } from './directoryContainer.js';
+import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
-export { setSVG, getParsedTime, resizeAll };
+import { loadGallery } from './directoryContainer.js';
 
-// sets the SVG of an element
-function setSVG(elementSVG, name) {
-    elementSVG.setAttribute('href', `../assets/svg/${name}.svg#${name}`);
+export { initWindow }
+
+function initWindow() {
+    initWindowEL();
+
+    initWindowIPC();
 }
 
-// gets the days, hours, minutes, and seconds of a given number of seconds
-function getParsedTime(time) {    
-    return [Math.floor(time / 86400), Math.floor(time % 86400 / 3600), Math.floor(time % 3600 / 60), Math.floor(time % 60)];
+function initWindowEL() {
+    // on resize, resize all width dependent elements
+    window.addEventListener('resize', () => {
+        resizeAll();
+    });
 }
 
-// resizes the gallery, playback slider, and timeline slider
-function resizeAll() {
-    resizeGallery();
-    resizePlaybackSlider();
-    resizeTimelineSlider();
+function initWindowIPC() {
+    // 
+    window.filesAPI.reqLoadGallery(() => { 
+        loadGallery(); 
+    });
+
+    // send the video player volume when requested
+    window.settingsAPI.reqVolumeSettings(() => {
+        window.settingsAPI.setVolumeSettings({ 'volume': data['settings']['volume'], 'volumeMuted': data['settings']['volumeMuted'] });
+    });
 }

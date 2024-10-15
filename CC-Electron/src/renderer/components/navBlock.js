@@ -1,28 +1,32 @@
-import { GROW_FACTOR, REDUCE_FACTOR, 
-    minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+import { 
+    GROW_FACTOR, REDUCE_FACTOR, 
+    html, 
+    minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackSlider, 
+    videoContainer, videoPlayer, 
+    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineTrack, timelineThumb, timelineState,  
-    allSettingPill, saveLocationSettingPill, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    settingsCache, 
-    videosData } from './variables.js';
+    data 
+} from './variables.js';
 
-import { getClickPercentage, setSVG, setTicks, getReadableTime, setVolumeSVG, setVideoState, setBoxWidths, setGalleryGap } from './shared.js';
+import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
-export { initnavBlock }
+export { initNavBlock }
 
 // handles navigation bar button event listeners
-function initnavBlock() {
-    loadnavBlockEL();
+function initNavBlock() {
+    initNavBlockEL();
 
-    loadnavBlock();
+    loadNavBlock();
 }
 
-function loadnavBlockEL() {
+function initNavBlockEL() {
     // change the SVGs on hover, change active content on click
     directoryBtn.addEventListener('mouseenter', () => setSVG(directorySVG, 'folder-solid'));
     directoryBtn.addEventListener('mouseleave', () => setSVG(directorySVG, 'folder'));
@@ -31,7 +35,7 @@ function loadnavBlockEL() {
         editorContainer1.classList.remove('active');
         directoryContainer1.classList.add('active');
 
-        videoPlayer.pause();
+        flags['videoLoaded'] = false;
     });
 
     // change the SVGs on hover, change active content on click
@@ -42,7 +46,7 @@ function loadnavBlockEL() {
         editorContainer1.classList.remove('active');
         settingsContainer1.classList.add('active');
 
-        videoPlayer.pause();
+        flags['videoLoaded'] = false;
     });
 
     // change the SVGs on hover, change active content on click
@@ -58,20 +62,22 @@ function loadnavBlockEL() {
 
         if (navBar.classList.contains('active')) {
             setSVG(navToggleSVG, 'arrow-back-ios');
-            settingsCache['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', true);
+            data['settings']['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', true);
         }
         else {
             setSVG(navToggleSVG, 'arrow-forward-ios');
-            settingsCache['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', false);
+            data['settings']['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', false);
         }
 
-        setBoxWidths();
+        resizeAll();
     });
 }
 
-function loadnavBlock() {
-    if (settingsCache['navBarActive'] === true) {
+function loadNavBlock() {
+    if (data['settings']['navBarActive'] === true) {
         navBar.classList.toggle('active');
         setSVG(navToggleSVG, 'arrow-back-ios');
     }
+
+    resizeAll();
 }

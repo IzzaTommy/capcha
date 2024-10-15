@@ -133,17 +133,21 @@ html {
     --vctr-width: 80%;
 
     /* ==== psl -> Playback Slider ==== */
-    --psl-bwidth: 10px;
     --psl-height: 3px;
     --psl-hmargin: 6px;
-    --psl-hover-height: 8px;
+    --psl-tpadding: 10px;
+    --psl-bpadding: calc((var(--psl-height) * var(--ptrack-transform) - var(--psl-height)) / 2);
+
+    /* ==== ptrack -> Playback Track ==== */
+    --ptrack-transform: 2.5;
 
     /* ==== pthumb -> Playback Thumb ==== */
     --pthumb-bswidth: 100vw;
 
     /* ==== pbtn -> Playback Button ==== */
     --pbtn-bradius: 5px;
-    --pbtn-margin: 3px;
+    --pbtn-bmargin: 3px;
+    --pbtn-hmargin: 3px;
     
     --pbtn-svg-length: 40px;
 
@@ -199,11 +203,11 @@ html {
     --tslider-width: var(--vctr-width);
 
     /* ==== ttrack -> Timeline Track ==== */
-    --ttrack-height: var(--tslider-height);
-    --ttrack-swidth: 1px;
+    --otrack-height: var(--tslider-height);
+    --otrack-swidth: 1px;
 
-    --ttrack-text-fsize: 12px;
-    --ttrack-text-fweight: 10;
+    --otrack-text-fsize: 12px;
+    --otrack-text-fweight: 10;
 
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bradius: calc(var(--tthumb-width) / 2);

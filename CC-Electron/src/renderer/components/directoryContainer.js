@@ -1,30 +1,32 @@
-import { GROW_FACTOR, REDUCE_FACTOR, 
-    minimizeBtn, maximizeBtn, closeBtn, navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+import { 
+    GROW_FACTOR, REDUCE_FACTOR, 
+    html, 
+    minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoryContainer1, editorContainer1, settingsContainer1, 
-    videoContainer, videoPlayer, playbackSlider, 
+    videoContainer, videoPlayer, 
+    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineTrack, timelineThumb, timelineState,  
-    allSettingPill, saveLocationSettingPill, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    settingsCache, 
-    videosData } from './variables.js';
+    data 
+} from './variables.js';
 
-import { getClickPercentage, setSVG, setTicks, getReadableTime, setVolumeSVG, setVideoState, setBoxWidths, setGalleryGap } from './shared.js';
+import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
-export { initDirectoryContainer, loadGallery }
+export { initDirectoryContainer, loadGallery, resizeGallery }
 
 // handles loading of the video galleries
 function initDirectoryContainer() {
-    loadDirectoryEL();
-
-    setGalleryGap();
+    initDirectoryEL();
     
     loadGallery();
 }
 
-function loadDirectoryEL() {
+function initDirectoryEL() {
     capturesLeftBtn.addEventListener('click', () => {
         capturesGallery.scrollBy({left: -boxes['galleryBox'].width, behavior: 'smooth'});
     });
@@ -34,7 +36,9 @@ function loadDirectoryEL() {
     });
 }
 
-function loadGallery() {
+async function loadGallery() {
+    data['videos'] = await window.filesAPI.getAllVideosData();
+
     // get the current date
     const currentDate = new Date();
 
@@ -44,28 +48,10 @@ function loadGallery() {
         capturesGallery.removeChild(capturesGallery.lastElementChild);
     }
 
-    for (const videoData of videosData) {
+    for (const videoData of data['videos']) {
         // make clone of the video preview template
         const videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
-        let headerText;
-
-        // calculate the age of the file relative to the current time
-        const msDiff = currentDate - videoData['created'];
-        const minDiff = Math.floor(msDiff / 60000);
-        const hourDiff = Math.floor(minDiff / 60);
-        const dayDiff = Math.floor(hourDiff / 24);
-
-        if (dayDiff > 0) {
-            headerText = `GAME - ${dayDiff} day${dayDiff > 1 ? 's' : ''} ago`;
-        }
-        else {
-            if (hourDiff > 0) {
-                headerText = `GAME - ${hourDiff} hour${hourDiff > 1 ? 's' : ''} ago`;
-            }
-            else {
-                headerText = `GAME - ${minDiff} minute${minDiff !== 1 ? 's' : ''} ago`;
-            }
-        }
+        const headerText = getReadableAge((currentDate - videoData['created']) / 1000);
 
         // fill in video data to the template
         videoPreviewClone.querySelector('.video-preview-ctr').dataset.src = videoData['path'];
@@ -81,10 +67,37 @@ function loadGallery() {
             settingsContainer1.classList.remove('active');
             editorContainer1.classList.add('active');
 
-            flags['videoMetaDataLoaded'] = false;
+            flags['videoLoaded'] = false;
         });
 
         // add the video preview to the gallery
         capturesGallery.appendChild(videoPreviewClone);
     }
 }
+
+
+function resizeGallery() {
+    let numVideoPreview;
+
+    boxes['galleryBox'] = capturesGallery.getBoundingClientRect();
+
+    numVideoPreview = Math.floor(boxes['galleryBox'].width / (videoPreviewWidth + 5));
+    capturesGallery.style.gap = `${(boxes['galleryBox'].width - (numVideoPreview * videoPreviewWidth)) / (numVideoPreview - 1)}px`;
+}
+
+function getReadableAge(time) {
+    const parsedTime = getParsedTime(time);
+
+    if (parsedTime[0] > 0) {
+        return `GAME - ${parsedTime[0]} day${parsedTime[0] > 1 ? 's' : ''} ago`;
+    }
+    else {
+        if (parsedTime[1] > 0) {
+            return `GAME - ${parsedTime[1]} hour${parsedTime[1] > 1 ? 's' : ''} ago`;
+        }
+        else {
+            return `GAME - ${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
+        }
+    }
+}
+

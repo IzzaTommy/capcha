@@ -39,14 +39,34 @@
     opacity: 1;
 }
 
+#slider-playback {
+    flex: 0 0 auto;
+    height: var(--psl-height);
+    margin: 0 var(--psl-hmargin);
+    padding: var(--psl-tpadding) 0 var(--psl-bpadding);
 
+    box-sizing: content-box;
+}
 
+#slider-playback:hover > #track-playback {
+    transform: scaleY(var(--ptrack-transform));
+}
 
+#track-playback {
+    position: relative;
 
+    height: 100%;
 
+    background-color: var(--ptrack-bgcolor);
+    overflow: hidden;
+    transition: var(--ptrack-transition);
+}
 
+#thumb-playback {
+    position: absolute;
 
-
+    box-shadow: calc(-1 * var(--pthumb-bswidth)) 0 0 var(--pthumb-bswidth) var(--pthumb-bscolor);
+}
 
 #bar-playback {
     align-items: center;
@@ -60,7 +80,7 @@
 .playback-btn {
     border-radius: var(--pbtn-bradius);
     flex: 0 0 fit-content;
-    margin: var(--pbtn-margin);
+    margin: 0 var(--pbtn-hmargin) var(--pbtn-bmargin);
 
     cursor: pointer;
     transition: var(--pbtn-transition);
@@ -244,11 +264,9 @@
 
 
 
-
-
 #slider-timeline {
-    flex: 0 0 auto;
     position: relative;
+    flex: 0 0 auto;
 
     border-radius: var(--tslider-bradius);
     height: var(--tslider-height);
@@ -257,22 +275,28 @@
     background-color: var(--tslider-bgcolor);
 }
 
-#track-timeline {
+#overlay-timeline {
     position: absolute;
 
-    height: var(--ttrack-height);
+    height: var(--otrack-height);
     width: 100%;
 
-    fill: var(--ttrack-fill);
-    stroke: var(--ttrack-stroke);
-    stroke-width: var(--ttrack-swidth);
+    fill: var(--otrack-fill);
+    stroke: var(--otrack-stroke);
+    stroke-width: var(--otrack-swidth);
 }
 
-#track-timeline > text {
-    fill: var(--ttrack-text-fill);
-    font-size: var(--ttrack-text-fsize);
-    font-weight: var(--ttrack-text-fweight);
-    stroke: var(--ttrack-text-stroke);
+#overlay-timeline > text {
+    fill: var(--otrack-text-fill);
+    font-size: var(--otrack-text-fsize);
+    font-weight: var(--otrack-text-fweight);
+    stroke: var(--otrack-text-stroke);
+}
+
+#track-timeline {
+    position: relative;
+
+    height: 100%;
 }
 
 #thumb-timeline {
@@ -286,42 +310,4 @@
 
     background-color: var(--tthumb-bgcolor);
     transition: transform 0s linear;
-}
-
-
-
-
-/* put this back in the right spot */
-#slider-playback {
-    position: relative;
-
-    border-top: var(--psl-bwidth) solid transparent;
-    flex: 0 0 auto;
-    height: var(--psl-height);
-    margin: 0 var(--psl-hmargin);
-
-    box-sizing: content-box;
-    overflow: hidden;
-    transition: var(--pthumb-transition);
-}
-
-#slider-playback:hover {
-    height: var(--psl-hover-height);
-}
-
-#track-playback {
-    position: absolute;
-
-    height: 100%;
-    width: 100%;
-
-    background-color: var(--ptrack-bgcolor);
-}
-
-#thumb-playback {
-    position: absolute;
-
-    height: 100%;
-
-    box-shadow: calc(-1 * var(--pthumb-bswidth)) 0 0 var(--pthumb-bswidth) var(--pthumb-bscolor);
 }

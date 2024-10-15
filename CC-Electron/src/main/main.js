@@ -146,7 +146,7 @@ function createWindow() {
     mainWindow.maximize();
     mainWindow.loadFile('src/renderer/index.html');
 
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // on close, grab the video volume setting
     mainWindow.on('close', (event) => {
@@ -311,7 +311,7 @@ function initIPC() {
                         console.error('Error reseting directory!');
                     }
 
-                    mainWindow.webContents.send('files:reqInitDirectory');
+                    mainWindow.webContents.send('files:reqLoadGallery');
                 }
 
                 break;

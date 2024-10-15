@@ -36,11 +36,5 @@ contextBridge.exposeInMainWorld('settingsAPI', {
 contextBridge.exposeInMainWorld('filesAPI', {
     getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
 
-    reqInitDirectory: (callback) => ipcRenderer.on('files:reqInitDirectory', callback)
+    reqLoadGallery: (callback) => ipcRenderer.on('files:reqLoadGallery', callback)
 });
-
-
-
-// contextBridge.exposeInMainWorld('dialogAPI', {
-//     getDirectory: () => ipcRenderer.invoke('dialog:getDirectory')
-// });

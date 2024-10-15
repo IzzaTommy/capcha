@@ -148,11 +148,11 @@ html[data-theme='dark'] {
     --tslider-bgcolor: var(--gray-800);
 
     /* ==== ttrack -> Timeline Track ==== */
-    --ttrack-fill: var(--white-500);
-    --ttrack-stroke: var(--white-500);
+    --otrack-fill: var(--white-500);
+    --otrack-stroke: var(--white-500);
 
-    --ttrack-text-fill: var(--white-100);
-    --ttrack-text-stroke: var(--white-100);
+    --otrack-text-fill: var(--white-100);
+    --otrack-text-stroke: var(--white-100);
 
     /* ==== tls -> Timeline Slider ==== */
     --tthumb-bgcolor: var(--white-100);
@@ -293,11 +293,11 @@ html[data-theme='light'] {
     --tslider-bgcolor: #dfe1e5;
 
     /* ==== ttrack -> Timeline Track ==== */
-    --ttrack-fill: #797b7e;
-    --ttrack-stroke: #797b7e;
+    --otrack-fill: #797b7e;
+    --otrack-stroke: #797b7e;
 
-    --ttrack-text-fill: #363636;
-    --ttrack-text-stroke: #363636;
+    --otrack-text-fill: #363636;
+    --otrack-text-stroke: #363636;
 
     /* ==== tls -> Timeline Slider ==== */
     --tthumb-bgcolor: #1a69e0;
@@ -332,7 +332,7 @@ html {
 
     --pctr-transition: opacity 0.2s ease 0s;
 
-    --pthumb-transition: height 0.2s ease 0s;
+    --ptrack-transition: transform 0.2s ease 0s;
 
     --pbtn-transition: background-color 0.3s ease 0s;
     --pbtn-svg-transition: fill 0.3s ease 0s;
