@@ -1,0 +1,114 @@
+.settings-group-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--stsgroupctr-hgap);
+}
+
+.setting-ctr {
+    align-items: start;
+    align-self: start;
+    border-radius: var(--stctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--stctr-vgap);
+    padding: var(--stctr-vpadding) var(--stctr-hpadding);
+
+    outline: var(--stctr-owidth) solid transparent;
+    transition: var(--stctr-transition);
+}
+
+.setting-ctr:hover {
+    background-color: var(--stctr-hover-bgcolor);
+    outline-color: var(--stctr-hover-ocolor);
+}
+
+.setting-ctr > h4 {
+    flex: 0 0 fit-content;
+
+    color: var(--stctr-h4-color);
+    font-size: var(--stctr-h4-fsize);
+    font-weight: var(--stctr-h4-fweight);
+}
+
+.setting-ctr > p {
+    flex: 0 0 fit-content;
+
+    color: var(--stctr-p-color);
+    font-size: var(--stctr-p-fsize);
+    font-weight: var(--stctr-p-fweight);
+}
+
+.setting-pill {
+    border-radius: var(--stpill-bradius);
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--stpill-bgcolor);
+    overflow: hidden;
+}
+
+.setting-pill > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--stpill-svg-length);
+    width: var(--stpill-svg-length);
+    margin: var(--stpill-svg-margin);
+
+    fill: var(--stpill-svg-fill);
+}
+
+.setting-pill > input, .setting-pill > select {
+    box-sizing: content-box;
+    flex: 0 0 auto;
+    padding-right: var(--stpill-inputselect-hpadding);
+    padding-left: var(--stpill-inputselect-hpadding);
+    width: var(--stpill-inputselect-width);
+
+    background-color: var(--stpill-inputselect-bgcolor);
+    color: var(--stpill-inputselect-color);
+}
+
+#ctr-save-location > .setting-pill > input {
+    width: 500px;
+}
+
+.setting-toggle-switch {
+    position: relative;
+
+    width: var(--sttswitch-width);
+
+    background-color: var(--sttswitch-bgcolor);
+    cursor: pointer;
+    transition: var(--sttswitch-transition);
+}
+
+.setting-toggle-switch > input {
+    display: none;
+}
+
+.setting-toggle-switch:has(input:checked) {
+    background-color: var(--sttswitch-active-bgcolor);
+}
+
+.setting-toggle-switch > input:checked + svg {
+    fill: var(--stpill-svg-active-fill);
+    transform: translateX(var(--sttswitch-svg-translateX));
+}
+
+.setting-toggle-switch > svg {
+    position: absolute;
+    inset: var(--sttswitch-svg-inset);
+
+    border-radius: var(--sttswitch-svg-bradius);
+    height: var(--sttswitch-svg-height);
+    width: var(--sttswitch-svg-width);
+
+    background-color: var(--sttswitch-svg-bgcolor);
+    transition: var(--sttswitch-svg-transition);
+
+    fill: var(--sttswitch-svg-fill);
+}

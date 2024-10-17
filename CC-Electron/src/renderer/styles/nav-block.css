@@ -31,7 +31,6 @@
     width: var(--ldp-svg-length);
 
     fill: var(--ldp-svg-fill);
-    /* fill: #B7C9A4; */
 }
 
 #display-logo > h1 {

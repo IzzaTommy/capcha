@@ -9,6 +9,27 @@
     <title>CapCha</title>
 </head>
 <body>
+    <template>
+        <div class="video-preview-ctr" data-src="">
+            <img class="video-thumbnail" src="" alt="">
+            
+            <h4></h4>
+            <p></p>
+            <div class="video-options-ctr">
+                <button class="video-options-btn video-rename-btn">
+                    <svg>
+                        <use href="../assets/svg/edit.svg#edit"></use>
+                    </svg>
+                </button>
+                <button class="video-options-btn video-delete-btn">
+                    <svg>
+                        <use href="../assets/svg/delete.svg#delete"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </template>
+
     <div id="bar-title">
         <p id="label-version">CC-0.1.1</p>
 
@@ -44,7 +65,7 @@
 
                 <hr>
 
-                <button id="btn-directory" class="nav-btn">
+                <button id="btn-directories" class="nav-btn">
                     <svg>
                         <use href="../assets/svg/folder.svg#folder"></use>
                     </svg>
@@ -78,13 +99,13 @@
         </div>
 
         <div id="block-content">
-            <section id="ctr1-directory" class="content-ctr1 active">
-                <h2>Directory</h2>
+            <section id="section-directories" class="content-section active">
+                <h2>Directories</h2>
 
                 <hr>
 
-                <div id="ctr2-directory" class="content-ctr2">
-                    <div id="ctr3-captures-directory" class="content-ctr3">
+                <div id="ctr1-directories" class="section-ctr1">
+                    <div id="ctr2-captures-directories" class="section-ctr2">
                         <h3>Captures</h3>
                         
                         <hr>
@@ -96,27 +117,7 @@
                                 </svg>
                             </button>
 
-                            <div id="gallery-captures" class="directory-gallery">
-                                <template>
-                                    <div class="video-preview-ctr" data-src="">
-                                        <img class="video-thumbnail" src="" alt="">
-                                        
-                                        <h4></h4>
-                                        <p></p>
-                                        <div class="video-options-ctr">
-                                            <button class="video-options-btn video-rename-btn">
-                                                <svg>
-                                                    <use href="../assets/svg/edit.svg#edit"></use>
-                                                </svg>
-                                            </button>
-                                            <button class="video-options-btn video-delete-btn">
-                                                <svg>
-                                                    <use href="../assets/svg/delete.svg#delete"></use>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </template>
+                            <div id="gallery-captures" class="directory-gallery">   
                                 <div class="video-preview-ctr" data-src="">
                                     <img class="video-thumbnail" src="" alt="">
                                     
@@ -145,7 +146,7 @@
                         </div>
                     </div>
 
-                    <div id="ctr3-clips-directory" class="content-ctr3">
+                    <div id="ctr2-clips-directory" class="section-ctr2">
                         <h3>Clips</h3>
 
                         <hr>
@@ -170,12 +171,12 @@
                 </div>
             </section>
 
-            <section id="ctr1-editor" class="content-ctr1">
+            <section id="section-editor" class="content-section">
                 <h2>Editor</h2>
 
                 <hr>
 
-                <div id="ctr2-editor" class="content-ctr2">
+                <div id="ctr1-editor" class="section-ctr1">
                     <div id="ctr-video">
                         <video id="player-video">
                             <source src="" type="video/mp4">
@@ -225,7 +226,7 @@
                     </div>
 
                     <div id="slider-timeline">
-                        <svg id="overlay-timeline"></svg>
+                        <svg id="overlay-timeline" xmlns="http://www.w3.org/2000/svg"></svg>
                         <div id="track-timeline">
                             <div id="thumb-timeline"></div>
                         </div>
@@ -233,13 +234,13 @@
                 </div>
             </section>
 
-            <section id="ctr1-settings" class="content-ctr1">
+            <section id="section-settings" class="content-section">
                 <h2>Settings</h2>
 
                 <hr>
 
-                <div id="ctr2-settings" class="content-ctr2">
-                    <div id="ctr3-appearance-settings" class="content-ctr3">
+                <div id="ctr1-settings" class="section-ctr1">
+                    <div id="ctr2-appearance-settings" class="section-ctr2">
                         <h3>Appearance</h3>
 
                         <hr>
@@ -264,7 +265,7 @@
                         </div>
                     </div>
 
-                    <div id="ctr3-files-settings" class="content-ctr3">
+                    <div id="ctr2-files-settings" class="section-ctr2">
                         <h3>Files</h3>
 
                         <hr>
@@ -343,7 +344,7 @@
                         </div>
                     </div>
                     
-                    <div id="ctr3-video-settings" class="content-ctr3">
+                    <div id="ctr2-video-settings" class="section-ctr2">
                         <h3>Video</h3>
 
                         <hr>
@@ -451,7 +452,7 @@
                         </div>
                     </div>
 
-                    <div id="ctr3-input-settings" class="content-ctr3">
+                    <div id="ctr2-input-settings" class="section-ctr2">
                         <h3>Input</h3>
 
                         <hr>

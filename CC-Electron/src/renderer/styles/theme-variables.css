@@ -80,18 +80,18 @@ html[data-theme='dark'] {
     /* ==== cb -> Content Block ==== */
     --cblock-bgcolor: var(--gray-blue-400);
 
-    /* ==== ctr1 -> Container 1 ==== */
-    --cctr1-h2-color: var(--white-100);
+    /* ==== csection -> Content Section ==== */
+    --csection-h2-color: var(--white-100);
 
-    --cctr1-hr-bgcolor: #a4a4a4;
+    --csection-hr-bgcolor: #a4a4a4;
 
-    /* ==== ctr2 -> Container 2 ==== */
-    --cctr2-bgcolor: var(--gray-blue-500);
+    /* ==== sctr1 -> Section Container 1 ==== */
+    --sctr1-bgcolor: var(--gray-blue-500);
 
-    /* ==== ctr3 -> Container 3 ==== */
-    --cctr3-h3-color: #c9c9c9;
+    /* ==== sctr2 -> Section Container 2 ==== */
+    --sctr2-h3-color: #c9c9c9;
 
-    --cctr3-hr-bgcolor: #747474;
+    --sctr2-hr-bgcolor: #747474;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bgcolor: var(--gray-800);
@@ -157,29 +157,29 @@ html[data-theme='dark'] {
     /* ==== tls -> Timeline Slider ==== */
     --tthumb-bgcolor: var(--white-100);
 
-    /* ==== sctr -> Setting Container ==== */
-    --sctr-hover-bgcolor: var(--gray-600);
-    --sctr-hover-ocolor: transparent;
+    /* ==== stctr -> Setting Container ==== */
+    --stctr-hover-bgcolor: var(--gray-600);
+    --stctr-hover-ocolor: transparent;
 
-    --sctr-h4-color: #dddddd;
+    --stctr-h4-color: #dddddd;
 
-    --sctr-p-color: #dddddd;
+    --stctr-p-color: #dddddd;
 
-    /* ==== spill -> Setting Pill ==== */
-    --spill-bgcolor: var(--gray-800);
+    /* ==== stpill -> Setting Pill ==== */
+    --stpill-bgcolor: var(--gray-800);
 
-    --spill-inputselect-bgcolor: var(--gray-100);
-    --spill-inputselect-color: var(--white-100);
+    --stpill-inputselect-bgcolor: var(--gray-100);
+    --stpill-inputselect-color: var(--white-100);
 
-    --spill-svg-fill: var(--white-100);
-    --spill-svg-active-fill: var(--green-500);
+    --stpill-svg-fill: var(--white-100);
+    --stpill-svg-active-fill: var(--green-500);
 
-    /* ==== stswitch -> Setting Toggle Switch ==== */
-    --stswitch-bgcolor: var(--gray-100);
-    --stswitch-active-bgcolor: var(--green-500);
+    /* ==== sttswitch -> Setting Toggle Switch ==== */
+    --sttswitch-bgcolor: var(--gray-100);
+    --sttswitch-active-bgcolor: var(--green-500);
 
-    --stswitch-svg-bgcolor: white;
-    --stswitch-svg-fill: var(--gray-100);
+    --sttswitch-svg-bgcolor: white;
+    --sttswitch-svg-fill: var(--gray-100);
 }
 
 
@@ -224,19 +224,18 @@ html[data-theme='light'] {
     /* ==== cb -> Content Block ==== */
     --cblock-bgcolor: #f2f2f2;
 
-    /* ==== ctr1 -> Container 1 ==== */
-    --cctr1-h2-color: #363636;
+    /* ==== csection -> Content Section ==== */
+    --csection-h2-color: #363636;
 
-    --cctr1-hr-bgcolor: #d0d0d0;
+    --csection-hr-bgcolor: #d0d0d0;
 
-    /* ==== ctr2 -> Container 2 ==== */
-    --cctr2-bgcolor: transparent;
+    /* ==== sctr1 -> Section Container 1 ==== */
+    --sctr1-bgcolor: transparent;
 
-    /* ==== ctr3 -> Container 3 ==== */
-    --cctr3-h3-color: #808080;
+    /* ==== sctr2 -> Section Container 2 ==== */
+    --sctr2-h3-color: #808080;
 
-    /* --cctr3-hr-bgcolor: #d0d0d0; */
-    --cctr3-hr-bgcolor: transparent;
+    --sctr2-hr-bgcolor: transparent;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bgcolor: transparent;
@@ -302,29 +301,29 @@ html[data-theme='light'] {
     /* ==== tls -> Timeline Slider ==== */
     --tthumb-bgcolor: #1a69e0;
 
-    /* ==== sctr -> Setting Container ==== */
-    --sctr-hover-bgcolor: transparent;
-    --sctr-hover-ocolor: #d2dade;
+    /* ==== stctr -> Setting Container ==== */
+    --stctr-hover-bgcolor: transparent;
+    --stctr-hover-ocolor: #d2dade;
 
-    --sctr-h4-color: #1a69e0;
+    --stctr-h4-color: #1a69e0;
 
-    --sctr-p-color: #363636;
+    --stctr-p-color: #363636;
 
-    /* ==== spill -> Setting Pill ==== */
-    --spill-bgcolor: #c4c7cc;
+    /* ==== stpill -> Setting Pill ==== */
+    --stpill-bgcolor: #c4c7cc;
 
-    --spill-inputselect-bgcolor: #dfe1e5;
-    --spill-inputselect-color: #363636;
+    --stpill-inputselect-bgcolor: #dfe1e5;
+    --stpill-inputselect-color: #363636;
 
-    --spill-svg-fill: #363636;
-    --spill-svg-active-fill: var(--green-500);
+    --stpill-svg-fill: #363636;
+    --stpill-svg-active-fill: var(--green-500);
 
-    /* ==== stswitch -> Setting Toggle Switch ==== */
-    --stswitch-bgcolor: #dfe1e5;
-    --stswitch-active-bgcolor: var(--green-500);
+    /* ==== sttswitch -> Setting Toggle Switch ==== */
+    --sttswitch-bgcolor: #dfe1e5;
+    --sttswitch-active-bgcolor: var(--green-500);
 
-    --stswitch-svg-bgcolor: white;
-    --stswitch-svg-fill: #acb5c4;
+    --sttswitch-svg-bgcolor: white;
+    --sttswitch-svg-fill: #acb5c4;
 }
 
 html {
@@ -344,10 +343,10 @@ html {
 
     --ntbtn-transition: background-color 0.3s ease 0s;
 
-    --sctr-transition: background-color 0.3s ease 0s, outline-color 0.3s ease 0s;
+    --stctr-transition: background-color 0.3s ease 0s, outline-color 0.3s ease 0s;
 
-    --stswitch-transition: background-color 0.3s ease 0s;
-    --stswitch-svg-transition: transform 0.3s ease 0s;
+    --sttswitch-transition: background-color 0.3s ease 0s;
+    --sttswitch-svg-transition: transform 0.3s ease 0s;
 
     --vpctr-transition: background-color 0.2s ease 0s;
     --vobtn-transition: background-color 0.2s ease 0s;

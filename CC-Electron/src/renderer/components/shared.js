@@ -1,10 +1,18 @@
+/**
+ * Module for providing shared utility functions
+ * 
+ * @module shared
+ * @requires editorSection
+ * @requires directoriesSection
+ */
 import { 
-    GROW_FACTOR, REDUCE_FACTOR, 
+    GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
@@ -12,27 +20,76 @@ import {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data 
+    data, animationFrame 
 } from './variables.js';
+import { resizePlaybackSlider, resizeTimelineSlider } from './editorSection.js';
+import { resizeGallery } from './directoriesSection.js';
 
-import { setAllThumbs, setTicks, resizePlaybackSlider, resizeTimelineSlider } from './editorContainer.js';
-import { resizeGallery } from './directoryContainer.js';
+/**
+ * @exports setSVG, getParsedTime, resizeAll, setActiveSection
+ */
+export { setSVG, getParsedTime, resizeAll, setActiveSection };
 
-export { setSVG, getParsedTime, resizeAll };
-
-// sets the SVG of an element
+/**
+ * Sets the SVG of an element
+ * 
+ * @param {HTMLElement} elementSVG - The SVG element
+ * @param {string} name - The name of the new SVG
+ */
 function setSVG(elementSVG, name) {
     elementSVG.setAttribute('href', `../assets/svg/${name}.svg#${name}`);
 }
 
-// gets the days, hours, minutes, and seconds of a given number of seconds
+/**
+ * Gets the days, hours, minutes, and seconds of the time
+ * 
+ * @param {number} time - The time in seconds
+ * @returns {number[]} The days, hours, minutes, seconds of the time
+ */
 function getParsedTime(time) {    
-    return [Math.floor(time / 86400), Math.floor(time % 86400 / 3600), Math.floor(time % 3600 / 60), Math.floor(time % 60)];
+    return [Math.floor(time / SECONDS_IN_DAY), Math.floor(time % SECONDS_IN_DAY / SECONDS_IN_HOUR), Math.floor(time % SECONDS_IN_HOUR / SECONDS_IN_MINUTE), Math.floor(time % SECONDS_IN_MINUTE)];
 }
 
-// resizes the gallery, playback slider, and timeline slider
+/**
+ * Resizes the gallery, playback slider, and timeline slider
+ */
 function resizeAll() {
     resizeGallery();
     resizePlaybackSlider();
     resizeTimelineSlider();
+}
+
+/**
+ * Sets the active section
+ * 
+ * @param {string} section - The section to set active
+ */
+function setActiveSection(section) {
+    switch (section) {
+        case 'directories':
+            // change the active content section to the directories section
+            settingsSection.classList.remove('active');
+            editorSection.classList.remove('active');
+            directoriesSection.classList.add('active');
+
+            // unload the editor video
+            flags['videoLoaded'] = false;
+            break;
+        case 'settings':
+            // change the active content section to the settings section
+            directoriesSection.classList.remove('active');
+            editorSection.classList.remove('active');
+            settingsSection.classList.add('active');
+
+            // unload the editor video
+            flags['videoLoaded'] = false;
+            break;
+        case 'editor':
+            // change the active content section to the editor section
+            directoriesSection.classList.remove('active');
+            settingsSection.classList.remove('active');
+            editorSection.classList.add('active');
+            break;
+        default:
+    }
 }

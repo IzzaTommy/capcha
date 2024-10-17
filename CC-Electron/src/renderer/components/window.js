@@ -1,10 +1,19 @@
+/**
+ * Module for initializing the window
+ * 
+ * @module window
+ * @requires variables
+ * @requires shared
+ * @requires directoriesSection
+ */
 import { 
-    GROW_FACTOR, REDUCE_FACTOR, 
+    GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
@@ -12,21 +21,27 @@ import {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data 
+    data, animationFrame 
 } from './variables.js';
-
 import { setSVG, getParsedTime, resizeAll } from './shared.js';
+import { loadGallery } from './directoriesSection.js';
 
-import { loadGallery } from './directoryContainer.js';
+/**
+ * @exports initWindow
+ */
+export { initWindow };
 
-export { initWindow }
-
+/**
+ * Initializes the window
+ */
 function initWindow() {
     initWindowEL();
-
     initWindowIPC();
 }
 
+/**
+ * Initializes the window event listener
+ */
 function initWindowEL() {
     // on resize, resize all width dependent elements
     window.addEventListener('resize', () => {
@@ -34,13 +49,16 @@ function initWindowEL() {
     });
 }
 
+/**
+ * Initializes the window inter-process communication callbacks
+ */
 function initWindowIPC() {
-    // 
+    // on request, load the gallery
     window.filesAPI.reqLoadGallery(() => { 
         loadGallery(); 
     });
 
-    // send the video player volume when requested
+    // on request, set the volume and volume mute status
     window.settingsAPI.reqVolumeSettings(() => {
         window.settingsAPI.setVolumeSettings({ 'volume': data['settings']['volume'], 'volumeMuted': data['settings']['volumeMuted'] });
     });

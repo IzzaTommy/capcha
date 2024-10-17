@@ -1,12 +1,36 @@
+/**
+ * Module for initializing variables
+ * 
+ * @module variables
+ * @requires timelineState
+ */
 import { TimelineState } from './timelineState.js';
 
+/**
+ * @exports GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+ *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+ *  html, 
+ *  minimizeBtn, maximizeBtn, closeBtn, 
+ *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+ *  navToggleBtn, navToggleSVG, 
+ *  directoriesSection, editorSection, settingsSection, 
+ *  videoContainer, videoPlayer, 
+ *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
+ *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+ *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+ *  allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+ *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+ *  flags, boxes, 
+ *  data 
+ */
 export { 
-    GROW_FACTOR, REDUCE_FACTOR, 
+    GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
@@ -14,46 +38,55 @@ export {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data 
+    data, animationFrame 
 };
 
-/* ========== constants ========== */
+// timeline constants and time constants
 const GROW_FACTOR = 0.15;
 const REDUCE_FACTOR = 0.1;
+const MIN_TIMELINE_ZOOM = 30;
+const MIN_GALLERY_GAP = 5;
+const MSECONDS_IN_SECOND = 1000;
+const SECONDS_IN_DAY = 86400;
+const SECONDS_IN_HOUR = 3600;
+const SECONDS_IN_MINUTE = 60;
 
-/* ========== style ==========*/
+// document styles
 const style = getComputedStyle(document.documentElement);
 
-/* ========== elements ========== */
+// document elements
 let html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
-    flags, boxes, 
-    data 
+    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
+
+// timelineState object
+let timelineState;
+
+// boolean flags, element boxes, settings/videos data, and animation frame
+let flags, boxes, data, animationFrame;
 
 export async function initVariables() {
-    /* ========== elements ========== */
-    /* ---------- html element ---------- */
+    // html element
     html = document.querySelector('html');
 
-    /* ---------- title bar elements ---------- */
+    // title bar elements
     minimizeBtn = document.getElementById('btn-minimize');
     maximizeBtn = document.getElementById('btn-maximize');
     closeBtn = document.getElementById('btn-close');
 
-    /* ---------- nav panel elements ---------- */
+    // nav block elements
     navBar = document.getElementById('bar-nav');
 
-    directoryBtn = document.getElementById('btn-directory');
-    directorySVG = directoryBtn.querySelector('svg > use');
+    directoriesBtn = document.getElementById('btn-directories');
+    directoriesSVG = directoriesBtn.querySelector('svg > use');
 
     settingsBtn = document.getElementById('btn-settings');
     settingsSVG = settingsBtn.querySelector('svg > use');
@@ -64,12 +97,12 @@ export async function initVariables() {
     navToggleBtn = document.getElementById('btn-nav-toggle');
     navToggleSVG = navToggleBtn.querySelector('svg > use');
 
-    /* ---------- content panel elements ---------- */
-    directoryContainer1 = document.getElementById('ctr1-directory');
-    editorContainer1 = document.getElementById('ctr1-editor');
-    settingsContainer1 = document.getElementById('ctr1-settings');
+    // content block elements
+    directoriesSection = document.getElementById('section-directories');
+    editorSection = document.getElementById('section-editor');
+    settingsSection = document.getElementById('section-settings');
 
-    /* ---------- editor section elements ---------- */
+    // editor section elements
     videoContainer = document.getElementById('ctr-video');
 
     videoPlayer = document.getElementById('player-video');
@@ -102,36 +135,40 @@ export async function initVariables() {
     timelineTrack = document.getElementById('track-timeline');
     timelineThumb = document.getElementById('thumb-timeline');
 
-    timelineState = new TimelineState();
-
-    /* ---------- settings section elements ---------- */
+    // settings section elements
     allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='saveLocation']), .setting-pill > select`);
     allSettingToggleSwitch = document.querySelectorAll(`.setting-toggle-switch > input:not([name='darkMode'])`);
     saveLocationSettingPill = document.querySelector(`.setting-pill > input[name='saveLocation']`);
     darkModeSettingToggleSwitch = document.querySelector(`.setting-toggle-switch > input[name='darkMode']`);
 
-    /* ---------- directory section elements ---------- */
+    // directories section elements
     capturesGallery = document.getElementById('gallery-captures');
-    videoPreviewTemplate = document.querySelectorAll('template')[0];
+    videoPreviewTemplate = document.querySelector('template');
     videoPreviewWidth = parseInt(style.getPropertyValue('--vtn-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
     capturesLeftBtn = document.getElementById('btn-captures-left');
     capturesRightBtn = document.getElementById('btn-captures-right');
 
-    /* ---------- boolean flags ---------- */
+    // timelineState object
+    timelineState = new TimelineState();
+
+    // boolean flags
     flags = { 
         videoLoaded: false, 
-        timelineDragging: false, 
-        playbackDragging: false 
+        timelineSliderDragging: false, 
+        playbackSliderDragging: false,
+        previouslyPaused: false
     };
 
-    /* ---------- element bounding client rectangles ---------- */
+    // element boxes
     boxes = { 
         timelineSliderBox: timelineSlider.getBoundingClientRect(),
         playbackSliderBox: playbackSlider.getBoundingClientRect(),
         galleryBox: capturesGallery.getBoundingClientRect() 
     };
 
-    /* ---------- settings and video data---------- */
+    // settings and videos data
     data = {};
-    // [data['settings'], data['videos']] = await Promise.all([window.settingsAPI.getAllSettings(), window.filesAPI.getAllVideosData()]);
+
+    // animation frame
+    animationFrame = {};
 }

@@ -7,77 +7,77 @@
     position: relative;
 }
 
-.content-ctr1 {
+.content-section {
     position: absolute;
     display: flex;
     visibility: hidden;
     width: 100%;
 
     flex-flow: column nowrap;
-    gap: var(--cctr1-vgap);
+    gap: var(--csection-vgap);
     height: 100%; /* for vertical scroll */
-    padding: var(--cctr1-vpadding) var(--cctr1-hpadding);
+    padding: var(--csection-vpadding) var(--csection-hpadding);
 }
 
-.content-ctr1.active {
+.content-section.active {
     visibility: visible;
 }
 
-.content-ctr1 > h2 {
+.content-section > h2 {
     flex: 0 0 fit-content;
 
-    color: var(--cctr1-h2-color);
-    font-size: var(--cctr1-h2-fsize);
-    font-weight: var(--cctr1-h2-fweight);
+    color: var(--csection-h2-color);
+    font-size: var(--csection-h2-fsize);
+    font-weight: var(--csection-h2-fweight);
 }
 
-.content-ctr1 > hr {
+.content-section > hr {
     flex: 0 0 auto;
-    height: var(--cctr1-hr-height);
-    margin-left: var(--cctr1-hr-lmargin);
-    width: var(--cctr1-hr-width);
+    height: var(--csection-hr-height);
+    margin-left: var(--csection-hr-lmargin);
+    width: var(--csection-hr-width);
 
-    background-color: var(--cctr1-hr-bgcolor);
+    background-color: var(--csection-hr-bgcolor);
 }
 
-.content-ctr2 {
-    border-radius: var(--cctr2-bradius);
+.section-ctr1 {
+    border-radius: var(--sctr1-bradius);
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: column nowrap;
-    gap: var(--cctr2-vgap);
-    padding: var(--cctr2-vpadding) var(--cctr2-hpadding);
+    gap: var(--sctr1-vgap);
+    padding: var(--sctr1-vpadding) var(--sctr1-hpadding);
 
-    background-color: var(--cctr2-bgcolor);
+    background-color: var(--sctr1-bgcolor);
     overflow-y: auto; /* for vertical scroll */
 
     scrollbar-gutter: stable;
 }
 
-.content-ctr2::-webkit-scrollbar-track {
-    margin: var(--cctr2-sb-track-margin);
+.section-ctr1::-webkit-scrollbar-track {
+    margin: var(--sctr1-sb-track-margin);
 }
 
-.content-ctr3 {
+.section-ctr2 {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--cctr3-vgap);
+    gap: var(--sctr2-vgap);
 }
 
-.content-ctr3 > h3 {
+.section-ctr2 > h3 {
     flex: 0 0 fit-content;
 
-    color: var(--cctr3-h3-color);
-    font-size: var(--cctr3-h3-fsize);
-    font-weight: var(--cctr3-h3-fweight);
+    color: var(--sctr2-h3-color);
+    font-size: var(--sctr2-h3-fsize);
+    font-weight: var(--sctr2-h3-fweight);
 }
 
-.content-ctr3 > hr {
+.section-ctr2 > hr {
     flex: 0 0 auto;
-    height: var(--cctr3-hr-height);
-    margin-left: var(--cctr3-hr-lmargin);
-    width: var(--cctr3-hr-width);
+    height: var(--sctr2-hr-height);
+    margin-left: var(--sctr2-hr-lmargin);
+    width: var(--sctr2-hr-width);
 
-    background-color: var(--cctr3-hr-bgcolor);
+    background-color: var(--sctr2-hr-bgcolor);
 }

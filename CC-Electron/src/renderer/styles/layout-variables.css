@@ -59,35 +59,35 @@ html {
     /* ==== cb -> Content Block ==== */
     --cblock-bradius: 10px;
 
-    /* ==== ctr1 -> Container 1 ==== */
-    --cctr1-vgap: var(--nbar-vgap);
-    --cctr1-hpadding: calc(var(--nbar-padding) + var(--ntbtn-svg-length));
-    --cctr1-vpadding: var(--nbar-padding);
+    /* ==== csection -> Content Section ==== */
+    --csection-vgap: var(--nbar-vgap);
+    --csection-hpadding: calc(var(--nbar-padding) + var(--ntbtn-svg-length));
+    --csection-vpadding: var(--nbar-padding);
 
-    --cctr1-h2-fsize: 60px;
-    --cctr1-h2-fweight: 500;
+    --csection-h2-fsize: 60px;
+    --csection-h2-fweight: 500;
 
-    --cctr1-hr-height: 1.5px;
-    --cctr1-hr-lmargin: var(--nbar-hr-lmargin);
-    --cctr1-hr-width: calc(100% + var(--cctr1-hpadding));
+    --csection-hr-height: 1.5px;
+    --csection-hr-lmargin: var(--nbar-hr-lmargin);
+    --csection-hr-width: calc(100% + var(--csection-hpadding));
 
-    /* ==== ctr2 -> Container 2 ==== */
-    --cctr2-bradius: 10px;
-    --cctr2-vgap: 30px;
-    --cctr2-hpadding: var(--cctr1-hpadding);
-    --cctr2-vpadding: var(--cctr1-vpadding);
+    /* ==== sctr1 -> Section Container 1 ==== */
+    --sctr1-bradius: 10px;
+    --sctr1-vgap: 30px;
+    --sctr1-hpadding: var(--csection-hpadding);
+    --sctr1-vpadding: var(--csection-vpadding);
 
-    --cctr2-sb-track-margin: calc(var(--cctr2-vpadding) - var(--sbar-thumb-bwidth));
+    --sctr1-sb-track-margin: calc(var(--sctr1-vpadding) - var(--sbar-thumb-bwidth));
 
-    /* ==== ctr3 -> Container 3 ==== */
-    --cctr3-vgap: var(--nbar-vgap);
+    /* ==== sctr2 -> Section Container 2 ==== */
+    --sctr2-vgap: var(--nbar-vgap);
 
-    --cctr3-h3-fsize: 30px;
-    --cctr3-h3-fweight: 400;
+    --sctr2-h3-fsize: 30px;
+    --sctr2-h3-fweight: 400;
 
-    --cctr3-hr-height: 1.5px;
-    --cctr3-hr-lmargin: var(--nbar-hr-lmargin);
-    --cctr3-hr-width: calc(100% + var(--cctr2-hpadding));
+    --sctr2-hr-height: 1.5px;
+    --sctr2-hr-lmargin: var(--nbar-hr-lmargin);
+    --sctr2-hr-width: calc(100% + var(--sctr1-hpadding));
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bradius: 10px;
@@ -216,39 +216,39 @@ html {
     --tthumb-linset: calc(var(--tthumb-width) / -2);
     --tthumb-width: 4px;
 
-    /* ==== sgroup -> Settings Group ==== */
-    --sgroup-hgap: 30px;
+    /* ==== stsgroupctr -> Settings Group ==== */
+    --stsgroupctr-hgap: 30px;
 
-    /* ==== sctr -> Setting Container ==== */
-    --sctr-bradius: 10px;
-    --sctr-vgap: 5px;
-    --sctr-hpadding: var(--cctr2-hpadding);
-    --sctr-vpadding: var(--cctr2-vpadding);
-    --sctr-owidth: 1.5px;
+    /* ==== stctr -> Setting Container ==== */
+    --stctr-bradius: 10px;
+    --stctr-vgap: 5px;
+    --stctr-hpadding: var(--sctr1-hpadding);
+    --stctr-vpadding: var(--sctr1-vpadding);
+    --stctr-owidth: 1.5px;
 
-    --sctr-p-fsize: 11px;
-    --sctr-p-fweight: 300;
+    --stctr-p-fsize: 11px;
+    --stctr-p-fweight: 300;
 
-    --sctr-h4-fsize: 17px;
-    --sctr-h4-fweight: 350;
+    --stctr-h4-fsize: 17px;
+    --stctr-h4-fweight: 350;
 
-    /* ==== spill -> Setting Pill ==== */
-    --spill-bradius: 10px;
+    /* ==== stpill -> Setting Pill ==== */
+    --stpill-bradius: 10px;
 
-    --spill-inputselect-hpadding: 10px;
-    --spill-inputselect-width: 110px;
+    --stpill-inputselect-hpadding: 10px;
+    --stpill-inputselect-width: 110px;
 
-    --spill-svg-length: 25px;
-    --spill-svg-margin: 5px;
+    --stpill-svg-length: 25px;
+    --stpill-svg-margin: 5px;
 
-    /* ==== stswitch -> Setting Toggle Switch ==== */
-    --stswitch-width: 66px;
+    /* ==== sttswitch -> Setting Toggle Switch ==== */
+    --sttswitch-width: 66px;
 
-    --stswitch-svg-bradius: 7.5px;
-    --stswitch-svg-height: calc(var(--spill-svg-length) + 2 * var(--spill-svg-margin) - 2 * var(--stswitch-svg-inset));
-    --stswitch-svg-inset: 2px;
-    --stswitch-svg-translateX: var(--stswitch-svg-width);
-    --stswitch-svg-width: calc(var(--stswitch-width) / 2 - var(--stswitch-svg-inset));
+    --sttswitch-svg-bradius: 7.5px;
+    --sttswitch-svg-height: calc(var(--stpill-svg-length) + 2 * var(--stpill-svg-margin) - 2 * var(--sttswitch-svg-inset));
+    --sttswitch-svg-inset: 2px;
+    --sttswitch-svg-translateX: var(--sttswitch-svg-width);
+    --sttswitch-svg-width: calc(var(--sttswitch-width) / 2 - var(--sttswitch-svg-inset));
 }
 
 ::-webkit-scrollbar {

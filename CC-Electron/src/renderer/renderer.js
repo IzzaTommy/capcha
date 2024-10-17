@@ -1,23 +1,35 @@
+/**
+ * Module for initializing all components
+ * 
+ * @module renderer
+ * @requires variables
+ * @requires window
+ * @requires titleBar
+ * @requires navBlock
+ * @requires settingsSection
+ * @requires editorSection
+ * @requires directoriesSection
+ */
 import { initVariables } from './components/variables.js';
 import { initWindow } from './components/window.js';
 import { initTitleBar } from './components/titleBar.js';
 import { initNavBlock } from './components/navBlock.js';
-import { initSettingsContainer } from './components/settingsContainer.js';
-import { initEditorContainer } from './components/editorContainer.js';
-import { initDirectoryContainer } from './components/directoryContainer.js';
+import { initSettingsSection } from './components/settingsSection.js';
+import { initEditorSection } from './components/editorSection.js';
+import { initDirectoriesSection } from './components/directoriesSection.js';
 
-// wait for DOM to finish loading
+// on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', init);
 
-// runs all initialization functions from all modules
+/**
+ * Initializes all components
+ */
 async function init() {
     initVariables();
-    await initSettingsContainer();
-    initNavBlock();
-    initDirectoryContainer();
-
     initWindow();
     initTitleBar();
-
-    initEditorContainer();
+    await initSettingsSection();
+    initNavBlock();
+    initDirectoriesSection();
+    initEditorSection();
 }

@@ -1,10 +1,17 @@
+/**
+ * Module for initializing the settings section
+ * 
+ * @module settingsSection
+ * @requires variables
+ */
 import { 
-    GROW_FACTOR, REDUCE_FACTOR, 
+    GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
@@ -12,20 +19,28 @@ import {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data 
+    data, animationFrame 
 } from './variables.js';
-
 import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
-export { initSettingsContainer }
+/**
+ * @exports initSettingsSection
+ */
+export { initSettingsSection }
 
-async function initSettingsContainer() {
-    initSettingsEL();
-    
-    await initSettings();
+/**
+ * Initializes the settings section and its components
+ */
+async function initSettingsSection() {
+    initSettingContainerEL();
+    await initSettingContainer();
 }
 
-function initSettingsEL() {
+/**
+ * Initializes the setting container event listeners
+ */
+function initSettingContainerEL() {
+    // iterate through each setting pill
     for (const setting of allSettingPill) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
@@ -34,6 +49,7 @@ function initSettingsEL() {
         });
     }
 
+    // iterate through each setting toggle switch
     for (const setting of allSettingToggleSwitch) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
@@ -47,7 +63,7 @@ function initSettingsEL() {
         data['settings'][darkModeSettingToggleSwitch.name] = await window.settingsAPI.setSetting(darkModeSettingToggleSwitch.name, darkModeSettingToggleSwitch.checked);
         darkModeSettingToggleSwitch.checked = data['settings'][darkModeSettingToggleSwitch.name];
 
-        // set the dark mode based on the stored setting
+        // change the theme attribute, depending on if dark mode is enabled
         if (darkModeSettingToggleSwitch.checked) {
             html.dataset.theme = 'dark';
         }
@@ -63,14 +79,20 @@ function initSettingsEL() {
     });
 }
 
-async function initSettings() {
+/**
+ * Initializes the setting container
+ */
+async function initSettingContainer() {
+    // get the settings
     data['settings'] = await window.settingsAPI.getAllSettings();
 
+    // iterate through each setting pill
     for (const setting of allSettingPill) {
         // load each settings initial value from stored settings
         setting.value = data['settings'][setting.name];
     }
 
+    // iterate through each setting toggle switch
     for (const setting of allSettingToggleSwitch) {
         // load each settings initial value from stored settings
         setting.checked = data['settings'][setting.name];
@@ -79,7 +101,7 @@ async function initSettings() {
     // load the initial value from stored setting
     darkModeSettingToggleSwitch.checked = data['settings'][darkModeSettingToggleSwitch.name];
 
-    // set the dark mode based on the stored setting
+    // change the theme attribute, depending on if dark mode is enabled
     if (darkModeSettingToggleSwitch.checked) {
         html.dataset.theme = 'dark';
     }

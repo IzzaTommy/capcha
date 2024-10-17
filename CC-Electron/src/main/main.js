@@ -146,7 +146,7 @@ function createWindow() {
     mainWindow.maximize();
     mainWindow.loadFile('src/renderer/index.html');
 
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // on close, grab the video volume setting
     mainWindow.on('close', (event) => {

@@ -1,10 +1,17 @@
+/**
+ * Module for initializing the title bar
+ * 
+ * @module titleBar
+ * @requires variables
+ */
 import { 
-    GROW_FACTOR, REDUCE_FACTOR, 
+    GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
+    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoryBtn, directorySVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
-    directoryContainer1, editorContainer1, settingsContainer1, 
+    directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
@@ -12,21 +19,30 @@ import {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data 
+    data, animationFrame 
 } from './variables.js';
-
 import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
-export { initTitleBar }
+/**
+ * @exports initTitleBar
+ */
+export { initTitleBar };
 
-// handles title bar button event listeners
+/**
+ * Initializes the title bar and its components
+ */
 function initTitleBar() {
-    initTitleBarEL();
+    initTitleBtnEL();
 }
 
-function initTitleBarEL() {
-    // API calls for window manipulation
+/**
+ * Initializes the title button event listeners
+ */
+function initTitleBtnEL() {
+    // on click, minimize the window
     minimizeBtn.addEventListener('click', window.titleBarAPI.minimize);
+    // on click, maximize the window
     maximizeBtn.addEventListener('click', window.titleBarAPI.maximize);
+    // on click, close the window
     closeBtn.addEventListener('click', window.titleBarAPI.close);
 }
