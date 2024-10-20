@@ -4,25 +4,27 @@
  * @module window
  * @requires variables
  * @requires shared
+ * @requires editorSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, animationFrame 
+    data, stateData 
 } from './variables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection } from './shared.js';
+import { getReadableDuration } from './editorSection.js';
 
 /**
  * @exports initNavBlock
@@ -60,9 +62,24 @@ function initNavBtnEL() {
     recordBtn.addEventListener('mouseenter', () => setSVG(recordSVG, 'record-solid'));
     // on mouse leave, change to the regular SVG
     recordBtn.addEventListener('mouseleave', () => setSVG(recordSVG, 'record'));
+
     // on click, toggle the recording
     recordBtn.addEventListener('click', () => {
-        window.webSocketAPI.startRecord();
+        // window.webSocketAPI.startRecord();
+        
+        if (!flags['recording']) {
+            flags['recording'] = true;
+            stateData['recordingTime'] = 0;
+
+            stateData['timerInterval'] = setInterval(() => {
+                stateData['recordingTime']++;
+                currentRecordingTimeLabel.textContent = getReadableDuration(stateData['recordingTime']);
+            }, 1000);
+        }
+        else {
+            flags['recording'] = false;
+            clearInterval(stateData['timerInterval']);
+        }
     });
 }
 

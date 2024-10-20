@@ -28,17 +28,22 @@ html {
 
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-vgap: 10px;
-    --nbar-padding: 10px;
+    --nbar-tpadding: 10px;
+    --nbar-hpadding: 10px;
+    --nbar-bpadding: 20px;
+    --nbar-width: calc(var(--ldp-svg-length) + 2 * var(--nbar-hpadding));
+    --nbar-active-width: calc(var(--nbar-width) + var(--ldp-hgap) + var(--ldp-h1-width));
 
     --nbar-hr-height: 1.5px;
-    --nbar-hr-lmargin: calc(var(--nbar-padding) / -2);
-    --nbar-hr-width: calc(100% + var(--nbar-padding));
+    --nbar-hr-lmargin: calc(var(--nbar-hpadding) / -2);
+    --nbar-hr-width: calc(100% + var(--nbar-hpadding));
 
     /* ==== ldp -> Logo Display ==== */
     --ldp-hgap: 20px;
 
     --ldp-h1-fsize: 28px;
     --ldp-h1-fweight: 600;
+    --ldp-h1-width: 111px;
 
     --ldp-svg-length: 60px;
 
@@ -53,6 +58,23 @@ html {
 
     --nbtn-svg-length: 30px;
 
+    /* ==== rbtn -> Record Button ==== */
+    --rbtn-bwidth: 1.5px;
+    --rbtn-padding: calc(var(--nbtn-padding) - var(--rbtn-bwidth));
+
+    /* ==== rctr -> Recording Container ==== */
+    --rctr-gap: 10px;
+    --rctr-hmargin: var(--nbtn-hmargin);
+
+    /* ==== crtlabel -> Current Recording Time Label ==== */
+    --crtlabel-width: calc(var(--nbtn-svg-length) + 2 * var(--nbtn-padding));
+    --crtlabel-fsize: 15px;
+    --crtlabel-fweight: 300;
+
+    /* ==== rglabel -> Recording Game Label ==== */
+    --rglabel-fsize: 12px;
+    --rglabel-fweight: 400;
+
     /* ==== nt -> Nav(igation) Toggle ==== */
     --ntbtn-svg-length: 15px;
 
@@ -61,8 +83,8 @@ html {
 
     /* ==== csection -> Content Section ==== */
     --csection-vgap: var(--nbar-vgap);
-    --csection-hpadding: calc(var(--nbar-padding) + var(--ntbtn-svg-length));
-    --csection-vpadding: var(--nbar-padding);
+    --csection-hpadding: calc(var(--nbar-hpadding) + var(--ntbtn-svg-length));
+    --csection-vpadding: var(--nbar-hpadding);
 
     --csection-h2-fsize: 60px;
     --csection-h2-fweight: 500;
@@ -91,15 +113,15 @@ html {
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bradius: 10px;
-    --dctr-height: calc(2 * var(--dgl-vpadding) + 2 * var(--vpctr-padding) + var(--vtn-height) + 3 * var(--vpctr-vgap) + var(--vpctr-h4-fsize) + var(--vpctr-p-fsize) + 2 * var(--vobtn-padding) + var(--vobtn-svg-length) + var(--sbar-length));
-    --dctr-owidth: 1.5px;
+    --dctr-bwidth: 1.5px;
+    --dctr-height: calc(2 * var(--dctr-bwidth) + 2 * var(--dgl-vpadding) + 2 * var(--vpctr-padding) + var(--vtn-height) + 3 * var(--vpctr-vgap) + var(--vpctr-h4-fsize) + var(--vpctr-p-fsize) + 2 * var(--vobtn-padding) + var(--vobtn-svg-length) + var(--sbar-length));
 
     /* ==== dbtn -> Directory Button ==== */
     --dbtn-svg-length: 15px;
 
     /* ==== dgl -> Directory Gallery ==== */
     --dgl-hmargin: 10px;
-    --dgl-vpadding: 10px;
+    --dgl-vpadding: calc(10px - var(--dctr-bwidth));
 
     --dgl-sb-track-margin: calc(-1 * var(--sbar-thumb-bwidth));
 
@@ -131,6 +153,10 @@ html {
     --vctr-bradius: 10px;
     --vctr-height: 75%;
     --vctr-width: 80%;
+
+    /* ==== ppstat -> Play Pause Status ==== */
+    --ppstat-svg-height: 80px;
+    --ppstat-svg-width: 80px;
 
     /* ==== psl -> Playback Slider ==== */
     --psl-height: 3px;
@@ -184,18 +210,18 @@ html {
     --ssl-thumb-bradius: calc(var(--ssl-thumb-width) / 2);
     --ssl-thumb-width: 4px;
 
-    /* ==== tlabel -> Time Label ==== */
-    --tlabel-fsize: 15px;
-    --tlabel-fweight: 400;
+    /* ==== vtlabel -> Video Time Label ==== */
+    --vtlabel-fsize: 15px;
+    --vtlabel-fweight: 400;
 
-    /* ==== ctlabel -> Current Time Label ==== */
-    --ctlabel-hpadding: var(--ctlabel-vpadding);
-    --ctlabel-vpadding: calc((var(--pbtn-svg-length) - var(--ctlabel-fsize)) / 2);
-    --ctlabel-width: 5ch;
+    /* ==== cvtlabel -> Current Video Time Label ==== */
+    --cvtlabel-hpadding: var(--cvtlabel-vpadding);
+    --cvtlabel-vpadding: calc((var(--pbtn-svg-length) - var(--cvtlabel-fsize)) / 2);
+    --cvtlabel-width: 5ch;
 
-    /* ==== ttlabel -> Total Time Label ==== */
-    --ttlabel-hpadding: var(--ctlabel-hpadding);
-    --ttlabel-vpadding: var(--ctlabel-vpadding);
+    /* ==== tvtlabel -> Total Video Time Label ==== */
+    --tvtlabel-hpadding: var(--cvtlabel-hpadding);
+    --tvtlabel-vpadding: var(--cvtlabel-vpadding);
 
     /* ==== tslider -> Timeline Slider ==== */
     --tslider-bradius: 10px;
@@ -221,10 +247,10 @@ html {
 
     /* ==== stctr -> Setting Container ==== */
     --stctr-bradius: 10px;
+    --stctr-bwidth: 1.5px;
     --stctr-vgap: 5px;
-    --stctr-hpadding: var(--sctr1-hpadding);
-    --stctr-vpadding: var(--sctr1-vpadding);
-    --stctr-owidth: 1.5px;
+    --stctr-hpadding: calc(var(--sctr1-hpadding) - var(--stctr-bwidth));
+    --stctr-vpadding: calc(var(--sctr1-vpadding) - var(--stctr-bwidth));
 
     --stctr-p-fsize: 11px;
     --stctr-p-fweight: 300;

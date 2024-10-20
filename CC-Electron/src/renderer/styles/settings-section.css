@@ -8,6 +8,7 @@
 .setting-ctr {
     align-items: start;
     align-self: start;
+    border: var(--stctr-bwidth) solid transparent;
     border-radius: var(--stctr-bradius);
     display: flex;
     flex: 0 0 fit-content;
@@ -15,13 +16,13 @@
     gap: var(--stctr-vgap);
     padding: var(--stctr-vpadding) var(--stctr-hpadding);
 
-    outline: var(--stctr-owidth) solid transparent;
     transition: var(--stctr-transition);
 }
 
 .setting-ctr:hover {
+    border-color: var(--stctr-hover-bcolor);
+
     background-color: var(--stctr-hover-bgcolor);
-    outline-color: var(--stctr-hover-ocolor);
 }
 
 .setting-ctr > h4 {

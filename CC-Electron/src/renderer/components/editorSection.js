@@ -13,21 +13,21 @@ import {
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, animationFrame 
+    data, stateData 
 } from './variables.js';
 import { setSVG, getParsedTime, resizeAll } from './shared.js';
 
 /**
- * @exports initEditorSection, resizePlaybackSlider, resizeTimelineSlider
+ * @exports initEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration
  */
-export { initEditorSection, resizePlaybackSlider, resizeTimelineSlider}
+export { initEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration }
 
 /**
  * Initializes the editor section and its components
@@ -60,7 +60,7 @@ function initVideoContainerEL() {
         playbackContainer.style.opacity = "";
 
         // sync the slider thumbs' movement to each frame of the video
-        animationFrame['requestID'] = requestAnimationFrame(syncThumbs);
+        stateData['animationID'] = requestAnimationFrame(syncThumbs);
     });
 
     // on pause, show the playback container and cancel animation frames
@@ -69,7 +69,7 @@ function initVideoContainerEL() {
         playbackContainer.style.opacity = "1";
 
         // cancel the syncing to prevent unnecessary computations
-        cancelAnimationFrame(animationFrame['requestID']);
+        cancelAnimationFrame(stateData['animationID']);
     });
 
     // on click, play/pause the video and change the SVG
@@ -91,7 +91,7 @@ function initVideoContainerEL() {
             }
     
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // pause the video and change the SVG
@@ -106,8 +106,8 @@ function initVideoContainerEL() {
         setTimelineOverlay();
 
         // set the video current time label to 0
-        currentTimeLabel.textContent = '0:00';
-        totalTimeLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
+        currentVideoTimeLabel.textContent = '0:00';
+        totalVideoTimeLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
 
         // set the video loaded flag
         flags['videoLoaded'] = true;
@@ -308,7 +308,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             } 
             else {
@@ -344,7 +344,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             }
         }
@@ -382,7 +382,7 @@ function initTimelineSliderEL() {
             }
 
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
     });
 
@@ -422,7 +422,7 @@ function initTimelineSliderEL() {
             setAllThumbs();
 
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // check if the timeline slider is dragging
@@ -456,7 +456,7 @@ function initTimelineSliderEL() {
                 setPlaybackThumb();
 
                 // set the video current time label
-                currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
             }
         }
     });
@@ -493,21 +493,25 @@ function setVideoPlayerState(action) {
         case 'play':
             // play the video and change the SVG
             setSVG(playPauseSVG, 'pause');
+            playPauseStatusSVG.style.opacity = '';
             videoPlayer.play();
             break;
         case 'pause':
             // pause the video and change the SVG
             setSVG(playPauseSVG, 'play-arrow');
+            playPauseStatusSVG.style.opacity = '1';
             videoPlayer.pause();
             break;
         case 'toggle':
             // play/pause the video and change the SVG
             if (videoPlayer.paused || videoPlayer.ended) {
                 setSVG(playPauseSVG, 'pause');
+                playPauseStatusSVG.style.opacity = '';
                 videoPlayer.play();
             }
             else {
                 setSVG(playPauseSVG, 'play-arrow');
+                playPauseStatusSVG.style.opacity = '1';
                 videoPlayer.pause();
             }
             break;
@@ -612,7 +616,7 @@ function syncThumbs() {
 
     // request the next animation frame if the video is playing
     if (!videoPlayer.paused && !videoPlayer.ended) {
-        animationFrame['requestID'] = requestAnimationFrame(syncThumbs);
+        stateData['animationID'] = requestAnimationFrame(syncThumbs);
     }
 }
 

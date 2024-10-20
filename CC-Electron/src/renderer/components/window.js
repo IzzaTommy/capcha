@@ -16,12 +16,12 @@ import {
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, animationFrame 
+    data, stateData 
 } from './variables.js';
 import { setSVG, getParsedTime, resizeAll } from './shared.js';
 import { loadGallery } from './directoriesSection.js';

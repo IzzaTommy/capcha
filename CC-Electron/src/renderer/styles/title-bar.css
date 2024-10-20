@@ -33,7 +33,7 @@
 }
 
 #btn-close:hover {
-    background-color: #ff0000;
+    background-color: var(--tcbtn-hover-bgcolor);
 }
 
 .title-btn > svg {

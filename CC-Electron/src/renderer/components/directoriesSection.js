@@ -15,12 +15,12 @@ import {
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, animationFrame 
+    data, stateData 
 } from './variables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection } from './shared.js';
 
@@ -33,14 +33,30 @@ export { initDirectoriesSection, loadGallery, resizeGallery }
  * Initializes the directories section and its components
  */
 function initDirectoriesSection() {
-    initDirectoryBtnEL();
+    initDirectoryGalleryEL();
     loadGallery();
 }
 
 /**
- * Initializes the directory button event listeners
+ * Initializes the directory gallery event listeners
  */
-function initDirectoryBtnEL() {
+function initDirectoryGalleryEL() {
+
+    // on scroll, scroll the captures gallery
+    capturesGallery.addEventListener('wheel', (pointer) => {
+        // prevent scrolling vertically on section container 1
+        pointer.preventDefault();
+
+        // scroll the captures gallery by approximately the video preview width
+        if (pointer.deltaY < 0) {
+            capturesGallery.scrollBy({left: -videoPreviewWidth});
+        }
+        else {
+            capturesGallery.scrollBy({left: videoPreviewWidth});
+        }
+    });
+
+
     // on click, smoothly scroll the captures gallery left by approximately its width
     capturesLeftBtn.addEventListener('click', () => {
         capturesGallery.scrollBy({left: -boxes['galleryBox'].width, behavior: 'smooth'});

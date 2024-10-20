@@ -11,34 +11,34 @@ import { TimelineState } from './timelineState.js';
  *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
  *  html, 
  *  minimizeBtn, maximizeBtn, closeBtn, 
- *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+ *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
  *  navToggleBtn, navToggleSVG, 
  *  directoriesSection, editorSection, settingsSection, 
- *  videoContainer, videoPlayer, 
+ *  videoContainer, videoPlayer, playPauseStatusSVG, 
  *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
- *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+ *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
  *  allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
- *  data 
+ *  data, stateData 
  */
 export { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, animationFrame 
+    data, stateData 
 };
 
 // timeline constants and time constants
@@ -57,12 +57,12 @@ const style = getComputedStyle(document.documentElement);
 // document elements
 let html, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
@@ -70,8 +70,8 @@ let html,
 // timelineState object
 let timelineState;
 
-// boolean flags, element boxes, settings/videos data, and animation frame
-let flags, boxes, data, animationFrame;
+// boolean flags, element boxes, settings/videos data, and state data
+let flags, boxes, data, stateData;
 
 export async function initVariables() {
     // html element
@@ -91,6 +91,8 @@ export async function initVariables() {
     settingsBtn = document.getElementById('btn-settings');
     settingsSVG = settingsBtn.querySelector('svg > use');
 
+    currentRecordingTimeLabel = document.getElementById('label-current-recording-time');
+
     recordBtn = document.getElementById('btn-record');
     recordSVG = recordBtn.querySelector('svg > use');
 
@@ -107,6 +109,8 @@ export async function initVariables() {
 
     videoPlayer = document.getElementById('player-video');
 
+    playPauseStatusSVG = document.getElementById('status-play-pause');
+
     playbackContainer = document.getElementById('ctr-playback');
 
     playbackSlider = document.getElementById('slider-playback');
@@ -120,8 +124,8 @@ export async function initVariables() {
     volumeSVG = volumeBtn.querySelector('svg > use');
     volumeSlider = document.getElementById('slider-volume');
 
-    currentTimeLabel = document.getElementById('label-current-time');
-    totalTimeLabel = document.getElementById('label-total-time');
+    currentVideoTimeLabel = document.getElementById('label-current-video-time');
+    totalVideoTimeLabel = document.getElementById('label-total-video-time');
 
     speedSlider = document.getElementById('slider-speed');
     speedBtn = document.getElementById('btn-speed');
@@ -156,7 +160,8 @@ export async function initVariables() {
         videoLoaded: false, 
         timelineSliderDragging: false, 
         playbackSliderDragging: false,
-        previouslyPaused: false
+        previouslyPaused: false, 
+        recording: false
     };
 
     // element boxes
@@ -169,6 +174,5 @@ export async function initVariables() {
     // settings and videos data
     data = {};
 
-    // animation frame
-    animationFrame = {};
+    stateData = {};
 }

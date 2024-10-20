@@ -10,7 +10,7 @@
     height: var(--vctr-height);
     width: var(--vctr-width);
 
-    background-color: black;
+    background-color: #000000;
     overflow: hidden;
 
     cursor: pointer;
@@ -22,6 +22,19 @@
     width: 100%;
 }
 
+#status-play-pause {
+    display: block;
+    inset: 0;
+    position: absolute;
+
+    margin: auto;
+    height: var(--ppstat-svg-height);
+    width: var(--ppstat-svg-width);
+
+    fill: var(--ppstat-svg-fill);
+    opacity: 0;
+}
+
 #ctr-playback {
     inset: auto 0 0;
     position: absolute;
@@ -29,7 +42,7 @@
     display: flex;
     flex-flow: column nowrap;
     
-    opacity: 0;
+    opacity: 1;
     transition: var(--pctr-transition);
 }
 
@@ -95,7 +108,7 @@
 }
 
 #btn-speed, 
-#ctr-time {
+#ctr-video-time {
     display: flex;
     flex-flow: row nowrap;
 }
@@ -235,33 +248,30 @@
     background-size: 16.666% 50%;
 }
 
-#ctr-time {
+#ctr-video-time {
     justify-content: end;
 }
 
-.time-label {
+.video-time-label {
     flex: 0 0 fit-content;
 
-    color: var(--tlabel-color);
-    font-size: var(--tlabel-fsize);
-    font-weight: var(--tlabel-fweight);
+    color: var(--vtlabel-color);
+    font-size: var(--vtlabel-fsize);
+    font-weight: var(--vtlabel-fweight);
 }
 
-#label-current-time {
-    padding-top: var(--ctlabel-vpadding);
-    padding-bottom: var(--ctlabel-vpadding);
-    padding-left: var(--ctlabel-hpadding);
-    width: var(--ctlabel-width);
+#label-current-video-time {
+    padding-top: var(--cvtlabel-vpadding);
+    padding-bottom: var(--cvtlabel-vpadding);
+    padding-left: var(--cvtlabel-hpadding);
+    width: var(--cvtlabel-width);
 }
 
-#label-total-time {
-    padding-top: var(--ttlabel-vpadding);
-    padding-right: var(--ttlabel-hpadding);
-    padding-bottom: var(--ttlabel-vpadding);
+#label-total-video-time {
+    padding-top: var(--tvtlabel-vpadding);
+    padding-right: var(--tvtlabel-hpadding);
+    padding-bottom: var(--tvtlabel-vpadding);
 }
-
-
-
 
 #slider-timeline {
     position: relative;
