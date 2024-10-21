@@ -65,10 +65,10 @@ function initNavBtnEL() {
 
     // on click, toggle the recording
     recordBtn.addEventListener('click', () => {
-        // window.webSocketAPI.startRecord();
-        
         if (!flags['recording']) {
+            window.webSocketAPI.startRecord();
             flags['recording'] = true;
+            recordBtn.classList.toggle('active');
             stateData['recordingTime'] = 0;
 
             stateData['timerInterval'] = setInterval(() => {
@@ -78,6 +78,8 @@ function initNavBtnEL() {
         }
         else {
             flags['recording'] = false;
+            window.webSocketAPI.stopRecord();
+            recordBtn.classList.toggle('active');
             clearInterval(stateData['timerInterval']);
         }
     });

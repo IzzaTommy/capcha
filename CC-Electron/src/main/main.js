@@ -14,7 +14,6 @@ const defVideoDirectory = path.join(app.getPath('videos'), 'CapCha');
 const defThumbnailDirectory = path.join(app.getPath('userData'), 'thumbnails');
 const obsExecutablePath = path.join(__dirname, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 
-let ws;
 const store = new Store({
     defaults: {
         navBarActive: true,
@@ -111,10 +110,15 @@ const store = new Store({
     }
 });
 
+let ws;
+
 let mainWindow;
+
 let obsProcess;
 
-function initOBS() {
+// loads the app when ready
+app.on('ready', () => {
+    // start OBS
     obsProcess = spawn(obsExecutablePath, [
         '--portable',
         '--multi',
@@ -123,13 +127,10 @@ function initOBS() {
         cwd: path.dirname(obsExecutablePath),
     });
 
-    setTimeout(() => {
-        initWebSocket();
-    }, 5000);
-}
+    // attempt Web Socket connection
+    attemptConnection();
 
-// sets up the basic window and closing event
-function createWindow() {
+    // start the window
     mainWindow = new BrowserWindow({
         minWidth: 1280,
         minHeight: 900,
@@ -154,14 +155,27 @@ function createWindow() {
 
         mainWindow.webContents.send('settings:reqVolumeSettings');
     });
-}
+});
 
-// sets up the websocket channel listeners
-function initWebSocket() {
+
+
+
+
+function attemptConnection() {
+    if (ws) {
+       
+        ws.removeAllListeners();
+        ws.terminate();
+    }
+
     ws = new WebSocket('ws://localhost:4444');
 
     ws.on('open', () => {
         console.log('Connected to OBS WebSocket');
+
+        ws.removeAllListeners('error');
+        ws.removeAllListeners('close');
+        initWebSocket();
 
         const message = {
             'op': 1,
@@ -169,18 +183,40 @@ function initWebSocket() {
         };
         
         ws.send(JSON.stringify(message));
+        
     });
 
+    ws.on('error', (error) => {
+        console.error('1 Connection error:', error['code']);
+    });
+
+    ws.on('close', (code, reason) => {
+        console.log('2 Disconnected from OBS WebSocket');
+        console.log('3 Code:', code, 'Reason:', reason.toString());
+        console.log('4 Retrying connection...');
+        setTimeout(attemptConnection, 3000);
+    });
+}
+
+app.on('before-quit', () => {
+    obsProcess.kill('SIGTERM');
+});
+
+
+
+function initWebSocket() {
+
+    
     ws.on('message', (data) => {
         const message = JSON.parse(data);
-
+    
         console.log('--------------------------------');
-
+    
         console.log('OP:', message['op']);
         for (const [key, value] of Object.entries(message['d'])) {
             console.log(key, ': ', value);
         }
-
+    
         switch (message['op']) {
             case 0:
                 console.log('Info: Hello!');
@@ -193,7 +229,7 @@ function initWebSocket() {
                 break;
             case 7:
                 console.log('Info: Responding to request from client.');
-
+    
                 if (message['d']['requestStatus']['result']) {
                     console.log('Status: Request succeeded.');
                 } 
@@ -208,234 +244,207 @@ function initWebSocket() {
             default:
                 console.log('Info: Uncaught OP.')
         }
-    });
 
+        console.log('--------------------------------');
+    });
+    
     ws.on('close', (code, reason) => {
         console.log('--------------------------------');
         console.log('Disconnected from OBS WebSocket');
         console.log('Code:', code);
         console.log('Reason:', reason.toString());
+        console.log('--------------------------------');
     });
-
+    
     ws.on('error', (error) => {
         console.log('--------------------------------');
-        console.error('WebSocket error:', error);
+        console.error('WebSocket error: \n', error['code']);
+
+        if (error['code'] === ' ECONNREFUSED') {
+            setTimeout(attemptConnection, 2000);
+        }
+        console.log('--------------------------------');
     });
 }
 
-// sets up the ipc main channel listeners
-function initIPC() {
-    ipcMain.on('ws-fn', (_, requestType, requestData) => {
-        console.log(`Sending ${requestType} request to OBS WebSocket with data:`, requestData);
 
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            const requestMessage = {
-                'op': 6,
-                'd': {
-                    requestType: requestType,
-                    requestData: requestData,
-                    requestId: Math.random().toString(36).substring(4)
-                }
-            };
+ipcMain.on('ws-fn', (_, requestType, requestData) => {
+    console.log(` --- Sending ${requestType} request to OBS WebSocket with data:`, requestData);
 
-            ws.send(JSON.stringify(requestMessage));
-        } 
-        else {
-            console.log('WebSocket is not open. Cannot send message.');
-        }
-    });
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        const requestMessage = {
+            'op': 6,
+            'd': {
+                requestType: requestType,
+                requestData: requestData,
+                requestId: Math.random().toString(36).substring(4)
+            }
+        };
 
-    // minimizes the window
-    ipcMain.on('window:minimize', (_) => mainWindow.minimize());
-    // maximizes or unmaximizes the window
-    ipcMain.on('window:maximize', (_) => {
-        if (mainWindow.isMaximized()) {
-            mainWindow.unmaximize();
-        }
-        else {
-            mainWindow.maximize();
-        }
-    });
-    // closes the window and triggers event
-    ipcMain.on('window:close', (_) => mainWindow.close());
+        ws.send(JSON.stringify(requestMessage));
+    } 
+    else {
+        console.log('WebSocket is not open. Cannot send message.');
+    }
+});
 
-    // gets the entire settings object
-    ipcMain.handle('settings:getAllSettings', (_) => { return store.store });
+// minimizes the window
+ipcMain.on('window:minimize', (_) => mainWindow.minimize());
+// maximizes or unmaximizes the window
+ipcMain.on('window:maximize', (_) => {
+    if (mainWindow.isMaximized()) {
+        mainWindow.unmaximize();
+    }
+    else {
+        mainWindow.maximize();
+    }
+});
+// closes the window and triggers event
+ipcMain.on('window:close', (_) => mainWindow.close());
 
-    // sets the value of a specific setting
-    ipcMain.handle('settings:setSetting', async (_, key, value) => {
-        switch (key) {
-            // keeps width between 1 and 2560, as an integer
-            case 'resolutionWidth':
-                if (value > 2560 || isNaN(value)) {
-                    value = 2560;
-                }
-                else {
-                    if (value < 1) {
-                        value = 1;
-                    }
-                    else {
-                        value = Math.floor(value);
-                    }
-                }
-                break;
-            // keeps height between 1 and 1440, as an integer
-            case 'resolutionHeight':
-                if (value > 1440 || isNaN(value)) {
-                    value = 1440;
+// gets the entire settings object
+ipcMain.handle('settings:getAllSettings', (_) => { return store.store });
+
+// sets the value of a specific setting
+ipcMain.handle('settings:setSetting', async (_, key, value) => {
+    switch (key) {
+        // keeps width between 1 and 2560, as an integer
+        case 'resolutionWidth':
+            if (value > 2560 || isNaN(value)) {
+                value = 2560;
+            }
+            else {
+                if (value < 1) {
+                    value = 1;
                 }
                 else {
-                    if (value < 1) {
-                        value = 1;
-                    }
-                    else {
-                        value = Math.floor(value);
-                    }
+                    value = Math.floor(value);
                 }
-                break;
-            // allows user to select new directory, or keeps the old one
-            case 'saveLocation':
-                const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
-        
-                if (!canceled && filePaths[0] !== value) {
-                    value = filePaths[0];
-
-                    try {
-                        // delete the thumbnail directory
-                        await fs.rm(defThumbnailDirectory, { recursive: true, force: true });
-                
-                        // recreate the thumbnail directory
-                        await fs.mkdir(defThumbnailDirectory);
-                    }
-                    catch {
-                        console.error('Error reseting directory!');
-                    }
-
-                    mainWindow.webContents.send('files:reqLoadGallery');
+            }
+            break;
+        // keeps height between 1 and 1440, as an integer
+        case 'resolutionHeight':
+            if (value > 1440 || isNaN(value)) {
+                value = 1440;
+            }
+            else {
+                if (value < 1) {
+                    value = 1;
                 }
-
-                break;
-            // ensures type correctness
-            default: 
-                if (!isNaN(value) && typeof(value) !== 'boolean') {
-                    value = Number(value);
+                else {
+                    value = Math.floor(value);
                 }
-        }
+            }
+            break;
+        // allows user to select new directory, or keeps the old one
+        case 'saveLocation':
+            const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
+    
+            if (!canceled && filePaths[0] !== value) {
+                value = filePaths[0];
 
-        // set the new filtered value
-        store.set(key, value);
-
-        // return the value to renderer process for display
-        return value;
-    });
-
-    // sets the volume when the app closes
-    ipcMain.once('settings:setVolumeSettings', (_, volumeSettings) => {
-        store.set('volume', volumeSettings['volume']);
-        store.set('volumeMuted', volumeSettings['volumeMuted']);
-        mainWindow.destroy();
-    });
-
-    // gets all of the video files and meta data from the save location directory
-    ipcMain.handle('files:getAllVideosData', async (_) => {
-        // get the save location stored in the settings
-        const directory = store.get('saveLocation');
-
-        // make the thumbnail directory and video directory (latter should already exist)
-        await Promise.all([
-            fs.mkdir(defThumbnailDirectory, { recursive: true }),
-            fs.mkdir(directory, { recursive: true })
-        ]);
-
-        // read the video directory for files
-        const files = await fs.readdir(directory);
-
-        // filter by video extensions
-        const videos = files.filter(file =>
-            ['.mp4', '.mkv', '.avi'].includes(path.extname(file).toLowerCase())
-        );
-
-        // get video meta data and thumbnail
-        const videosData = await Promise.all(
-            videos.map(async video => {
                 try {
-                    const videoName = path.parse(video).name;
-                    const videoPath = path.join(directory, video);
-
-                    const [videoMetaData, thumbnailPath] = await Promise.all([
-                        fs.stat(videoPath),
-                        path.join(defThumbnailDirectory, `${videoName}.png`)
-                    ]);
-
-                    // create thumbnail if it does not exist
-                    try {
-                        await fs.access(thumbnailPath);
-                    }
-                    catch {
-                        await new Promise((resolve, reject) => {
-                            ffmpeg(videoPath)
-                                .on('end', resolve)
-                                .on('error', reject)
-                                .screenshots({
-                                    timestamps: ['50%'],
-                                    filename: videoName,
-                                    folder: defThumbnailDirectory,
-                                    size: THUMBNAIL_SIZE
-                                });
-                        });
-                    }
-
-                    // return data on the video
-                    return {
-                        nameExt: video,
-                        path: videoPath,
-                        size: videoMetaData.size,
-                        created: videoMetaData.birthtime,
-                        thumbnailPath: thumbnailPath
-                    };
+                    // delete the thumbnail directory
+                    await fs.rm(defThumbnailDirectory, { recursive: true, force: true });
+            
+                    // recreate the thumbnail directory
+                    await fs.mkdir(defThumbnailDirectory);
                 }
                 catch {
-                    console.log('Video Reading Error!');
-                    return null;
+                    console.error('Error reseting directory!');
                 }
-            })
-        );
 
-        // return all the data on the videos
-        return videosData.filter(videoData => videoData !== null).sort((a, b) => b.created - a.created);
-    });
+                mainWindow.webContents.send('files:reqLoadGallery');
+            }
 
-    // ipcMain.handle('dialog:getDirectory', async (_) => {
-    //     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
-        
-    //     if (!canceled) {
-    //         return filePaths[0];
-    //     }
-    // });
-}
-
-// loads the app when ready
-app.whenReady().then(() => {
-    initOBS();
-    createWindow();
-    // initWebSocket();
-    initIPC();
-});
-
-// quits the app when all the windows are closed
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
+            break;
+        // ensures type correctness
+        default: 
+            if (!isNaN(value) && typeof(value) !== 'boolean') {
+                value = Number(value);
+            }
     }
+
+    // set the new filtered value
+    store.set(key, value);
+
+    // return the value to renderer process for display
+    return value;
 });
 
-// creates a single window
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
+// sets the volume when the app closes
+ipcMain.once('settings:setVolumeSettings', (_, volumeSettings) => {
+    store.set('volume', volumeSettings['volume']);
+    store.set('volumeMuted', volumeSettings['volumeMuted']);
+    mainWindow.destroy();
 });
 
-app.on('before-quit', () => {
-    obsProcess.kill('SIGTERM');
+// gets all of the video files and meta data from the save location directory
+ipcMain.handle('files:getAllVideosData', async (_) => {
+    // get the save location stored in the settings
+    const directory = store.get('saveLocation');
+
+    // make the thumbnail directory and video directory (latter should already exist)
+    await Promise.all([
+        fs.mkdir(defThumbnailDirectory, { recursive: true }),
+        fs.mkdir(directory, { recursive: true })
+    ]);
+
+    // read the video directory for files
+    const files = await fs.readdir(directory);
+
+    // filter by video extensions
+    const videos = files.filter(file =>
+        ['.mp4', '.mkv', '.avi'].includes(path.extname(file).toLowerCase())
+    );
+
+    // get video meta data and thumbnail
+    const videosData = await Promise.all(
+        videos.map(async video => {
+            try {
+                const videoName = path.parse(video).name;
+                const videoPath = path.join(directory, video);
+
+                const [videoMetaData, thumbnailPath] = await Promise.all([
+                    fs.stat(videoPath),
+                    path.join(defThumbnailDirectory, `${videoName}.png`)
+                ]);
+
+                // create thumbnail if it does not exist
+                try {
+                    await fs.access(thumbnailPath);
+                }
+                catch {
+                    await new Promise((resolve, reject) => {
+                        ffmpeg(videoPath)
+                            .on('end', resolve)
+                            .on('error', reject)
+                            .screenshots({
+                                timestamps: ['50%'],
+                                filename: videoName,
+                                folder: defThumbnailDirectory,
+                                size: THUMBNAIL_SIZE
+                            });
+                    });
+                }
+
+                // return data on the video
+                return {
+                    nameExt: video,
+                    path: videoPath,
+                    size: videoMetaData.size,
+                    created: videoMetaData.birthtime,
+                    thumbnailPath: thumbnailPath
+                };
+            }
+            catch {
+                console.log('Video Reading Error!');
+                return null;
+            }
+        })
+    );
+
+    // return all the data on the videos
+    return videosData.filter(videoData => videoData !== null).sort((a, b) => b.created - a.created);
 });
+

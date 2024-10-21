@@ -21,7 +21,8 @@ import { TimelineState } from './timelineState.js';
  *  allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
- *  data, stateData 
+ *  data, stateData, 
+ *  initVariables 
  */
 export { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -38,7 +39,8 @@ export {
     allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, stateData, 
+    initVariables 
 };
 
 // timeline constants and time constants
@@ -73,7 +75,7 @@ let timelineState;
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, stateData;
 
-export async function initVariables() {
+async function initVariables() {
     // html element
     html = document.querySelector('html');
 
