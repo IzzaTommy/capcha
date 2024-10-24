@@ -10,31 +10,18 @@ import EventEmitter from 'events';
 
 import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, GLOBAL_EMITTER, components, initVariables } from './variablesEJS.js';
 import { initMainWindow, initMainWindowL } from './mainWindowEJS.js';
-import { initOBS } from './obsEJS.js';
 import { initWebSocket, initWebSocketL } from './webSocketEJS.js';
 import { initSettings, initSettingsL } from './settingsEJS.js';
 
-// loads the app when ready
-app.on('ready', () => {
-    initVariables();
+export { initOBS };
 
-    initMainWindow();
-    initMainWindowL();
-
-    initOBS();
-    initWebSocket();
-
-    GLOBAL_EMITTER.on('webSocketOpen', () => {
-        initWebSocketL();
+function initOBS() {
+    // start OBS
+    components['obsProcess'] = spawn(OBS_EXECUTABLE_PATH, [
+        '--portable',
+        '--multi',
+        '--minimize-to-tray'
+    ], {
+        cwd: path.dirname(OBS_EXECUTABLE_PATH),
     });
-
-    GLOBAL_EMITTER.on('webSocketLOpen', () => {
-        initSettings();
-        initSettingsL();
-        components['mainWindow'].webContents.send('window:reqFinishInit');
-    })
-});
-
-app.on('before-quit', () => {
-    components['obsProcess'].kill('SIGTERM');
-});
+}

@@ -28,8 +28,14 @@ async function init() {
     initVariables();
     initWindow();
     initTitleBar();
-    await initSettingsSection();
-    initNavBlock();
-    initDirectoriesSection();
-    initEditorSection();
+
+    // on request, load the gallery
+    window.windowAPI.reqFinishInit(async () => { 
+        await initSettingsSection();
+        initNavBlock();
+        initDirectoriesSection();
+        initEditorSection();
+
+        document.getElementById('cover').classList.toggle('active');
+    });
 }

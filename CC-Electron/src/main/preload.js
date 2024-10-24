@@ -38,3 +38,7 @@ contextBridge.exposeInMainWorld('filesAPI', {
 
     reqLoadGallery: (callback) => ipcRenderer.on('files:reqLoadGallery', callback)
 });
+
+contextBridge.exposeInMainWorld('windowAPI', {
+    reqFinishInit: (callback) => ipcRenderer.on('window:reqFinishInit', callback)
+});

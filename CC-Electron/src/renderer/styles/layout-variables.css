@@ -310,3 +310,40 @@ body {
 
     background-color: var(--body-bgcolor);
 }
+
+#cover {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 1;
+
+    display: none;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--body-bgcolor);
+}
+
+#cover.active {
+    display: flex;
+}
+
+#cover > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: 100px;
+
+    width: 100px;
+
+    fill: var(--ldp-svg-fill);
+}
+
+#cover > span {
+    flex: 0 0 auto;
+    text-align: center;
+
+    color: var(--ldp-h1-color);
+    font-size: 80px;
+    font-weight: 600;
+}
