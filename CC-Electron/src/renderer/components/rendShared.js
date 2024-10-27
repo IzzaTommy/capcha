@@ -1,9 +1,9 @@
 /**
  * Module for providing shared utility functions
  * 
- * @module shared
- * @requires editorSection
- * @requires directoriesSection
+ * @module rendShared
+ * @requires rendEditorSection
+ * @requires rendDirectoriesSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -17,13 +17,13 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { resizePlaybackSlider, resizeTimelineSlider } from './editorSection.js';
-import { resizeGallery } from './directoriesSection.js';
+} from './rendVariables.js';
+import { resizePlaybackSlider, resizeTimelineSlider } from './rendEditorSection.js';
+import { resizeGallery } from './rendDirectoriesSection.js';
 
 /**
  * @exports setSVG, getParsedTime, resizeAll, setActiveSection

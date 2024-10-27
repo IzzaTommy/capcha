@@ -311,7 +311,7 @@ body {
     background-color: var(--body-bgcolor);
 }
 
-#cover {
+#overlay-initialization {
     align-items: center;
     justify-content: center;
     position: absolute;
@@ -325,11 +325,11 @@ body {
     background-color: var(--body-bgcolor);
 }
 
-#cover.active {
+#overlay-initialization.active {
     display: flex;
 }
 
-#cover > svg {
+#overlay-initialization > svg {
     display: block;
     flex: 0 0 auto;
     height: 100px;
@@ -339,7 +339,7 @@ body {
     fill: var(--ldp-svg-fill);
 }
 
-#cover > span {
+#overlay-initialization > span {
     flex: 0 0 auto;
     text-align: center;
 

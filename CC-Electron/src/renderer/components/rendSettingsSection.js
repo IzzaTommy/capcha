@@ -1,8 +1,8 @@
 /**
  * Module for initializing the settings section
  * 
- * @module settingsSection
- * @requires variables
+ * @module rendSettingsSection
+ * @requires rendVariables
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -16,22 +16,22 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { setSVG, getParsedTime, resizeAll } from './shared.js';
+} from './rendVariables.js';
+import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
 
 /**
- * @exports initSettingsSection
+ * @exports initRendSettingsSection
  */
-export { initSettingsSection }
+export { initRendSettingsSection }
 
 /**
  * Initializes the settings section and its components
  */
-async function initSettingsSection() {
+async function initRendSettingsSection() {
     initSettingContainerEL();
     await initSettingContainer();
 }
@@ -58,6 +58,12 @@ function initSettingContainerEL() {
         });
     }
 
+    // on change, select directory from dialog, save it, and set the saved value
+    capturesPathSettingPill.addEventListener('click', async () => {
+        data['settings'][capturesPathSettingPill.name] = await window.settingsAPI.setSetting(capturesPathSettingPill.name, capturesPathSettingPill.value);
+        capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
+    });
+
     // on change, validate the setting, save it, and set the saved value
     darkModeSettingToggleSwitch.addEventListener('change', async () => {
         data['settings'][darkModeSettingToggleSwitch.name] = await window.settingsAPI.setSetting(darkModeSettingToggleSwitch.name, darkModeSettingToggleSwitch.checked);
@@ -70,12 +76,6 @@ function initSettingContainerEL() {
         else {
             html.dataset.theme = 'light';
         }
-    });
-
-    // on change, select directory from dialog, save it, and set the saved value
-    saveLocationSettingPill.addEventListener('click', async () => {
-        data['settings'][saveLocationSettingPill.name] = await window.settingsAPI.setSetting(saveLocationSettingPill.name, saveLocationSettingPill.value);
-        saveLocationSettingPill.value = data['settings'][saveLocationSettingPill.name];
     });
 }
 
@@ -110,5 +110,5 @@ async function initSettingContainer() {
     }
 
     // load the initial value from stored setting
-    saveLocationSettingPill.value = data['settings'][saveLocationSettingPill.name];
+    capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
 }

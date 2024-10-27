@@ -73,7 +73,7 @@
     color: var(--stpill-inputselect-color);
 }
 
-#ctr-save-location > .setting-pill > input {
+#ctr-captures-path > .setting-pill > input {
     width: 500px;
 }
 

@@ -1,10 +1,10 @@
 /**
  * Module for initializing the nav block
  * 
- * @module window
- * @requires variables
- * @requires shared
- * @requires editorSection
+ * @module rendWindow
+ * @requires rendVariables
+ * @requires rendShared
+ * @requires rendEditorSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -18,23 +18,23 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection } from './shared.js';
-import { getReadableDuration } from './editorSection.js';
+} from './rendVariables.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection } from './rendShared.js';
+import { getReadableDuration } from './rendEditorSection.js';
 
 /**
- * @exports initNavBlock
+ * @exports initRendNavBlock
  */
-export { initNavBlock };
+export { initRendNavBlock };
 
 /**
  * Initializes the nav block and its components
  */
-function initNavBlock() {
+function initRendNavBlock() {
     initNavBtnEL();
     initNavToggleBtnEL();
     initNavToggleBtn();

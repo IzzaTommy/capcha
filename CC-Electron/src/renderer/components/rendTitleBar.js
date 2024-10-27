@@ -1,8 +1,8 @@
 /**
  * Module for initializing the title bar
  * 
- * @module titleBar
- * @requires variables
+ * @module rendTitleBar
+ * @requires rendVariables
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -16,22 +16,22 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { setSVG, getParsedTime, resizeAll } from './shared.js';
+} from './rendVariables.js';
+import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
 
 /**
- * @exports initTitleBar
+ * @exports initRendTitleBar
  */
-export { initTitleBar };
+export { initRendTitleBar };
 
 /**
  * Initializes the title bar and its components
  */
-function initTitleBar() {
+function initRendTitleBar() {
     initTitleBtnEL();
 }
 
@@ -40,9 +40,9 @@ function initTitleBar() {
  */
 function initTitleBtnEL() {
     // on click, minimize the window
-    minimizeBtn.addEventListener('click', window.titleBarAPI.minimize);
+    minimizeBtn.addEventListener('click', window.windowAPI.minimize);
     // on click, maximize the window
-    maximizeBtn.addEventListener('click', window.titleBarAPI.maximize);
+    maximizeBtn.addEventListener('click', window.windowAPI.maximize);
     // on click, close the window
-    closeBtn.addEventListener('click', window.titleBarAPI.close);
+    closeBtn.addEventListener('click', window.windowAPI.close);
 }

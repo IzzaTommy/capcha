@@ -1,9 +1,9 @@
 /**
  * Module for initializing the directories section
  * 
- * @module directoriesSection
- * @requires variables
- * @requires shared
+ * @module rendDirectoriesSection
+ * @requires rendVariables
+ * @requires rendShared
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -17,22 +17,22 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection } from './shared.js';
+} from './rendVariables.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection } from './rendShared.js';
 
 /**
- * @exports initDirectoriesSectionm loadGallery, resizeGallery
+ * @exports initRendDirectoriesSection, loadGallery, resizeGallery
  */
-export { initDirectoriesSection, loadGallery, resizeGallery }
+export { initRendDirectoriesSection, loadGallery, resizeGallery }
 
 /**
  * Initializes the directories section and its components
  */
-function initDirectoriesSection() {
+function initRendDirectoriesSection() {
     initDirectoryGalleryEL();
     loadGallery();
 }

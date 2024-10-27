@@ -2,40 +2,41 @@
  * Module for initializing all components
  * 
  * @module renderer
- * @requires variables
- * @requires window
- * @requires titleBar
- * @requires navBlock
- * @requires settingsSection
- * @requires editorSection
- * @requires directoriesSection
+ * @requires rendVariables
+ * @requires rendWindow
+ * @requires rendTitleBar
+ * @requires rendNavBlock
+ * @requires rendSettingsSection
+ * @requires rendEditorSection
+ * @requires rendDirectoriesSection
  */
-import { initVariables } from './components/variables.js';
-import { initWindow } from './components/window.js';
-import { initTitleBar } from './components/titleBar.js';
-import { initNavBlock } from './components/navBlock.js';
-import { initSettingsSection } from './components/settingsSection.js';
-import { initEditorSection } from './components/editorSection.js';
-import { initDirectoriesSection } from './components/directoriesSection.js';
+import { initRendVariables } from './components/rendVariables.js';
+import { initRendWindow } from './components/rendWindow.js';
+import { initRendTitleBar } from './components/rendTitleBar.js';
+import { initRendNavBlock } from './components/rendNavBlock.js';
+import { initRendSettingsSection } from './components/rendSettingsSection.js';
+import { initRendEditorSection } from './components/rendEditorSection.js';
+import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
+
+import { initializationOverlay } from './components/rendVariables.js';
 
 // on DOM load, initialize all components
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', initRend);
 
 /**
  * Initializes all components
  */
-async function init() {
-    initVariables();
-    initWindow();
-    initTitleBar();
+async function initRend() {
+    initRendVariables();
+    initRendWindow();
+    initRendTitleBar();
 
-    // on request, load the gallery
-    window.windowAPI.reqFinishInit(async () => { 
-        await initSettingsSection();
-        initNavBlock();
-        initDirectoriesSection();
-        initEditorSection();
+    window.windowAPI.reqFinishInitRend(async () => { 
+        await initRendSettingsSection();
+        initRendNavBlock();
+        initRendDirectoriesSection();
+        initRendEditorSection();
 
-        document.getElementById('cover').classList.toggle('active');
+        initializationOverlay.classList.toggle('active');
     });
 }

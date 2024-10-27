@@ -1,7 +1,7 @@
 /**
  * Module for initializing variables
  * 
- * @module variables
+ * @module rendVariables
  * @requires timelineState
  */
 import { TimelineState } from './timelineState.js';
@@ -10,6 +10,7 @@ import { TimelineState } from './timelineState.js';
  * @exports GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
  *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
  *  html, 
+ *  initializationOverlay, 
  *  minimizeBtn, maximizeBtn, closeBtn, 
  *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
  *  navToggleBtn, navToggleSVG, 
@@ -18,16 +19,17 @@ import { TimelineState } from './timelineState.js';
  *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
  *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
- *  allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+ *  allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
  *  data, stateData, 
- *  initVariables 
+ *  initRendVariables 
  */
 export { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
@@ -36,11 +38,11 @@ export {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData, 
-    initVariables 
+    initRendVariables 
 };
 
 // timeline constants and time constants
@@ -58,6 +60,7 @@ const style = getComputedStyle(document.documentElement);
 
 // document elements
 let html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
@@ -66,7 +69,7 @@ let html,
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
 
 // timelineState object
@@ -75,9 +78,12 @@ let timelineState;
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, stateData;
 
-async function initVariables() {
+async function initRendVariables() {
     // html element
     html = document.querySelector('html');
+
+    // initialization overlay element
+    initializationOverlay = document.getElementById('overlay-initialization');
 
     // title bar elements
     minimizeBtn = document.getElementById('btn-minimize');
@@ -142,9 +148,9 @@ async function initVariables() {
     timelineThumb = document.getElementById('thumb-timeline');
 
     // settings section elements
-    allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='saveLocation']), .setting-pill > select`);
+    allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='capturesPath']), .setting-pill > select`);
     allSettingToggleSwitch = document.querySelectorAll(`.setting-toggle-switch > input:not([name='darkMode'])`);
-    saveLocationSettingPill = document.querySelector(`.setting-pill > input[name='saveLocation']`);
+    capturesPathSettingPill = document.querySelector(`.setting-pill > input[name='capturesPath']`);
     darkModeSettingToggleSwitch = document.querySelector(`.setting-toggle-switch > input[name='darkMode']`);
 
     // directories section elements

@@ -1,9 +1,9 @@
 /**
  * Module for initializing the editor section
  * 
- * @module editorSection
- * @requires variables
- * @requires shared
+ * @module rendEditorSection
+ * @requires rendVariables
+ * @requires rendShared
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
@@ -17,22 +17,22 @@ import {
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
-    allSettingPill, allSettingToggleSwitch, saveLocationSettingPill, darkModeSettingToggleSwitch, 
+    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, stateData 
-} from './variables.js';
-import { setSVG, getParsedTime, resizeAll } from './shared.js';
+} from './rendVariables.js';
+import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
 
 /**
- * @exports initEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration
+ * @exports initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration
  */
-export { initEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration }
+export { initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration }
 
 /**
  * Initializes the editor section and its components
  */
-function initEditorSection() {
+function initRendEditorSection() {
     initVideoContainerEL();
     initVideoContainer();
     initTimelineSliderEL();

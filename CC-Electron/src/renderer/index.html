@@ -30,7 +30,7 @@
         </div>
     </template>
 
-    <div id="cover" class="active">
+    <div id="overlay-initialization" class="active">
         <svg>
             <use href="../assets/svg/capcha.svg#capcha"></use>
         </svg>
@@ -62,7 +62,7 @@
 
     <div id="area-client">
         <div id="block-nav">
-            <nav id="bar-nav" class="active">
+            <nav id="bar-nav">
                 <div id="display-logo">
                     <svg>
                         <use href="../assets/svg/capcha.svg#capcha"></use>
@@ -285,29 +285,29 @@
 
                         <hr>
 
-                        <div id="ctr-save-location" class="setting-ctr">
-                            <h4>Video Save Location</h4>
+                        <div id="ctr-captures-path" class="setting-ctr">
+                            <h4>Captures Save Location</h4>
 
                             <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
 
-                                <input type="text" name="saveLocation" readonly>
+                                <input type="text" name="capturesPath" readonly>
                             </div>
 
-                            <p>Your videos and configuration file will be saved in this location.</p>
+                            <p>Your captures will be saved in this location.</p>
                         </div>
 
-                        <div id="ctr-storage-limit" class="setting-ctr">
-                            <h4>Storage Limit</h4>
+                        <div id="ctr-captures-limit" class="setting-ctr">
+                            <h4>Captures Storage Limit</h4>
 
                             <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <select name="storageLimit">
+                                <select name="capturesLimit">
                                     <option value="5">5 GB</option>
                                     <option value="10">10 GB</option>
                                     <option value="20">20 GB</option>
@@ -322,7 +322,7 @@
                             <p>When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
                         </div>
 
-                        <div id="ctr-file-extension" class="setting-ctr">
+                        <div id="ctr-format" class="setting-ctr">
                             <h4>File Extension</h4>
 
                             <div class="setting-pill">
@@ -330,10 +330,9 @@
                                     <use href="../assets/svg/draft.svg#draft"></use>
                                 </svg>
 
-                                <select name="fileExtension">
-                                    <option value=".mp4">.mp4</option>
-                                    <option value=".mkv">.mkv</option>
-                                    <option value=".avi">.avi</option>
+                                <select name="format">
+                                    <option value="mp4">.mp4</option>
+                                    <option value="mkv">.mkv</option>
                                 </select>
                             </div>
 
@@ -349,9 +348,9 @@
                                 </svg>
 
                                 <select name="encoder">
-                                    <option value="nvenc">nvenc</option>
-                                    <option value="jim_nvenc">jim_nvenc</option>
-                                    <option value="h.264">h.264</option>
+                                    <option value="obs_nvenc_h264_tex">nvenc h.264</option>
+                                    <option value="obs_nvenc_hevc_tex">nvenc hevc</option>
+                                    <option value="obs_x264">x264</option>
                                 </select>
                             </div>
 
@@ -364,15 +363,15 @@
 
                         <hr>
 
-                        <div id="ctr-capture-display" class="setting-ctr">
-                            <h4>Capture Display</h4>
+                        <div id="ctr-recording-display" class="setting-ctr">
+                            <h4>Recording Display</h4>
 
                             <div class="setting-pill">
                                 <svg>
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <select name="captureDisplay">
+                                <select name="recordingDisplay">
                                     <option value="temp1">temp1</option>
                                     <option value="temp2">temp2</option>
                                 </select>
@@ -382,7 +381,7 @@
                         </div>
 
                         <div class="settings-group-ctr">
-                            <div id="ctr-resolution-width" class="setting-ctr">
+                            <div id="ctr-recording-width" class="setting-ctr">
                                 <h4>Width</h4>
 
                                 <div class="setting-pill">
@@ -390,10 +389,10 @@
                                         <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
 
-                                    <input type="text" name="resolutionWidth">
+                                    <input type="text" name="recordingWidth">
                                 </div>
                             </div>   
-                            <div id="ctr-resolution-height" class="setting-ctr">
+                            <div id="ctr-recording-height" class="setting-ctr">
                                 <h4>Height</h4>
 
                                 <div class="setting-pill">
@@ -401,7 +400,7 @@
                                         <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
 
-                                    <input type="text" name="resolutionHeight">
+                                    <input type="text" name="recordingHeight">
                                 </div>
                             </div>
                         </div>
@@ -434,14 +433,14 @@
                                     </svg>
 
                                     <select name="bitrate">
-                                        <option value="3">3 Mbps</option>
-                                        <option value="5">5 Mbps</option>
-                                        <option value="10">10 Mbps</option>
-                                        <option value="15">15 Mbps</option>
-                                        <option value="20">20 Mbps</option>
-                                        <option value="30">30 Mbps</option>
-                                        <option value="50">50 Mbps</option>
-                                        <option value="100">100 Mbps</option>
+                                        <option value="3000">3 Mbps</option>
+                                        <option value="5000">5 Mbps</option>
+                                        <option value="10000">10 Mbps</option>
+                                        <option value="15000">15 Mbps</option>
+                                        <option value="20000">20 Mbps</option>
+                                        <option value="30000">30 Mbps</option>
+                                        <option value="50000">50 Mbps</option>
+                                        <option value="100000">100 Mbps</option>
                                     </select>
                                 </div>
                             </div>
@@ -467,28 +466,28 @@
                         </div>
                     </div>
 
-                    <div id="ctr2-input-settings" class="section-ctr2">
-                        <h3>Input</h3>
+                    <div id="ctr2-audio-settings" class="section-ctr2">
+                        <h3>Audio</h3>
 
                         <hr>
 
                         <div class="settings-group-ctr">
-                            <div id="ctr-input-audio" class="setting-ctr">
-                                <h4>Audio</h4>
+                            <div id="ctr-speaker" class="setting-ctr">
+                                <h4>Speaker</h4>
 
                                 <div class="setting-pill">
                                     <svg>
                                         <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
 
-                                    <select name="audio">
+                                    <select name="speaker">
                                         <option value="none">None</option>
                                         <option value="default">Default</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div id="ctr-input-microphone" class="setting-ctr">
+                            <div id="ctr-microphone" class="setting-ctr">
                                 <h4>Microphone</h4>
 
                                 <div class="setting-pill">
@@ -503,7 +502,7 @@
                                 </div>
                             </div>
 
-                            <div id="ctr-input-webcam" class="setting-ctr">
+                            <div id="ctr-webcam" class="setting-ctr">
                                 <h4>Webcam</h4>
 
                                 <div class="setting-pill">

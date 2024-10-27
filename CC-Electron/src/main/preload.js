@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
     }
 });
 
-contextBridge.exposeInMainWorld('titleBarAPI', {
+contextBridge.exposeInMainWorld('windowAPI', {
     minimize: () => {
         ipcRenderer.send('window:minimize');
     },
@@ -21,7 +21,9 @@ contextBridge.exposeInMainWorld('titleBarAPI', {
 
     close: () => {
         ipcRenderer.send('window:close');
-    }
+    },
+
+    reqFinishInitRend: (callback) => ipcRenderer.on('window:reqFinishInitRend', callback)
 });
 
 contextBridge.exposeInMainWorld('settingsAPI', {
@@ -37,8 +39,4 @@ contextBridge.exposeInMainWorld('filesAPI', {
     getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
 
     reqLoadGallery: (callback) => ipcRenderer.on('files:reqLoadGallery', callback)
-});
-
-contextBridge.exposeInMainWorld('windowAPI', {
-    reqFinishInit: (callback) => ipcRenderer.on('window:reqFinishInit', callback)
 });
