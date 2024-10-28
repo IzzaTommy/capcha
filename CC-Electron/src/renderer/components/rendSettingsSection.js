@@ -22,6 +22,7 @@ import {
     data, stateData 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
+import { loadGallery } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendSettingsSection
@@ -61,7 +62,11 @@ function initSettingContainerEL() {
     // on change, select directory from dialog, save it, and set the saved value
     capturesPathSettingPill.addEventListener('click', async () => {
         data['settings'][capturesPathSettingPill.name] = await window.settingsAPI.setSetting(capturesPathSettingPill.name, capturesPathSettingPill.value);
-        capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
+
+        if (capturesPathSettingPill.value !== data['settings'][capturesPathSettingPill.name]) {
+            capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
+            loadGallery();
+        }
     });
 
     // on change, validate the setting, save it, and set the saved value

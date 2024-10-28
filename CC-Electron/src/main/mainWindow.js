@@ -29,11 +29,11 @@ function initMainWindow() {
     });
 
     // start index.html maximized
-    // instances['mainWindow'].maximize();
+    instances['mainWindow'].maximize();
 
     instances['mainWindow'].loadFile('src/renderer/index.html');
 
-    // instances['mainWindow'].webContents.openDevTools();
+    instances['mainWindow'].webContents.openDevTools();
 }
 
 function initMainWindowL() {

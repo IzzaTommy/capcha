@@ -15,36 +15,53 @@ import { initMainWebSocket, initMainWebSocketL, webSocketSend } from './mainWebS
 export { initMainSettings, initMainSettingsL };
 
 async function initMainSettings() {
-    //validate settings here...
     console.log('\n---------------- SETTINGS DATA ----------------');
-    for (const [key, value] of settingsData) {
-        // console.log(key, ': ', value);
-        settingsData[key] = validateSetting(key, value);
-        console.log(key, ': ', value);
-    }
 
+    // create CapCha profile
     if (!(await webSocketSend('GetProfileList'))['profiles'].includes('CapCha'))
     {
         await webSocketSend('CreateProfile', { profileName: 'CapCha' });
     }
 
+    // set to CapCha profile
     await webSocketSend('SetCurrentProfile', { profileName: 'CapCha' });
 
+    // set basic settings
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' });
     await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' });
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' });
-    // // file name formatting
+    /* file name formatting */
 
+    // set captures path
     await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: settingsData.get('capturesPath') });
+    // set format
     await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: settingsData.get('format') });
+    // set encoder
     await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: settingsData.get('encoder') });
-
+    // set recording width
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${settingsData.get('recordingWidth')}` });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${settingsData.get('recordingHeight')}` });
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${settingsData.get('recordingWidth')}` });
+    // set recording height
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${settingsData.get('recordingHeight')}` });
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${settingsData.get('recordingHeight')}` });
-
+    // set framerate
     await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${settingsData.get('framerate')}` });
+    // set bitrate
+    try {
+        let recordEncoderData;
+
+        if (settingsData.get('encoder') == 'obs_x264') {
+            recordEncoderData = { 'bitrate': settingsData.get('bitrate') };
+        }
+        else {
+            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': settingsData.get('bitrate') };
+        }
+        writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
+        console.log('File has been written successfully with options');
+    } 
+    catch (error) {
+        console.error('Error writing to file: ', error);
+    }
 }
 
 function initMainSettingsL() {
@@ -53,11 +70,11 @@ function initMainSettingsL() {
     
     // sets the value of a specific setting
     ipcMain.handle('settings:setSetting', async (_, key, value) => {
-        // console.log('1--', key, ': ', value, ' - ', typeof(value));
-        switch (key) {
+        console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
 
-            // allows user to select new directory, or keeps the old one
-            //reloading before sending new gallery?
+        value = validateSetting(key, value);
+
+        switch (key) {
             case 'capturesPath':
                 const { canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] });
         
@@ -74,14 +91,71 @@ function initMainSettingsL() {
                     catch {
                         console.error('Error reseting thumbnails directory!');
                     }
-    
-                    instances['mainWindow'].webContents.send('files:reqLoadGallery');
                 }
-    
+
+                // should realistically never run
+                if (!existsSync(value)) {
+                    value = SETTINGS_DATA_DEFAULTS[key];
+                }
+
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: settingsData.get('capturesPath') });
+                break;
+
+            case 'format':
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: settingsData.get('format') });
                 break;
 
             case 'encoder':
-                webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value });
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value });
+
+                try {
+                    let recordEncoderData;
+            
+                    if (value == 'obs_x264') {
+                        recordEncoderData = { 'bitrate': settingsData.get('bitrate') };
+                    }
+                    else {
+                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': settingsData.get('bitrate') };
+                    }
+                    writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
+                    console.log('File has been written successfully with options');
+
+                    console.log('REAPPLIED BITRATE: ', settingsData.get('bitrate'));
+                } 
+                catch (error) {
+                    console.error('Error writing to file: ', error);
+                }
+                break;
+
+            case 'recordingWidth':
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${settingsData.get('recordingWidth')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${settingsData.get('recordingWidth')}` });
+                break;
+
+            case 'recordingHeight':
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${settingsData.get('recordingHeight')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${settingsData.get('recordingHeight')}` });
+                break;
+
+            case 'framerate':
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${settingsData.get('framerate')}` });
                 break;
 
             case 'bitrate':
@@ -89,33 +163,83 @@ function initMainSettingsL() {
                     let recordEncoderData;
             
                     if (settingsData.get('encoder') == 'obs_x264') {
-                        recordEncoderData = {"bitrate": value};
+                        recordEncoderData = { 'bitrate': value };
                     }
                     else {
-                        recordEncoderData = {"rate_control": "CBR", "bitrate": value};
+                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': value };
                     }
                     writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
                     console.log('File has been written successfully with options');
-                } catch (err) {
-                    console.error('Error writing to file:', err);
+
+                    console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                    settingsData.set(key, value);
+                } 
+                catch (error) {
+                    console.error('Error writing to file: ', error);
                 }
-
                 break;
-            // ensures type correctness
-            default: 
-                // console.log('something broke!');
+            default:
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                settingsData.set(key, value);
+                console.log('Not an OBS setting!');
         }
-
-        value = validateSetting(key, value);
-    
-        // console.log('2--', key, ': ', value, ' - ', typeof(value));
-        // set the new filtered value
-        settingsData.set(key, value);
     
         // return the value to renderer process for display
         return value;
     });
     
+    function validateSetting(key, value) {
+        if (SETTINGS_DATA_SCHEMA[key]['type'] === 'boolean') {
+            if (typeof(value) !== 'boolean') {
+                value = SETTINGS_DATA_DEFAULTS[key];
+            }
+        }
+        else {
+            if (SETTINGS_DATA_SCHEMA[key]['type'] === 'number') {
+                if (isNaN(value)) {
+                    value = SETTINGS_DATA_DEFAULTS[key];
+                }
+                else {
+                    if (SETTINGS_DATA_SCHEMA[key]['enum']) {
+                        if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
+                            value = SETTINGS_DATA_DEFAULTS[key];
+                        }
+                        else {
+                            value = Number(value);
+                        }
+                    }
+                    else {
+                        if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
+                            value = SETTINGS_DATA_SCHEMA[key]['maximum'];
+                        }
+                        else {
+                            if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
+                                value = SETTINGS_DATA_SCHEMA[key]['minimum'];
+                            }
+                            else {
+                                value = Number(value);
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if (typeof(value) !== 'string') {
+                    value = SETTINGS_DATA_DEFAULTS[key];
+                }
+                else {
+                    if (SETTINGS_DATA_SCHEMA[key]['enum']) {
+                        if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
+                            value = SETTINGS_DATA_DEFAULTS[key];
+                        }
+                    }
+                }
+            }
+        }
+
+        return value;
+    }
+
     // sets the volume when the app closes
     ipcMain.once('settings:setVolumeSettings', (_, volumeSettings) => {
         settingsData.set('volume', volumeSettings['volume']);
@@ -191,147 +315,4 @@ function initMainSettingsL() {
         // return all the data on the videos
         return videosData.filter(videoData => videoData !== null).sort((a, b) => b.created - a.created);
     });
-}
-
-function validateSetting(key, value) {
-    switch (key) {
-        case 'navBarActive':
-            // console.log(typeof(value));
-            if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        case 'volume':
-            if (!isNaN(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
-                    value = SETTINGS_DATA_SCHEMA[key]['maximum'];
-                }
-                else {
-                    if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
-                        value = SETTINGS_DATA_SCHEMA[key]['minimum'];
-                    }
-                }
-
-                value = Number(value);
-            }
-            break;
-
-        case 'volumeMuted':
-            if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        case 'darkMode':
-            if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        // allows user to select new directory, or keeps the old one
-        //reloading before sending new gallery?
-        case 'capturesPath':
-            if (typeof(value) !== 'string' || !existsSync(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            
-            break;
-
-        case 'capturesLimit':
-            if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                value = Number(value);
-            }
-            break;
-
-        case 'format':
-            if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        case 'encoder':
-            if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        // keeps width between 1 and 2560, as an integer
-        case 'recordingWidth':
-            if (!isNaN(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
-                    value = SETTINGS_DATA_SCHEMA[key]['maximum'];
-                }
-                else {
-                    if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
-                        value = SETTINGS_DATA_SCHEMA[key]['minimum'];
-                    }
-                    else {
-                        value = Math.floor(value);
-                    }
-                }
-
-                value = Number(value);
-            }
-            break;
-        // keeps height between 1 and 1440, as an integer
-        case 'recordingHeight':
-            if (!isNaN(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
-                    value = SETTINGS_DATA_SCHEMA[key]['maximum'];
-                }
-                else {
-                    if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
-                        value = SETTINGS_DATA_SCHEMA[key]['minimum'];
-                    }
-                    else {
-                        value = Math.floor(value);
-                    }
-                }
-
-                value = Number(value);
-            }
-            break;
-
-        case 'framerate':
-            if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                value = Number(value);
-            }
-            break;
-
-        case 'bitrate':
-            if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            else {
-                value = Number(value);
-            }
-            break;
-
-        case 'autoRecord':
-            if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-            break;
-
-        default: 
-            console.log('Invalid setting: ', key);
-    }
-
-    return value;
 }
