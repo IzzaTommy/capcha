@@ -3,26 +3,27 @@
  * 
  * @module rendEditorSection
  * @requires rendVariables
- * @requires rendShared
+ * @requires rendSharedFunctions
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
-    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, state 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
  * @exports initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration
@@ -60,7 +61,7 @@ function initVideoContainerEL() {
         playbackContainer.style.opacity = "";
 
         // sync the slider thumbs' movement to each frame of the video
-        stateData['animationID'] = requestAnimationFrame(syncThumbs);
+        state['animationID'] = requestAnimationFrame(syncThumbs);
     });
 
     // on pause, show the playback container and cancel animation frames
@@ -69,7 +70,7 @@ function initVideoContainerEL() {
         playbackContainer.style.opacity = "1";
 
         // cancel the syncing to prevent unnecessary computations
-        cancelAnimationFrame(stateData['animationID']);
+        cancelAnimationFrame(state['animationID']);
     });
 
     // on click, play/pause the video and change the SVG
@@ -80,8 +81,8 @@ function initVideoContainerEL() {
         // check if the video is loaded (editor section is active)
         if (flags['videoLoaded'] && !flags['timelineSliderDragging'] && !flags['playbackSliderDragging']) {
             // reset the video, change the SVG, and pause the video, depending on if the video has reached the end
-            if (videoPlayer.currentTime < timelineState.getStartTime() || videoPlayer.currentTime >= timelineState.getEndTime()) {
-                videoPlayer.currentTime = timelineState.getStartTime();
+            if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
+                videoPlayer.currentTime = state['timeline'].getStartTime();
     
                 // pause the video and change the SVG
                 setVideoPlayerState('pause');
@@ -102,7 +103,7 @@ function initVideoContainerEL() {
     // on load of meta data, set the editor to default state
     videoPlayer.addEventListener('loadedmetadata', () => {
         // set the timeline state and timeline overlay
-        timelineState.update(0, getTruncDecimal(videoPlayer.duration, 6));
+        state['timeline'].update(0, getTruncDecimal(videoPlayer.duration, 6));
         setTimelineOverlay();
 
         // set the video current time label to 0
@@ -122,7 +123,7 @@ function initVideoContainerEL() {
         const newTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['playbackSliderBox']);
 
         // check if the new time is within the timeline's start and end times
-        // videoPlayer.currentTime = (newTime < timelineState.getStartTime() || newTime >= timelineState.getEndTime()) ? timelineState.getStartTime() : newTime;
+        // videoPlayer.currentTime = (newTime < state['timeline'].getStartTime() || newTime >= state['timeline'].getEndTime()) ? state['timeline'].getStartTime() : newTime;
         videoPlayer.currentTime = newTime;
 
         // set the playback slider and timeline slider thumbs
@@ -267,7 +268,7 @@ function initTimelineSliderEL() {
     // on click, change the video time based on the click location on the timeline slider
     timelineSlider.addEventListener('click', (pointer) => {
         // get the time based on click location on the timeline slider
-        videoPlayer.currentTime = timelineState.getDuration() * getPointerEventPct(pointer, boxes['timelineSliderBox']) + timelineState.getStartTime();
+        videoPlayer.currentTime = state['timeline'].getDuration() * getPointerEventPct(pointer, boxes['timelineSliderBox']) + state['timeline'].getStartTime();
 
         // set the playback slider and timeline slider thumbs
         setAllThumbs();
@@ -286,20 +287,20 @@ function initTimelineSliderEL() {
             // check if the pointer scrolled up ("zoom in")
             if (pointer.deltaY < 0) {
                 // check if timeline is not at maximum zoom of 30s
-                if (timelineState.getDuration() > MIN_TIMELINE_ZOOM) {
+                if (state['timeline'].getDuration() > MIN_TIMELINE_ZOOM) {
                     // calculate the new start/end times and duration
-                    newStartTime = timelineState.getStartTime() + (REDUCE_FACTOR * timelineState.getDuration() * percentage);
-                    newEndTime = timelineState.getEndTime() - (REDUCE_FACTOR * timelineState.getDuration() * (1 - percentage));
+                    newStartTime = state['timeline'].getStartTime() + (REDUCE_FACTOR * state['timeline'].getDuration() * percentage);
+                    newEndTime = state['timeline'].getEndTime() - (REDUCE_FACTOR * state['timeline'].getDuration() * (1 - percentage));
                     newDuration = newEndTime - newStartTime;
                     
                     // check if the new duration is less than 30s and set the zoom to 30s
-                    timelineState.update(
+                    state['timeline'].update(
                         getTruncDecimal((newDuration < MIN_TIMELINE_ZOOM) ? newStartTime - (MIN_TIMELINE_ZOOM - newDuration) * percentage : newStartTime, 6),
                         getTruncDecimal((newDuration < MIN_TIMELINE_ZOOM) ? newStartTime - (MIN_TIMELINE_ZOOM - newDuration) * percentage + MIN_TIMELINE_ZOOM : newEndTime, 6)
                     );
                     
                     // check if the video time is out of the timeline, put it back in bounds
-                    videoPlayer.currentTime = Math.max(timelineState.getStartTime(), Math.min(videoPlayer.currentTime, timelineState.getEndTime()));
+                    videoPlayer.currentTime = Math.max(state['timeline'].getStartTime(), Math.min(videoPlayer.currentTime, state['timeline'].getEndTime()));
 
                     // set the timeline overlay
                     setTimelineOverlay();
@@ -313,29 +314,29 @@ function initTimelineSliderEL() {
             } 
             else {
                 // check if the timeline is not at minimum zoom
-                if (timelineState.getDuration() < videoPlayer.duration) {
+                if (state['timeline'].getDuration() < videoPlayer.duration) {
                     // calculate the new start and end times
-                    newStartTime = timelineState.getStartTime() - (GROW_FACTOR * timelineState.getDuration() * percentage);
-                    newEndTime = timelineState.getEndTime() + (GROW_FACTOR * timelineState.getDuration() * (1 - percentage));
+                    newStartTime = state['timeline'].getStartTime() - (GROW_FACTOR * state['timeline'].getDuration() * percentage);
+                    newEndTime = state['timeline'].getEndTime() + (GROW_FACTOR * state['timeline'].getDuration() * (1 - percentage));
                     
                     // check if "zoom out" would bring the timeline out of bounds
                     if (newStartTime < 0) {
                         // reallocate grow factor to the end time if needed
-                        timelineState.update(
+                        state['timeline'].update(
                             0, 
                             getTruncDecimal(Math.min(videoPlayer.duration, Math.abs(newStartTime) + newEndTime), 6)
                         );
                     } 
                     else {
                         // reallocate grow factor to the start time if needed
-                        timelineState.update(
+                        state['timeline'].update(
                             getTruncDecimal(newEndTime > videoPlayer.duration ? Math.max(0, newStartTime - (newEndTime - videoPlayer.duration)) : newStartTime, 6),
                             getTruncDecimal(Math.min(videoPlayer.duration, newEndTime), 6)
                         );
                     }
                              
                     // check if the video time is out of the timeline, put it back in bounds
-                    videoPlayer.currentTime = Math.max(timelineState.getStartTime(), Math.min(videoPlayer.currentTime, timelineState.getEndTime()));
+                    videoPlayer.currentTime = Math.max(state['timeline'].getStartTime(), Math.min(videoPlayer.currentTime, state['timeline'].getEndTime()));
 
                     // set the timeline overlay
                     setTimelineOverlay();
@@ -364,8 +365,8 @@ function initTimelineSliderEL() {
             flags['playbackSliderDragging'] = false;
 
             // check if the video has reached the end, set it back the start
-            if (videoPlayer.currentTime < timelineState.getStartTime() || videoPlayer.currentTime >= timelineState.getEndTime()) {
-                videoPlayer.currentTime = timelineState.getStartTime();
+            if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
+                videoPlayer.currentTime = state['timeline'].getStartTime();
 
                 // pause the video and change the SVG
                 setVideoPlayerState('pause');
@@ -437,18 +438,18 @@ function initTimelineSliderEL() {
                 if (location < 0) {
                     // set the timeline slider thumb to the start, set the video time to the start
                     timelineThumb.style.transform = `translateX(0px)`;
-                    videoPlayer.currentTime = timelineState.getStartTime();
+                    videoPlayer.currentTime = state['timeline'].getStartTime();
                 } 
                 else {
                     if (location > boxes['timelineSliderBox'].width) {
                         // set the timeline slider thumb to the end, set the video time to the end
                         timelineThumb.style.transform = `translateX(${boxes['timelineSliderBox'].width}px)`;
-                        videoPlayer.currentTime = timelineState.getEndTime();
+                        videoPlayer.currentTime = state['timeline'].getEndTime();
                     } 
                     else {
                         // set the timeline slider thumb to the pointer, set the video time to the relative time
                         timelineThumb.style.transform = `translateX(${location}px)`;
-                        videoPlayer.currentTime = timelineState.getStartTime() + getPointerEventPct(pointer, boxes['timelineSliderBox']) * timelineState.getDuration();
+                        videoPlayer.currentTime = state['timeline'].getStartTime() + getPointerEventPct(pointer, boxes['timelineSliderBox']) * state['timeline'].getDuration();
                     }
                 }
 
@@ -566,7 +567,7 @@ function resizePlaybackSlider() {
  */
 function setTimelineThumb() {
     // get the percentage location of the video time within the timeline bounding box
-    const percentage = (videoPlayer.currentTime - timelineState.getStartTime()) / timelineState.getDuration();
+    const percentage = (videoPlayer.currentTime - state['timeline'].getStartTime()) / state['timeline'].getDuration();
 
     // set the timeline thumb position within the timeline bounding box
     if (percentage < 0) {
@@ -616,7 +617,7 @@ function syncThumbs() {
 
     // request the next animation frame if the video is playing
     if (!videoPlayer.paused && !videoPlayer.ended) {
-        stateData['animationID'] = requestAnimationFrame(syncThumbs);
+        state['animationID'] = requestAnimationFrame(syncThumbs);
     }
 }
 
@@ -625,8 +626,8 @@ function syncThumbs() {
  */
 function setTimelineOverlay() {
     // get the location of the first tick in seconds and the number of ticks based on the duration
-    const firstTick = Math.ceil(timelineState.getStartTime() / timelineState.getSubInterval()) * timelineState.getSubInterval();
-    const numTicks = ((Math.floor(timelineState.getEndTime() / timelineState.getSubInterval()) * timelineState.getSubInterval()) - firstTick) / timelineState.getSubInterval() + 1;
+    const firstTick = Math.ceil(state['timeline'].getStartTime() / state['timeline'].getSubInterval()) * state['timeline'].getSubInterval();
+    const numTicks = ((Math.floor(state['timeline'].getEndTime() / state['timeline'].getSubInterval()) * state['timeline'].getSubInterval()) - firstTick) / state['timeline'].getSubInterval() + 1;
 
     // the tick line clone, tick text clone, tick location, and tick percentage
     let tickLineClone, tickTextClone, tickLocation, tickPercentage;
@@ -652,9 +653,9 @@ function setTimelineOverlay() {
     for (let i = 0; i < numTicks; i++)
     {
         // get the location of the tick in seconds
-        tickLocation = firstTick + (i * timelineState.getSubInterval());
+        tickLocation = firstTick + (i * state['timeline'].getSubInterval());
         // get the percentage location of the tick within the timeline overlay
-        tickPercentage = (tickLocation - timelineState.getStartTime()) / timelineState.getDuration();
+        tickPercentage = (tickLocation - state['timeline'].getStartTime()) / state['timeline'].getDuration();
 
         // get the tick line clone
         tickLineClone = tickLineTemplate.cloneNode(true);
@@ -664,7 +665,7 @@ function setTimelineOverlay() {
         tickLineClone.setAttribute('x2', tickPercentage * boxes['timelineSliderBox'].width);
 
         // check if the tick is an interval tick
-        if (tickLocation % timelineState.getInterval() === 0) {
+        if (tickLocation % state['timeline'].getInterval() === 0) {
             // set the tick line height to be larger
             tickLineClone.setAttribute('y1', 10);
             tickLineClone.setAttribute('y2', 50);

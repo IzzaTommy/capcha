@@ -7,15 +7,15 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 
-import { initMainWindow, initMainWindowL } from './mainWindow.js';
+import { initMainWindow } from './mainWindow.js';
 import { initMainOBS } from './mainOBS.js';
-import { initMainWebSocket, initMainWebSocketL } from './mainWebSocket.js';
-import { initMainSettings, initMainSettingsL } from './mainSettings.js';
-import { config } from 'process';
+import { initMainWebSocket } from './mainWebSocket.js';
+import { initMainSettings } from './mainSettings.js';
+import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-export { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, pendingRequests, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, settingsData };
+export { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state };
 
-// constants
+// thumbnail, path, and settings constants
 const THUMBNAIL_SIZE = '320x180';
 const ACTIVE_DIRECTORY = import.meta.dirname;
 const DEF_VIDEO_DIRECTORY = path.join(app.getPath('videos'), 'CapCha');
@@ -115,31 +115,38 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'boolean'
     }
 };
+const GAMES = { VALORANT: 'Valorant.exe', Notepad: 'Notepad.exe' };
+// const GAMES = {};
 
-let instances, settingsData, pendingRequests;
+// main window, obs process, websocket
+let instances;
+
+// boolean flags, settings/videos data, and state data
+let flags, data, state; 
+
 
 function initMainVariables() {
-    instances = {};
-    // attempt to load the settings
-    try {
-        settingsData = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
-    }
-    catch (error) {
-        // error will occur if the file cannot be read, has corrupted values, or has invalid values (which should only occur if the user manually tampered with it)
-        console.log('Error initializing Store: ', error);
+    // main window, obs process, and websocket
+    instances = { 
+        mainWindow: null, 
+        obsProcess: null, 
+        webSocket: null 
+    };
 
-        try {
-            // delete the corrupted file
-            unlinkSync(path.join(app.getPath('userData'), 'config.json'));
-            console.log('config.json deleted.');
+    // boolean flags
+    flags = { 
+        recording: false 
+    };
+    
+    // settings and videos data
+    data = { 
+        settings: null, 
+        videos: null 
+    };
 
-            // recreate the settings with the default values
-            settingsData = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
-            console.log('Store reinitialized with default settings.');
-        } 
-        catch (fsError) {
-            console.error('Error deleting or resetting config file:', fsError);
-        }
-    }
-    pendingRequests = new Map();
+    // pending requests for websocket
+    state = { 
+        pendingRequests: new Map(), 
+        recordingGame: null 
+    };
 }

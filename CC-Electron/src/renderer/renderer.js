@@ -26,17 +26,27 @@ window.addEventListener('DOMContentLoaded', initRend);
 /**
  * Initializes all components
  */
-async function initRend() {
+function initRend() {
+    init();
+
+    window.windowAPI.reqFinishInit( () => { 
+        finishInit();
+    });
+}
+
+function init() {
     initRendVariables();
     initRendWindow();
     initRendTitleBar();
+}
 
-    window.windowAPI.reqFinishInitRend(async () => { 
-        await initRendSettingsSection();
-        initRendNavBlock();
-        initRendDirectoriesSection();
-        initRendEditorSection();
+async function finishInit() {
+    await initRendSettingsSection();
+    initRendNavBlock();
+    initRendDirectoriesSection();
+    initRendEditorSection();
 
-        initializationOverlay.classList.toggle('active');
-    });
+    // send done to main process
+    initializationOverlay.classList.toggle('active');
+    window.windowAPI.readyCheck();
 }

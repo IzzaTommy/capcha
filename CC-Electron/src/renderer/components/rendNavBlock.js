@@ -3,27 +3,28 @@
  * 
  * @module rendWindow
  * @requires rendVariables
- * @requires rendShared
+ * @requires rendSharedFunctions
  * @requires rendEditorSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
-    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, state 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection } from './rendShared.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { getReadableDuration } from './rendEditorSection.js';
 
 /**
@@ -64,26 +65,41 @@ function initNavBtnEL() {
     recordBtn.addEventListener('mouseleave', () => setSVG(recordSVG, 'record'));
 
     // on click, toggle the recording
-    recordBtn.addEventListener('click', () => {
-        if (!flags['recording']) {
-            window.webSocketAPI.startRecord();
-            flags['recording'] = true;
-            recordBtn.classList.toggle('active');
-            stateData['recordingTime'] = 0;
+    recordBtn.addEventListener('click', async () => {
+        await setActiveRecordBtn();
+    });
 
-            stateData['timerInterval'] = setInterval(() => {
-                stateData['recordingTime']++;
-                currentRecordingTimeLabel.textContent = getReadableDuration(stateData['recordingTime']);
-            }, 1000);
-        }
-        else {
-            flags['recording'] = false;
-            window.webSocketAPI.stopRecord();
-            recordBtn.classList.toggle('active');
-            clearInterval(stateData['timerInterval']);
-        }
+    // on request, set the volume and volume mute status
+    window.webSocketAPI.reqSetActiveRecordBtn(() => {
+        setActiveRecordBtn();
     });
 }
+
+
+async function setActiveRecordBtn() {
+    if (!flags['recording']) {
+        if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), 3, 2000)) {
+            flags['recording'] = true;
+            recordBtn.classList.toggle('active');
+
+            state['recordingTime'] = 0;
+            state['timerInterval'] = setInterval(() => {
+                state['recordingTime']++;
+                currentRecordingTimeLabel.textContent = getReadableDuration(state['recordingTime']);
+            }, 1000);
+        }
+    }
+    else {
+        if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), 3, 2000)) {
+            flags['recording'] = false;
+            
+            recordBtn.classList.toggle('active');
+            clearInterval(state['timerInterval']);
+        }
+    }
+}
+
+
 
 /**
  * Initializes the nav toggle button event listener
@@ -97,11 +113,11 @@ function initNavToggleBtnEL() {
         // change the SVG and save the setting, depending on if the nav bar is active
         if (navBar.classList.contains('active')) {
             setSVG(navToggleSVG, 'arrow-back-ios');
-            data['settings']['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', true);
+            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', true), 3, 2000);
         }
         else {
             setSVG(navToggleSVG, 'arrow-forward-ios');
-            data['settings']['navBarActive'] = await window.settingsAPI.setSetting('navBarActive', false);
+            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', false), 3, 2000);
         }
 
         // resize all width dependent elements

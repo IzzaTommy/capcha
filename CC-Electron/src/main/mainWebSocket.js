@@ -7,14 +7,20 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, pendingRequests, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, settingsData } from './mainVariables.js';
-import { initMainWindow, initMainWindowL } from './mainWindow.js';
+import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
+import { initMainWindow } from './mainWindow.js';
 import { initMainOBS } from './mainOBS.js';
-import { initMainSettings, initMainSettingsL } from './mainSettings.js';
+import { initMainSettings } from './mainSettings.js';
+import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-export { initMainWebSocket, initMainWebSocketL, webSocketSend };
+export { initMainWebSocket, webSocketSend };
 
-function initMainWebSocket() {
+async function initMainWebSocket() {
+    await initWebSocket();
+    initWebSocketL();
+}
+
+function initWebSocket() {
     return new Promise((resolve, reject) => {
         // clear an existing attempt
         if (instances['webSocket']) {
@@ -45,7 +51,7 @@ function initMainWebSocket() {
             console.log('Reason:', reason.toString());
             console.log('Retrying connection');
             setTimeout(() => {
-                initMainWebSocket().then(resolve).catch(reject);
+                initWebSocket().then(resolve).catch(reject);
             }, 1000);
         });
 
@@ -80,20 +86,20 @@ function initMainWebSocket() {
                 case 7:
                     console.log('Info: Responding to a request coming from a client.');
         
-                    if (pendingRequests.has(message['d']['requestId'])) {
-                        const { resolve, reject } = pendingRequests.get(message['d']['requestId']);
+                    if (state['pendingRequests'].has(message['d']['requestId'])) {
+                        const { resolve, reject } = state['pendingRequests'].get(message['d']['requestId']);
             
                         if (message['d']['requestStatus']['result']) {
                             console.log('Status: Successful.');
-                            resolve(message['d']['responseData']);
+                            resolve(message['d']);
                         } 
                         else {
                             console.log('Status: Failed.');
                             console.error(message['d']['requestStatus']['comment']);
-                            reject(new Error(message['d']['requestStatus']['comment']));
+                            reject(new Error(message['d']));
                         }
             
-                        pendingRequests.delete(message['d']['requestId']);
+                        state['pendingRequests'].delete(message['d']['requestId']);
                     }
                     break;
                 case 9:
@@ -107,11 +113,27 @@ function initMainWebSocket() {
 }
 
 
-function initMainWebSocketL() {
-    ipcMain.on('ws-fn', (_, requestType, requestData) => {
-        webSocketSend(requestType, requestData);
+function initWebSocketL() {
+    ipcMain.handle('websocket:requestStartRecord', async (_, requestType, requestData) => {
+        const recording = (await webSocketSend(requestType, requestData))['requestStatus']['result'];
+
+        flags['recording'] = recording;
+
+        return recording;
+    });
+
+    ipcMain.handle('websocket:requestStopRecord', async (_, requestType, requestData) => {
+        const recording = (await webSocketSend(requestType, requestData))['requestStatus']['result'];
+
+        flags['recording'] = !recording;
+
+        return recording;
     });
 }
+
+
+
+
 
 function webSocketSend(requestType, requestData) {
     const requestId = Math.random().toString(36).substring(2, 15);
@@ -124,7 +146,7 @@ function webSocketSend(requestType, requestData) {
     console.log('Request Data: ', requestData);
 
     return new Promise((resolve, reject) => {
-        pendingRequests.set(requestId, { resolve, reject });
+        state['pendingRequests'].set(requestId, { resolve, reject });
 
         instances['webSocket'].send(JSON.stringify({ 'op': 6,'d': { requestType, requestData, requestId } }));
     });

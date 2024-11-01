@@ -1,34 +1,35 @@
 /**
  * Module for providing shared utility functions
  * 
- * @module rendShared
+ * @module rendSharedFunctions
  * @requires rendEditorSection
  * @requires rendDirectoriesSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
-    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, state 
 } from './rendVariables.js';
 import { resizePlaybackSlider, resizeTimelineSlider } from './rendEditorSection.js';
 import { resizeGallery } from './rendDirectoriesSection.js';
 
 /**
- * @exports setSVG, getParsedTime, resizeAll, setActiveSection
+ * @exports setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction
  */
-export { setSVG, getParsedTime, resizeAll, setActiveSection };
+export { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction };
 
 /**
  * Sets the SVG of an element
@@ -91,5 +92,27 @@ function setActiveSection(section) {
             editorSection.classList.add('active');
             break;
         default:
+    }
+}
+
+
+
+
+
+async function attemptAsyncFunction(asyncFunction, attempts, delay) {
+    for (let i = 0; i < attempts; i++) {
+        try {
+            return await asyncFunction();
+        } 
+        catch (error) {
+            console.error(`Attempt ${i} failed: `, error);
+
+            if (i < attempts - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } 
+            else {
+                throw new Error(`Function failed after ${attempts} attempts: `, error);
+            }
+        }
     }
 }

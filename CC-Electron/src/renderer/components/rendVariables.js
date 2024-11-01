@@ -18,11 +18,11 @@ import { TimelineState } from './timelineState.js';
  *  videoContainer, videoPlayer, playPauseStatusSVG, 
  *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
  *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
- *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+ *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
  *  allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
- *  data, stateData, 
+ *  data, state, 
  *  initRendVariables 
  */
 export { 
@@ -37,15 +37,15 @@ export {
     videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData, 
+    data, state, 
     initRendVariables 
 };
 
-// timeline constants and time constants
+// timeline, time, and style constants
 const GROW_FACTOR = 0.15;
 const REDUCE_FACTOR = 0.1;
 const MIN_TIMELINE_ZOOM = 30;
@@ -54,8 +54,6 @@ const MSECONDS_IN_SECOND = 1000;
 const SECONDS_IN_DAY = 86400;
 const SECONDS_IN_HOUR = 3600;
 const SECONDS_IN_MINUTE = 60;
-
-// document styles
 const style = getComputedStyle(document.documentElement);
 
 // document elements
@@ -72,11 +70,8 @@ let html,
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
 
-// timelineState object
-let timelineState;
-
 // boolean flags, element boxes, settings/videos data, and state data
-let flags, boxes, data, stateData;
+let flags, boxes, data, state;
 
 async function initRendVariables() {
     // html element
@@ -160,16 +155,13 @@ async function initRendVariables() {
     capturesLeftBtn = document.getElementById('btn-captures-left');
     capturesRightBtn = document.getElementById('btn-captures-right');
 
-    // timelineState object
-    timelineState = new TimelineState();
-
     // boolean flags
     flags = { 
         videoLoaded: false, 
         timelineSliderDragging: false, 
         playbackSliderDragging: false,
         previouslyPaused: false, 
-        recording: false
+        recording: false 
     };
 
     // element boxes
@@ -180,7 +172,8 @@ async function initRendVariables() {
     };
 
     // settings and videos data
-    data = {};
+    data = { settings: null, videos: null };
 
-    stateData = {};
+    // animationID, recording time, and timer interval
+    state = { animationID: null, recordingTime: null, timerInterval: null, timeline: new TimelineState() };
 }

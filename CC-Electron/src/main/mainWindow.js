@@ -6,15 +6,22 @@ import { promises as fs, writeFileSync, existsSync } from 'fs';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
+import psList from 'ps-list';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, pendingRequests, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, settingsData } from './mainVariables.js';
+import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
 import { initMainOBS } from './mainOBS.js';
-import { initMainWebSocket, initMainWebSocketL } from './mainWebSocket.js';
-import { initMainSettings, initMainSettingsL } from './mainSettings.js';
+import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
+import { initMainSettings } from './mainSettings.js';
+import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-export { initMainWindow, initMainWindowL };
+export { initMainWindow };
 
 function initMainWindow() {
+    initWindow();
+    initWindowL();
+}
+
+function initWindow() {
     // start the window
     instances['mainWindow'] = new BrowserWindow({
         minWidth: 1280,
@@ -32,11 +39,9 @@ function initMainWindow() {
     instances['mainWindow'].maximize();
 
     instances['mainWindow'].loadFile('src/renderer/index.html');
-
-    instances['mainWindow'].webContents.openDevTools();
 }
 
-function initMainWindowL() {
+function initWindowL() {
     // on close, grab the video volume setting
     instances['mainWindow'].on('close', (event) => {
         event.preventDefault();
@@ -59,4 +64,40 @@ function initMainWindowL() {
 
     // closes the window and triggers event
     ipcMain.on('window:close', (_) => instances['mainWindow'].close());
+
+    ipcMain.on('window:readyCheck', (_) => {
+        initAutoRecord();
+    });
+
+
+    async function checkProgramList() {
+        const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
+
+        // if not recording
+        if (!flags['recording']) {
+            console.log('not recording');
+            for (const [key, value] of Object.entries(GAMES)) {
+                // if (processes.includes(value)) {
+                if (processes.some(process => process.name.toLowerCase() === value.toLowerCase())) {
+                    instances['mainWindow'].webContents.send('websocket:reqSetActiveRecordBtn');
+                    state['recordingGame'] = key;
+                    break;
+                }
+            }
+        }
+        // if recording
+        else {
+            console.log('recording');
+            // if the recording game is not in the processes
+            if (state['recordingGame'] && !processes.some(process => process.name.toLowerCase() === GAMES[state['recordingGame']].toLowerCase())) {
+                instances['mainWindow'].webContents.send('websocket:reqSetActiveRecordBtn');
+                state['recordingGame'] = null;  // not needed
+            }
+        }
+    }
+    
+    
+    function initAutoRecord() {
+        setInterval(() => checkProgramList(), 5000);
+    }
 }

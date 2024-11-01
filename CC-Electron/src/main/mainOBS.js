@@ -7,14 +7,19 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, pendingRequests, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, settingsData } from './mainVariables.js';
-import { initMainWindow, initMainWindowL } from './mainWindow.js';
-import { initMainWebSocket, initMainWebSocketL } from './mainWebSocket.js';
-import { initMainSettings, initMainSettingsL } from './mainSettings.js';
+import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
+import { initMainWindow } from './mainWindow.js';
+import { initMainWebSocket } from './mainWebSocket.js';
+import { initMainSettings } from './mainSettings.js';
+import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
 export { initMainOBS };
 
 function initMainOBS() {
+    initOBSProcess();
+}
+
+function initOBSProcess() {
     // start OBS
     instances['obsProcess'] = spawn(OBS_EXECUTABLE_PATH, [
         '--portable',

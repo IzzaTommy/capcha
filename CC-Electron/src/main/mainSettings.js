@@ -7,18 +7,49 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, pendingRequests, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, settingsData } from './mainVariables.js';
-import { initMainWindow, initMainWindowL } from './mainWindow.js';
-import { initMainOBS } from './mainOBS.js';
-import { initMainWebSocket, initMainWebSocketL, webSocketSend } from './mainWebSocket.js';
+import { exec } from 'child_process';
+import psList from 'ps-list';
 
-export { initMainSettings, initMainSettingsL };
+import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
+import { initMainWindow } from './mainWindow.js';
+import { initMainOBS } from './mainOBS.js';
+import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
+import { attemptAsyncFunction } from './mainSharedFunctions.js';
+
+export { initMainSettings };
 
 async function initMainSettings() {
+    await initSettings();
+    initSettingsL();
+}
+
+async function initSettings() {
+    // attempt to load the settings
+    try {
+        data['settings'] = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
+    }
+    catch (error) {
+        // error will occur if the file cannot be read, has corrupted values, or has invalid values (which should only occur if the user manually tampered with it)
+        console.log('Error initializing Store: ', error);
+
+        try {
+            // delete the corrupted file
+            unlinkSync(path.join(app.getPath('userData'), 'config.json'));
+            console.log('config.json deleted.');
+
+            // recreate the settings with the default values
+            data['settings'] = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
+            console.log('Store reinitialized with default settings.');
+        } 
+        catch (fsError) {
+            console.error('Error deleting or resetting config file:', fsError);
+        }
+    }
+
     console.log('\n---------------- SETTINGS DATA ----------------');
 
     // create CapCha profile
-    if (!(await webSocketSend('GetProfileList'))['profiles'].includes('CapCha'))
+    if (!(await webSocketSend('GetProfileList'))['responseData']['profiles'].includes('CapCha'))
     {
         await webSocketSend('CreateProfile', { profileName: 'CapCha' });
     }
@@ -33,28 +64,28 @@ async function initMainSettings() {
     /* file name formatting */
 
     // set captures path
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: settingsData.get('capturesPath') });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') });
     // set format
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: settingsData.get('format') });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') });
     // set encoder
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: settingsData.get('encoder') });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('encoder') });
     // set recording width
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${settingsData.get('recordingWidth')}` });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${settingsData.get('recordingWidth')}` });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
     // set recording height
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${settingsData.get('recordingHeight')}` });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${settingsData.get('recordingHeight')}` });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
     // set framerate
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${settingsData.get('framerate')}` });
+    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` });
     // set bitrate
     try {
         let recordEncoderData;
 
-        if (settingsData.get('encoder') == 'obs_x264') {
-            recordEncoderData = { 'bitrate': settingsData.get('bitrate') };
+        if (data['settings'].get('encoder') == 'obs_x264') {
+            recordEncoderData = { 'bitrate': data['settings'].get('bitrate') };
         }
         else {
-            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': settingsData.get('bitrate') };
+            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('bitrate') };
         }
         writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
         console.log('File has been written successfully with options');
@@ -64,9 +95,9 @@ async function initMainSettings() {
     }
 }
 
-function initMainSettingsL() {
+function initSettingsL() {
     // gets the entire settings object
-    ipcMain.handle('settings:getAllSettings', (_) => { return settingsData.store });
+    ipcMain.handle('settings:getAllSettings', (_) => { return data['settings'].store });
     
     // sets the value of a specific setting
     ipcMain.handle('settings:setSetting', async (_, key, value) => {
@@ -99,20 +130,20 @@ function initMainSettingsL() {
                 }
 
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: settingsData.get('capturesPath') });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') });
                 break;
 
             case 'format':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: settingsData.get('format') });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') });
                 break;
 
             case 'encoder':
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
                 await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value });
 
@@ -120,15 +151,15 @@ function initMainSettingsL() {
                     let recordEncoderData;
             
                     if (value == 'obs_x264') {
-                        recordEncoderData = { 'bitrate': settingsData.get('bitrate') };
+                        recordEncoderData = { 'bitrate': data['settings'].get('bitrate') };
                     }
                     else {
-                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': settingsData.get('bitrate') };
+                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('bitrate') };
                     }
                     writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
                     console.log('File has been written successfully with options');
 
-                    console.log('REAPPLIED BITRATE: ', settingsData.get('bitrate'));
+                    console.log('REAPPLIED BITRATE: ', data['settings'].get('bitrate'));
                 } 
                 catch (error) {
                     console.error('Error writing to file: ', error);
@@ -137,32 +168,32 @@ function initMainSettingsL() {
 
             case 'recordingWidth':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${settingsData.get('recordingWidth')}` });
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${settingsData.get('recordingWidth')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
                 break;
 
             case 'recordingHeight':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${settingsData.get('recordingHeight')}` });
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${settingsData.get('recordingHeight')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
                 break;
 
             case 'framerate':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${settingsData.get('framerate')}` });
+                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` });
                 break;
 
             case 'bitrate':
                 try {
                     let recordEncoderData;
             
-                    if (settingsData.get('encoder') == 'obs_x264') {
+                    if (data['settings'].get('encoder') == 'obs_x264') {
                         recordEncoderData = { 'bitrate': value };
                     }
                     else {
@@ -172,7 +203,7 @@ function initMainSettingsL() {
                     console.log('File has been written successfully with options');
 
                     console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                    settingsData.set(key, value);
+                    data['settings'].set(key, value);
                 } 
                 catch (error) {
                     console.error('Error writing to file: ', error);
@@ -180,7 +211,7 @@ function initMainSettingsL() {
                 break;
             default:
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                settingsData.set(key, value);
+                data['settings'].set(key, value);
                 console.log('Not an OBS setting!');
         }
     
@@ -242,15 +273,15 @@ function initMainSettingsL() {
 
     // sets the volume when the app closes
     ipcMain.once('settings:setVolumeSettings', (_, volumeSettings) => {
-        settingsData.set('volume', volumeSettings['volume']);
-        settingsData.set('volumeMuted', volumeSettings['volumeMuted']);
+        data['settings'].set('volume', volumeSettings['volume']);
+        data['settings'].set('volumeMuted', volumeSettings['volumeMuted']);
         instances['mainWindow'].destroy();
     });
     
     // gets all of the video files and meta data from the save location directory
     ipcMain.handle('files:getAllVideosData', async (_) => {
         // get the save location stored in the settings
-        const directory = settingsData.get('capturesPath');
+        const directory = data['settings'].get('capturesPath');
     
         // make the thumbnail directory and video directory (latter should already exist)
         await Promise.all([

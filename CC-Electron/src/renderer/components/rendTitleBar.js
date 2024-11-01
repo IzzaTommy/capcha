@@ -6,22 +6,23 @@
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
-    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, state 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
  * @exports initRendTitleBar

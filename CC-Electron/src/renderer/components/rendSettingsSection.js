@@ -6,22 +6,23 @@
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
-    SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
     html, 
+    initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, 
+    videoContainer, videoPlayer, playPauseStatusSVG, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timelineState, 
+    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, stateData 
+    data, state 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll } from './rendShared.js';
+import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { loadGallery } from './rendDirectoriesSection.js';
 
 /**
@@ -45,7 +46,7 @@ function initSettingContainerEL() {
     for (const setting of allSettingPill) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
-            data['settings'][setting.name] = await window.settingsAPI.setSetting(setting.name, setting.value);
+            data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.value), 3, 2000);
             setting.value = data['settings'][setting.name];
         });
     }
@@ -54,14 +55,14 @@ function initSettingContainerEL() {
     for (const setting of allSettingToggleSwitch) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
-            data['settings'][setting.name] = await window.settingsAPI.setSetting(setting.name, setting.checked);
+            data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.checked), 3, 2000);
             setting.checked = data['settings'][setting.name];
         });
     }
 
     // on change, select directory from dialog, save it, and set the saved value
     capturesPathSettingPill.addEventListener('click', async () => {
-        data['settings'][capturesPathSettingPill.name] = await window.settingsAPI.setSetting(capturesPathSettingPill.name, capturesPathSettingPill.value);
+        data['settings'][capturesPathSettingPill.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(capturesPathSettingPill.name, capturesPathSettingPill.value), 3, 2000);
 
         if (capturesPathSettingPill.value !== data['settings'][capturesPathSettingPill.name]) {
             capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
@@ -71,7 +72,7 @@ function initSettingContainerEL() {
 
     // on change, validate the setting, save it, and set the saved value
     darkModeSettingToggleSwitch.addEventListener('change', async () => {
-        data['settings'][darkModeSettingToggleSwitch.name] = await window.settingsAPI.setSetting(darkModeSettingToggleSwitch.name, darkModeSettingToggleSwitch.checked);
+        data['settings'][darkModeSettingToggleSwitch.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(darkModeSettingToggleSwitch.name, darkModeSettingToggleSwitch.checked), 3, 2000);
         darkModeSettingToggleSwitch.checked = data['settings'][darkModeSettingToggleSwitch.name];
 
         // change the theme attribute, depending on if dark mode is enabled
@@ -89,7 +90,7 @@ function initSettingContainerEL() {
  */
 async function initSettingContainer() {
     // get the settings
-    data['settings'] = await window.settingsAPI.getAllSettings();
+    data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettings(), 3, 2000);
 
     // iterate through each setting pill
     for (const setting of allSettingPill) {
