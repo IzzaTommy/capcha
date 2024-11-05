@@ -72,6 +72,7 @@ function initDirectoryGalleryEL() {
  * Loads the gallery with video previews
  */
 async function loadGallery() {
+    console.log('RUNNING LOAD GALLERY');
     // the clone of the video preview template
     let videoPreviewClone;
 

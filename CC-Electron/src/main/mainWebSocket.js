@@ -114,26 +114,22 @@ function initWebSocket() {
 
 
 function initWebSocketL() {
-    ipcMain.handle('websocket:requestStartRecord', async (_, requestType, requestData) => {
-        const recording = (await webSocketSend(requestType, requestData))['requestStatus']['result'];
+    ipcMain.handle('webSocket:StartRecord', async (_) => {
+        const recording = (await webSocketSend('StartRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = recording;
 
         return recording;
     });
 
-    ipcMain.handle('websocket:requestStopRecord', async (_, requestType, requestData) => {
-        const recording = (await webSocketSend(requestType, requestData))['requestStatus']['result'];
+    ipcMain.handle('webSocket:StopRecord', async (_) => {
+        const recording = (await webSocketSend('StopRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = !recording;
 
         return recording;
     });
 }
-
-
-
-
 
 function webSocketSend(requestType, requestData) {
     const requestId = Math.random().toString(36).substring(2, 15);

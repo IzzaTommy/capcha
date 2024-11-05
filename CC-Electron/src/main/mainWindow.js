@@ -66,38 +66,40 @@ function initWindowL() {
     ipcMain.on('window:close', (_) => instances['mainWindow'].close());
 
     ipcMain.on('window:readyCheck', (_) => {
-        initAutoRecord();
+        setAutoRecord();
     });
+}
 
+async function checkProgramList() {
+    const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
 
-    async function checkProgramList() {
-        const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
-
-        // if not recording
-        if (!flags['recording']) {
-            console.log('not recording');
-            for (const [key, value] of Object.entries(GAMES)) {
-                // if (processes.includes(value)) {
-                if (processes.some(process => process.name.toLowerCase() === value.toLowerCase())) {
-                    instances['mainWindow'].webContents.send('websocket:reqSetActiveRecordBtn');
-                    state['recordingGame'] = key;
-                    break;
-                }
-            }
-        }
-        // if recording
-        else {
-            console.log('recording');
-            // if the recording game is not in the processes
-            if (state['recordingGame'] && !processes.some(process => process.name.toLowerCase() === GAMES[state['recordingGame']].toLowerCase())) {
-                instances['mainWindow'].webContents.send('websocket:reqSetActiveRecordBtn');
-                state['recordingGame'] = null;  // not needed
+    // if not recording
+    if (!flags['recording']) {
+        for (const [key, value] of Object.entries(GAMES)) {
+            if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
+                instances['mainWindow'].webContents.send('webSocket:reqSetActiveRecordBtn');
+                state['recordingGame'] = key;
+                break;
             }
         }
     }
-    
-    
-    function initAutoRecord() {
-        setInterval(() => checkProgramList(), 5000);
+    // if recording
+    else {
+        console.log('recording');
+        // if the recording game is not in the processes
+        if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === GAMES[state['recordingGame']].toLowerCase())) {
+            instances['mainWindow'].webContents.send('webSocket:reqSetActiveRecordBtn');
+            state['recordingGame'] = null;  // not needed
+        }
+    }
+}
+
+
+function setAutoRecord() {
+    if (data['settings'].get('autoRecord') && !flags['manualPause']) {
+        state['autoRecordInterval'] = setInterval(() => checkProgramList(), 5000);
+    }
+    else {
+        clearInterval(state['autoRecordInterval']);
     }
 }

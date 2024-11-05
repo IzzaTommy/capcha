@@ -1,11 +1,11 @@
 const { contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
-    startRecord: () => ipcRenderer.invoke('websocket:requestStartRecord', 'StartRecord', {}), 
+    startRecord: () => ipcRenderer.invoke('webSocket:StartRecord'), 
 
-    stopRecord: () => ipcRenderer.invoke('websocket:requestStopRecord', 'StopRecord', {}), 
+    stopRecord: () => ipcRenderer.invoke('webSocket:StopRecord'), 
 
-    reqSetActiveRecordBtn: (callback) => ipcRenderer.on('websocket:reqSetActiveRecordBtn', callback)
+    reqSetActiveRecordBtn: (callback) => ipcRenderer.on('webSocket:reqSetActiveRecordBtn', callback)
 });
 
 contextBridge.exposeInMainWorld('windowAPI', {

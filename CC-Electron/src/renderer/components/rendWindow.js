@@ -26,6 +26,7 @@ import {
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { loadGallery } from './rendDirectoriesSection.js';
+import { setActiveRecordBtn } from './rendNavBlock.js';
 
 /**
  * @exports initRendWindow
@@ -62,5 +63,9 @@ function initWindowIPC() {
     // on request, set the volume and volume mute status
     window.settingsAPI.reqVolumeSettings(() => {
         window.settingsAPI.setVolumeSettings({ 'volume': data['settings']['volume'], 'volumeMuted': data['settings']['volumeMuted'] });
+    });
+
+    window.webSocketAPI.reqSetActiveRecordBtn(() => {
+        setActiveRecordBtn();
     });
 }

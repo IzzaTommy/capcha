@@ -2,7 +2,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import WebSocket from 'ws';
 import path from 'path';
-import { promises as fs, writeFileSync, existsSync } from 'fs';
+import { promises as fs, writeFileSync, existsSync, readFileSync } from 'fs';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
@@ -294,7 +294,7 @@ function initSettingsL() {
     
         // filter by video extensions
         const videos = files.filter(file =>
-            ['.mp4', '.mkv', '.avi'].includes(path.extname(file).toLowerCase())
+            ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
         );
     
         // get video meta data and thumbnail
@@ -314,7 +314,7 @@ function initSettingsL() {
                         await fs.access(thumbnailPath);
                     }
                     catch {
-                        await new Promise((resolve, reject) => {
+                        await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
                             ffmpeg(videoPath)
                                 .on('end', resolve)
                                 .on('error', reject)
@@ -324,7 +324,7 @@ function initSettingsL() {
                                     folder: DEF_THUMBNAIL_DIRECTORY,
                                     size: THUMBNAIL_SIZE
                                 });
-                        });
+                        }), 3, 4000);
                     }
     
                     // return data on the video
@@ -336,8 +336,8 @@ function initSettingsL() {
                         thumbnailPath: thumbnailPath
                     };
                 }
-                catch {
-                    console.log('Video Reading Error!');
+                catch (error) {
+                    console.log('Video Reading Error!:', error);
                     return null;
                 }
             })

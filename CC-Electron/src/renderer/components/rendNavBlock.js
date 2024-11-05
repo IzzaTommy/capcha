@@ -26,11 +26,12 @@ import {
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { getReadableDuration } from './rendEditorSection.js';
+import { loadGallery } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendNavBlock
  */
-export { initRendNavBlock };
+export { initRendNavBlock, setActiveRecordBtn };
 
 /**
  * Initializes the nav block and its components
@@ -64,42 +65,11 @@ function initNavBtnEL() {
     // on mouse leave, change to the regular SVG
     recordBtn.addEventListener('mouseleave', () => setSVG(recordSVG, 'record'));
 
+
+    
     // on click, toggle the recording
-    recordBtn.addEventListener('click', async () => {
-        await setActiveRecordBtn();
-    });
-
-    // on request, set the volume and volume mute status
-    window.webSocketAPI.reqSetActiveRecordBtn(() => {
-        setActiveRecordBtn();
-    });
+    recordBtn.addEventListener('click', async () => await setActiveRecordBtn());
 }
-
-
-async function setActiveRecordBtn() {
-    if (!flags['recording']) {
-        if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), 3, 2000)) {
-            flags['recording'] = true;
-            recordBtn.classList.toggle('active');
-
-            state['recordingTime'] = 0;
-            state['timerInterval'] = setInterval(() => {
-                state['recordingTime']++;
-                currentRecordingTimeLabel.textContent = getReadableDuration(state['recordingTime']);
-            }, 1000);
-        }
-    }
-    else {
-        if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), 3, 2000)) {
-            flags['recording'] = false;
-            
-            recordBtn.classList.toggle('active');
-            clearInterval(state['timerInterval']);
-        }
-    }
-}
-
-
 
 /**
  * Initializes the nav toggle button event listener
@@ -137,4 +107,30 @@ function initNavToggleBtn() {
 
     // resize all width dependent elements
     resizeAll();
+}
+
+// JSDocs
+async function setActiveRecordBtn() {
+    if (flags['recording']) {
+        if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), 3, 2000)) {
+            flags['recording'] = false;
+            recordBtn.classList.toggle('active');
+            
+            clearInterval(state['timerInterval']);
+
+            loadGallery();
+        }
+    }
+    else {
+        if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), 3, 2000)) {
+            flags['recording'] = true;
+            recordBtn.classList.toggle('active');
+
+            state['recordingTime'] = 0;
+            state['timerInterval'] = setInterval(() => {
+                state['recordingTime']++;
+                currentRecordingTimeLabel.textContent = getReadableDuration(state['recordingTime']);
+            }, 1000);
+        }
+    }
 }

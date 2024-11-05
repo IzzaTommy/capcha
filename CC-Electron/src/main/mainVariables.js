@@ -135,7 +135,8 @@ function initMainVariables() {
 
     // boolean flags
     flags = { 
-        recording: false 
+        recording: false, 
+        manualPause: false 
     };
     
     // settings and videos data
@@ -147,6 +148,7 @@ function initMainVariables() {
     // pending requests for websocket
     state = { 
         pendingRequests: new Map(), 
-        recordingGame: null 
+        recordingGame: null, 
+        autoRecordInterval: null 
     };
 }
