@@ -6,15 +6,23 @@ import { promises as fs, writeFileSync, existsSync, readFileSync } from 'fs';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
-
-import { exec } from 'child_process';
 import psList from 'ps-list';
+import { exec } from 'child_process';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
+import { 
+    THUMBNAIL_SIZE, 
+    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    PROGRAMS, 
+    instances, flags, 
+    data, state, 
+    initMainVariables 
+} from './mainVariables.js';
 import { initMainWindow } from './mainWindow.js';
 import { initMainOBS } from './mainOBS.js';
 import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
 import { attemptAsyncFunction } from './mainSharedFunctions.js';
+import { toggleAutoRecord } from './mainWindow.js';
 
 export { initMainSettings };
 
@@ -48,35 +56,37 @@ async function initSettings() {
 
     console.log('\n---------------- SETTINGS DATA ----------------');
 
+    await attemptAsyncFunction(() => psList(), 3, 2000);
+
     // create CapCha profile
-    if (!(await webSocketSend('GetProfileList'))['responseData']['profiles'].includes('CapCha'))
+    if (!(await attemptAsyncFunction(() => webSocketSend('GetProfileList'), 3, 2000))['responseData']['profiles'].includes('CapCha'))
     {
-        await webSocketSend('CreateProfile', { profileName: 'CapCha' });
+        await attemptAsyncFunction(() => webSocketSend('CreateProfile', { profileName: 'CapCha' }), 3, 2000);
     }
 
     // set to CapCha profile
-    await webSocketSend('SetCurrentProfile', { profileName: 'CapCha' });
+    await attemptAsyncFunction(() => webSocketSend('SetCurrentProfile', { profileName: 'CapCha' }), 3, 2000);
 
     // set basic settings
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), 3, 2000);
     /* file name formatting */
 
     // set captures path
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), 3, 2000);
     // set format
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') }), 3, 2000);
     // set encoder
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('encoder') });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('encoder') }), 3, 2000);
     // set recording width
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
     // set recording height
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
     // set framerate
-    await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` });
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` }), 3, 2000);
     // set bitrate
     try {
         let recordEncoderData;
@@ -97,7 +107,7 @@ async function initSettings() {
 
 function initSettingsL() {
     // gets the entire settings object
-    ipcMain.handle('settings:getAllSettings', (_) => { return data['settings'].store });
+    ipcMain.handle('settings:getAllSettingsData', (_) => { return data['settings'].store });
     
     // sets the value of a specific setting
     ipcMain.handle('settings:setSetting', async (_, key, value) => {
@@ -114,10 +124,10 @@ function initSettingsL() {
     
                     try {
                         // delete the thumbnail directory
-                        await fs.rm(DEF_THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                        await fs.rm(THUMBNAIL_DIRECTORY, { recursive: true, force: true });
                 
                         // recreate the thumbnail directory
-                        await fs.mkdir(DEF_THUMBNAIL_DIRECTORY);
+                        await fs.mkdir(THUMBNAIL_DIRECTORY);
                     }
                     catch {
                         console.error('Error reseting thumbnails directory!');
@@ -132,20 +142,20 @@ function initSettingsL() {
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), 3, 2000);
                 break;
 
             case 'format':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') }), 3, 2000);
                 break;
 
             case 'encoder':
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }), 3, 2000);
 
                 try {
                     let recordEncoderData;
@@ -170,23 +180,23 @@ function initSettingsL() {
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
                 break;
 
             case 'recordingHeight':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
                 break;
 
             case 'framerate':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` });
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` }), 3, 2000);
                 break;
 
             case 'bitrate':
@@ -209,6 +219,17 @@ function initSettingsL() {
                     console.error('Error writing to file: ', error);
                 }
                 break;
+            
+            case 'autoRecord':
+                data['settings'].set(key, value);
+                toggleAutoRecord();
+                break;
+
+            case 'volumeMuted':
+                data['settings'].set(key, value);
+                instances['mainWindow'].destroy();
+                break;
+
             default:
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
@@ -270,13 +291,6 @@ function initSettingsL() {
 
         return value;
     }
-
-    // sets the volume when the app closes
-    ipcMain.once('settings:setVolumeSettings', (_, volumeSettings) => {
-        data['settings'].set('volume', volumeSettings['volume']);
-        data['settings'].set('volumeMuted', volumeSettings['volumeMuted']);
-        instances['mainWindow'].destroy();
-    });
     
     // gets all of the video files and meta data from the save location directory
     ipcMain.handle('files:getAllVideosData', async (_) => {
@@ -285,7 +299,7 @@ function initSettingsL() {
     
         // make the thumbnail directory and video directory (latter should already exist)
         await Promise.all([
-            fs.mkdir(DEF_THUMBNAIL_DIRECTORY, { recursive: true }),
+            fs.mkdir(THUMBNAIL_DIRECTORY, { recursive: true }),
             fs.mkdir(directory, { recursive: true })
         ]);
     
@@ -306,7 +320,7 @@ function initSettingsL() {
     
                     const [videoMetaData, thumbnailPath] = await Promise.all([
                         fs.stat(videoPath),
-                        path.join(DEF_THUMBNAIL_DIRECTORY, `${videoName}.png`)
+                        path.join(THUMBNAIL_DIRECTORY, `${videoName}.png`)
                     ]);
     
                     // create thumbnail if it does not exist
@@ -321,7 +335,7 @@ function initSettingsL() {
                                 .screenshots({
                                     timestamps: ['50%'],
                                     filename: videoName,
-                                    folder: DEF_THUMBNAIL_DIRECTORY,
+                                    folder: THUMBNAIL_DIRECTORY,
                                     size: THUMBNAIL_SIZE
                                 });
                         }), 3, 4000);

@@ -63,8 +63,17 @@ html {
     --rbtn-padding: calc(var(--nbtn-padding) - var(--rbtn-bwidth));
 
     /* ==== rctr -> Recording Container ==== */
+    --rctr-bradius: 10px;
+    --rctr-bwidth: 1.5px;
     --rctr-gap: 10px;
-    --rctr-hmargin: var(--nbtn-hmargin);
+    --rctr-rinset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --rctr-binset: calc(var(--nbar-vgap) + var(--rarlabel-height) + var(--nbar-bpadding));
+    --rctr-active-binset: calc(var(--rctr-binset) + var(--rctr-tpadding) + var(--rctr-bpadding));
+    --rctr-linset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --rctr-tpadding: 2.5px;  /* calculatable */
+    --rctr-rpadding: 2.5px;
+    --rctr-lpadding: 2.5px;
+    --rctr-bpadding: 25px;
 
     /* ==== crtlabel -> Current Recording Time Label ==== */
     --crtlabel-width: calc(var(--nbtn-svg-length) + 2 * var(--nbtn-padding));
@@ -74,6 +83,12 @@ html {
     /* ==== rglabel -> Recording Game Label ==== */
     --rglabel-fsize: 12px;
     --rglabel-fweight: 400;
+
+    /* ==== rarlabel -> Resume Auto Record Label ==== */
+    --rarlabel-height: calc(3 * var(--rarlabel-fsize));
+    --rarlabel-hmargin: var(--nbtn-hmargin);
+    --rarlabel-fsize: 12px;
+    --rarlabel-fweight: 400;
 
     /* ==== nt -> Nav(igation) Toggle ==== */
     --ntbtn-svg-length: 15px;
@@ -315,7 +330,7 @@ body {
     align-items: center;
     justify-content: center;
     position: absolute;
-    z-index: 1;
+    z-index: 3;
 
     display: none;
     flex-flow: column nowrap;

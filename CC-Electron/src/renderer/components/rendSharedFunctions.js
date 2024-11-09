@@ -11,7 +11,7 @@ import {
     html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -21,10 +21,11 @@ import {
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, state 
+    data, state, 
+    initRendVariables 
 } from './rendVariables.js';
-import { resizePlaybackSlider, resizeTimelineSlider } from './rendEditorSection.js';
-import { resizeGallery } from './rendDirectoriesSection.js';
+import { initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
+import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
 
 /**
  * @exports setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction
@@ -91,25 +92,32 @@ function setActiveSection(section) {
             settingsSection.classList.remove('active');
             editorSection.classList.add('active');
             break;
-        default:
     }
 }
 
-
-
-
-
+/**
+ * Attempts an asynchronous function multiple times with a delay
+ * 
+ * @param {Function} asyncFunction - The asynchronous function
+ * @param {number} attempts - The number of attempts
+ * @param {number} delay - The delay between attempts in milliseconds
+ * @returns {Promise} The result of the attempts
+ */
 async function attemptAsyncFunction(asyncFunction, attempts, delay) {
+    // iterate through each attempt
     for (let i = 0; i < attempts; i++) {
+        // try the asynchronous function
         try {
             return await asyncFunction();
         } 
         catch (error) {
             console.error(`Attempt ${i} failed: `, error);
 
+            // do another attempt after the delay
             if (i < attempts - 1) {
                 await new Promise(resolve => setTimeout(resolve, delay));
-            } 
+            }
+            // throw an error
             else {
                 throw new Error(`Function failed after ${attempts} attempts: `, error);
             }

@@ -2,26 +2,30 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import WebSocket from 'ws';
 import path from 'path';
-import { promises as fs, writeFileSync, existsSync, unlinkSync } from 'fs';
+import { promises as fs, writeFileSync, existsSync } from 'fs';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
+import psList from 'ps-list';
+import { exec } from 'child_process';
 
-import { initMainWindow } from './mainWindow.js';
-import { initMainOBS } from './mainOBS.js';
-import { initMainWebSocket } from './mainWebSocket.js';
-import { initMainSettings } from './mainSettings.js';
-import { attemptAsyncFunction } from './mainSharedFunctions.js';
-
-export { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state };
+export { 
+    THUMBNAIL_SIZE, 
+    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    PROGRAMS, 
+    instances, flags, 
+    data, state, 
+    initMainVariables 
+};
 
 // thumbnail, path, and settings constants
 const THUMBNAIL_SIZE = '320x180';
 const ACTIVE_DIRECTORY = import.meta.dirname;
 const DEF_VIDEO_DIRECTORY = path.join(app.getPath('videos'), 'CapCha');
-const DEF_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'thumbnails');
+const THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'thumbnails');
 const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
-const SETTINGS_DATA_DEFAULTS = {
+const SETTINGS_DATA_DEFAULTS = { 
     navBarActive: true,
     
     volume: 0.25,
@@ -45,7 +49,7 @@ const SETTINGS_DATA_DEFAULTS = {
     // microphone: '',
     // webcam: ''
 };
-const SETTINGS_DATA_SCHEMA = {
+const SETTINGS_DATA_SCHEMA = { 
     navBarActive: {
         type: 'boolean'
     },
@@ -115,18 +119,19 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'boolean'
     }
 };
-const GAMES = { VALORANT: 'Valorant.exe', Notepad: 'Notepad.exe' };
-// const GAMES = {};
+const PROGRAMS = { 
+    VALORANT: 'Valorant.exe', 
+    Notepad: 'Notepad.exe' 
+};
 
-// main window, obs process, websocket
+// main window, obs process, websocket INSTANCES
 let instances;
 
 // boolean flags, settings/videos data, and state data
 let flags, data, state; 
 
-
 function initMainVariables() {
-    // main window, obs process, and websocket
+    // main window, obs process, and websocket instances
     instances = { 
         mainWindow: null, 
         obsProcess: null, 
@@ -135,8 +140,7 @@ function initMainVariables() {
 
     // boolean flags
     flags = { 
-        recording: false, 
-        manualPause: false 
+        recording: false 
     };
     
     // settings and videos data
@@ -145,10 +149,10 @@ function initMainVariables() {
         videos: null 
     };
 
-    // pending requests for websocket
+    // pending requests for websocket, recording game, and auto record interval
     state = { 
+        autoRecordInterval: null, 
         pendingRequests: new Map(), 
-        recordingGame: null, 
-        autoRecordInterval: null 
+        recordingGame: null
     };
 }

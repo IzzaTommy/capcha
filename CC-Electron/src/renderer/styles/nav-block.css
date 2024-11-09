@@ -9,6 +9,8 @@
 }
 
 #bar-nav {
+    position: relative;
+
     display: flex;
     flex: 0 0 auto;
     flex-flow: column nowrap;
@@ -88,8 +90,17 @@
 }
 
 #btn-record {
+    z-index: 2;
+
     border: var(--rbtn-bwidth) solid var(--rbtn-bcolor);
+    margin-top: auto;
     padding: var(--rbtn-padding);
+
+    background-color: var(--rbtn-bgcolor);
+}
+
+#btn-record:hover {
+    background-color: var(--rbtn-hover-bgcolor);
 }
 
 #btn-record.active {
@@ -136,14 +147,31 @@
 }
 
 #ctr-recording {
+    right: var(--rctr-rinset);
+    bottom: var(--rctr-binset);
+    left: var(--rctr-linset);
+    position: absolute;
+    z-index: 1;
+
     align-items: center;
+    border: var(--rctr-bwidth) solid var(--rctr-bcolor);
+    border-radius: var(--rctr-bradius);
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
     gap: var(--rctr-gap);
-    margin-top: auto;
-    margin-right: var(--rctr-hmargin);
-    margin-left: var(--rctr-hmargin);
+    padding-top: var(--rctr-tpadding);
+    padding-right: var(--rctr-rpadding);
+    padding-left: var(--rctr-lpadding);
+    padding-bottom: var(--rctr-bpadding);
+
+    background-color: var(--rctr-bgcolor);
+
+    transition: var(--rctr-transition);    
+}
+
+#ctr-recording.active {
+    bottom: var(--rctr-active-binset);
 }
 
 #label-current-recording-time {
@@ -156,8 +184,9 @@
     font-weight: var(--crtlabel-fweight);
 }
 
-#label-recording-game {
+#label-current-recording-game {
     flex: 0 0 fit-content;
+    margin: auto;
 
     color: var(--rglabel-color);
     font-size: var(--rglabel-fsize);
@@ -167,10 +196,39 @@
     transition: var(--rglabel-transition);
 }
 
-#bar-nav.active > #ctr-recording > #label-recording-game {
+#bar-nav.active > #ctr-recording > #label-current-recording-game {
     opacity: 1;
 
     transition: var(--rglabel-active-transition);
+}
+
+#label-resume-auto-record {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    height: var(--rarlabel-height);
+    justify-content: center;
+    margin-right: var(--rarlabel-hmargin);
+    margin-left: var(--rarlabel-hmargin);
+
+    color: var(--rarlabel-color);
+    font-size: var(--rarlabel-fsize);
+    font-weight: var(--rarlabel-fweight);
+    opacity: 0;
+    text-align: center;
+
+    pointer-events: none;
+    transition: var(--rarlabel-transition);
+}
+
+#label-resume-auto-record:hover {
+    color: var(--rarlabel-hover-color);
+}
+
+#label-resume-auto-record.active {
+    opacity: 1;
+
+    pointer-events: all;
 }
 
 #btn-nav-toggle {

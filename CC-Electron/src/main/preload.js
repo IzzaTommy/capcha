@@ -5,43 +5,40 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
 
     stopRecord: () => ipcRenderer.invoke('webSocket:StopRecord'), 
 
-    reqSetActiveRecordBtn: (callback) => ipcRenderer.on('webSocket:reqSetActiveRecordBtn', callback)
+    reqToggleRecordBtn: (callback) => ipcRenderer.on('webSocket:reqToggleRecordBtn', (_, recordingGame) => callback(recordingGame))
 });
 
 contextBridge.exposeInMainWorld('windowAPI', {
     // sends request to main
-    minimize: () => {
-        ipcRenderer.send('window:minimize');
+    minimizeWindow: () => {
+        ipcRenderer.send('window:minimizeWindow');
     },
 
     // sends request to main
-    maximize: () => {
-        ipcRenderer.send('window:maximize');
+    maximizeWindow: () => {
+        ipcRenderer.send('window:maximizeWindow');
     },
 
     // sends request to main
-    close: () => {
-        ipcRenderer.send('window:close');
+    closeWindow: () => {
+        ipcRenderer.send('window:closeWindow');
     },
 
     // sends request to renderer
     reqFinishInit: (callback) => ipcRenderer.on('window:reqFinishInit', callback),
 
     // sends request to main
-    readyCheck: () => {
-        ipcRenderer.send('window:readyCheck');
+    reqToggleAutoRecord: () => {
+        ipcRenderer.send('window:reqToggleAutoRecord');
     }
 });
 
 contextBridge.exposeInMainWorld('settingsAPI', {
     // returns settings data
-    getAllSettings: () => ipcRenderer.invoke('settings:getAllSettings'),
+    getAllSettingsData: () => ipcRenderer.invoke('settings:getAllSettingsData'),
 
     // sends setting, returns setting
     setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
-
-    // sends setting
-    setVolumeSettings: (volumeSettings) => ipcRenderer.send('settings:setVolumeSettings', volumeSettings),
 
     // sends request to renderer
     reqVolumeSettings: (callback) => ipcRenderer.on('settings:reqVolumeSettings', callback)

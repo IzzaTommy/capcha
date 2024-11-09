@@ -12,7 +12,7 @@ import { TimelineState } from './timelineState.js';
  *  html, 
  *  initializationOverlay, 
  *  minimizeBtn, maximizeBtn, closeBtn, 
- *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+ *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
  *  navToggleBtn, navToggleSVG, 
  *  directoriesSection, editorSection, settingsSection, 
  *  videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -31,7 +31,7 @@ export {
     html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -60,7 +60,7 @@ const style = getComputedStyle(document.documentElement);
 let html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -73,7 +73,10 @@ let html,
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, state;
 
-async function initRendVariables() {
+/**
+ * Initializes the variables
+ */
+function initRendVariables() {
     // html element
     html = document.querySelector('html');
 
@@ -94,10 +97,14 @@ async function initRendVariables() {
     settingsBtn = document.getElementById('btn-settings');
     settingsSVG = settingsBtn.querySelector('svg > use');
 
+    recordingContainer = document.getElementById('ctr-recording');
     currentRecordingTimeLabel = document.getElementById('label-current-recording-time');
+    currentRecordingGameLabel = document.getElementById('label-current-recording-game');
 
     recordBtn = document.getElementById('btn-record');
     recordSVG = recordBtn.querySelector('svg > use');
+
+    resumeAutoRecordLabel = document.getElementById('label-resume-auto-record');
 
     navToggleBtn = document.getElementById('btn-nav-toggle');
     navToggleSVG = navToggleBtn.querySelector('svg > use');
@@ -161,7 +168,9 @@ async function initRendVariables() {
         timelineSliderDragging: false, 
         playbackSliderDragging: false,
         previouslyPaused: false, 
-        recording: false 
+        recording: false, 
+        manualStop: false, 
+        autoStart: false 
     };
 
     // element boxes
@@ -172,8 +181,16 @@ async function initRendVariables() {
     };
 
     // settings and videos data
-    data = { settings: null, videos: null };
+    data = { 
+        settings: null, 
+        videos: null 
+    };
 
     // animationID, recording time, and timer interval
-    state = { animationID: null, recordingTime: null, timerInterval: null, timeline: new TimelineState() };
+    state = { 
+        animationID: null, 
+        recordingTime: null, 
+        timerInterval: null, 
+        timeline: new TimelineState()
+     };
 }

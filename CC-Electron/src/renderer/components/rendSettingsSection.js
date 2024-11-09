@@ -10,7 +10,7 @@ import {
     html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -20,10 +20,11 @@ import {
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, state 
+    data, state, 
+    initRendVariables 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { loadGallery } from './rendDirectoriesSection.js';
+import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendSettingsSection
@@ -31,7 +32,7 @@ import { loadGallery } from './rendDirectoriesSection.js';
 export { initRendSettingsSection }
 
 /**
- * Initializes the settings section and its components
+ * Initializes the settings section
  */
 async function initRendSettingsSection() {
     initSettingContainerEL();
@@ -90,7 +91,7 @@ function initSettingContainerEL() {
  */
 async function initSettingContainer() {
     // get the settings
-    data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettings(), 3, 2000);
+    data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettingsData(), 3, 2000);
 
     // iterate through each setting pill
     for (const setting of allSettingPill) {

@@ -7,6 +7,7 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 import psList from 'ps-list';
+import { exec } from 'child_process';
 
 import { instances, initMainVariables } from './mainVariables.js';
 import { initMainWindow } from './mainWindow.js';
@@ -15,27 +16,26 @@ import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
 import { initMainSettings } from './mainSettings.js';
 import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-// loads the app when ready
-app.on('ready', () => {
-    // initialize variables
+app.on('ready', initMain);
+
+app.on('before-quit', () => instances['obsProcess'].kill('SIGTERM'));
+
+function initMain() {
+    init();
+
+    instances['mainWindow'].webContents.on('did-finish-load', finishInit);
+}
+
+function init() {
     initMainVariables();
-
-    // initialize the main window and listeners
     initMainWindow();
+}
 
-    // wait for main window to finish loading, then initialize OBS and websocket
-    instances['mainWindow'].webContents.on('did-finish-load', async () => {
-        initMainOBS();
+async function finishInit() {
+    initMainOBS();
+    await initMainWebSocket();
+    await initMainSettings();
 
-        await initMainWebSocket();
-
-        await initMainSettings();
-
-        instances['mainWindow'].webContents.openDevTools();
-        instances['mainWindow'].webContents.send('window:reqFinishInit');
-    });
-});
-
-app.on('before-quit', () => {
-    instances['obsProcess'].kill('SIGTERM');
-});
+    instances['mainWindow'].webContents.openDevTools();
+    instances['mainWindow'].webContents.send('window:reqFinishInit');
+}

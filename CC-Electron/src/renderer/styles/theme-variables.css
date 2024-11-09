@@ -51,17 +51,27 @@ html[data-theme='dark'] {
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #575757;
+    --rbtn-bgcolor: #373737;
+    --rbtn-hover-bgcolor: #575757;
     --rbtn-active-bgcolor: #dddddd;
 
     --rbtn-svg-active-fill: #ff0000;
 
     --rbtn-span-active-color: #ff0000;
 
+    /* ==== rctr -> Recording Container ==== */
+    --rctr-bcolor: #575757;
+    --rctr-bgcolor: #575757;
+
     /* ==== crtlabel -> Current Recording Time Label ==== */
     --crtlabel-color: #14dd40;
 
     /* ==== rglabel -> Recording Game Label ==== */
     --rglabel-color: #dddddd;
+
+    /* ==== rarlabel -> Resume Auto Record Label ==== */
+    --rarlabel-color: #88959d;
+    --rarlabel-hover-color: #dddddd;
 
     /* ==== nt -> Nav(igation) Toggle ==== */
     --ntbtn-hover-bgcolor: #505050;
@@ -215,17 +225,27 @@ html[data-theme='light'] {
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #dbdbdb;
+    --rbtn-bgcolor: #f2f2f2;
+    --rbtn-hover-bgcolor: #dbdbdb;
     --rbtn-active-bgcolor: #dddddd;
 
     --rbtn-svg-active-fill: #ff0000;
 
     --rbtn-span-active-color: #ff0000;
 
+    /* ==== rctr -> Recording Container ==== */
+    --rctr-bcolor: #dbdbdb;
+    --rctr-bgcolor: #dbdbdb;
+
     /* ==== crtlabel -> Current Recording Time Label ==== */
     --crtlabel-color: #14dd40;
 
     /* ==== rglabel -> Recording Game Label ==== */
     --rglabel-color: #363636;
+
+    /* ==== rarlabel -> Resume Auto Record Label ==== */
+    --rarlabel-color: #88959d;
+    --rarlabel-hover-color: #363636;
 
     /* ==== nt -> Nav(igation) Toggle ==== */
     --ntbtn-hover-bgcolor: #dfe1e5;
@@ -353,19 +373,23 @@ html {
     --vsl-transition: width 0.1s ease 0s;
     --ssl-transition: width 0.1s ease 0s;
 
-    --nbar-transition: width 0.3s ease 0.3s;
-    --nbar-active-transition: width 0.3s ease 0s;
+    --nbar-transition: width 0.3s ease 0.2s;
+    --nbar-active-transition: width 0.3s ease 0.2s;
 
-    --ldp-h1-transition: opacity 0.3s ease 0s;
-    --ldp-h1-active-transition: opacity 0.3s ease 0.3s;
+    --ldp-h1-transition: opacity 0.2s ease 0s;
+    --ldp-h1-active-transition: opacity 0.2s ease 0.5s;
 
     --nbtn-transition: background-color 0.3s ease 0s;
 
-    --nbtn-span-transition: opacity 0.3s ease 0s;
-    --nbtn-span-active-transition: opacity 0.3s ease 0.3s;
+    --nbtn-span-transition: opacity 0.2s ease 0s;
+    --nbtn-span-active-transition: opacity 0.2s ease 0.5s;
 
-    --rglabel-transition: opacity 0.3s ease 0s;
-    --rglabel-active-transition: opacity 0.3s ease 0.3s;
+    --rctr-transition: bottom 0.3s ease 0s;
+
+    --rglabel-transition: opacity 0.2s ease 0s;
+    --rglabel-active-transition: opacity 0.2s ease 0.5s;
+
+    --rarlabel-transition: color 0.3s ease 0s, opacity 0.2s ease 0s;
 
     --ntbtn-transition: background-color 0.3s ease 0s;
 

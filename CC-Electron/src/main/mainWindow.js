@@ -7,14 +7,23 @@ import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
 import { spawn } from 'child_process';
 import psList from 'ps-list';
+import { exec } from 'child_process';
 
-import { THUMBNAIL_SIZE, ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, DEF_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, instances, initMainVariables, SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, GAMES, flags, data, state } from './mainVariables.js';
+import { 
+    THUMBNAIL_SIZE, 
+    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    PROGRAMS, 
+    instances, flags, 
+    data, state, 
+    initMainVariables 
+} from './mainVariables.js';
 import { initMainOBS } from './mainOBS.js';
 import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
 import { initMainSettings } from './mainSettings.js';
 import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-export { initMainWindow };
+export { initMainWindow, toggleAutoRecord };
 
 function initMainWindow() {
     initWindow();
@@ -22,7 +31,6 @@ function initMainWindow() {
 }
 
 function initWindow() {
-    // start the window
     instances['mainWindow'] = new BrowserWindow({
         minWidth: 1280,
         minHeight: 900,
@@ -35,25 +43,21 @@ function initWindow() {
         }
     });
 
-    // start index.html maximized
     instances['mainWindow'].maximize();
 
     instances['mainWindow'].loadFile('src/renderer/index.html');
 }
 
 function initWindowL() {
-    // on close, grab the video volume setting
     instances['mainWindow'].on('close', (event) => {
         event.preventDefault();
 
         instances['mainWindow'].webContents.send('settings:reqVolumeSettings');
     });
 
-    // minimizes the window
-    ipcMain.on('window:minimize', (_) => instances['mainWindow'].minimize());
+    ipcMain.on('window:minimizeWindow', (_) => instances['mainWindow'].minimize());
 
-    // maximizes or unmaximizes the window
-    ipcMain.on('window:maximize', (_) => {
+    ipcMain.on('window:maximizeWindow', (_) => {
         if (instances['mainWindow'].isMaximized()) {
             instances['mainWindow'].unmaximize();
         }
@@ -62,44 +66,44 @@ function initWindowL() {
         }
     });
 
-    // closes the window and triggers event
-    ipcMain.on('window:close', (_) => instances['mainWindow'].close());
+    ipcMain.on('window:closeWindow', (_) => instances['mainWindow'].close());
 
-    ipcMain.on('window:readyCheck', (_) => {
-        setAutoRecord();
-    });
+    ipcMain.on('window:reqToggleAutoRecord', (_) => {
+        toggleAutoRecord();
+    }); 
 }
 
-async function checkProgramList() {
-    const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
-
-    // if not recording
-    if (!flags['recording']) {
-        for (const [key, value] of Object.entries(GAMES)) {
-            if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
-                instances['mainWindow'].webContents.send('webSocket:reqSetActiveRecordBtn');
-                state['recordingGame'] = key;
-                break;
-            }
-        }
-    }
-    // if recording
-    else {
-        console.log('recording');
-        // if the recording game is not in the processes
-        if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === GAMES[state['recordingGame']].toLowerCase())) {
-            instances['mainWindow'].webContents.send('webSocket:reqSetActiveRecordBtn');
-            state['recordingGame'] = null;  // not needed
-        }
-    }
-}
-
-
-function setAutoRecord() {
-    if (data['settings'].get('autoRecord') && !flags['manualPause']) {
-        state['autoRecordInterval'] = setInterval(() => checkProgramList(), 5000);
+function toggleAutoRecord() {
+    if (data['settings'].get('autoRecord')) {
+        state['autoRecordInterval'] = setInterval(async () => await checkPrograms(), 5000);
     }
     else {
         clearInterval(state['autoRecordInterval']);
+        state['autoRecordInterval'] = null;
+    }
+}
+
+async function checkPrograms() {
+    const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
+
+    console.log('\n---------------- RECORDING ----------------');
+        
+    console.log('Recording Game: ', state['recordingGame']);
+
+    if (flags['recording']) {
+        console.log('Recording Status: Recording');
+        if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === PROGRAMS[state['recordingGame']].toLowerCase())) {
+            instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn');
+        }
+    }
+    else {
+        console.log('Recording Status: Not Recording');
+        for (const [key, value] of Object.entries(PROGRAMS)) {
+            if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
+                state['recordingGame'] = key;
+                instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn', state['recordingGame']);
+                break;
+            }
+        }
     }
 }

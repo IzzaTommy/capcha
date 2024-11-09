@@ -12,7 +12,7 @@ import {
     html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -22,11 +22,12 @@ import {
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, state 
+    data, state, 
+    initRendVariables 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { loadGallery } from './rendDirectoriesSection.js';
-import { setActiveRecordBtn } from './rendNavBlock.js';
+import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
+import { initRendNavBlock, toggleRecordBtn } from './rendNavBlock.js';
 
 /**
  * @exports initRendWindow
@@ -61,11 +62,14 @@ function initWindowIPC() {
     });
 
     // on request, set the volume and volume mute status
-    window.settingsAPI.reqVolumeSettings(() => {
-        window.settingsAPI.setVolumeSettings({ 'volume': data['settings']['volume'], 'volumeMuted': data['settings']['volumeMuted'] });
+    window.settingsAPI.reqVolumeSettings(async () => {
+        // not run in Promise.all because updating volumeMuted is set to end the program
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volume', data['settings']['volume']), 3, 2000);
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volumeMuted', data['settings']['volumeMuted']), 3, 2000);
     });
 
-    window.webSocketAPI.reqSetActiveRecordBtn(() => {
-        setActiveRecordBtn();
+    // on request, toggle the record button
+    window.webSocketAPI.reqToggleRecordBtn(async (recordingGame) => {
+        await toggleRecordBtn(true, false, recordingGame);
     });
 }

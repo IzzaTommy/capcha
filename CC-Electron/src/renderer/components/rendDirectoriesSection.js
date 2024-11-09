@@ -11,7 +11,7 @@ import {
     html, 
     initializationOverlay, 
     minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, currentRecordingTimeLabel, recordBtn, recordSVG, 
+    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
     directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusSVG, 
@@ -21,7 +21,8 @@ import {
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
-    data, state 
+    data, state, 
+    initRendVariables 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
@@ -31,7 +32,7 @@ import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunctio
 export { initRendDirectoriesSection, loadGallery, resizeGallery }
 
 /**
- * Initializes the directories section and its components
+ * Initializes the directories section
  */
 function initRendDirectoriesSection() {
     initDirectoryGalleryEL();
@@ -72,7 +73,6 @@ function initDirectoryGalleryEL() {
  * Loads the gallery with video previews
  */
 async function loadGallery() {
-    console.log('RUNNING LOAD GALLERY');
     // the clone of the video preview template
     let videoPreviewClone;
 
