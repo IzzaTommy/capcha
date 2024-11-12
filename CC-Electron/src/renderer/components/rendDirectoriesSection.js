@@ -8,13 +8,14 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -34,9 +35,9 @@ export { initRendDirectoriesSection, loadGallery, resizeGallery }
 /**
  * Initializes the directories section
  */
-function initRendDirectoriesSection() {
+async function initRendDirectoriesSection() {
     initDirectoryGalleryEL();
-    loadGallery();
+    await loadGallery(true);
 }
 
 /**
@@ -72,7 +73,7 @@ function initDirectoryGalleryEL() {
 /**
  * Loads the gallery with video previews
  */
-async function loadGallery() {
+async function loadGallery(initialization) {
     // the clone of the video preview template
     let videoPreviewClone;
 
@@ -80,7 +81,7 @@ async function loadGallery() {
     const currentDate = new Date();
 
     // get the videos
-    data['videos'] = await attemptAsyncFunction(() => window.filesAPI.getAllVideosData(), 3, 2000);
+    data['videos'] = await attemptAsyncFunction(() => window.filesAPI.getAllVideosData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
     // remove every video preview from the captures gallery
     while (capturesGallery.firstElementChild)

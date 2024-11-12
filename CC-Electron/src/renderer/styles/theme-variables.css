@@ -31,6 +31,14 @@ html[data-theme='dark'] {
     /* ==== vlabel -> Version Label ==== */
     --vlabel-color: #dddddd;
 
+    /* ==== inito -> Initialization Overlay ==== */
+    --inito-svg-fill: #dddddd;
+
+    --inito-span-color: #dddddd;
+
+    /* ==== islabel -> Initialization Status Label ==== */
+    --islabel-color: #dddddd;
+
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #373737;
 
@@ -81,6 +89,10 @@ html[data-theme='dark'] {
     /* ==== cb -> Content Block ==== */
     --cblock-bgcolor: #4a4c51;
 
+    /* ==== gslabel -> General Status Label ==== */
+    --gslabel-bgcolor: #373737;
+    --gslabel-color: #dddddd;
+
     /* ==== csection -> Content Section ==== */
     --csection-h2-color: #dddddd;
 
@@ -120,8 +132,8 @@ html[data-theme='dark'] {
     --vobtn-svg-fill: #dddddd;
     --vobtn-hover-svg-fill: white;
 
-    /* ==== ppstat -> Play Pause Status ==== */
-    --ppstat-svg-fill: rgba(255, 255, 255, 0.7);
+    /* ==== ppsicon -> Play Pause Status Icon ==== */
+    --ppsicon-svg-fill: rgba(255, 255, 255, 0.7);
 
     /* ==== pthumb -> Playback Thumb ==== */
     --pthumb-bscolor: #00a9ff;
@@ -205,6 +217,14 @@ html[data-theme='light'] {
     /* ==== vlabel -> Version Label ==== */
     --vlabel-color: #363636;
 
+    /* ==== inito -> Initialization Overlay ==== */
+    --inito-svg-fill: #363636;
+
+    --inito-span-color: #363636;
+
+    /* ==== islabel -> Initialization Status Label ==== */
+    --islabel-color: #363636;
+
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #f2f2f2;
 
@@ -255,6 +275,10 @@ html[data-theme='light'] {
     /* ==== cb -> Content Block ==== */
     --cblock-bgcolor: #f2f2f2;
 
+    /* ==== gslabel -> General Status Label ==== */
+    --gslabel-bgcolor: #f2f2f2;
+    --gslabel-color: #363636;
+
     /* ==== csection -> Content Section ==== */
     --csection-h2-color: #363636;
 
@@ -294,8 +318,8 @@ html[data-theme='light'] {
     --vobtn-svg-fill: #363636;
     --vobtn-hover-svg-fill: white;
 
-    /* ==== ppstat -> Play Pause Status ==== */
-    --ppstat-svg-fill: rgba(255, 255, 255, 0.7);
+    /* ==== ppsicon -> Play Pause Status Icon ==== */
+    --ppsicon-svg-fill: rgba(255, 255, 255, 0.7);
 
     /* ==== pthumb -> Playback Thumb ==== */
     --pthumb-bscolor: #00a9ff;

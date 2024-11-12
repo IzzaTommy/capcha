@@ -1,8 +1,0 @@
-#area-client {
-    display: flex;
-    flex: 1 1 fit-content;
-    flex-flow: row nowrap;
-    gap: var(--carea-hgap);
-
-    overflow: hidden; /* for vertical scroll */
-}

@@ -10,12 +10,12 @@ import { TimelineState } from './timelineState.js';
  * @exports GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
  *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
  *  html, 
- *  initializationOverlay, 
+ *  initializationOverlay, initializationStatusLabel, 
  *  minimizeBtn, maximizeBtn, closeBtn, 
  *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
  *  navToggleBtn, navToggleSVG, 
- *  directoriesSection, editorSection, settingsSection, 
- *  videoContainer, videoPlayer, playPauseStatusSVG, 
+ *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+ *  videoContainer, videoPlayer, playPauseStatusIcon, 
  *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
  *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
@@ -28,13 +28,14 @@ import { TimelineState } from './timelineState.js';
 export { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -56,14 +57,19 @@ const SECONDS_IN_HOUR = 3600;
 const SECONDS_IN_MINUTE = 60;
 const style = getComputedStyle(document.documentElement);
 
+// asynchronous function attempts and delay
+const ATTEMPTS = 3;
+const FAST_DELAY_IN_MSECONDS = 2000;
+const SLOW_DELAY_IN_MSECONDS = 4000;
+
 // document elements
 let html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -80,8 +86,9 @@ function initRendVariables() {
     // html element
     html = document.querySelector('html');
 
-    // initialization overlay element
+    // initialization overlay elements
     initializationOverlay = document.getElementById('overlay-initialization');
+    initializationStatusLabel = document.getElementById('label-initialization-status');
 
     // title bar elements
     minimizeBtn = document.getElementById('btn-minimize');
@@ -110,6 +117,8 @@ function initRendVariables() {
     navToggleSVG = navToggleBtn.querySelector('svg > use');
 
     // content block elements
+    generalStatusLabel = document.getElementById('label-general-status');
+
     directoriesSection = document.getElementById('section-directories');
     editorSection = document.getElementById('section-editor');
     settingsSection = document.getElementById('section-settings');
@@ -119,7 +128,7 @@ function initRendVariables() {
 
     videoPlayer = document.getElementById('player-video');
 
-    playPauseStatusSVG = document.getElementById('status-play-pause');
+    playPauseStatusIcon = document.getElementById('icon-play-pause-status');
 
     playbackContainer = document.getElementById('ctr-playback');
 
@@ -189,6 +198,7 @@ function initRendVariables() {
     // animationID, recording time, and timer interval
     state = { 
         animationID: null, 
+        generalStatusTimeout: null, 
         recordingTime: null, 
         timerInterval: null, 
         timeline: new TimelineState()

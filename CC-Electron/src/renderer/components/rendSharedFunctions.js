@@ -8,13 +8,14 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -26,6 +27,7 @@ import {
 } from './rendVariables.js';
 import { initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
 import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
+import { setInitializationStatusLabel, setGeneralStatusLabel } from './rendGeneral.js';
 
 /**
  * @exports setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction
@@ -101,25 +103,45 @@ function setActiveSection(section) {
  * @param {Function} asyncFunction - The asynchronous function
  * @param {number} attempts - The number of attempts
  * @param {number} delay - The delay between attempts in milliseconds
+ * @param {boolean} initialization - if the asynchronous function is for initialization
  * @returns {Promise} The result of the attempts
  */
-async function attemptAsyncFunction(asyncFunction, attempts, delay) {
+async function attemptAsyncFunction(asyncFunction, attempts, delay, initialization) {
     // iterate through each attempt
-    for (let i = 0; i < attempts; i++) {
+    for (let i = 1; i <= attempts; i++) {
         // try the asynchronous function
         try {
             return await asyncFunction();
         } 
         catch (error) {
-            console.error(`Attempt ${i} failed: `, error);
-
             // do another attempt after the delay
-            if (i < attempts - 1) {
+            if (i < attempts) {
+                if (initialization) {
+                    setInitializationStatusLabel(`Attempt ${i} failed!`);
+                }
+                else {
+                    generalStatusLabel.style.visibility = 'visible';
+                    setGeneralStatusLabel(`Attempt ${i} failed!`);
+
+                    if (state['generalStatusTimeout']) {
+                        clearTimeout(state['generalStatusTimeout']);
+                    }
+                    state['generalStatusTimeout'] = setTimeout(() => generalStatusLabel.style.visibility = 'hidden', 5000);
+                }
+
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
             // throw an error
             else {
-                throw new Error(`Function failed after ${attempts} attempts: `, error);
+                if (initialization) {
+                    setInitializationStatusLabel('An Error Occurred!');
+                    // closing code...
+                }
+                else {
+                    generalStatusLabel.style.visibility = 'visible';
+                    setGeneralStatusLabel('An Error Occurred!');
+                    state['generalStatusTimeout'] = setTimeout(() => generalStatusLabel.style.visibility = 'hidden', 5000);
+                }
             }
         }
     }

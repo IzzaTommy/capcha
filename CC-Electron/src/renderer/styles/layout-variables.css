@@ -20,6 +20,18 @@ html {
     --vlabel-fweight: 300;
     --vlabel-lmargin: 10px;
 
+    /* ==== inito -> Initialization Overlay ==== */
+    --inito-span-fsize: 80px;
+    --inito-span-fweight: 600;
+
+    --inito-svg-height: 100px;
+    --inito-svg-width: 100px;
+
+    /* ==== islabel -> Initialization Status Label ==== */
+    --islabel-tmargin: 50px;
+    --islabel-fsize: 18px;
+    --islabel-fweight: 300;
+
     /* ==== carea -> Client Area ==== */
     --carea-hgap: 12px;
 
@@ -96,6 +108,13 @@ html {
     /* ==== cb -> Content Block ==== */
     --cblock-bradius: 10px;
 
+    /* ==== gslabel -> General Status Label ==== */
+    --gslabel-tinset: 40px;
+    --gslabel-bradius: 10px;
+    --gslabel-padding: 10px;
+    --gslabel-fsize: 15px;
+    --gslabel-fweight: 300;
+
     /* ==== csection -> Content Section ==== */
     --csection-vgap: var(--nbar-vgap);
     --csection-hpadding: calc(var(--nbar-hpadding) + var(--ntbtn-svg-length));
@@ -169,9 +188,9 @@ html {
     --vctr-height: 75%;
     --vctr-width: 80%;
 
-    /* ==== ppstat -> Play Pause Status ==== */
-    --ppstat-svg-height: 80px;
-    --ppstat-svg-width: 80px;
+    /* ==== ppsicon -> Play Pause Status Icon ==== */
+    --ppsicon-svg-height: 80px;
+    --ppsicon-svg-width: 80px;
 
     /* ==== psl -> Playback Slider ==== */
     --psl-height: 3px;
@@ -290,75 +309,4 @@ html {
     --sttswitch-svg-inset: 2px;
     --sttswitch-svg-translateX: var(--sttswitch-svg-width);
     --sttswitch-svg-width: calc(var(--sttswitch-width) / 2 - var(--sttswitch-svg-inset));
-}
-
-::-webkit-scrollbar {
-    height: var(--sbar-length);
-    width: var(--sbar-length);
-}
-
-::-webkit-scrollbar-thumb {
-    border: var(--sbar-thumb-bwidth) solid transparent;
-    border-radius: var(--sbar-thumb-bradius);
-
-    background-clip: padding-box;
-    background-color: var(--sbar-thumb-bgcolor);
-}
-
-/* ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--sbar-thumb-bgcolor);
-} */
-
-::-webkit-scrollbar-corner {
-    background-color: transparent;
-}
-
-html {
-    height: 100%;
-}
-
-body {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100%;
-    margin: 0;
-
-    background-color: var(--body-bgcolor);
-}
-
-#overlay-initialization {
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    z-index: 3;
-
-    display: none;
-    flex-flow: column nowrap;
-    height: 100%;
-    width: 100%;
-
-    background-color: var(--body-bgcolor);
-}
-
-#overlay-initialization.active {
-    display: flex;
-}
-
-#overlay-initialization > svg {
-    display: block;
-    flex: 0 0 auto;
-    height: 100px;
-
-    width: 100px;
-
-    fill: var(--ldp-svg-fill);
-}
-
-#overlay-initialization > span {
-    flex: 0 0 auto;
-    text-align: center;
-
-    color: var(--ldp-h1-color);
-    font-size: 80px;
-    font-weight: 600;
 }

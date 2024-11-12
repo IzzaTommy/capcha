@@ -11,9 +11,9 @@
     width: var(--vctr-width);
 
     background-color: #000000;
-    overflow: hidden;
 
     cursor: pointer;
+    overflow: hidden;
 }
 
 #player-video {
@@ -22,16 +22,16 @@
     width: 100%;
 }
 
-#status-play-pause {
-    display: block;
+#icon-play-pause-status {
     inset: 0;
     position: absolute;
 
+    display: block;
+    height: var(--ppsicon-svg-height);
     margin: auto;
-    height: var(--ppstat-svg-height);
-    width: var(--ppstat-svg-width);
+    width: var(--ppsicon-svg-width);
 
-    fill: var(--ppstat-svg-fill);
+    fill: var(--ppsicon-svg-fill);
     opacity: 0;
 }
 
@@ -70,8 +70,9 @@
     height: 100%;
 
     background-color: var(--ptrack-bgcolor);
-    overflow: hidden;
     transition: var(--ptrack-transition);
+
+    overflow: hidden;
 }
 
 #thumb-playback {
@@ -94,8 +95,9 @@
     flex: 0 0 fit-content;
     margin: 0 var(--pbtn-hmargin) var(--pbtn-bmargin);
 
-    cursor: pointer;
     transition: var(--pbtn-transition);
+
+    cursor: pointer;
 }
 
 #btn-volume {
@@ -104,6 +106,7 @@
 
 #btn-speed {
     justify-content: end;
+
     margin-left: 0;
 }
 
@@ -275,9 +278,9 @@
 
 #slider-timeline {
     position: relative;
-    flex: 0 0 auto;
 
     border-radius: var(--tslider-bradius);
+    flex: 0 0 auto;
     height: var(--tslider-height);
     width: var(--tslider-width);
 

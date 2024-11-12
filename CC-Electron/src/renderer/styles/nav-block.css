@@ -32,6 +32,7 @@
 
 #display-logo {
     align-items: center;
+
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -50,19 +51,17 @@
 #display-logo > h1 {
     flex: 0 0 auto;
     width: var(--ldp-h1-width);
-    text-align: center;
 
     color: var(--ldp-h1-color);
     font-size: var(--ldp-h1-fsize);
     font-weight: var(--ldp-h1-fweight);
+    text-align: center;
     opacity: 0;
-
     transition: var(--ldp-h1-transition);
 }
 
 #bar-nav.active > #display-logo > h1 {
     opacity: 1;
-
     transition: var(--ldp-h1-active-transition);
 }
 
@@ -77,6 +76,7 @@
 
 .nav-btn {
     align-items: center;
+
     border-radius: var(--nbtn-bradius);
     display: flex;
     flex: 0 0 fit-content;
@@ -136,24 +136,22 @@
     font-size: var(--nbtn-span-fsize);
     font-weight: var(--nbtn-span-fweight);
     opacity: 0;
-
     transition: var(--nbtn-span-transition);
 }
 
 #bar-nav.active > .nav-btn > span {
     opacity: 1;
-
     transition: var(--nbtn-span-active-transition);
 }
 
 #ctr-recording {
+    align-items: center;
     right: var(--rctr-rinset);
     bottom: var(--rctr-binset);
     left: var(--rctr-linset);
     position: absolute;
     z-index: 1;
 
-    align-items: center;
     border: var(--rctr-bwidth) solid var(--rctr-bcolor);
     border-radius: var(--rctr-bradius);
     display: flex;
@@ -166,7 +164,6 @@
     padding-bottom: var(--rctr-bpadding);
 
     background-color: var(--rctr-bgcolor);
-
     transition: var(--rctr-transition);    
 }
 
@@ -177,11 +174,11 @@
 #label-current-recording-time {
     flex: 0 0 auto;
     width: var(--crtlabel-width);
-    text-align: center;
     
     color: var(--crtlabel-color);
     font-size: var(--crtlabel-fsize);
     font-weight: var(--crtlabel-fweight);
+    text-align: center;
 }
 
 #label-current-recording-game {
@@ -192,22 +189,21 @@
     font-size: var(--rglabel-fsize);
     font-weight: var(--rglabel-fweight);
     opacity: 0;
-    
     transition: var(--rglabel-transition);
 }
 
 #bar-nav.active > #ctr-recording > #label-current-recording-game {
     opacity: 1;
-
     transition: var(--rglabel-active-transition);
 }
 
 #label-resume-auto-record {
     align-items: center;
+    justify-content: center;
+
     display: flex;
     flex-flow: row nowrap;
     height: var(--rarlabel-height);
-    justify-content: center;
     margin-right: var(--rarlabel-hmargin);
     margin-left: var(--rarlabel-hmargin);
 
@@ -216,9 +212,9 @@
     font-weight: var(--rarlabel-fweight);
     opacity: 0;
     text-align: center;
+    transition: var(--rarlabel-transition);
 
     pointer-events: none;
-    transition: var(--rarlabel-transition);
 }
 
 #label-resume-auto-record:hover {
@@ -233,6 +229,7 @@
 
 #btn-nav-toggle {
     align-items: center;
+    
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;

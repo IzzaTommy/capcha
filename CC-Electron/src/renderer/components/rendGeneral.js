@@ -1,7 +1,7 @@
 /**
- * Module for initializing the window
+ * Module for initializing general components
  * 
- * @module rendWindow
+ * @module rendGeneral
  * @requires rendVariables
  * @requires rendSharedFunctions
  * @requires rendDirectoriesSection
@@ -9,13 +9,14 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -30,22 +31,22 @@ import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDi
 import { initRendNavBlock, toggleRecordBtn } from './rendNavBlock.js';
 
 /**
- * @exports initRendWindow
+ * @exports initRendGeneral
  */
-export { initRendWindow };
+export { initRendGeneral, setInitializationStatusLabel, setGeneralStatusLabel };
 
 /**
- * Initializes the window
+ * Initializes general components
  */
-function initRendWindow() {
-    initWindowEL();
-    initWindowIPC();
+function initRendGeneral() {
+    initGeneralEL();
+    initGeneralIPC();
 }
 
 /**
- * Initializes the window event listener
+ * Initializes general event listeners
  */
-function initWindowEL() {
+function initGeneralEL() {
     // on resize, resize all width dependent elements
     window.addEventListener('resize', () => {
         resizeAll();
@@ -53,23 +54,31 @@ function initWindowEL() {
 }
 
 /**
- * Initializes the window inter-process communication callbacks
+ * Initializes the inter-process communication callbacks
  */
-function initWindowIPC() {
+function initGeneralIPC() {
     // on request, load the gallery
-    window.filesAPI.reqLoadGallery(() => { 
-        loadGallery(); 
+    window.filesAPI.reqLoadGallery(async () => { 
+        await loadGallery(false); 
     });
 
     // on request, set the volume and volume mute status
     window.settingsAPI.reqVolumeSettings(async () => {
         // not run in Promise.all because updating volumeMuted is set to end the program
-        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volume', data['settings']['volume']), 3, 2000);
-        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volumeMuted', data['settings']['volumeMuted']), 3, 2000);
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volume', data['settings']['volume']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volumeMuted', data['settings']['volumeMuted']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
     });
 
     // on request, toggle the record button
     window.webSocketAPI.reqToggleRecordBtn(async (recordingGame) => {
-        await toggleRecordBtn(true, false, recordingGame);
+        await attemptAsyncFunction(() => toggleRecordBtn(true, false, recordingGame), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
     });
+}
+
+function setInitializationStatusLabel(message) {
+    initializationStatusLabel.textContent = message;
+}
+
+function setGeneralStatusLabel(message) {
+    generalStatusLabel.textContent = message;
 }

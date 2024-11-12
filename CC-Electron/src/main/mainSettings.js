@@ -294,6 +294,9 @@ function initSettingsL() {
     
     // gets all of the video files and meta data from the save location directory
     ipcMain.handle('files:getAllVideosData', async (_) => {
+        
+        // return Promise.reject(new Error("Simulated error for testing"));
+
         // get the save location stored in the settings
         const directory = data['settings'].get('capturesPath');
     

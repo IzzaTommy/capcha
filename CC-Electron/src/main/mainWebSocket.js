@@ -125,6 +125,7 @@ function initWebSocket() {
 
 function initWebSocketL() {
     ipcMain.handle('webSocket:StartRecord', async (_) => {
+        // return Promise.reject(new Error("Simulated error for testing"));
         const recording = (await webSocketSend('StartRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = recording;
@@ -133,6 +134,7 @@ function initWebSocketL() {
     });
 
     ipcMain.handle('webSocket:StopRecord', async (_) => {
+        // return Promise.reject(new Error("Simulated error for testing"));
         const recording = (await webSocketSend('StopRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = !recording;

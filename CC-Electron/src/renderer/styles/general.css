@@ -1,0 +1,209 @@
+* {
+    border: none;
+    margin: 0;
+    outline: none;
+    padding: 0;
+    
+    background-color: transparent;
+    box-sizing: border-box;
+
+    line-height: 1;
+
+    -webkit-user-select: none;
+}
+
+::-webkit-scrollbar {
+    height: var(--sbar-length);
+    width: var(--sbar-length);
+}
+
+::-webkit-scrollbar-thumb {
+    border: var(--sbar-thumb-bwidth) solid transparent;
+    border-radius: var(--sbar-thumb-bradius);
+
+    background-clip: padding-box;
+    background-color: var(--sbar-thumb-bgcolor);
+}
+
+/* ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--sbar-thumb-bgcolor);
+} */
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    margin: 0;
+
+    background-color: var(--body-bgcolor);
+}
+
+#overlay-initialization {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 3;
+
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--body-bgcolor);
+    visibility: hidden;
+}
+
+#overlay-initialization.active {
+    visibility: visible;
+}
+
+#overlay-initialization > svg {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--inito-svg-height);
+    width: var(--inito-svg-width);
+
+    fill: var(--inito-svg-fill);
+}
+
+#overlay-initialization > span {
+    flex: 0 0 fit-content;
+
+    color: var(--inito-span-color);
+    font-size: var(--inito-span-fsize);
+    font-weight: var(--inito-span-fweight);
+}
+
+#label-initialization-status {
+    flex: 0 0 fit-content;
+    margin-top: var(--islabel-tmargin);
+
+    color: var(--islabel-color);
+    font-size: var(--islabel-fsize);
+    font-weight: var(--islabel-fweight);
+}
+
+#area-client {
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--carea-hgap);
+
+    overflow: hidden; /* for vertical scroll */
+}
+
+#block-content {
+    position: relative;
+
+    border-radius: var(--cblock-bradius) 0 0;
+    flex: 1 1 fit-content;
+
+    background-color: var(--cblock-bgcolor);
+    overflow: hidden; /* for vertical/horizontal scroll */
+}
+
+#label-general-status {
+    position: absolute;
+    top: var(--gslabel-tinset);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+
+    border-radius: var(--gslabel-bradius);
+    padding: var(--gslabel-padding);
+
+    background-color: var(--gslabel-bgcolor);
+    color: var(--gslabel-color);
+    font-size: var(--gslabel-fsize);
+    font-weight: var(--gslabel-fweight);
+    text-align: center;
+    visibility: hidden;
+}
+
+#label-general-status.active {
+    visibility: visible;
+}
+
+.content-section {
+    position: absolute;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: var(--csection-vgap);
+    height: 100%; /* for vertical scroll */
+    padding: var(--csection-vpadding) var(--csection-hpadding);
+    width: 100%;
+
+    visibility: hidden;
+}
+
+.content-section.active {
+    visibility: visible;
+}
+
+.content-section > h2 {
+    flex: 0 0 fit-content;
+
+    color: var(--csection-h2-color);
+    font-size: var(--csection-h2-fsize);
+    font-weight: var(--csection-h2-fweight);
+}
+
+.content-section > hr {
+    flex: 0 0 auto;
+    height: var(--csection-hr-height);
+    margin-left: var(--csection-hr-lmargin);
+    width: var(--csection-hr-width);
+
+    background-color: var(--csection-hr-bgcolor);
+}
+
+.section-ctr1 {
+    border-radius: var(--sctr1-bradius);
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--sctr1-vgap);
+    padding: var(--sctr1-vpadding) var(--sctr1-hpadding);
+
+    background-color: var(--sctr1-bgcolor);
+    overflow-y: auto; /* for vertical scroll */
+
+    scrollbar-gutter: stable;
+}
+
+.section-ctr1::-webkit-scrollbar-track {
+    margin: var(--sctr1-sb-track-margin);
+}
+
+.section-ctr2 {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--sctr2-vgap);
+}
+
+.section-ctr2 > h3 {
+    flex: 0 0 fit-content;
+
+    color: var(--sctr2-h3-color);
+    font-size: var(--sctr2-h3-fsize);
+    font-weight: var(--sctr2-h3-fweight);
+}
+
+.section-ctr2 > hr {
+    flex: 0 0 auto;
+    height: var(--sctr2-hr-height);
+    margin-left: var(--sctr2-hr-lmargin);
+    width: var(--sctr2-hr-width);
+
+    background-color: var(--sctr2-hr-bgcolor);
+}

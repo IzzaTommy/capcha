@@ -1,7 +1,7 @@
 /**
  * Module for initializing the nav block
  * 
- * @module rendWindow
+ * @module rendNavBlock
  * @requires rendVariables
  * @requires rendSharedFunctions
  * @requires rendEditorSection
@@ -9,13 +9,14 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -87,16 +88,16 @@ function initNavToggleBtnEL() {
         // change the SVG and save the setting, depending on if the nav bar is active
         if (navBar.classList.contains('active')) {
             setSVG(navToggleSVG, 'arrow-back-ios');
-            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', true), 3, 2000);
+            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', true), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         }
         else {
             setSVG(navToggleSVG, 'arrow-forward-ios');
-            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', false), 3, 2000);
+            data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         }
 
         // hide the resumeAutoRecord label, then show it again after 500 ms
         resumeAutoRecordLabel.style.opacity = '0';
-        await new Promise(resolve => setTimeout(() => { resumeAutoRecordLabel.style.opacity = ''; resolve(); }, 500));
+        await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { resumeAutoRecordLabel.style.opacity = ''; resolve(); }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
         // resize all width dependent elements
         resizeAll();
@@ -129,7 +130,7 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
         // check if it was a manual start / manual stop or auto start / auto stop or auto start / manual stop
         if ((!flags['autoStart'] && manualStop) || (flags['autoStart'] && !manualStop) || (flags['autoStart'] && manualStop)) {
             // stop recording
-            if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), 3, 2000)) {
+            if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
                 // set the manual stop flag
                 flags['manualStop'] = manualStop;
 
@@ -148,14 +149,14 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
                 }
 
                 // reload the gallery for the new video
-                loadGallery();
+                await loadGallery(false);
             }
         }
     }
     else {
         // check if it was an auto start / with no manual pause or if it was a manual start
         if ((autoStart && !flags['manualStop']) || !autoStart) {
-            if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), 3, 2000)) {
+            if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
                 // set auto start flag
                 flags['autoStart'] = autoStart;
 

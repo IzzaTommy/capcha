@@ -1,14 +1,14 @@
 /* Positioning */
 /* Display & Box Model */
+/* Theme */
 /* Other */
+/* Browser Provided */
 
-@import url('styles/default.css');
+@import url('styles/general.css');
 @import url('styles/theme-variables.css');
 @import url('styles/layout-variables.css');
 @import url('styles/title-bar.css');
 @import url('styles/nav-block.css');
-@import url('styles/client-area.css');
-@import url('styles/content-block.css');
 @import url('styles/directories-section.css');
 @import url('styles/editor-section.css');
 @import url('styles/settings-section.css');

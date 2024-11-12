@@ -8,13 +8,14 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
-    initializationOverlay, 
+    initializationOverlay, initializationStatusLabel, 
     minimizeBtn, maximizeBtn, closeBtn, 
     navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
     navToggleBtn, navToggleSVG, 
-    directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusSVG, 
+    generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
     playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
@@ -49,10 +50,12 @@ function initVideoContainerEL() {
         if (document.fullscreenElement !== null) {
             setSVG(fullscreenSVG, 'fullscreen-exit');
             resizePlaybackSlider();
+            resizeTimelineSlider();
         }
         else {
             setSVG(fullscreenSVG, 'fullscreen');
             resizePlaybackSlider();
+            resizeTimelineSlider();
         }
     });
 
@@ -495,25 +498,25 @@ function setVideoPlayerState(action) {
         case 'play':
             // play the video and change the SVG
             setSVG(playPauseSVG, 'pause');
-            playPauseStatusSVG.style.opacity = '';
+            playPauseStatusIcon.style.opacity = '';
             videoPlayer.play();
             break;
         case 'pause':
             // pause the video and change the SVG
             setSVG(playPauseSVG, 'play-arrow');
-            playPauseStatusSVG.style.opacity = '1';
+            playPauseStatusIcon.style.opacity = '1';
             videoPlayer.pause();
             break;
         case 'toggle':
             // play/pause the video and change the SVG
             if (videoPlayer.paused || videoPlayer.ended) {
                 setSVG(playPauseSVG, 'pause');
-                playPauseStatusSVG.style.opacity = '';
+                playPauseStatusIcon.style.opacity = '';
                 videoPlayer.play();
             }
             else {
                 setSVG(playPauseSVG, 'play-arrow');
-                playPauseStatusSVG.style.opacity = '1';
+                playPauseStatusIcon.style.opacity = '1';
                 videoPlayer.pause();
             }
             break;

@@ -3,20 +3,16 @@
  * 
  * @module renderer
  * @requires rendVariables
- * @requires rendWindow
+ * @requires rendGeneral
  * @requires rendTitleBar
  * @requires rendNavBlock
  * @requires rendSettingsSection
  * @requires rendEditorSection
  * @requires rendDirectoriesSection
- * 
- * 
- * 
- * 
- * 
+ * @requires rendVariables
  */
 import { initRendVariables } from './components/rendVariables.js';
-import { initRendWindow } from './components/rendWindow.js';
+import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
 import { initRendTitleBar } from './components/rendTitleBar.js';
 import { initRendNavBlock } from './components/rendNavBlock.js';
 import { initRendSettingsSection } from './components/rendSettingsSection.js';
@@ -36,19 +32,15 @@ function initRend() {
 
     window.windowAPI.reqFinishInit(() => { 
         finishInit();
-
-        // toggle the auto recording and the initialization overlay
-        window.windowAPI.reqToggleAutoRecord();
-        initializationOverlay.classList.remove('active');
     });
 }
 
 /**
- * Initializes the variables, window, and title bar
+ * Initializes the variables, general components, and title bar
  */
 function init() {
     initRendVariables();
-    initRendWindow();
+    initRendGeneral();
     initRendTitleBar();
 }
 
@@ -56,8 +48,17 @@ function init() {
  * Initializes the settings section, nav block, directories section, and editor section
  */
 async function finishInit() {
+    setInitializationStatusLabel('Loading Settings...');
     await initRendSettingsSection();
+
     initRendNavBlock();
-    initRendDirectoriesSection();
+
+    setInitializationStatusLabel('Loading Files...');
+    await initRendDirectoriesSection();
+    
     initRendEditorSection();
+
+    // toggle the auto recording and the initialization overlay
+    window.windowAPI.reqToggleAutoRecord();
+    initializationOverlay.classList.remove('active');
 }
