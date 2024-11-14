@@ -36,7 +36,7 @@ function initWindow() {
         minHeight: 900,
         show: false,
         icon: path.join(ACTIVE_DIRECTORY, '..', 'assets', 'app-icon', 'capcha-app-icon.png'),
-        frame: true,
+        frame: false,
         webPreferences: {
             preload: path.join(ACTIVE_DIRECTORY, 'preload.js'),
             contextIsolation: true,

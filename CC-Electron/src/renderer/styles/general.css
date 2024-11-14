@@ -1,12 +1,12 @@
 * {
     border: none;
     margin: 0;
+    /* outline: 1px solid yellow; */
     outline: none;
     padding: 0;
     
     background-color: transparent;
     box-sizing: border-box;
-
     line-height: 1;
 
     -webkit-user-select: none;
@@ -25,9 +25,9 @@
     background-color: var(--sbar-thumb-bgcolor);
 }
 
-/* ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--sbar-thumb-bgcolor);
-} */
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--sbar-thumb-alt-bgcolor);
+}
 
 ::-webkit-scrollbar-corner {
     background-color: transparent;
@@ -41,7 +41,6 @@ body {
     display: flex;
     flex-flow: column nowrap;
     height: 100%;
-    margin: 0;
 
     background-color: var(--body-bgcolor);
 }
@@ -57,7 +56,7 @@ body {
     height: 100%;
     width: 100%;
 
-    background-color: var(--body-bgcolor);
+    background-color: var(--initoverlay-bgcolor);
     visibility: hidden;
 }
 
@@ -68,18 +67,18 @@ body {
 #overlay-initialization > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--inito-svg-height);
-    width: var(--inito-svg-width);
+    height: var(--initoverlay-svg-length);
+    width: var(--initoverlay-svg-length);
 
-    fill: var(--inito-svg-fill);
+    fill: var(--initoverlay-svg-fill);
 }
 
 #overlay-initialization > span {
     flex: 0 0 fit-content;
 
-    color: var(--inito-span-color);
-    font-size: var(--inito-span-fsize);
-    font-weight: var(--inito-span-fweight);
+    color: var(--initoverlay-span-color);
+    font-size: var(--initoverlay-span-fsize);
+    font-weight: var(--initoverlay-span-fweight);
 }
 
 #label-initialization-status {
@@ -103,7 +102,7 @@ body {
 #block-content {
     position: relative;
 
-    border-radius: var(--cblock-bradius) 0 0;
+    border-top-left-radius: var(--cblock-tlbradius);
     flex: 1 1 fit-content;
 
     background-color: var(--cblock-bgcolor);

@@ -1,6 +1,6 @@
 #bar-title {
     align-items: center;
-    
+
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -25,16 +25,16 @@
     -webkit-app-region: no-drag;
 }
 
+.title-btn:hover {
+    background-color: var(--tbtn-alt-bgcolor);
+}
+
 #btn-minimize {
     margin-left: auto;
 }
 
-.title-btn:hover {
-    background-color: var(--tbtn-hover-bgcolor);
-}
-
 #btn-close:hover {
-    background-color: var(--tcbtn-hover-bgcolor);
+    background-color: var(--tcbtn-alt-bgcolor);
 }
 
 .title-btn > svg {

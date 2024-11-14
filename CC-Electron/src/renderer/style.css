@@ -4,9 +4,9 @@
 /* Other */
 /* Browser Provided */
 
-@import url('styles/general.css');
-@import url('styles/theme-variables.css');
 @import url('styles/layout-variables.css');
+@import url('styles/theme-variables.css');
+@import url('styles/general.css');
 @import url('styles/title-bar.css');
 @import url('styles/nav-block.css');
 @import url('styles/directories-section.css');

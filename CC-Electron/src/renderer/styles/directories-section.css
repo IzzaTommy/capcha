@@ -21,7 +21,7 @@
 }
 
 .directory-btn:hover {
-    background-color: var(--dbtn-hover-bgcolor);
+    background-color: var(--dbtn-alt-bgcolor);
 }
 
 .directory-btn > svg {
@@ -62,12 +62,28 @@
     padding: var(--vpctr-padding);
 
     transition: var(--vpctr-transition);
-    
+
     scroll-snap-align: start;
 }
 
 .video-preview-ctr:hover {
-    background-color: var(--vpctr-hover-bgcolor);
+    background-color: var(--vpctr-alt-bgcolor);
+}
+
+.video-preview-ctr > h4 {
+    flex: 0 0 fit-content;
+
+    color: var(--vpctr-h4-color);
+    font-size: var(--vpctr-h4-fsize);
+    font-weight: var(--vpctr-h4-fweight);
+}
+
+.video-preview-ctr > p {
+    flex: 0 0 fit-content;
+
+    color: var(--vpctr-p-color);
+    font-size: var(--vpctr-p-fsize);
+    font-weight: var(--vpctr-p-fweight);
 }
 
 .video-thumbnail {
@@ -78,26 +94,6 @@
 
     background-color: black;
     object-fit: contain;
-}
-
-.video-preview-ctr > h4 {
-    flex: 0 0 fit-content;
-    margin: 0;
-
-    color: var(--vpctr-h4-color);
-    font-size: var(--vpctr-h4-fsize);
-    font-weight: var(--vpctr-h4-fweight);
-    line-height: 1;
-}
-
-.video-preview-ctr > p {
-    flex: 0 0 fit-content;
-    margin: 0;
-
-    color: var(--vpctr-p-color);
-    font-size: var(--vpctr-p-fsize);
-    font-weight: var(--vpctr-p-fweight);
-    line-height: 1;
 }
 
 .video-options-ctr {
@@ -117,15 +113,11 @@
 }
 
 .video-rename-btn:hover {
-    background-color: var(--vrbtn-hover-bgcolor);
+    background-color: var(--vrbtn-alt-bgcolor);
 }
 
 .video-delete-btn:hover {
-    background-color: var(--vdbtn-hover-bgcolor);
-}
-
-.video-options-btn:hover > svg {
-    fill: var(--vobtn-hover-svg-fill);
+    background-color: var(--vdbtn-alt-bgcolor);
 }
 
 .video-options-btn > svg {
@@ -136,4 +128,8 @@
 
     fill: var(--vobtn-svg-fill);
     transition: var(--vobtn-svg-transition);
+}
+
+.video-options-btn:hover > svg {
+    fill: var(--vobtn-svg-alt-fill);
 }

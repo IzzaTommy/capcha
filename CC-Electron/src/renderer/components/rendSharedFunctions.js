@@ -17,7 +17,7 @@ import {
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -122,11 +122,6 @@ async function attemptAsyncFunction(asyncFunction, attempts, delay, initializati
                 else {
                     generalStatusLabel.style.visibility = 'visible';
                     setGeneralStatusLabel(`Attempt ${i} failed!`);
-
-                    if (state['generalStatusTimeout']) {
-                        clearTimeout(state['generalStatusTimeout']);
-                    }
-                    state['generalStatusTimeout'] = setTimeout(() => generalStatusLabel.style.visibility = 'hidden', 5000);
                 }
 
                 await new Promise(resolve => setTimeout(resolve, delay));
@@ -140,7 +135,6 @@ async function attemptAsyncFunction(asyncFunction, attempts, delay, initializati
                 else {
                     generalStatusLabel.style.visibility = 'visible';
                     setGeneralStatusLabel('An Error Occurred!');
-                    state['generalStatusTimeout'] = setTimeout(() => generalStatusLabel.style.visibility = 'hidden', 5000);
                 }
             }
         }

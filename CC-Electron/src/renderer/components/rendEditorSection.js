@@ -17,7 +17,7 @@ import {
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -96,7 +96,7 @@ function initVideoContainerEL() {
             }
     
             // set the video current time label
-            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // pause the video and change the SVG
@@ -111,8 +111,8 @@ function initVideoContainerEL() {
         setTimelineOverlay();
 
         // set the video current time label to 0
-        currentVideoTimeLabel.textContent = '0:00';
-        totalVideoTimeLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
+        currentTimeLabel.textContent = '0:00';
+        totalTimeLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
 
         // set the video loaded flag
         flags['videoLoaded'] = true;
@@ -206,19 +206,19 @@ function initVideoContainerEL() {
         switch (speedSlider.value) {
             case '-2':
                 videoPlayer.playbackRate = 0.2;
-                speedLabel.textContent = '0.2';
+                currentSpeedLabel.textContent = '0.2';
                 break;
             case '-1':
                 videoPlayer.playbackRate = 0.5;
-                speedLabel.textContent = '0.5';
+                currentSpeedLabel.textContent = '0.5';
                 break;
             case '0':
                 videoPlayer.playbackRate = 0.7;
-                speedLabel.textContent = '0.7';
+                currentSpeedLabel.textContent = '0.7';
                 break;
             default:
                 videoPlayer.playbackRate = speedSlider.value;
-                speedLabel.textContent = speedSlider.value;
+                currentSpeedLabel.textContent = speedSlider.value;
         }
     });
 
@@ -226,7 +226,7 @@ function initVideoContainerEL() {
     speedBtn.addEventListener('click', () => {
         // set the playback speed and speed label to 1
         videoPlayer.playbackRate = 1;
-        speedLabel.textContent = '1';
+        currentSpeedLabel.textContent = '1';
 
         // set the speed input slider to match playback speed
         if (speedSlider.value < 1) {
@@ -313,7 +313,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             } 
             else {
@@ -349,7 +349,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             }
         }
@@ -387,7 +387,7 @@ function initTimelineSliderEL() {
             }
 
             // set the video current time label
-            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
     });
 
@@ -427,7 +427,7 @@ function initTimelineSliderEL() {
             setAllThumbs();
 
             // set the video current time label
-            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // check if the timeline slider is dragging
@@ -461,7 +461,7 @@ function initTimelineSliderEL() {
                 setPlaybackThumb();
 
                 // set the video current time label
-                currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
             }
         }
     });

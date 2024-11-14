@@ -1,5 +1,5 @@
 #block-nav {
-    border-radius: 0 var(--nblock-bradius) 0 0;
+    border-top-right-radius: var(--nblock-trbradius);
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -15,19 +15,16 @@
     flex: 0 0 auto;
     flex-flow: column nowrap;
     gap: var(--nbar-vgap);
-    padding-top: var(--nbar-tpadding);
-    padding-right: var(--nbar-hpadding);
-    padding-bottom: var(--nbar-bpadding);
-    padding-left: var(--nbar-hpadding);
+    padding: var(--nbar-tpadding) var(--nbar-hpadding) var(--nbar-bpadding);
     width: var(--nbar-width);
 
     transition: var(--nbar-transition);
 }
 
 #bar-nav.active {
-    width: var(--nbar-active-width);
+    width: var(--nbar-alt-width);
 
-    transition: var(--nbar-active-transition);
+    transition: var(--nbar-alt-transition);
 }
 
 #display-logo {
@@ -55,14 +52,14 @@
     color: var(--ldp-h1-color);
     font-size: var(--ldp-h1-fsize);
     font-weight: var(--ldp-h1-fweight);
-    text-align: center;
     opacity: 0;
+    text-align: center;
     transition: var(--ldp-h1-transition);
 }
 
 #bar-nav.active > #display-logo > h1 {
     opacity: 1;
-    transition: var(--ldp-h1-active-transition);
+    transition: var(--ldp-h1-alt-transition);
 }
 
 #bar-nav > hr {
@@ -89,35 +86,8 @@
     transition: var(--nbtn-transition);
 }
 
-#btn-record {
-    z-index: 2;
-
-    border: var(--rbtn-bwidth) solid var(--rbtn-bcolor);
-    margin-top: auto;
-    padding: var(--rbtn-padding);
-
-    background-color: var(--rbtn-bgcolor);
-}
-
-#btn-record:hover {
-    background-color: var(--rbtn-hover-bgcolor);
-}
-
-#btn-record.active {
-    border-color: transparent;
-    background-color: var(--rbtn-active-bgcolor);
-}
-
-#btn-record.active > svg {
-    fill: var(--rbtn-svg-active-fill);
-}
-
-#btn-record.active > span {
-    color: var(--rbtn-svg-active-color);
-}
-
 .nav-btn:hover {
-    background-color: var(--nbtn-hover-bgcolor);
+    background-color: var(--nbtn-alt-bgcolor);
 }
 
 .nav-btn > svg {
@@ -141,7 +111,38 @@
 
 #bar-nav.active > .nav-btn > span {
     opacity: 1;
-    transition: var(--nbtn-span-active-transition);
+    transition: var(--nbtn-span-alt-transition);
+}
+
+#btn-record {
+    z-index: 2;
+
+    border: var(--rbtn-bwidth) solid var(--rbtn-bcolor);
+    margin-top: auto;
+    padding: var(--rbtn-padding);
+
+    background-color: var(--rbtn-bgcolor);
+}
+
+#btn-record.active {
+    border-color: transparent;
+    background-color: var(--rbtn-alt2-bgcolor);
+}
+
+#btn-record:hover {
+    background-color: var(--rbtn-alt-bgcolor);
+}
+
+#btn-record.active > svg {
+    fill: var(--rbtn-svg-alt-fill);
+}
+
+#btn-record.active:hover {
+    background-color: var(--rbtn-alt3-bgcolor);
+}
+
+#btn-record.active > span {
+    color: var(--rbtn-span-alt-color);
 }
 
 #ctr-recording {
@@ -155,20 +156,16 @@
     border: var(--rctr-bwidth) solid var(--rctr-bcolor);
     border-radius: var(--rctr-bradius);
     display: flex;
-    flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--rctr-gap);
-    padding-top: var(--rctr-tpadding);
-    padding-right: var(--rctr-rpadding);
-    padding-left: var(--rctr-lpadding);
-    padding-bottom: var(--rctr-bpadding);
+    gap: var(--rctr-hgap);
+    padding: var(--rctr-tpadding) var(--rctr-tpadding) var(--rctr-bpadding);
 
     background-color: var(--rctr-bgcolor);
     transition: var(--rctr-transition);    
 }
 
 #ctr-recording.active {
-    bottom: var(--rctr-active-binset);
+    bottom: var(--rctr-alt-binset);
 }
 
 #label-current-recording-time {
@@ -185,16 +182,16 @@
     flex: 0 0 fit-content;
     margin: auto;
 
-    color: var(--rglabel-color);
-    font-size: var(--rglabel-fsize);
-    font-weight: var(--rglabel-fweight);
+    color: var(--crglabel-color);
+    font-size: var(--crglabel-fsize);
+    font-weight: var(--crglabel-fweight);
     opacity: 0;
-    transition: var(--rglabel-transition);
+    transition: var(--crglabel-transition);
 }
 
 #bar-nav.active > #ctr-recording > #label-current-recording-game {
     opacity: 1;
-    transition: var(--rglabel-active-transition);
+    transition: var(--crglabel-alt-transition);
 }
 
 #label-resume-auto-record {
@@ -217,19 +214,19 @@
     pointer-events: none;
 }
 
-#label-resume-auto-record:hover {
-    color: var(--rarlabel-hover-color);
-}
-
 #label-resume-auto-record.active {
     opacity: 1;
 
     pointer-events: all;
 }
 
+#label-resume-auto-record:hover {
+    color: var(--rarlabel-alt-color);
+}
+
 #btn-nav-toggle {
     align-items: center;
-    
+
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
@@ -238,7 +235,7 @@
 }
 
 #btn-nav-toggle:hover {
-    background-color: var(--ntbtn-hover-bgcolor);
+    background-color: var(--ntbtn-alt-bgcolor);
 }
 
 #btn-nav-toggle > svg {

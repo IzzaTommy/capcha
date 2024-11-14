@@ -17,7 +17,7 @@ import { TimelineState } from './timelineState.js';
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
  *  videoContainer, videoPlayer, playPauseStatusIcon, 
  *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
- *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+ *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
  *  allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -37,7 +37,7 @@ export {
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -71,7 +71,7 @@ let html,
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseStatusIcon, 
     playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentVideoTimeLabel, totalVideoTimeLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenSVG, 
+    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
@@ -143,12 +143,12 @@ function initRendVariables() {
     volumeSVG = volumeBtn.querySelector('svg > use');
     volumeSlider = document.getElementById('slider-volume');
 
-    currentVideoTimeLabel = document.getElementById('label-current-video-time');
-    totalVideoTimeLabel = document.getElementById('label-total-video-time');
+    currentTimeLabel = document.getElementById('label-current-time');
+    totalTimeLabel = document.getElementById('label-total-time');
 
     speedSlider = document.getElementById('slider-speed');
     speedBtn = document.getElementById('btn-speed');
-    speedLabel = document.getElementById('label-current-speed');
+    currentSpeedLabel = document.getElementById('label-current-speed');
 
     fullscreenBtn = document.getElementById('btn-fullscreen');
     fullscreenSVG = fullscreenBtn.querySelector('svg > use');
