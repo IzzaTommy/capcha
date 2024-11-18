@@ -4,18 +4,15 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-
-    -webkit-app-region: drag;
-    -webkit-user-select: none;
 }
 
-#label-version {
+#bar-title > span {
     flex: 0 0 fit-content;
-    margin-left: var(--vlabel-lmargin);
+    margin-left: var(--tbar-span-lmargin);
 
-    color: var(--vlabel-color);
-    font-size: var(--vlabel-fsize);
-    font-weight: var(--vlabel-fweight);
+    color: var(--tbar-span-color);
+    font-size: var(--tbar-span-fsize);
+    font-weight: var(--tbar-span-fweight);
 }
 
 .title-btn {
@@ -37,10 +34,10 @@
     background-color: var(--tcbtn-alt-bgcolor);
 }
 
-.title-btn > svg {
+.title-icon {
     display: block;
-    height: var(--tbtn-svg-length);
-    width: var(--tbtn-svg-length);
+    height: var(--ticon-length);
+    width: var(--ticon-length);
 
-    fill: var(--tbtn-svg-fill);
+    fill: var(--ticon-fill);
 }

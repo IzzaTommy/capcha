@@ -21,46 +21,49 @@ html[data-theme='dark'] {
     /* ==== body -> Body ==== */
     --body-bgcolor: #5f646a;
 
-    /* ==== initoverlay -> Initialization Overlay ==== */
-    --initoverlay-bgcolor: #5f646a;
+    /* ==== ioverlay -> Initialization Overlay ==== */
+    --ioverlay-bgcolor: #5f646a;
 
-    --initoverlay-svg-fill: #dddddd;
+    --ioverlay-svg-fill: #dddddd;
 
-    --initoverlay-span-color: #dddddd;
+    --ioverlay-span-color: #dddddd;
     
-    /* ==== islabel -> Initialization Status Label ==== */
-    --islabel-color: #dddddd;
+    /* ==== istatlabel -> Initialization Status Label ==== */
+    --istatlabel-color: #dddddd;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #4a4c51;
 
-    /* ==== gslabel -> General Status Label ==== */
-    --gslabel-bgcolor: #373737;
-    --gslabel-color: #dddddd;
+    /* ==== gstatlabel -> General Status Label ==== */
+    --gstatlabel-bgcolor: #373737;
+    --gstatlabel-color: #dddddd;
 
-    /* ==== csection -> Content Section ==== */
-    --csection-h2-color: #dddddd;
+    /* ==== clabel -> Content Label ==== */
+    --clabel-color: #dddddd;
 
-    --csection-hr-bgcolor: #a4a4a4;
+    /* ==== cdivider -> Content Divider ==== */
+    --cdivider-bgcolor: #a4a4a4;
 
     /* ==== sctr1 -> Section Container 1 ==== */
     --sctr1-bgcolor: #414344;
 
-    /* ==== sctr2 -> Section Container 2 ==== */
-    --sctr2-h3-color: #c9c9c9;
+    /* ==== slabel -> Section Label ==== */
+    --slabel-color: #c9c9c9;
 
-    --sctr2-hr-bgcolor: #747474;
+    /* ==== sdivider -> Section Divider ==== */
+    --sdivider-bgcolor: #747474;
 
-    /* ==== vlabel -> Version Label ==== */
-    --vlabel-color: #dddddd;
+    /* ==== tbar -> Title Bar ==== */
+    --tbar-span-color: #dddddd;
 
     /* ==== tbtn -> Title Button ==== */
     --tbtn-alt-bgcolor: #3a3a3a;
 
-    --tbtn-svg-fill: #cccccc;
-
     /* ==== tcbtn -> Title Close Button ==== */
     --tcbtn-alt-bgcolor: #ff0000;
+
+    /* ==== ticon -> Title Icon ==== */
+    --ticon-fill: #cccccc;
 
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #373737;
@@ -68,17 +71,13 @@ html[data-theme='dark'] {
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-hr-bgcolor: #a4a4a4;
 
-    /* ==== ldp -> Logo Display ==== */
-    --ldp-svg-fill: #dddddd;
+    /* ==== licon -> Logo Icon ==== */
+    --licon-svg-fill: #dddddd;
 
-    --ldp-h1-color: #dddddd;
+    --licon-h1-color: #dddddd;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-alt-bgcolor: #575757;
-
-    --nbtn-svg-fill: #dddddd;
-
-    --nbtn-span-color: #dddddd;
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #575757;
@@ -87,28 +86,36 @@ html[data-theme='dark'] {
     --rbtn-alt2-bgcolor: #dddddd;
     --rbtn-alt3-bgcolor: #ffffff;
 
-    --rbtn-svg-alt-fill: #ff0000;
-
     --rbtn-span-alt-color: #363636;
 
-    /* ==== rctr -> Recording Container ==== */
-    --rctr-bcolor: #575757;
-    --rctr-bgcolor: #575757;
+    /* ==== ricon -> Record Icon ==== */
+    --ricon-alt-fill: #ff0000;
 
-    /* ==== crtlabel -> Current Recording Time Label ==== */
-    --crtlabel-color: #14dd40;
+    /* ==== nicon -> Nav(igation) Icon ==== */
+    --nicon-fill: #dddddd;
 
-    /* ==== crglabel -> Current Recording Game Label ==== */
-    --crglabel-color: #dddddd;
+    /* ==== nlabel -> Nav(igation) Label ==== */
+    --nlabel-color: #dddddd;
 
-    /* ==== rarlabel -> Resume Auto Record Label ==== */
-    --rarlabel-color: #88959d;
-    --rarlabel-alt-color: #dddddd;
+    /* ==== crctr -> Current Recording Container ==== */
+    --crctr-bcolor: #575757;
+    --crctr-bgcolor: #575757;
+
+    /* ==== crtimelabel -> Current Recording Time Label ==== */
+    --crtimelabel-color: #14dd40;
+
+    /* ==== crgamelabel -> Current Recording Game Label ==== */
+    --crgamelabel-color: #dddddd;
+
+    /* ==== arreslabel -> Auto Record Resume Label ==== */
+    --arreslabel-color: #88959d;
+    --arreslabel-alt-color: #dddddd;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-alt-bgcolor: #505050;
 
-    --ntbtn-svg-fill: #dddddd;
+    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
+    --nticon-fill: #dddddd;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bcolor: transparent;
@@ -117,18 +124,21 @@ html[data-theme='dark'] {
     /* ==== dbtn -> Directory Button ==== */
     --dbtn-alt-bgcolor: #505050;
     
-    --dbtn-svg-fill: #dddddd;
+    /* ==== dicon -> Directory Icon ==== */
+    --dicon-fill: #dddddd;
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-alt-bgcolor: #505050;
 
-    --vpctr-h4-color: #dddddd;
+    /* ==== vdurlabel -> Video Duration Label ==== */
+    --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
+    --vdurlabel-color: #dddddd;
 
-    --vpctr-p-color: #dddddd;
+    /* ==== vgameagelabel -> Video Game / Age Label ==== */
+    --vgameagelabel-color: #dddddd;
 
-    /* ==== vobtn -> Video Options Button ==== */
-    --vobtn-svg-fill: #dddddd;
-    --vobtn-svg-alt-fill: white;
+    /* ==== vnamelabel -> Video Name Label ==== */
+    --vnamelabel-color: #dddddd;
 
     /* ==== vrbtn -> Video Rename Button ==== */
     --vrbtn-alt-bgcolor: #f2a72f;
@@ -136,33 +146,38 @@ html[data-theme='dark'] {
     /* ==== vdbtn -> Video Delete Button ==== */
     --vdbtn-alt-bgcolor: #ea2d2d;
 
-    /* ==== ppsicon -> Play Pause Status Icon ==== */
-    --ppsicon-svg-fill: rgba(255, 255, 255, 0.7);
+    /* ==== voicon -> Video Options Icon ==== */
+    --voicon-fill: #dddddd;
+    --voicon-alt-fill: white;
 
-    /* ==== ptrack -> Playback Track ==== */
-    --ptrack-bgcolor: rgba(137, 137, 137, 0.4);
+    /* ==== ppoverlayicon -> Play Pause Overlay Icon ==== */
+    --ppoverlayicon-fill: rgba(255, 255, 255, 0.7);
 
-    /* ==== pthumb -> Playback Thumb ==== */
-    --pthumb-bscolor: #00a9ff;
+    /* ==== strack -> Seek Track ==== */
+    --strack-bgcolor: rgba(137, 137, 137, 0.4);
+
+    /* ==== sthumb -> Seek Thumb ==== */
+    --sthumb-bscolor: #00a9ff;
 
     /* ==== pbar -> Playback Bar ==== */
     --pbar-lgradientcolor: rgba(0, 0, 0, 0.75);
 
-    /* ==== pbtn -> Playback Button ==== */
-    --pbtn-svg-fill: #dddddd;
+    /* ==== picon -> Playback Icon ==== */
+    --picon-fill: #dddddd;
 
-    /* ==== pinput -> Playback Input ==== */
-    --pinput-thumb-bgcolor: #00a9ff;
+    /* ==== splabel -> Speed Label ==== */
+    --splabel-color: #dddddd;
 
-    /* ==== vsl -> Volume Slider ==== */
-    --vsl-thumb-bshadowcolor: #00a9ff;
-    --vsl-track-bgcolor: #dddddd;
+    /* ==== pslider -> Playback Slider ==== */
+    --pslider-thumb-bgcolor: #00a9ff;
 
-    /* ==== tlabel -> Time Label ==== */
-    --tlabel-color: #dddddd;
+    /* ==== vslider -> Volume Slider ==== */
+    --vslider-thumb-bshadowcolor: #00a9ff;
 
-    /* ==== slabel -> Speed Label ==== */
-    --slabel-color: #dddddd;
+    --vslider-track-bgcolor: #dddddd;
+
+    /* ==== cvlabel -> Current Video Label ==== */
+    --cvlabel-color: #dddddd;
 
     /* ==== tslider -> Timeline Slider ==== */
     --tslider-bgcolor: #373737;
@@ -181,25 +196,34 @@ html[data-theme='dark'] {
     --stctr-alt-bcolor: transparent;
     --stctr-alt-bgcolor: #3c3c3c;
 
-    --stctr-h4-color: #dddddd;
-
-    --stctr-p-color: #dddddd;
+    /* ==== stlabel -> Setting Label ==== */
+    --stlabel-color: #dddddd;
 
     /* ==== stpill -> Setting Pill ==== */
     --stpill-bgcolor: #373737;
 
-    --stpill-svg-fill: #dddddd;
-    --stpill-svg-alt-fill: #2da347;
+    /* ==== sticon -> Setting Icon ==== */
+    --sticon-fill: #dddddd;
 
-    --stpill-inputselect-bgcolor: #5a5a5a;
-    --stpill-inputselect-color: #dddddd;
+    /* ==== stfield -> Setting Field ==== */
+    --stfield-bgcolor: #5a5a5a;
+    --stfield-color: #dddddd;
 
     /* ==== sttswitch -> Setting Toggle Switch ==== */
     --sttswitch-bgcolor: #5a5a5a;
     --sttswitch-alt-bgcolor: #2da347;
 
-    --sttswitch-svg-bgcolor: white;
-    --sttswitch-svg-fill: #5a5a5a;
+    /* ==== sttfield -> Setting Toggle Field ==== */
+    --sttfield-bgcolor: #5a5a5a;
+    --sttfield-color: #dddddd;
+
+    /* ==== stticon -> Setting Toggle Icon ==== */
+    --stticon-bgcolor: white;
+    --stticon-fill: #5a5a5a;
+    --stticon-alt-fill: #2da347;
+
+    /* ==== stdesc -> Setting Description ==== */
+    --stdesc-color: #dddddd;
 }
 
 
@@ -211,46 +235,49 @@ html[data-theme='light'] {
     /* ==== body -> Body ==== */
     --body-bgcolor: white;
 
-    /* ==== initoverlay -> Initialization Overlay ==== */
-    --initoverlay-bgcolor: #white;
+    /* ==== ioverlay -> Initialization Overlay ==== */
+    --ioverlay-bgcolor: #white;
 
-    --initoverlay-svg-fill: #363636;
+    --ioverlay-svg-fill: #363636;
 
-    --initoverlay-span-color: #363636;
+    --ioverlay-span-color: #363636;
 
-    /* ==== islabel -> Initialization Status Label ==== */
-    --islabel-color: #363636;
+    /* ==== istatlabel -> Initialization Status Label ==== */
+    --istatlabel-color: #363636;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #f2f2f2;
 
-    /* ==== gslabel -> General Status Label ==== */
-    --gslabel-bgcolor: #f2f2f2;
-    --gslabel-color: #363636;
+    /* ==== gstatlabel -> General Status Label ==== */
+    --gstatlabel-bgcolor: #f2f2f2;
+    --gstatlabel-color: #363636;
 
-    /* ==== csection -> Content Section ==== */
-    --csection-h2-color: #363636;
+    /* ==== clabel -> Content Label ==== */
+    --clabel-color: #363636;
 
-    --csection-hr-bgcolor: #d0d0d0;
+    /* ==== cdivider -> Content Divider ==== */
+    --cdivider-bgcolor: #d0d0d0;
 
     /* ==== sctr1 -> Section Container 1 ==== */
     --sctr1-bgcolor: transparent;
 
-    /* ==== sctr2 -> Section Container 2 ==== */
-    --sctr2-h3-color: #808080;
+    /* ==== slabel -> Section Label ==== */
+    --slabel-color: #808080;
 
-    --sctr2-hr-bgcolor: transparent;
+    /* ==== sdivider -> Section Divider ==== */
+    --sdivider-bgcolor: transparent;
 
-    /* ==== vlabel -> Version Label ==== */
-    --vlabel-color: #363636;
+    /* ==== tbar -> Title Bar ==== */
+    --tbar-span-color: #363636;
 
     /* ==== tbtn -> Title Button ==== */
     --tbtn-alt-bgcolor: #c3c3c3;
 
-    --tbtn-svg-fill: #363636;
-
     /* ==== tcbtn -> Title Close Button ==== */
     --tcbtn-alt-bgcolor: #ff0000;
+
+    /* ==== ticon -> Title Icon ==== */
+    --ticon-fill: #363636;
 
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #f2f2f2;
@@ -258,17 +285,13 @@ html[data-theme='light'] {
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-hr-bgcolor: #d0d0d0;
 
-    /* ==== ldp -> Logo Display ==== */
-    --ldp-svg-fill: #363636;
+    /* ==== licon -> Logo Icon ==== */
+    --licon-svg-fill: #363636;
 
-    --ldp-h1-color: #363636;
+    --licon-h1-color: #363636;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-alt-bgcolor: #dbdbdb;
-
-    --nbtn-svg-fill: #363636;
-
-    --nbtn-span-color: #363636;
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #dbdbdb;
@@ -277,28 +300,36 @@ html[data-theme='light'] {
     --rbtn-alt2-bgcolor: #dddddd;
     --rbtn-alt3-bgcolor: white;
 
-    --rbtn-svg-alt-fill: #ff0000;
-
     --rbtn-span-alt-color: #363636;
 
-    /* ==== rctr -> Recording Container ==== */
-    --rctr-bcolor: #dbdbdb;
-    --rctr-bgcolor: #dbdbdb;
+    /* ==== ricon -> Record Icon ==== */
+    --ricon-alt-fill: #ff0000;
 
-    /* ==== crtlabel -> Current Recording Time Label ==== */
-    --crtlabel-color: #14dd40;
+    /* ==== nicon -> Nav(igation) Icon ==== */
+    --nicon-fill: #363636;
 
-    /* ==== crglabel -> Current Recording Game Label ==== */
-    --crglabel-color: #363636;
+    /* ==== nlabel -> Nav(igation) Label ==== */
+    --nlabel-color: #363636;
 
-    /* ==== rarlabel -> Resume Auto Record Label ==== */
-    --rarlabel-color: #88959d;
-    --rarlabel-alt-color: #363636;
+    /* ==== crctr -> Current Recording Container ==== */
+    --crctr-bcolor: #dbdbdb;
+    --crctr-bgcolor: #dbdbdb;
+
+    /* ==== crtimelabel -> Current Recording Time Label ==== */
+    --crtimelabel-color: #14dd40;
+
+    /* ==== crgamelabel -> Current Recording Game Label ==== */
+    --crgamelabel-color: #363636;
+
+    /* ==== arreslabel -> Auto Record Resume Label ==== */
+    --arreslabel-color: #88959d;
+    --arreslabel-alt-color: #363636;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-alt-bgcolor: #dfe1e5;
 
-    --ntbtn-svg-fill: #1a69e0;
+    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
+    --nticon-fill: #1a69e0;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bcolor: #dfe1e5;
@@ -307,18 +338,21 @@ html[data-theme='light'] {
     /* ==== dbtn -> Directory Button ==== */
     --dbtn-alt-bgcolor: #dfe1e5;
 
-    --dbtn-svg-fill: #1a69e0;
+    /* ==== dicon -> Directory Icon ==== */
+    --dicon-fill: #1a69e0;
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-alt-bgcolor: #dfe1e5;
 
-    --vpctr-h4-color: #1a69e0;
+    /* ==== vdurlabel -> Video Duration Label ==== */
+    --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
+    --vdurlabel-color: #dddddd;
 
-    --vpctr-p-color: #363636;
+    /* ==== vgameagelabel -> Video Game / Age Label ==== */
+    --vgameagelabel-color: #1a69e0;
 
-    /* ==== vobtn -> Video Options Button ==== */
-    --vobtn-svg-fill: #363636;
-    --vobtn-svg-alt-fill: white;
+    /* ==== vnamelabel -> Video Name Label ==== */
+    --vnamelabel-color: #363636;
 
     /* ==== vrbtn -> Video Rename Button ==== */
     --vrbtn-alt-bgcolor: #f2a72f;
@@ -326,34 +360,38 @@ html[data-theme='light'] {
     /* ==== vdbtn -> Video Delete Button ==== */
     --vdbtn-alt-bgcolor: #ea2d2d;
 
-    /* ==== ppsicon -> Play Pause Status Icon ==== */
-    --ppsicon-svg-fill: rgba(255, 255, 255, 0.7);
+    /* ==== voicon -> Video Options Icon ==== */
+    --voicon-fill: #363636;
+    --voicon-alt-fill: white;
 
-    /* ==== ptrack -> Playback Track ==== */
-    --ptrack-bgcolor: rgba(137, 137, 137, 0.4);
+    /* ==== ppoverlayicon -> Play Pause Overlay Icon ==== */
+    --ppoverlayicon-fill: rgba(255, 255, 255, 0.7);
 
-    /* ==== pthumb -> Playback Thumb ==== */
-    --pthumb-bscolor: #00a9ff;
+    /* ==== strack -> Seek Track ==== */
+    --strack-bgcolor: rgba(137, 137, 137, 0.4);
+
+    /* ==== sthumb -> Seek Thumb ==== */
+    --sthumb-bscolor: #00a9ff;
 
     /* ==== pbar -> Playback Bar ==== */
     --pbar-lgradientcolor: rgba(0, 0, 0, 0.75);
 
-    /* ==== pbtn -> Playback Button ==== */
-    --pbtn-svg-fill: #dddddd;
+    /* ==== picon -> Playback Icon ==== */
+    --picon-fill: #dddddd;
 
-    /* ==== pinput -> Playback Input ==== */
-    --pinput-thumb-bgcolor: #00a9ff;
+    /* ==== splabel -> Speed Label ==== */
+    --splabel-color: #dddddd;
 
-    /* ==== vsl -> Volume Slider ==== */
-    --vsl-thumb-bshadowcolor: #00a9ff;
+    /* ==== pslider -> Playback Slider ==== */
+    --pslider-thumb-bgcolor: #00a9ff;
 
-    --vsl-track-bgcolor: #dddddd;
+    /* ==== vslider -> Volume Slider ==== */
+    --vslider-thumb-bshadowcolor: #00a9ff;
 
-    /* ==== tlabel -> Time Label ==== */
-    --tlabel-color: #dddddd;
+    --vslider-track-bgcolor: #dddddd;
 
-    /* ==== slabel -> Speed Label ==== */
-    --slabel-color: #dddddd;
+    /* ==== cvlabel -> Current Video Label ==== */
+    --cvlabel-color: #dddddd;
 
     /* ==== tslider -> Timeline Slider ==== */
     --tslider-bgcolor: #dfe1e5;
@@ -372,54 +410,71 @@ html[data-theme='light'] {
     --stctr-alt-bcolor: #d2dade;
     --stctr-alt-bgcolor: transparent;
 
-    --stctr-h4-color: #1a69e0;
-
-    --stctr-p-color: #363636;
+    /* ==== stlabel -> Setting Label ==== */
+    --stlabel-color: #1a69e0;
 
     /* ==== stpill -> Setting Pill ==== */
     --stpill-bgcolor: #c4c7cc;
 
-    --stpill-svg-fill: #363636;
-    --stpill-svg-alt-fill: #2da347;
+    /* ==== sticon -> Setting Icon ==== */
+    --sticon-fill: #363636;
 
-    --stpill-inputselect-bgcolor: #dfe1e5;
-    --stpill-inputselect-color: #363636;
+    /* ==== stfield -> Setting Field ==== */
+    --stfield-bgcolor: #dfe1e5;
+    --stfield-color: #363636;
 
     /* ==== sttswitch -> Setting Toggle Switch ==== */
     --sttswitch-bgcolor: #dfe1e5;
     --sttswitch-alt-bgcolor: #2da347;
 
-    --sttswitch-svg-bgcolor: white;
-    --sttswitch-svg-fill: #acb5c4;
+    /* ==== sttfield -> Setting Toggle Field ==== */
+    --sttfield-bgcolor: #dfe1e5;
+    --sttfield-color: #363636;
+
+    /* ==== stticon -> Setting Toggle Icon ==== */
+    --stticon-bgcolor: white;
+    --stticon-fill: #acb5c4;
+    --stticon-alt-fill: #2da347;
+
+    /* ==== stdesc -> Setting Description ==== */
+    --stdesc-color: #363636;
 }
 
 html {
     /* ==== sbar -> Scroll Bar ==== */
-    /* --sbar-thumb-transition: background-color 10s ease 0s; */
+    /* --sbar-thumb-transition: background-color 1s ease 1s; */
+
+    /* ==== ioverlay -> Initialization Overlay ==== */
+    --ioverlay-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
+
+    /* ==== gstatlabel -> General Status Label ==== */
+    --gstatlabel-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
+    --gstatlabel-alt-transition: opacity 0.5s ease 0s;
 
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-transition: width 0.3s ease 0.2s;
     --nbar-alt-transition: width 0.3s ease 0.2s;
 
-    /* ==== ldp -> Logo Display ==== */
-    --ldp-h1-transition: opacity 0.2s ease 0s;
-    --ldp-h1-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== licon -> Logo Icon ==== */
+    --licon-h1-transition: opacity 0.2s ease 0s;
+    --licon-h1-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-transition: background-color 0.3s ease 0s;
 
-    --nbtn-span-transition: opacity 0.2s ease 0s;
-    --nbtn-span-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== nlabel -> Nav(igation) Label ==== */
+    --nlabel-transition: opacity 0.2s ease 0s;
+    --nlabel-alt-transition: opacity 0.2s ease 0.5s;
 
-    /* ==== rctr -> Recording Container ==== */
-    --rctr-transition: bottom 0.3s ease 0s;
+    /* ==== crctr -> Current Recording Container ==== */
+    --crctr-transition: bottom 0.3s ease 0s;
 
-    /* ==== crglabel -> Current Recording Game Label ==== */
-    --crglabel-transition: opacity 0.2s ease 0s;
-    --crglabel-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== crgamelabel -> Current Recording Game Label ==== */
+    --crgamelabel-transition: opacity 0.2s ease 0s;
+    --crgamelabel-alt-transition: opacity 0.2s ease 0.5s;
 
-    /* ==== rarlabel -> Resume Auto Record Label ==== */
-    --rarlabel-transition: color 0.3s ease 0s, opacity 0.2s ease 0s;
+    /* ==== arreslabel -> Auto Record Resume Label ==== */
+    --arreslabel-transition: color 0.3s ease 0s, opacity 0.2s ease 0s;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-transition: background-color 0.3s ease 0s;
@@ -432,28 +487,34 @@ html {
 
     /* ==== vobtn -> Video Options Button ==== */
     --vobtn-transition: background-color 0.2s ease 0s;
-    --vobtn-svg-transition: fill 0.2s ease 0s;
+
+    /* ==== voicon -> Video Options Icon ==== */
+    --voicon-transition: fill 0.2s ease 0s;
 
     /* ==== pctr -> Playback Container ==== */
     --pctr-transition: opacity 0.2s ease 0s;
 
-    /* ==== ptrack -> Playback Track ==== */
-    --ptrack-transition: transform 0.2s ease 0s;
+    /* ==== strack -> Seek Track ==== */
+    --strack-transition: transform 0.2s ease 0s;
 
     /* ==== pbtn -> Playback Button ==== */
     --pbtn-transition: background-color 0.3s ease 0s;
-    --pbtn-svg-transition: fill 0.3s ease 0s;
 
-    /* ==== vsl -> Volume Slider ==== */
-    --vsl-transition: width 0.1s ease 0s;
+    /* ==== picon -> Playback Icon ==== */
+    --picon-transition: fill 0.3s ease 0s;
 
-    /* ==== ssl -> Speed Slider ==== */
-    --ssl-transition: width 0.1s ease 0s;
+    /* ==== vslider -> Volume Slider ==== */
+    --vslider-transition: width 0.1s ease 0s;
+
+    /* ==== spslider -> Speed Slider ==== */
+    --spslider-transition: width 0.1s ease 0s;
 
     /* ==== stctr -> Setting Container ==== */
     --stctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;
 
     /* ==== sttswitch -> Setting Toggle Switch ==== */
     --sttswitch-transition: background-color 0.3s ease 0s;
-    --sttswitch-svg-transition: transform 0.3s ease 0s;
+
+    /* ==== stticon -> Setting Toggle Icon ==== */
+    --stticon-transition: transform 0.3s ease 0s;
 }

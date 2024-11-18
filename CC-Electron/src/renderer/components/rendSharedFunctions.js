@@ -11,21 +11,21 @@ import {
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
+import { initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
 import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
 import { setInitializationStatusLabel, setGeneralStatusLabel } from './rendGeneral.js';
 
@@ -59,7 +59,7 @@ function getParsedTime(time) {
  */
 function resizeAll() {
     resizeGallery();
-    resizePlaybackSlider();
+    resizeseekSlider();
     resizeTimelineSlider();
 }
 
@@ -120,7 +120,7 @@ async function attemptAsyncFunction(asyncFunction, attempts, delay, initializati
                     setInitializationStatusLabel(`Attempt ${i} failed!`);
                 }
                 else {
-                    generalStatusLabel.style.visibility = 'visible';
+                    generalStatusLabel.classList.add('active');
                     setGeneralStatusLabel(`Attempt ${i} failed!`);
                 }
 
@@ -133,7 +133,7 @@ async function attemptAsyncFunction(asyncFunction, attempts, delay, initializati
                     // closing code...
                 }
                 else {
-                    generalStatusLabel.style.visibility = 'visible';
+                    generalStatusLabel.classList.add('active');
                     setGeneralStatusLabel('An Error Occurred!');
                 }
             }

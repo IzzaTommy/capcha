@@ -11,7 +11,7 @@
  * @requires rendDirectoriesSection
  * @requires rendVariables
  */
-import { initRendVariables } from './components/rendVariables.js';
+import { generalStatusLabel, initRendVariables } from './components/rendVariables.js';
 import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
 import { initRendTitleBar } from './components/rendTitleBar.js';
 import { initRendNavBlock } from './components/rendNavBlock.js';
@@ -19,7 +19,7 @@ import { initRendSettingsSection } from './components/rendSettingsSection.js';
 import { initRendEditorSection } from './components/rendEditorSection.js';
 import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
 
-import { initializationOverlay } from './components/rendVariables.js';
+import { titleBar, initializationOverlay } from './components/rendVariables.js';
 
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);
@@ -60,5 +60,6 @@ async function finishInit() {
 
     // toggle the auto recording and the initialization overlay
     window.windowAPI.reqToggleAutoRecord();
+    titleBar.style.webkitAppRegion = 'drag';
     initializationOverlay.classList.remove('active');
 }

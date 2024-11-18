@@ -1,3 +1,10 @@
+.settings-group-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--stsgctr-hgap);
+}
+
 .setting-ctr {
     align-items: start;
     align-self: start;
@@ -19,20 +26,12 @@
     background-color: var(--stctr-alt-bgcolor);
 }
 
-.setting-ctr > h4 {
+.setting-label {
     flex: 0 0 fit-content;
 
-    color: var(--stctr-h4-color);
-    font-size: var(--stctr-h4-fsize);
-    font-weight: var(--stctr-h4-fweight);
-}
-
-.setting-ctr > p {
-    flex: 0 0 fit-content;
-
-    color: var(--stctr-p-color);
-    font-size: var(--stctr-p-fsize);
-    font-weight: var(--stctr-p-fweight);
+    color: var(--stlabel-color);
+    font-size: var(--stlabel-fsize);
+    font-weight: var(--stlabel-fweight);
 }
 
 .setting-pill {
@@ -45,28 +44,28 @@
     overflow: hidden;
 }
 
-.setting-pill > svg {
+.setting-icon {
     display: block;
     flex: 0 0 auto;
-    height: var(--stpill-svg-length);
-    width: var(--stpill-svg-length);
-    margin: var(--stpill-svg-margin);
+    height: var(--sticon-length);
+    width: var(--sticon-length);
+    margin: var(--sticon-margin);
 
-    fill: var(--stpill-svg-fill);
+    fill: var(--sticon-fill);
 }
 
-.setting-pill > input, .setting-pill > select {
+.setting-field {
     flex: 0 0 auto;
-    padding-right: var(--stpill-inputselect-hpadding);
-    padding-left: var(--stpill-inputselect-hpadding);
-    width: var(--stpill-inputselect-width);
+    padding-right: var(--stfield-hpadding);
+    padding-left: var(--stfield-hpadding);
+    width: var(--stfield-width);
 
-    background-color: var(--stpill-inputselect-bgcolor);
+    background-color: var(--stfield-bgcolor);
     box-sizing: content-box;
-    color: var(--stpill-inputselect-color);
+    color: var(--stfield-color);
 }
 
-#ctr-captures-path > .setting-pill > input {
+.setting-field[name="capturesPath"] {
     width: 500px;
 }
 
@@ -81,35 +80,44 @@
     cursor: pointer;
 }
 
-.setting-toggle-switch:has(input:checked) {
+.setting-toggle-switch:has(.setting-toggle-field:checked) {
     background-color: var(--sttswitch-alt-bgcolor);
 }
 
-.setting-toggle-switch > input {
+.setting-toggle-field {
+    flex: 0 0 auto;
+    padding-right: var(--sttfield-hpadding);
+    padding-left: var(--sttfield-hpadding);
+    width: var(--sttfield-width);
+
+    background-color: var(--sttfield-bgcolor);
+    box-sizing: content-box;
+    color: var(--sttfield-color);
     visibility: hidden;
 }
 
-.setting-toggle-switch > svg {
+.setting-toggle-icon {
     position: absolute;
-    inset: var(--sttswitch-svg-inset);
+    inset: var(--stticon-inset);
 
-    border-radius: var(--sttswitch-svg-bradius);
-    height: var(--sttswitch-svg-height);
-    width: var(--sttswitch-svg-width);
+    border-radius: var(--stticon-bradius);
+    height: var(--stticon-height);
+    width: var(--stticon-width);
 
-    background-color: var(--sttswitch-svg-bgcolor);
-    fill: var(--sttswitch-svg-fill);
-    transition: var(--sttswitch-svg-transition);
+    background-color: var(--stticon-bgcolor);
+    fill: var(--stticon-fill);
+    transition: var(--stticon-transition);
 }
 
-.setting-toggle-switch > input:checked + svg {
-    fill: var(--stpill-svg-alt-fill);
-    transform: translateX(var(--sttswitch-svg-alt-translateX));
+.setting-toggle-field:checked + .setting-toggle-icon {
+    fill: var(--stticon-alt-fill);
+    transform: translateX(var(--stticon-alt-translateX));
 }
 
-.settings-group-ctr {
-    display: flex;
+.setting-description {
     flex: 0 0 fit-content;
-    flex-flow: row nowrap;
-    gap: var(--stsgroupctr-hgap);
+
+    color: var(--stdesc-color);
+    font-size: var(--stdesc-fsize);
+    font-weight: var(--stdesc-fweight);
 }

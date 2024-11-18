@@ -10,15 +10,15 @@ import {
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
@@ -45,7 +45,7 @@ async function initRendSettingsSection() {
  */
 function initSettingContainerEL() {
     // iterate through each setting pill
-    for (const setting of allSettingPill) {
+    for (const setting of mostSettingFields) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
             data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
@@ -54,7 +54,7 @@ function initSettingContainerEL() {
     }
 
     // iterate through each setting toggle switch
-    for (const setting of allSettingToggleSwitch) {
+    for (const setting of mostSettingToggleFields) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
             data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
@@ -63,22 +63,22 @@ function initSettingContainerEL() {
     }
 
     // on change, select directory from dialog, save it, and set the saved value
-    capturesPathSettingPill.addEventListener('click', async () => {
-        data['settings'][capturesPathSettingPill.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(capturesPathSettingPill.name, capturesPathSettingPill.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    capturesPathSettingField.addEventListener('click', async () => {
+        data['settings'][capturesPathSettingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(capturesPathSettingField.name, capturesPathSettingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
-        if (capturesPathSettingPill.value !== data['settings'][capturesPathSettingPill.name]) {
-            capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
+        if (capturesPathSettingField.value !== data['settings'][capturesPathSettingField.name]) {
+            capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
             await loadGallery(false);
         }
     });
 
     // on change, validate the setting, save it, and set the saved value
-    darkModeSettingToggleSwitch.addEventListener('change', async () => {
-        data['settings'][darkModeSettingToggleSwitch.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(darkModeSettingToggleSwitch.name, darkModeSettingToggleSwitch.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-        darkModeSettingToggleSwitch.checked = data['settings'][darkModeSettingToggleSwitch.name];
+    darkModeSettingToggleField.addEventListener('change', async () => {
+        data['settings'][darkModeSettingToggleField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(darkModeSettingToggleField.name, darkModeSettingToggleField.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        darkModeSettingToggleField.checked = data['settings'][darkModeSettingToggleField.name];
 
         // change the theme attribute, depending on if dark mode is enabled
-        if (darkModeSettingToggleSwitch.checked) {
+        if (darkModeSettingToggleField.checked) {
             html.dataset.theme = 'dark';
         }
         else {
@@ -95,22 +95,22 @@ async function initSettingContainer() {
     data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettingsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
 
     // iterate through each setting pill
-    for (const setting of allSettingPill) {
+    for (const setting of mostSettingFields) {
         // load each settings initial value from stored settings
         setting.value = data['settings'][setting.name];
     }
 
     // iterate through each setting toggle switch
-    for (const setting of allSettingToggleSwitch) {
+    for (const setting of mostSettingToggleFields) {
         // load each settings initial value from stored settings
         setting.checked = data['settings'][setting.name];
     }
 
     // load the initial value from stored setting
-    darkModeSettingToggleSwitch.checked = data['settings'][darkModeSettingToggleSwitch.name];
+    darkModeSettingToggleField.checked = data['settings'][darkModeSettingToggleField.name];
 
     // change the theme attribute, depending on if dark mode is enabled
-    if (darkModeSettingToggleSwitch.checked) {
+    if (darkModeSettingToggleField.checked) {
         html.dataset.theme = 'dark';
     }
     else {
@@ -118,5 +118,5 @@ async function initSettingContainer() {
     }
 
     // load the initial value from stored setting
-    capturesPathSettingPill.value = data['settings'][capturesPathSettingPill.name];
+    capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
 }

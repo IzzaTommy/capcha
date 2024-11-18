@@ -11,21 +11,22 @@ import {
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { getReadableDuration } from './rendEditorSection.js';
 
 /**
  * @exports initRendDirectoriesSection, loadGallery, resizeGallery
@@ -94,14 +95,16 @@ async function loadGallery(initialization) {
         // get a clone of the video preview template
         videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
 
+        videoPreviewClone.querySelector('.video-thumbnail-ctr > span').textContent = getReadableDuration(videoData['duration']);
+
         // set the video source
         videoPreviewClone.querySelector('.video-preview-ctr').dataset.src = videoData['path'];
         // set the video thumbnail source
-        videoPreviewClone.querySelector('img').setAttribute('src', videoData['thumbnailPath']);
+        videoPreviewClone.querySelector('.video-thumbnail-ctr > img').setAttribute('src', videoData['thumbnailPath']);
         // set the video age
-        videoPreviewClone.querySelector('h4').textContent = getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND);
+        videoPreviewClone.querySelector('.video-preview-ctr > h4').textContent = getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND);
         // set the video name with extension
-        videoPreviewClone.querySelector('p').textContent = videoData['nameExt'];
+        videoPreviewClone.querySelector('.video-preview-ctr > span').textContent = videoData['nameExt'];
 
         // on click, open the video in the editor section
         videoPreviewClone.querySelector('.video-preview-ctr').addEventListener('click', () => {
@@ -150,7 +153,12 @@ function getReadableAge(time) {
             return `GAME - ${parsedTime[1]} hour${parsedTime[1] > 1 ? 's' : ''} ago`;
         }
         else {
-            return `GAME - ${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
+            if (parsedTime[2] > 0) {
+                return `GAME - ${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
+            }
+            else {
+                return `GAME - Just Now`;
+            }
         }
     }
 }

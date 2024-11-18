@@ -11,18 +11,24 @@
 <body>
     <template>
         <div class="video-preview-ctr" data-src="">
-            <img class="video-thumbnail" src="" alt="">
-            
-            <h4></h4>
-            <p></p>
+            <div class="video-thumbnail-ctr">
+                <img class="video-thumbnail" src="" alt="">
+                <span class="video-duration-label"></span>
+            </div>
+
+            <h4 class="video-game-age-label"></h4>
+
+            <span class="video-name-label"></span>
+
             <div class="video-options-ctr">
                 <button class="video-options-btn video-rename-btn">
-                    <svg>
+                    <svg class="video-options-icon">
                         <use href="../assets/svg/edit.svg#edit"></use>
                     </svg>
                 </button>
+
                 <button class="video-options-btn video-delete-btn">
-                    <svg>
+                    <svg class="video-options-icon">
                         <use href="../assets/svg/delete.svg#delete"></use>
                     </svg>
                 </button>
@@ -30,33 +36,33 @@
         </div>
     </template>
 
-    <div id="overlay-initialization" class="active">
+    <div id="overlay-initialization" class="">
         <svg>
             <use href="../assets/svg/capcha.svg#capcha"></use>
         </svg>
 
         <span>CapCha</span>
 
-        <p id="label-initialization-status">Loading...</p>
+        <p id="status-label-initialization">Loading...</p>
     </div>
 
     <div id="bar-title">
-        <span id="label-version">CC-0.1.1</span>
+        <span>CC-0.1.1</span>
 
         <button id="btn-minimize" class="title-btn">
-            <svg>
+            <svg class="title-icon">
                 <use href="../assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
             </svg>
         </button>
 
         <button id="btn-maximize" class="title-btn">
-            <svg>
+            <svg class="title-icon">
                 <use href="../assets/svg/expand-solid.svg#expand-solid"></use>
             </svg>
         </button>
 
         <button id="btn-close" class="title-btn">
-            <svg>
+            <svg class="title-icon">
                 <use href="../assets/svg/xmark-solid.svg#xmark-solid"></use>
             </svg>
         </button>
@@ -65,7 +71,7 @@
     <div id="area-client">
         <div id="block-nav">
             <nav id="bar-nav">
-                <div id="display-logo">
+                <div id="icon-logo">
                     <svg>
                         <use href="../assets/svg/capcha.svg#capcha"></use>
                     </svg>
@@ -76,102 +82,108 @@
                 <hr>
 
                 <button id="btn-directories" class="nav-btn">
-                    <svg>
+                    <svg id="icon-directories" class="nav-icon">
                         <use href="../assets/svg/folder.svg#folder"></use>
                     </svg>
 
-                    <span>Files</span>
+                    <span class="nav-label">Files</span>
                 </button>
     
                 <button id="btn-settings" class="nav-btn">
-                    <svg>
+                    <svg id="icon-settings" class="nav-icon">
                         <use href="../assets/svg/settings.svg#settings"></use>
                     </svg>
 
-                    <span>Settings</span>
+                    <span class="nav-label">Settings</span>
                 </button>
     
-                <div id="ctr-recording">
-                    <span id="label-current-recording-time">88:88</span>
-                    <span id="label-current-recording-game">GAME</span>
+                <div id="ctr-current-recording">
+                    <span id="time-label-current-recording">88:88</span>
+                    <span id="game-label-current-recording">GAME</span>
                 </div>
                 
                 <button id="btn-record" class="nav-btn">
-                    <svg>
+                    <svg id="icon-record" class="nav-icon">
                         <use href="../assets/svg/record.svg#record"></use>
                     </svg>
 
-                    <span>Record</span>
+                    <span class="nav-label">Record</span>
                 </button>
 
-                <span id="label-resume-auto-record">RESUME AUTO RECORD</span>
+                <span id="resume-label-auto-record">RESUME AUTO RECORD</span>
             </nav>
 
             <button id="btn-nav-toggle">
-                <svg>
+                <svg id="icon-nav-toggle">
                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                 </svg>
             </button>
         </div>
 
         <div id="block-content">
-            <p id="label-general-status">Loading...</p>
+            <p id="status-label-general">Loading...</p>
 
             <section id="section-directories" class="content-section active">
-                <h2>Directories</h2>
+                <h2 class="content-label">Directories</h2>
 
-                <hr>
+                <hr class="content-divider">
 
-                <div id="ctr1-directories" class="section-ctr1">
-                    <div id="ctr2-captures-directories" class="section-ctr2">
-                        <h3>Captures</h3>
+                <div class="section-ctr1">
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Captures</h3>
                         
-                        <hr>
+                        <hr class="section-divider">
 
                         <div class="directory-ctr">
-                            <button id="btn-captures-left" class="directory-btn">
-                                <svg>
+                            <button id="left-btn-captures" class="directory-btn">
+                                <svg class="directory-icon">
                                     <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
                             </button>
 
                             <div id="gallery-captures" class="directory-gallery">
-                                <!-- <div class="video-preview-ctr" data-src="">
-                                    <img class="video-thumbnail" src="" alt="">
-                                    
-                                    <h4>Example Text</h4>
-                                    <p>Example Text</p>
+                                <div class="video-preview-ctr" data-src="">
+                                    <div class="video-thumbnail-ctr">
+                                        <img class="video-thumbnail" src="" alt="">
+                                        <span class="video-duration-label">88:88</span>
+                                    </div>
+
+                                    <h4 class="video-game-age-label">Example Text</h4>
+
+                                    <span class="video-name-label">Example Text</span>
+
                                     <div class="video-options-ctr">
                                         <button class="video-options-btn video-rename-btn">
-                                            <svg>
+                                            <svg class="video-options-icon">
                                                 <use href="../assets/svg/edit.svg#edit"></use>
                                             </svg>
                                         </button>
+
                                         <button class="video-options-btn video-delete-btn">
-                                            <svg>
+                                            <svg class="video-options-icon">
                                                 <use href="../assets/svg/delete.svg#delete"></use>
                                             </svg>
                                         </button>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
-                            <button id="btn-captures-right" class="directory-btn">
-                                <svg>
+                            <button id="right-btn-captures" class="directory-btn">
+                                <svg class="directory-icon">
                                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
                             </button>
                         </div>
                     </div>
 
-                    <div id="ctr2-clips-directory" class="section-ctr2">
-                        <h3>Clips</h3>
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Clips</h3>
 
-                        <hr>
+                        <hr class="section-divider">
 
                         <div class="directory-ctr">
-                            <button id="btn-clips-left" class="directory-btn">
-                                <svg>
+                            <button id="left-btn-clips" class="directory-btn">
+                                <svg class="directory-icon">
                                     <use href="../assets/svg/arrow-back-ios.svg#arrow-back-ios"></use>
                                 </svg>
                             </button>
@@ -179,8 +191,8 @@
                             <div id="gallery-clips" class="directory-gallery">
                             </div>
 
-                            <button id="btn-captures-right" class="directory-btn">
-                                <svg>
+                            <button id="right-btn-captures" class="directory-btn">
+                                <svg class="directory-icon">
                                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
                             </button>
@@ -190,9 +202,9 @@
             </section>
 
             <section id="section-editor" class="content-section">
-                <h2>Editor</h2>
+                <h2 class="content-label">Editor</h2>
 
-                <hr>
+                <hr class="content-divider">
 
                 <div id="ctr1-editor" class="section-ctr1">
                     <div id="ctr-video">
@@ -200,46 +212,46 @@
                             <source src="" type="video/mp4">
                         </video>
 
-                        <svg id="icon-play-pause-status">
+                        <svg id="overlay-icon-play-pause">
                             <use href="../assets/svg/play-circle.svg#play-circle"></use>
                         </svg>
 
                         <div id="ctr-playback">
-                             <div id="slider-playback">
-                                <div id="track-playback">
-                                    <div id="thumb-playback"></div>
+                             <div id="slider-seek">
+                                <div id="track-seek">
+                                    <div id="thumb-seek"></div>
                                 </div>
                              </div>
 
                             <div id="bar-playback">
                                 <button id="btn-play-pause" class="playback-btn">
-                                    <svg>
+                                    <svg id="icon-play-pause" class="playback-icon">
                                         <use href="../assets/svg/play-arrow.svg#play-arrow"></use>
                                     </svg>
                                 </button>
 
                                 <button id="btn-volume" class="playback-btn">
-                                    <svg>
+                                    <svg id="icon-volume" class="playback-icon">
                                         <use href="../assets/svg/volume-down.svg#volume-down"></use>
                                     </svg>
                                 </button>
 
-                                <input id="slider-volume" class="playback-input" type="range" min="0" max="1" value="0" step="0.01">
+                                <input id="slider-volume" class="playback-slider" type="range" min="0" max="1" value="0" step="0.01">
 
-                                <div id="ctr-time">
-                                    <span id="label-current-time" class="time-label">88:88</span>
-                                    <span id="label-total-time" class="time-label">/88:88</span>
+                                <div id="ctr-current-video">
+                                    <span id="time-label-current-video" class="current-video-label">88:88</span>
+                                    <span id="duration-label-current-video" class="current-video-label">/88:88</span>
                                 </div>
 
-                                <input id="slider-speed" class="playback-input" type="range" min="-2" max="4" value="1" step="1">
+                                <input id="slider-speed" class="playback-slider" type="range" min="-2" max="4" value="1" step="1">
 
                                 <button id="btn-speed" class="playback-btn">
-                                    <span id="label-current-speed" class="speed-label">1</span>
-                                    <span id="label-speed-multiplier" class="speed-label">X</span>
+                                    <span id="label-speed" class="speed-label">1</span>
+                                    <span id="multiplier-label-speed" class="speed-label">X</span>
                                 </button>
                                 
                                 <button id="btn-fullscreen" class="playback-btn">
-                                    <svg>
+                                    <svg id="icon-fullscreen" class="playback-icon">
                                         <use href="../assets/svg/fullscreen.svg#fullscreen"></use>
                                     </svg>
                                 </button>
@@ -257,64 +269,64 @@
             </section>
 
             <section id="section-settings" class="content-section">
-                <h2>Settings</h2>
+                <h2 class="content-label">Settings</h2>
 
-                <hr>
+                <hr class="content-divider">
 
-                <div id="ctr1-settings" class="section-ctr1">
-                    <div id="ctr2-appearance-settings" class="section-ctr2">
-                        <h3>Appearance</h3>
+                <div class="section-ctr1">
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Appearance</h3>
 
-                        <hr>
+                        <hr class="section-divider">
 
-                        <div id="ctr-dark-mode" class="setting-ctr">
-                            <h4>Dark Mode</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Dark Mode</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
                                 <label class="setting-toggle-switch">
-                                    <input type="checkbox" name="darkMode">
-                                    <svg>
+                                    <input class="setting-toggle-field" type="checkbox" name="darkMode">
+                                    <svg class="setting-toggle-icon">
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
                                 </label>
                             </div>
 
-                            <p>Easier on the eyes.</p>
+                            <p class="setting-description">Easier on the eyes.</p>
                         </div>
                     </div>
 
-                    <div id="ctr2-files-settings" class="section-ctr2">
-                        <h3>Files</h3>
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Files</h3>
 
-                        <hr>
+                        <hr class="section-divider">
 
-                        <div id="ctr-captures-path" class="setting-ctr">
-                            <h4>Captures Save Location</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Captures Save Location</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/folder-open-solid.svg#folder-open-solid"></use>
                                 </svg>
 
-                                <input type="text" name="capturesPath" readonly>
+                                <input class="setting-field" type="text" name="capturesPath" readonly>
                             </div>
 
-                            <p>Your captures will be saved in this location.</p>
+                            <p class="setting-description">Your captures will be saved in this location.</p>
                         </div>
 
-                        <div id="ctr-captures-limit" class="setting-ctr">
-                            <h4>Captures Storage Limit</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Captures Storage Limit</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <select name="capturesLimit">
+                                <select class="setting-field" name="capturesLimit">
                                     <option value="5">5 GB</option>
                                     <option value="10">10 GB</option>
                                     <option value="20">20 GB</option>
@@ -326,102 +338,102 @@
                                 </select>
                             </div>
 
-                            <p>When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
+                            <p class="setting-description">When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
                         </div>
 
-                        <div id="ctr-format" class="setting-ctr">
-                            <h4>File Extension</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">File Extension</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/draft.svg#draft"></use>
                                 </svg>
 
-                                <select name="format">
+                                <select class="setting-field" name="format">
                                     <option value="mp4">.mp4</option>
                                     <option value="mkv">.mkv</option>
                                 </select>
                             </div>
 
-                            <p>Your videos will be saved with this extension.</p>
+                            <p class="setting-description">Your videos will be saved with this extension.</p>
                         </div>
 
-                        <div id="ctr-encoder-setting" class="setting-ctr">
-                            <h4>Encoder</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Encoder</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/compress.svg#compress"></use>
                                 </svg>
 
-                                <select name="encoder">
+                                <select class="setting-field" name="encoder">
                                     <option value="obs_nvenc_h264_tex">nvenc h.264</option>
                                     <option value="obs_nvenc_hevc_tex">nvenc hevc</option>
                                     <option value="obs_x264">x264</option>
                                 </select>
                             </div>
 
-                            <p>Something something CPU vs GPU...</p>
+                            <p class="setting-description">Something something CPU vs GPU...</p>
                         </div>
                     </div>
                     
-                    <div id="ctr2-video-settings" class="section-ctr2">
-                        <h3>Video</h3>
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Video</h3>
 
-                        <hr>
+                        <hr class="section-divider">
 
-                        <div id="ctr-recording-display" class="setting-ctr">
-                            <h4>Recording Display</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Recording Display</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
-                                <select name="recordingDisplay">
+                                <select class="setting-field" name="recordingDisplay">
                                     <option value="temp1">temp1</option>
                                     <option value="temp2">temp2</option>
                                 </select>
                             </div>
 
-                            <p>Which display will be captured?</p>
+                            <p class="setting-description">Which display will be captured?</p>
                         </div>
 
                         <div class="settings-group-ctr">
-                            <div id="ctr-recording-width" class="setting-ctr">
-                                <h4>Width</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Width</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
 
-                                    <input type="text" name="recordingWidth">
+                                    <input class="setting-field" type="text" name="recordingWidth">
                                 </div>
                             </div>   
-                            <div id="ctr-recording-height" class="setting-ctr">
-                                <h4>Height</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Height</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
 
-                                    <input type="text" name="recordingHeight">
+                                    <input class="setting-field" type="text" name="recordingHeight">
                                 </div>
                             </div>
                         </div>
 
                         <div class="settings-group-ctr">
-                            <div id="ctr-framerate" class="setting-ctr">
-                                <h4>Framerate</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Framerate</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
 
-                                    <select name="framerate">
+                                    <select class="setting-field" name="framerate">
                                         <option value="10">10 fps</option>
                                         <option value="20">20 fps</option>
                                         <option value="24">24 fps</option>
@@ -431,15 +443,15 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="ctr-bitrate" class="setting-ctr">
-                                <h4>Bitrate</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Bitrate</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/bar-chart-4-bars.svg#bar-chart-4-bars"></use>
                                     </svg>
 
-                                    <select name="bitrate">
+                                    <select class="setting-field" name="bitrate">
                                         <option value="3000">3 Mbps</option>
                                         <option value="5000">5 Mbps</option>
                                         <option value="10000">10 Mbps</option>
@@ -453,71 +465,71 @@
                             </div>
                         </div>
 
-                        <div id="ctr-auto-record" class="setting-ctr">
-                            <h4>Automatic Recording</h4>
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Automatic Recording</h4>
 
                             <div class="setting-pill">
-                                <svg>
+                                <svg class="setting-icon">
                                     <use href="../assets/svg/storage.svg#storage"></use>
                                 </svg>
 
                                 <label class="setting-toggle-switch">
-                                    <input type="checkbox" name="autoRecord">
-                                    <svg>
+                                    <input class="setting-toggle-field" type="checkbox" name="autoRecord">
+                                    <svg class="setting-toggle-icon">
                                         <use href="../assets/svg/autofps-select.svg#autofps-select"></use>
                                     </svg>
                                 </label>
                             </div>
 
-                            <p>Automatically record when gameplay is detected.</p>
+                            <p class="setting-description">Automatically record when gameplay is detected.</p>
                         </div>
                     </div>
 
-                    <div id="ctr2-audio-settings" class="section-ctr2">
-                        <h3>Audio</h3>
+                    <div class="section-ctr2">
+                        <h3 class="section-label">Audio</h3>
 
-                        <hr>
+                        <hr class="section-divider">
 
                         <div class="settings-group-ctr">
-                            <div id="ctr-speaker" class="setting-ctr">
-                                <h4>Speaker</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Speaker</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/width.svg#width"></use>
                                     </svg>
 
-                                    <select name="speaker">
+                                    <select class="setting-field" name="speaker">
                                         <option value="none">None</option>
                                         <option value="default">Default</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div id="ctr-microphone" class="setting-ctr">
-                                <h4>Microphone</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Microphone</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
 
-                                    <select name="microphone">
+                                    <select class="setting-field" name="microphone">
                                         <option value="none">None</option>
                                         <option value="default">Default</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div id="ctr-webcam" class="setting-ctr">
-                                <h4>Webcam</h4>
+                            <div class="setting-ctr">
+                                <h4 class="setting-label">Webcam</h4>
 
                                 <div class="setting-pill">
-                                    <svg>
+                                    <svg class="setting-icon">
                                         <use href="../assets/svg/height.svg#height"></use>
                                     </svg>
 
-                                    <select name="webcam">
+                                    <select class="setting-field" name="webcam">
                                         <option value="none">None</option>
                                         <option value="default">Default</option>
                                     </select>

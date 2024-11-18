@@ -11,15 +11,15 @@ import {
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
@@ -28,9 +28,9 @@ import {
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
- * @exports initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration
+ * @exports initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration
  */
-export { initRendEditorSection, resizePlaybackSlider, resizeTimelineSlider, getReadableDuration }
+export { initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration }
 
 /**
  * Initializes the editor section
@@ -48,13 +48,13 @@ function initVideoContainerEL() {
     // on fullscreen change, change the SVG and resize the playback slider
     videoContainer.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement !== null) {
-            setSVG(fullscreenSVG, 'fullscreen-exit');
-            resizePlaybackSlider();
+            setSVG(fullscreenIcon, 'fullscreen-exit');
+            resizeseekSlider();
             resizeTimelineSlider();
         }
         else {
-            setSVG(fullscreenSVG, 'fullscreen');
-            resizePlaybackSlider();
+            setSVG(fullscreenIcon, 'fullscreen');
+            resizeseekSlider();
             resizeTimelineSlider();
         }
     });
@@ -83,7 +83,7 @@ function initVideoContainerEL() {
     // on time update, check the video player time
     videoPlayer.addEventListener('timeupdate', () => {
         // check if the video is loaded (editor section is active)
-        if (flags['videoLoaded'] && !flags['timelineSliderDragging'] && !flags['playbackSliderDragging']) {
+        if (flags['videoLoaded'] && !flags['timelineSliderDragging'] && !flags['seekSliderDragging']) {
             // reset the video, change the SVG, and pause the video, depending on if the video has reached the end
             if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
                 videoPlayer.currentTime = state['timeline'].getStartTime();
@@ -96,7 +96,7 @@ function initVideoContainerEL() {
             }
     
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // pause the video and change the SVG
@@ -111,8 +111,8 @@ function initVideoContainerEL() {
         setTimelineOverlay();
 
         // set the video current time label to 0
-        currentTimeLabel.textContent = '0:00';
-        totalTimeLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
+        currentVideoTimeLabel.textContent = '0:00';
+        currentVideoDurationLabel.textContent = `/${getReadableDuration(videoPlayer.duration)}`;
 
         // set the video loaded flag
         flags['videoLoaded'] = true;
@@ -122,9 +122,9 @@ function initVideoContainerEL() {
     });
 
     // on click, change the video time based on the click location on the playback slider
-    playbackSlider.addEventListener('click', (pointer) => {
+    seekSlider.addEventListener('click', (pointer) => {
         // get the new time based on click location on the playback slider
-        const newTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['playbackSliderBox']);
+        const newTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['seekSliderBox']);
 
         // check if the new time is within the timeline's start and end times
         // videoPlayer.currentTime = (newTime < state['timeline'].getStartTime() || newTime >= state['timeline'].getEndTime()) ? state['timeline'].getStartTime() : newTime;
@@ -135,20 +135,20 @@ function initVideoContainerEL() {
     });
 
     // on mousemove, set a hover highlight based on pointer location
-    playbackSlider.addEventListener('mousemove', (pointer) => {
-        const playbackSliderPct = getPointerEventPct(pointer, boxes['playbackSliderBox']) * 100;
+    seekSlider.addEventListener('mousemove', (pointer) => {
+        const seekSliderPct = getPointerEventPct(pointer, boxes['seekSliderBox']) * 100;
         
-        playbackTrack.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${playbackSliderPct}%, transparent ${playbackSliderPct}%)`;
+        seekTrack.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${seekSliderPct}%, transparent ${seekSliderPct}%)`;
     });
 
     // on mouseleave, remove the hover hightlight
-    playbackSlider.addEventListener('mouseleave', () => {
-        playbackTrack.style.backgroundImage = 'none';
+    seekSlider.addEventListener('mouseleave', () => {
+        seekTrack.style.backgroundImage = 'none';
     });
 
     // on mousedown, set the timeline dragging and previously paused flags
-    playbackSlider.addEventListener('mousedown', () => { 
-        flags['playbackSliderDragging'] = true; 
+    seekSlider.addEventListener('mousedown', () => { 
+        flags['seekSliderDragging'] = true; 
         flags['previouslyPaused'] = videoPlayer.paused;
     });
 
@@ -182,7 +182,7 @@ function initVideoContainerEL() {
         data['settings']['volumeMuted'] = videoPlayer.muted;
 
         // change the volume SVG
-        setVolumeSVG();
+        setvolumeIcon();
     });
 
     // on input, set the volume
@@ -198,7 +198,7 @@ function initVideoContainerEL() {
         data['settings']['volumeMuted'] = videoPlayer.muted;
 
         // change the volume SVG
-        setVolumeSVG();
+        setvolumeIcon();
     });
 
     // on input, set the playback speed
@@ -206,19 +206,19 @@ function initVideoContainerEL() {
         switch (speedSlider.value) {
             case '-2':
                 videoPlayer.playbackRate = 0.2;
-                currentSpeedLabel.textContent = '0.2';
+                speedLabel.textContent = '0.2';
                 break;
             case '-1':
                 videoPlayer.playbackRate = 0.5;
-                currentSpeedLabel.textContent = '0.5';
+                speedLabel.textContent = '0.5';
                 break;
             case '0':
                 videoPlayer.playbackRate = 0.7;
-                currentSpeedLabel.textContent = '0.7';
+                speedLabel.textContent = '0.7';
                 break;
             default:
                 videoPlayer.playbackRate = speedSlider.value;
-                currentSpeedLabel.textContent = speedSlider.value;
+                speedLabel.textContent = speedSlider.value;
         }
     });
 
@@ -226,7 +226,7 @@ function initVideoContainerEL() {
     speedBtn.addEventListener('click', () => {
         // set the playback speed and speed label to 1
         videoPlayer.playbackRate = 1;
-        currentSpeedLabel.textContent = '1';
+        speedLabel.textContent = '1';
 
         // set the speed input slider to match playback speed
         if (speedSlider.value < 1) {
@@ -262,7 +262,7 @@ function initVideoContainer() {
     }
     
     // change the volume SVG
-    setVolumeSVG();
+    setvolumeIcon();
 }
 
 /**
@@ -313,7 +313,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             } 
             else {
@@ -349,7 +349,7 @@ function initTimelineSliderEL() {
                     setAllThumbs();
 
                     // set the video current time label
-                    currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                    currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
                 }
             }
         }
@@ -363,10 +363,10 @@ function initTimelineSliderEL() {
 
     // on mouseup, validate the slider input and change the video time
     document.addEventListener('mouseup', () => { 
-        if (flags['timelineSliderDragging'] === true || flags['playbackSliderDragging'] === true) {
+        if (flags['timelineSliderDragging'] === true || flags['seekSliderDragging'] === true) {
             // set the timeline and playback dragging flags to false
             flags['timelineSliderDragging'] = false; 
-            flags['playbackSliderDragging'] = false;
+            flags['seekSliderDragging'] = false;
 
             // check if the video has reached the end, set it back the start
             if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
@@ -387,7 +387,7 @@ function initTimelineSliderEL() {
             }
 
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
     });
 
@@ -397,29 +397,29 @@ function initTimelineSliderEL() {
         let location;
 
         // check if the playback slider is dragging
-        if (flags['playbackSliderDragging']) {
+        if (flags['seekSliderDragging']) {
             // pause the video and change the SVG
             setVideoPlayerState('pause');
 
             // get the pointer location on the playback slider
-            location = getPointerEventLoc(pointer, boxes['playbackSliderBox']);
+            location = getPointerEventLoc(pointer, boxes['seekSliderBox']);
             
             // check if the pointer is within the playback slider
             if (location < 0) {
                 // set the playback slider thumb to the start, set the video time to the start
-                playbackThumb.style.transform = `translateX(0px)`;
+                seekThumb.style.transform = `translateX(0px)`;
                 videoPlayer.currentTime = 0;
             } 
             else {
-                if (location > boxes['playbackSliderBox'].width) {
+                if (location > boxes['seekSliderBox'].width) {
                     // set the playback slider thumb to the end, set the video time to the end
-                    playbackThumb.style.transform = `translateX(${boxes['playbackSliderBox'].width}px)`;
+                    seekThumb.style.transform = `translateX(${boxes['seekSliderBox'].width}px)`;
                     videoPlayer.currentTime = videoPlayer.duration;
                 } 
                 else {
                     // set the playback slider thumb to the pointer, set the video time to the relative time
-                    playbackThumb.style.transform = `translateX(${location}px)`;
-                    videoPlayer.currentTime = getPointerEventPct(pointer, boxes['playbackSliderBox']) * videoPlayer.duration;
+                    seekThumb.style.transform = `translateX(${location}px)`;
+                    videoPlayer.currentTime = getPointerEventPct(pointer, boxes['seekSliderBox']) * videoPlayer.duration;
                 }
             }
 
@@ -427,7 +427,7 @@ function initTimelineSliderEL() {
             setAllThumbs();
 
             // set the video current time label
-            currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
         else {
             // check if the timeline slider is dragging
@@ -458,10 +458,10 @@ function initTimelineSliderEL() {
                 }
 
                 // set the playback slider thumb
-                setPlaybackThumb();
+                setseekThumb();
 
                 // set the video current time label
-                currentTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+                currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
             }
         }
     });
@@ -470,20 +470,20 @@ function initTimelineSliderEL() {
 /**
  * Sets the volume SVG based on the volume
  */
-function setVolumeSVG() {
+function setvolumeIcon() {
     if (videoPlayer.muted) {
-        setSVG(volumeSVG, 'volume-off');
+        setSVG(volumeIcon, 'volume-off');
     }
     else {
         if (videoPlayer.volume > 0.6) {
-            setSVG(volumeSVG, 'volume-up');
+            setSVG(volumeIcon, 'volume-up');
         }
         else {
             if (videoPlayer.volume > 0.1) {
-                setSVG(volumeSVG, 'volume-down');
+                setSVG(volumeIcon, 'volume-down');
             }
             else {
-                setSVG(volumeSVG, 'volume-mute');
+                setSVG(volumeIcon, 'volume-mute');
             }
         }
     }
@@ -497,26 +497,26 @@ function setVideoPlayerState(action) {
     switch (action) {
         case 'play':
             // play the video and change the SVG
-            setSVG(playPauseSVG, 'pause');
-            playPauseStatusIcon.style.opacity = '';
+            setSVG(playPauseIcon, 'pause');
+            playPauseOverlayIcon.style.opacity = '';
             videoPlayer.play();
             break;
         case 'pause':
             // pause the video and change the SVG
-            setSVG(playPauseSVG, 'play-arrow');
-            playPauseStatusIcon.style.opacity = '1';
+            setSVG(playPauseIcon, 'play-arrow');
+            playPauseOverlayIcon.style.opacity = '1';
             videoPlayer.pause();
             break;
         case 'toggle':
             // play/pause the video and change the SVG
             if (videoPlayer.paused || videoPlayer.ended) {
-                setSVG(playPauseSVG, 'pause');
-                playPauseStatusIcon.style.opacity = '';
+                setSVG(playPauseIcon, 'pause');
+                playPauseOverlayIcon.style.opacity = '';
                 videoPlayer.play();
             }
             else {
-                setSVG(playPauseSVG, 'play-arrow');
-                playPauseStatusIcon.style.opacity = '1';
+                setSVG(playPauseIcon, 'play-arrow');
+                playPauseOverlayIcon.style.opacity = '1';
                 videoPlayer.pause();
             }
             break;
@@ -549,20 +549,20 @@ function getPointerEventPct(pointer, box) {
 /**
  * Sets the playback thumb position based on video time
  */
-function setPlaybackThumb() {
-    playbackThumb.style.transform = `translateX(${videoPlayer.currentTime / videoPlayer.duration * boxes['playbackSliderBox'].width}px)`;
+function setseekThumb() {
+    seekThumb.style.transform = `translateX(${videoPlayer.currentTime / videoPlayer.duration * boxes['seekSliderBox'].width}px)`;
 }
 
 /**
  * Resizes the playback slider
  */
-function resizePlaybackSlider() {
+function resizeseekSlider() {
     // get the new playback slider bounding box
-    boxes['playbackSliderBox'] = playbackSlider.getBoundingClientRect();
+    boxes['seekSliderBox'] = seekSlider.getBoundingClientRect();
 
     // if the video is loaded, set the new playback thumb position
     if (flags['videoLoaded']) {
-        setPlaybackThumb();
+        setseekThumb();
     }
 }
 
@@ -608,7 +608,7 @@ function resizeTimelineSlider() {
  * Sets the playback and timeline thumb positions based on video time
  */
 function setAllThumbs() {
-    setPlaybackThumb();
+    setseekThumb();
     setTimelineThumb();
 }
 

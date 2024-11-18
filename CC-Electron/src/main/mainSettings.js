@@ -111,7 +111,7 @@ function initSettingsL() {
     
     // sets the value of a specific setting
     ipcMain.handle('settings:setSetting', async (_, key, value) => {
-        console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+        console.log(key, '1: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
 
         value = validateSetting(key, value);
 
@@ -231,7 +231,7 @@ function initSettingsL() {
                 break;
 
             default:
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                console.log(key, '2: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
                 console.log('Not an OBS setting!');
         }
@@ -294,7 +294,6 @@ function initSettingsL() {
     
     // gets all of the video files and meta data from the save location directory
     ipcMain.handle('files:getAllVideosData', async (_) => {
-        
         // return Promise.reject(new Error("Simulated error for testing"));
 
         // get the save location stored in the settings
@@ -326,6 +325,19 @@ function initSettingsL() {
                         path.join(THUMBNAIL_DIRECTORY, `${videoName}.png`)
                     ]);
     
+
+                    const videoDuration = await new Promise((resolve, reject) => {
+                        ffmpeg.ffprobe(videoPath, (error, metadata) => {
+                            if (error) {
+                                return reject(error);
+                            }
+           
+                            resolve(metadata.format.duration);
+                        });
+                    });
+
+
+
                     // create thumbnail if it does not exist
                     try {
                         await fs.access(thumbnailPath);
@@ -349,7 +361,8 @@ function initSettingsL() {
                         nameExt: video,
                         path: videoPath,
                         size: videoMetaData.size,
-                        created: videoMetaData.birthtime,
+                        created: videoMetaData.birthtime, 
+                        duration: videoDuration, 
                         thumbnailPath: thumbnailPath
                     };
                 }

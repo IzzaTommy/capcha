@@ -5,16 +5,17 @@ html {
     --sbar-thumb-bwidth: calc((var(--sbar-length) - 6px) / 2);
     --sbar-thumb-bradius: calc(var(--sbar-length) / 2);
 
-    /* ==== initoverlay -> Initialization Overlay ==== */
-    --initoverlay-svg-length: 100px;
+    /* ==== ioverlay -> Initialization Overlay ==== */
+    --ioverlay-svg-length: 100px;
 
-    --initoverlay-span-fsize: 80px;
-    --initoverlay-span-fweight: 600;
+    --ioverlay-span-fsize: 80px;
+    --ioverlay-span-fweight: 600;
 
-    /* ==== islabel -> Initialization Status Label ==== */
-    --islabel-tmargin: 50px;
-    --islabel-fsize: 18px;
-    --islabel-fweight: 300;
+    /* ==== istatlabel -> Initialization Status Label ==== */
+    --istatlabel-height: 18px;
+    --istatlabel-tmargin: 50px;
+    --istatlabel-fsize: var(--istatlabel-height);
+    --istatlabel-fweight: 300;
 
     /* ==== carea -> Client Area ==== */
     --carea-hgap: 12px;
@@ -22,24 +23,26 @@ html {
     /* ==== cblock -> Content Block ==== */
     --cblock-tlbradius: 10px;
 
-    /* ==== gslabel -> General Status Label ==== */
-    --gslabel-tinset: 40px;
-    --gslabel-bradius: 10px;
-    --gslabel-padding: 10px;
-    --gslabel-fsize: 15px;
-    --gslabel-fweight: 300;
+    /* ==== gstatlabel -> General Status Label ==== */
+    --gstatlabel-tinset: 40px;
+    --gstatlabel-bradius: 10px;
+    --gstatlabel-padding: 10px;
+    --gstatlabel-fsize: 15px;
+    --gstatlabel-fweight: 300;
 
     /* ==== csection -> Content Section ==== */
     --csection-vgap: var(--nbar-vgap);
     --csection-vpadding: var(--nbar-hpadding);
-    --csection-hpadding: calc(var(--nbar-hpadding) + var(--ntbtn-svg-length));
+    --csection-hpadding: calc(var(--nbar-hpadding) + var(--nticon-length));
 
-    --csection-h2-fsize: 60px;
-    --csection-h2-fweight: 500;
+    /* ==== clabel -> Content Label ==== */
+    --clabel-fsize: 60px;
+    --clabel-fweight: 500;
 
-    --csection-hr-height: 1.5px;
-    --csection-hr-lmargin: var(--nbar-hr-lmargin);
-    --csection-hr-width: calc(100% + var(--csection-hpadding));
+    /* ==== cdivider -> Content Divider ==== */
+    --cdivider-height: 1.5px;
+    --cdivider-lmargin: var(--nbar-hr-lmargin);
+    --cdivider-width: calc(100% + var(--csection-hpadding));
 
     /* ==== sctr1 -> Section Container 1 ==== */
     --sctr1-bradius: 10px;
@@ -52,23 +55,26 @@ html {
     /* ==== sctr2 -> Section Container 2 ==== */
     --sctr2-vgap: var(--nbar-vgap);
 
-    --sctr2-h3-fsize: 30px;
-    --sctr2-h3-fweight: 400;
+    /* ==== slabel -> Section Label ==== */
+    --slabel-fsize: 30px;
+    --slabel-fweight: 400;
 
-    --sctr2-hr-height: 1.5px;
-    --sctr2-hr-lmargin: var(--nbar-hr-lmargin);
-    --sctr2-hr-width: calc(100% + var(--sctr1-hpadding));
+    /* ==== sdivider -> Section Divider ==== */
+    --sdivider-height: 1.5px;
+    --sdivider-lmargin: var(--nbar-hr-lmargin);
+    --sdivider-width: calc(100% + var(--sctr1-hpadding));
 
-    /* ==== vlabel -> Version Label ==== */
-    --vlabel-lmargin: 10px;
-    --vlabel-fsize: 11px;
-    --vlabel-fweight: 300;
+    /* ==== tbar -> Title Bar ==== */
+    --tbar-span-lmargin: 10px;
+    --tbar-span-fsize: 11px;
+    --tbar-span-fweight: 300;
 
     /* ==== tbtn -> Title Button ==== */
     --tbtn-vpadding: 7.5px;
     --tbtn-hpadding: 15px;
 
-    --tbtn-svg-length: 10px;
+    /* ==== ticon -> Title Icon ==== */
+    --ticon-length: 10px;
 
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-trbradius: 10px;
@@ -78,95 +84,107 @@ html {
     --nbar-tpadding: 10px;
     --nbar-hpadding: 10px;
     --nbar-bpadding: 20px;
-    --nbar-width: calc(var(--ldp-svg-length) + 2 * var(--nbar-hpadding));
-    --nbar-alt-width: calc(var(--nbar-width) + var(--ldp-hgap) + var(--ldp-h1-width));
+    --nbar-width: calc(var(--licon-svg-length) + 2 * var(--nbar-hpadding));
+    --nbar-alt-width: calc(var(--nbar-width) + var(--licon-hgap) + var(--licon-h1-width));
 
     --nbar-hr-height: 1.5px;
     --nbar-hr-lmargin: calc(var(--nbar-hpadding) / -2);
     --nbar-hr-width: calc(100% + var(--nbar-hpadding));
 
-    /* ==== ldp -> Logo Display ==== */
-    --ldp-hgap: 20px;
+    /* ==== licon -> Logo Icon ==== */
+    --licon-hgap: 20px;
 
-    --ldp-svg-length: 60px;
+    --licon-svg-length: 60px;
 
-    --ldp-h1-width: 111px;
-    --ldp-h1-fsize: 28px;
-    --ldp-h1-fweight: 600;
+    --licon-h1-width: 111px;
+    --licon-h1-fsize: 28px;
+    --licon-h1-fweight: 600;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-bradius: 10px;
     --nbtn-hgap: 40px;
-    --nbtn-hmargin: calc((var(--ldp-svg-length) - var(--nbtn-svg-length) - 2 * var(--nbtn-padding)) / 2);
+    --nbtn-hmargin: calc((var(--licon-svg-length) - var(--nicon-length) - 2 * var(--nbtn-padding)) / 2);
     --nbtn-padding: 10px;
-
-    --nbtn-svg-length: 30px;
-
-    --nbtn-span-fsize: 20px;
-    --nbtn-span-fweight: 400;
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bwidth: 1.5px;
     --rbtn-padding: calc(var(--nbtn-padding) - var(--rbtn-bwidth));
 
-    /* ==== rctr -> Recording Container ==== */
-    --rctr-rinset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
-    --rctr-binset: calc(var(--nbar-vgap) + var(--rarlabel-height) + var(--nbar-bpadding));
-    --rctr-alt-binset: calc(var(--rctr-binset) + var(--rctr-tpadding) + var(--rctr-bpadding));
-    --rctr-linset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
-    --rctr-bwidth: 1.5px;
-    --rctr-bradius: 10px;
-    --rctr-hgap: 10px;
-    --rctr-tpadding: 2.5px;  /* calculatable */
-    --rctr-hpadding: 2.5px;
-    --rctr-bpadding: 25px;
+    /* ==== nicon -> Nav(igation) Icon ==== */
+    --nicon-length: 30px;
 
-    /* ==== crtlabel -> Current Recording Time Label ==== */
-    --crtlabel-width: calc(var(--nbtn-svg-length) + 2 * var(--nbtn-padding));
-    --crtlabel-fsize: 15px;
-    --crtlabel-fweight: 300;
+    /* ==== nlabel -> Nav(igation) Label ==== */
+    --nlabel-fsize: 20px;
+    --nlabel-fweight: 400;
 
-    /* ==== crglabel -> Current Recording Game Label ==== */
-    --crglabel-fsize: 12px;
-    --crglabel-fweight: 400;
+    /* ==== crctr -> Current Recording Container ==== */
+    --crctr-rinset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --crctr-binset: calc(var(--nbar-vgap) + var(--arreslabel-height) + var(--nbar-bpadding));
+    --crctr-alt-binset: calc(var(--crctr-binset) + var(--crctr-tpadding) + var(--crctr-bpadding));
+    --crctr-linset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --crctr-bwidth: 1.5px;
+    --crctr-bradius: 10px;
+    --crctr-hgap: 10px;
+    --crctr-tpadding: 2.5px;  /* calculatable */
+    --crctr-hpadding: 2.5px;
+    --crctr-bpadding: 25px;
 
-    /* ==== rarlabel -> Resume Auto Record Label ==== */
-    --rarlabel-height: calc(3 * var(--rarlabel-fsize));
-    --rarlabel-hmargin: var(--nbtn-hmargin);
-    --rarlabel-fsize: 12px;
-    --rarlabel-fweight: 400;
+    /* ==== crtimelabel -> Current Recording Time Label ==== */
+    --crtimelabel-width: calc(var(--nicon-length) + 2 * var(--nbtn-padding));
+    --crtimelabel-fsize: 15px;
+    --crtimelabel-fweight: 300;
 
-    /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-svg-length: 15px;
+    /* ==== crgamelabel -> Current Recording Game Label ==== */
+    --crgamelabel-fsize: 12px;
+    --crgamelabel-fweight: 400;
+
+    /* ==== arreslabel -> Auto Record Resume Label ==== */
+    --arreslabel-height: calc(3 * var(--arreslabel-fsize));
+    --arreslabel-hmargin: var(--nbtn-hmargin);
+    --arreslabel-fsize: 12px;
+    --arreslabel-fweight: 400;
+
+    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
+    --nticon-length: 15px;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bwidth: 1.5px;
     --dctr-bradius: 10px;
-    --dctr-height: calc(2 * var(--dctr-bwidth) + 2 * var(--dgl-vpadding) + 2 * var(--vpctr-padding) + var(--vtn-height) + 3 * var(--vpctr-vgap) + var(--vpctr-h4-fsize) + var(--vpctr-p-fsize) + 2 * var(--vobtn-padding) + var(--vobtn-svg-length) + var(--sbar-length));
+    --dctr-height: calc(2 * var(--dctr-bwidth) + 2 * var(--dgallery-vpadding) + 2 * var(--vpctr-padding) + var(--vthumbnail-height) + 3 * var(--vpctr-vgap) + var(--vgameagelabel-fsize) + var(--vnamelabel-fsize) + 2 * var(--vobtn-padding) + var(--voicon-length) + var(--sbar-length));
 
-    /* ==== dbtn -> Directory Button ==== */
-    --dbtn-svg-length: 15px;
+    /* ==== dicon -> Directory Icon ==== */
+    --dicon-length: 15px;
 
-    /* ==== dgl -> Directory Gallery ==== */
-    --dgl-hmargin: 10px;
-    --dgl-vpadding: calc(10px - var(--dctr-bwidth));
+    /* ==== dgallery -> Directory Gallery ==== */
+    --dgallery-hmargin: 10px;
+    --dgallery-vpadding: calc(10px - var(--dctr-bwidth));
 
-    --dgl-sb-track-margin: calc(-1 * var(--sbar-thumb-bwidth));
+    --dgallery-sb-track-margin: calc(-1 * var(--sbar-thumb-bwidth));
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bradius: 10px;
     --vpctr-vgap: 10px;
     --vpctr-padding: 10px;
     
-    --vpctr-h4-fsize: 17px;
-    --vpctr-h4-fweight: 350;
+    /* ==== vthumbnail -> Video Thumbnail ==== */
+    --vthumbnail-bradius: 10px;
+    --vthumbnail-height: 144px;
 
-    --vpctr-p-fsize: 11px;
-    --vpctr-p-fweight: 300;
+    /* ==== vdurlabel -> Video Duration Label ==== */
+    --vdurlabel-rinset: 5px;
+    --vdurlabel-binset: 5px;
+    --vdurlabel-bradius: 3px;
+    --vdurlabel-padding: 5px;
+    --vdurlabel-fsize: 15px;
+    --vdurlabel-fweight: 400;
 
-    /* ==== vtn -> Video Thumbnail ==== */
-    --vtn-bradius: 10px;
-    --vtn-height: 144px;
+    /* ==== vgameagelabel -> Video Game / Age Label ==== */
+    --vgameagelabel-fsize: 17px;
+    --vgameagelabel-fweight: 350;
+
+    /* ==== vnamelabel -> Video Name Label ==== */
+    --vnamelabel-fsize: 11px;
+    --vnamelabel-fweight: 300;
 
     /* ==== voctr -> Video Options Container ==== */
     --voctr-hgap: 10px;
@@ -175,27 +193,28 @@ html {
     --vobtn-bradius: 5px;
     --vobtn-padding: 2px;
 
-    --vobtn-svg-length: 30px;
+    /* ==== voicon -> Video Options Icon ==== */
+    --voicon-length: 30px;
 
     /* ==== vctr -> Video Container ==== */
     --vctr-bradius: 10px;
     --vctr-height: 75%;
     --vctr-width: 80%;
 
-    /* ==== ppsicon -> Play Pause Status Icon ==== */
-    --ppsicon-length: 80px;
+    /* ==== ppoverlayicon -> Play Pause Overlay Icon ==== */
+    --ppoverlayicon-length: 80px;
 
-    /* ==== psl -> Playback Slider ==== */
-    --psl-height: 3px;
-    --psl-hmargin: 6px;
-    --psl-tpadding: 10px;
-    --psl-bpadding: calc((var(--psl-height) * var(--ptrack-alt-transform) - var(--psl-height)) / 2);
+    /* ==== sslider -> Seek Slider ==== */
+    --sslider-height: 3px;
+    --sslider-hmargin: 6px;
+    --sslider-tpadding: 10px;
+    --sslider-bpadding: calc((var(--sslider-height) * var(--strack-alt-transform) - var(--sslider-height)) / 2);
 
-    /* ==== ptrack -> Playback Track ==== */
-    --ptrack-alt-transform: 2.5;
+    /* ==== strack -> Seek Track ==== */
+    --strack-alt-transform: 2.5;
 
-    /* ==== pthumb -> Playback Thumb ==== */
-    --pthumb-bswidth: 100vw;
+    /* ==== sthumb -> Seek Thumb ==== */
+    --sthumb-bswidth: 100vw;
 
     /* ==== pbar -> Playback Bar ==== */
     --pbar-bpadding: 3px;
@@ -204,60 +223,55 @@ html {
     --pbtn-bradius: 5px;
     --pbtn-hmargin: 3px;
     
-    --pbtn-svg-length: 40px;
+    /* ==== picon -> Playback Icon ==== */
+    --picon-length: 40px;
 
-    /* ==== pinput -> Playback Input ==== */
-    --pinput-thumb-height: 16px;
-    --pinput-thumb-tmargin: calc((var(--pinput-thumb-height) - var(--pinput-track-height)) / -2);
+    /* ==== splabel -> Speed Label (class name) ==== */
+    --splabel-fsize: 20px;
+    --splabel-fweight: 400;
 
-    --pinput-track-height: 4px;
+    /* ==== splabel -> Speed Label (id name) ==== */
+    --splabel-vpadding: calc((var(--picon-length) - var(--splabel-fsize)) / 2);
+    --splabel-lpadding: var(--splabel-vpadding);
+    --splabel-width: 3ch;
 
-    /* ==== vsl -> Volume Slider ==== */
-    --vsl-vpadding: calc((var(--pbtn-svg-length) - var(--pinput-track-height)) / 2);
-    --vsl-alt-width: 100px;
+    /* ==== spmultlabel -> Speed Multiplier Label ==== */
+    --spmultlabel-vpadding: var(--splabel-vpadding);
+    --spmultlabel-rpadding: var(--splabel-lpadding);
 
-    --vsl-thumb-bradius: calc(var(--pinput-thumb-height) / 2);
-    --vsl-thumb-width: var(--pinput-thumb-height);
+    /* ==== pslider -> Playback Slider ==== */
+    --pslider-thumb-height: 16px;
+    --pslider-thumb-tmargin: calc((var(--pslider-thumb-height) - var(--pslider-track-height)) / -2);
 
-    /* ==== tlabel -> Time Label ==== */
-    --tlabel-fsize: 15px;
-    --tlabel-fweight: 400;
+    --pslider-track-height: 4px;
 
-    /* ==== ctlabel -> Current Time Label ==== */
-    /* --ctlabel-vpadding: calc((var(--pbtn-svg-length) - var(--tlabel-fsize)) / 2); */
-    /* --ctlabel-hpadding: var(--ctlabel-vpadding); */
-    --ctlabel-width: 5ch;
+    /* ==== vslider -> Volume Slider ==== */
+    --vslider-vpadding: calc((var(--picon-length) - var(--pslider-track-height)) / 2);
+    --vslider-alt-width: 100px;
 
-    /* ==== ttlabel -> Total Time Label ==== */
-    /* --ttlabel-vpadding: var(--ctlabel-vpadding); */
-    /* --ttlabel-hpadding: var(--ctlabel-hpadding); */
+    --vslider-thumb-bradius: calc(var(--pslider-thumb-height) / 2);
+    --vslider-thumb-width: var(--pslider-thumb-height);
 
-    /* ==== ssl -> Speed Slider ==== */
-    --ssl-vpadding: var(--vsl-vpadding);
-    --ssl-alt-width: 150px;
+    /* ==== spslider -> Speed Slider ==== */
+    --spslider-vpadding: var(--vslider-vpadding);
+    --spslider-alt-width: 150px;
 
-    --ssl-thumb-bradius: calc(var(--ssl-thumb-width) / 2);
-    --ssl-thumb-width: 4px;
+    --spslider-thumb-bradius: calc(var(--spslider-thumb-width) / 2);
+    --spslider-thumb-width: 4px;
 
-    /* ==== slabel -> Speed Label ==== */
-    --slabel-fsize: 20px;
-    --slabel-fweight: 400;
+    /* ==== cvlabel -> Current Video Label ==== */
+    --cvlabel-fsize: 15px;
+    --cvlabel-fweight: 400;
 
-    /* ==== cslabel -> Current Speed Label ==== */
-    --cslabel-vpadding: calc((var(--pbtn-svg-length) - var(--slabel-fsize)) / 2);
-    --cslabel-lpadding: var(--cslabel-vpadding);
-    --cslabel-width: 3ch;
-
-    /* ==== smlabel -> Speed Multiplier Label ==== */
-    --smlabel-vpadding: var(--cslabel-vpadding);
-    --smlabel-rpadding: var(--cslabel-lpadding);
+    /* ==== cvtimelabel -> Current Video Time Label ==== */
+    --cvtimelabel-width: 5ch;
 
     /* ==== tslider -> Timeline Slider ==== */
     --tslider-bradius: 10px;
     --tslider-height: 60px;
     --tslider-width: var(--vctr-width);
 
-    /* ==== otrack -> Timeline Overlay ==== */
+    /* ==== toverlay -> Timeline Overlay ==== */
     --toverlay-height: var(--tslider-height);
     --toverlay-swidth: 1px;
 
@@ -272,6 +286,9 @@ html {
     --tthumb-height: calc(-2 * var(--tthumb-tinset) + var(--tslider-height));
     --tthumb-width: 4px;
 
+    /* ==== stsgctr -> Settings Group Container ==== */
+    --stsgctr-hgap: 30px;
+
     /* ==== stctr -> Setting Container ==== */
     --stctr-bwidth: 1.5px;
     --stctr-bradius: 10px;
@@ -279,30 +296,36 @@ html {
     --stctr-vpadding: calc(var(--sctr1-vpadding) - var(--stctr-bwidth));
     --stctr-hpadding: calc(var(--sctr1-hpadding) - var(--stctr-bwidth));
 
-    --stctr-h4-fsize: 17px;
-    --stctr-h4-fweight: 350;
-
-    --stctr-p-fsize: 11px;
-    --stctr-p-fweight: 300;
+    /* ==== stlabel -> Setting Label ==== */
+    --stlabel-fsize: 17px;
+    --stlabel-fweight: 350;
 
     /* ==== stpill -> Setting Pill ==== */
     --stpill-bradius: 10px;
 
-    --stpill-svg-length: 25px;
-    --stpill-svg-margin: 5px;
+    /* ==== sticon -> Setting Icon ==== */
+    --sticon-length: 25px;
+    --sticon-margin: 5px;
 
-    --stpill-inputselect-hpadding: 10px;
-    --stpill-inputselect-width: 110px;
+    /* ==== stfield -> Setting Field ==== */
+    --stfield-hpadding: 10px;
+    --stfield-width: 110px;
 
     /* ==== sttswitch -> Setting Toggle Switch ==== */
     --sttswitch-width: 66px;
 
-    --sttswitch-svg-inset: 2px;
-    --sttswitch-svg-bradius: 7.5px;
-    --sttswitch-svg-height: calc(var(--stpill-svg-length) + 2 * var(--stpill-svg-margin) - 2 * var(--sttswitch-svg-inset));
-    --sttswitch-svg-width: calc(var(--sttswitch-width) / 2 - var(--sttswitch-svg-inset));
-    --sttswitch-svg-alt-translateX: var(--sttswitch-svg-width);
+    /* ==== sttfield -> Setting Toggle Field ==== */
+    --sttfield-hpadding: 10px;
+    --sttfield-width: 110px;
 
-    /* ==== stsgroupctr -> Settings Group ==== */
-    --stsgroupctr-hgap: 30px;
+    /* ==== stticon -> Setting Toggle Icon ==== */
+    --stticon-inset: 2px;
+    --stticon-bradius: 7.5px;
+    --stticon-height: calc(var(--sticon-length) + 2 * var(--sticon-margin) - 2 * var(--stticon-inset));
+    --stticon-width: calc(var(--sttswitch-width) / 2 - var(--stticon-inset));
+    --stticon-alt-translateX: var(--stticon-width);
+
+    /* ==== stdesc -> Setting Description ==== */
+    --stdesc-fsize: 11px;
+    --stdesc-fweight: 300;
 }

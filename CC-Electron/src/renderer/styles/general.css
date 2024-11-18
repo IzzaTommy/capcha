@@ -23,6 +23,7 @@
 
     background-clip: padding-box;
     background-color: var(--sbar-thumb-bgcolor);
+    /* transition: var(--sbar-thumb-transition); */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -56,38 +57,42 @@ body {
     height: 100%;
     width: 100%;
 
-    background-color: var(--initoverlay-bgcolor);
+    background-color: var(--ioverlay-bgcolor);
+    opacity: 0;
     visibility: hidden;
+    transition: var(--ioverlay-transition);
 }
 
 #overlay-initialization.active {
+    opacity: 1;
     visibility: visible;
 }
 
 #overlay-initialization > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--initoverlay-svg-length);
-    width: var(--initoverlay-svg-length);
+    height: var(--ioverlay-svg-length);
+    width: var(--ioverlay-svg-length);
 
-    fill: var(--initoverlay-svg-fill);
+    fill: var(--ioverlay-svg-fill);
 }
 
 #overlay-initialization > span {
     flex: 0 0 fit-content;
 
-    color: var(--initoverlay-span-color);
-    font-size: var(--initoverlay-span-fsize);
-    font-weight: var(--initoverlay-span-fweight);
+    color: var(--ioverlay-span-color);
+    font-size: var(--ioverlay-span-fsize);
+    font-weight: var(--ioverlay-span-fweight);
 }
 
-#label-initialization-status {
-    flex: 0 0 fit-content;
-    margin-top: var(--islabel-tmargin);
+#status-label-initialization {
+    flex: 0 0 auto;
+    height: var(--istatlabel-height);
+    margin-top: var(--istatlabel-tmargin);
 
-    color: var(--islabel-color);
-    font-size: var(--islabel-fsize);
-    font-weight: var(--islabel-fweight);
+    color: var(--istatlabel-color);
+    font-size: var(--istatlabel-fsize);
+    font-weight: var(--istatlabel-fweight);
 }
 
 #area-client {
@@ -109,25 +114,29 @@ body {
     overflow: hidden; /* for vertical/horizontal scroll */
 }
 
-#label-general-status {
+#status-label-general {
     position: absolute;
-    top: var(--gslabel-tinset);
+    top: var(--gstatlabel-tinset);
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
 
-    border-radius: var(--gslabel-bradius);
-    padding: var(--gslabel-padding);
+    border-radius: var(--gstatlabel-bradius);
+    padding: var(--gstatlabel-padding);
 
-    background-color: var(--gslabel-bgcolor);
-    color: var(--gslabel-color);
-    font-size: var(--gslabel-fsize);
-    font-weight: var(--gslabel-fweight);
+    background-color: var(--gstatlabel-bgcolor);
+    color: var(--gstatlabel-color);
+    font-size: var(--gstatlabel-fsize);
+    font-weight: var(--gstatlabel-fweight);
     text-align: center;
+    opacity: 0;
+    transition: var(--gstatlabel-transition);
     visibility: hidden;
 }
 
-#label-general-status.active {
+#status-label-general.active {
+    opacity: 1;
+    transition: var(--gstatlabel-alt-transition);
     visibility: visible;
 }
 
@@ -148,21 +157,21 @@ body {
     visibility: visible;
 }
 
-.content-section > h2 {
+.content-label {
     flex: 0 0 fit-content;
 
-    color: var(--csection-h2-color);
-    font-size: var(--csection-h2-fsize);
-    font-weight: var(--csection-h2-fweight);
+    color: var(--clabel-color);
+    font-size: var(--clabel-fsize);
+    font-weight: var(--clabel-fweight);
 }
 
-.content-section > hr {
+.content-divider {
     flex: 0 0 auto;
-    height: var(--csection-hr-height);
-    margin-left: var(--csection-hr-lmargin);
-    width: var(--csection-hr-width);
+    height: var(--cdivider-height);
+    margin-left: var(--cdivider-lmargin);
+    width: var(--cdivider-width);
 
-    background-color: var(--csection-hr-bgcolor);
+    background-color: var(--cdivider-bgcolor);
 }
 
 .section-ctr1 {
@@ -190,19 +199,19 @@ body {
     gap: var(--sctr2-vgap);
 }
 
-.section-ctr2 > h3 {
+.section-label {
     flex: 0 0 fit-content;
 
-    color: var(--sctr2-h3-color);
-    font-size: var(--sctr2-h3-fsize);
-    font-weight: var(--sctr2-h3-fweight);
+    color: var(--slabel-color);
+    font-size: var(--slabel-fsize);
+    font-weight: var(--slabel-fweight);
 }
 
-.section-ctr2 > hr {
+.section-divider {
     flex: 0 0 auto;
-    height: var(--sctr2-hr-height);
-    margin-left: var(--sctr2-hr-lmargin);
-    width: var(--sctr2-hr-width);
+    height: var(--sdivider-height);
+    margin-left: var(--sdivider-lmargin);
+    width: var(--sdivider-width);
 
-    background-color: var(--sctr2-hr-bgcolor);
+    background-color: var(--sdivider-bgcolor);
 }

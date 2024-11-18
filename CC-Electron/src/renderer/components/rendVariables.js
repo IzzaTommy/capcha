@@ -11,15 +11,15 @@ import { TimelineState } from './timelineState.js';
  *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
  *  html, 
  *  initializationOverlay, initializationStatusLabel, 
- *  minimizeBtn, maximizeBtn, closeBtn, 
- *  navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
- *  navToggleBtn, navToggleSVG, 
+ *  titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+ *  navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+ *  navToggleBtn, navToggleIcon, 
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
- *  videoContainer, videoPlayer, playPauseStatusIcon, 
- *  playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
- *  playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+ *  videoContainer, videoPlayer, playPauseOverlayIcon, 
+ *  playbackContainer, seekSlider, seekTrack, seekThumb, 
+ *  playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
- *  allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+ *  mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
  *  data, state, 
@@ -31,15 +31,15 @@ export {
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
@@ -65,15 +65,15 @@ const SLOW_DELAY_IN_MSECONDS = 4000;
 // document elements
 let html, 
     initializationOverlay, initializationStatusLabel, 
-    minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesSVG, settingsBtn, settingsSVG, recordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordSVG, resumeAutoRecordLabel, 
-    navToggleBtn, navToggleSVG, 
+    titleBar, minimizeBtn, maximizeBtn, closeBtn, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoContainer, videoPlayer, playPauseStatusIcon, 
-    playbackContainer, playbackSlider, playbackTrack, playbackThumb, 
-    playPauseBtn, playPauseSVG, volumeBtn, volumeSVG, volumeSlider, currentTimeLabel, totalTimeLabel, speedSlider, speedBtn, currentSpeedLabel, fullscreenBtn, fullscreenSVG, 
+    videoContainer, videoPlayer, playPauseOverlayIcon, 
+    playbackContainer, seekSlider, seekTrack, seekThumb, 
+    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
-    allSettingPill, allSettingToggleSwitch, capturesPathSettingPill, darkModeSettingToggleSwitch, 
+    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
 
 // boolean flags, element boxes, settings/videos data, and state data
@@ -88,9 +88,10 @@ function initRendVariables() {
 
     // initialization overlay elements
     initializationOverlay = document.getElementById('overlay-initialization');
-    initializationStatusLabel = document.getElementById('label-initialization-status');
+    initializationStatusLabel = document.getElementById('status-label-initialization');
 
     // title bar elements
+    titleBar = document.getElementById('bar-title');
     minimizeBtn = document.getElementById('btn-minimize');
     maximizeBtn = document.getElementById('btn-maximize');
     closeBtn = document.getElementById('btn-close');
@@ -99,25 +100,25 @@ function initRendVariables() {
     navBar = document.getElementById('bar-nav');
 
     directoriesBtn = document.getElementById('btn-directories');
-    directoriesSVG = directoriesBtn.querySelector('svg > use');
+    directoriesIcon = document.querySelector('#icon-directories > use');
 
     settingsBtn = document.getElementById('btn-settings');
-    settingsSVG = settingsBtn.querySelector('svg > use');
+    settingsIcon = document.querySelector('#icon-settings > use');
 
-    recordingContainer = document.getElementById('ctr-recording');
-    currentRecordingTimeLabel = document.getElementById('label-current-recording-time');
-    currentRecordingGameLabel = document.getElementById('label-current-recording-game');
+    currentRecordingContainer = document.getElementById('ctr-current-recording');
+    currentRecordingTimeLabel = document.getElementById('time-label-current-recording');
+    currentRecordingGameLabel = document.getElementById('game-label-current-recording');
 
     recordBtn = document.getElementById('btn-record');
-    recordSVG = recordBtn.querySelector('svg > use');
+    recordIcon = document.querySelector('#icon-record > use');
 
-    resumeAutoRecordLabel = document.getElementById('label-resume-auto-record');
+    autoRecordResumeLabel = document.getElementById('resume-label-auto-record');
 
     navToggleBtn = document.getElementById('btn-nav-toggle');
-    navToggleSVG = navToggleBtn.querySelector('svg > use');
+    navToggleIcon = document.querySelector('#icon-nav-toggle > use');
 
     // content block elements
-    generalStatusLabel = document.getElementById('label-general-status');
+    generalStatusLabel = document.getElementById('status-label-general');
 
     directoriesSection = document.getElementById('section-directories');
     editorSection = document.getElementById('section-editor');
@@ -128,30 +129,30 @@ function initRendVariables() {
 
     videoPlayer = document.getElementById('player-video');
 
-    playPauseStatusIcon = document.getElementById('icon-play-pause-status');
+    playPauseOverlayIcon = document.getElementById('overlay-icon-play-pause');
 
     playbackContainer = document.getElementById('ctr-playback');
 
-    playbackSlider = document.getElementById('slider-playback');
-    playbackTrack = document.getElementById('track-playback');
-    playbackThumb = document.getElementById('thumb-playback');
+    seekSlider = document.getElementById('slider-seek');
+    seekTrack = document.getElementById('track-seek');
+    seekThumb = document.getElementById('thumb-seek');
 
     playPauseBtn = document.getElementById('btn-play-pause');
-    playPauseSVG = playPauseBtn.querySelector('svg > use');
+    playPauseIcon = playPauseBtn.querySelector('#icon-play-pause > use');
 
     volumeBtn = document.getElementById('btn-volume');
-    volumeSVG = volumeBtn.querySelector('svg > use');
+    volumeIcon = volumeBtn.querySelector('#icon-volume > use');
     volumeSlider = document.getElementById('slider-volume');
 
-    currentTimeLabel = document.getElementById('label-current-time');
-    totalTimeLabel = document.getElementById('label-total-time');
+    currentVideoTimeLabel = document.getElementById('time-label-current-video');
+    currentVideoDurationLabel = document.getElementById('duration-label-current-video');
 
     speedSlider = document.getElementById('slider-speed');
     speedBtn = document.getElementById('btn-speed');
-    currentSpeedLabel = document.getElementById('label-current-speed');
+    speedLabel = document.getElementById('label-speed');
 
     fullscreenBtn = document.getElementById('btn-fullscreen');
-    fullscreenSVG = fullscreenBtn.querySelector('svg > use');
+    fullscreenIcon = fullscreenBtn.querySelector('#icon-fullscreen > use');
 
     timelineSlider = document.getElementById('slider-timeline');
     timelineOverlay = document.getElementById('overlay-timeline');
@@ -159,23 +160,23 @@ function initRendVariables() {
     timelineThumb = document.getElementById('thumb-timeline');
 
     // settings section elements
-    allSettingPill = document.querySelectorAll(`.setting-pill > input:not([name='capturesPath']), .setting-pill > select`);
-    allSettingToggleSwitch = document.querySelectorAll(`.setting-toggle-switch > input:not([name='darkMode'])`);
-    capturesPathSettingPill = document.querySelector(`.setting-pill > input[name='capturesPath']`);
-    darkModeSettingToggleSwitch = document.querySelector(`.setting-toggle-switch > input[name='darkMode']`);
+    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath'])`);
+    mostSettingToggleFields = document.querySelectorAll(`.setting-toggle-field:not([name='darkMode'])`);
+    capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
+    darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
 
     // directories section elements
     capturesGallery = document.getElementById('gallery-captures');
     videoPreviewTemplate = document.querySelector('template');
-    videoPreviewWidth = parseInt(style.getPropertyValue('--vtn-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
-    capturesLeftBtn = document.getElementById('btn-captures-left');
-    capturesRightBtn = document.getElementById('btn-captures-right');
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vthumbnail-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
+    capturesLeftBtn = document.getElementById('left-btn-captures');
+    capturesRightBtn = document.getElementById('right-btn-captures');
 
     // boolean flags
     flags = { 
         videoLoaded: false, 
         timelineSliderDragging: false, 
-        playbackSliderDragging: false,
+        seekSliderDragging: false,
         previouslyPaused: false, 
         recording: false, 
         manualStop: false, 
@@ -185,7 +186,7 @@ function initRendVariables() {
     // element boxes
     boxes = { 
         timelineSliderBox: timelineSlider.getBoundingClientRect(),
-        playbackSliderBox: playbackSlider.getBoundingClientRect(),
+        seekSliderBox: seekSlider.getBoundingClientRect(),
         galleryBox: capturesGallery.getBoundingClientRect() 
     };
 
