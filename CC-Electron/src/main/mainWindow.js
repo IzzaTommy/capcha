@@ -94,6 +94,7 @@ async function checkPrograms() {
         console.log('Recording Status: Recording');
         if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === PROGRAMS[state['recordingGame']].toLowerCase())) {
             instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn');
+            // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: 'MANUAL-%MM%DD%YY%hh%mm%ss' }), 3, 2000);
         }
     }
     else {
@@ -101,6 +102,7 @@ async function checkPrograms() {
         for (const [key, value] of Object.entries(PROGRAMS)) {
             if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
                 state['recordingGame'] = key;
+                // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${state['recordingGame']}-%MM%DD%YY%hh%mm%ss` }), 3, 2000);
                 instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn', state['recordingGame']);
                 break;
             }

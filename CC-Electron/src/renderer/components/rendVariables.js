@@ -12,12 +12,12 @@ import { TimelineState } from './timelineState.js';
  *  html, 
  *  initializationOverlay, initializationStatusLabel, 
  *  titleBar, minimizeBtn, maximizeBtn, closeBtn, 
- *  navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+ *  navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
  *  navToggleBtn, navToggleIcon, 
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
  *  videoContainer, videoPlayer, playPauseOverlayIcon, 
  *  playbackContainer, seekSlider, seekTrack, seekThumb, 
- *  playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
+ *  playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
  *  mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -32,12 +32,12 @@ export {
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
+    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -66,12 +66,12 @@ const SLOW_DELAY_IN_MSECONDS = 4000;
 let html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
+    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
@@ -105,7 +105,7 @@ function initRendVariables() {
     settingsBtn = document.getElementById('btn-settings');
     settingsIcon = document.querySelector('#icon-settings > use');
 
-    currentRecordingContainer = document.getElementById('ctr-current-recording');
+    currentRecordingLabelContainer = document.getElementById('label-ctr-current-recording');
     currentRecordingTimeLabel = document.getElementById('time-label-current-recording');
     currentRecordingGameLabel = document.getElementById('game-label-current-recording');
 
@@ -136,6 +136,8 @@ function initRendVariables() {
     seekSlider = document.getElementById('slider-seek');
     seekTrack = document.getElementById('track-seek');
     seekThumb = document.getElementById('thumb-seek');
+
+    playbackBar = document.getElementById('bar-playback');
 
     playPauseBtn = document.getElementById('btn-play-pause');
     playPauseIcon = playPauseBtn.querySelector('#icon-play-pause > use');
@@ -200,6 +202,7 @@ function initRendVariables() {
     state = { 
         animationID: null, 
         generalStatusTimeout: null, 
+        playbackContainerTimeout: null, 
         recordingTime: null, 
         timerInterval: null, 
         timeline: new TimelineState()

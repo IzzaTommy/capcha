@@ -12,7 +12,7 @@ import {
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
@@ -45,6 +45,7 @@ async function initRendDirectoriesSection() {
  * Initializes the directory gallery event listeners
  */
 function initDirectoryGalleryEL() {
+
     // on scroll, scroll the captures gallery
     capturesGallery.addEventListener('wheel', (pointer) => {
         // prevent scrolling vertically on section container 1
@@ -69,6 +70,9 @@ function initDirectoryGalleryEL() {
     capturesRightBtn.addEventListener('click', () => {
         capturesGallery.scrollBy({left: boxes['galleryBox'].width, behavior: 'smooth'});
     });
+
+
+    capturesGallery.addEventListener('scroll', toggleCapturesGalleryBtn);
 }
 
 /**
@@ -95,16 +99,18 @@ async function loadGallery(initialization) {
         // get a clone of the video preview template
         videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
 
-        videoPreviewClone.querySelector('.video-thumbnail-ctr > span').textContent = getReadableDuration(videoData['duration']);
+        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(videoData['duration']);
 
         // set the video source
         videoPreviewClone.querySelector('.video-preview-ctr').dataset.src = videoData['path'];
         // set the video thumbnail source
-        videoPreviewClone.querySelector('.video-thumbnail-ctr > img').setAttribute('src', videoData['thumbnailPath']);
+        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', videoData['thumbnailPath']);
         // set the video age
-        videoPreviewClone.querySelector('.video-preview-ctr > h4').textContent = getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND);
+        videoPreviewClone.querySelector('.video-game-label').textContent = `${videoData['game']}`;
+
+        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND)}`;
         // set the video name with extension
-        videoPreviewClone.querySelector('.video-preview-ctr > span').textContent = videoData['nameExt'];
+        videoPreviewClone.querySelector('.video-name-label').textContent = videoData['nameExt'];
 
         // on click, open the video in the editor section
         videoPreviewClone.querySelector('.video-preview-ctr').addEventListener('click', () => {
@@ -118,6 +124,8 @@ async function loadGallery(initialization) {
         // append the video preview to the gallery
         capturesGallery.appendChild(videoPreviewClone);
     }
+
+    toggleCapturesGalleryBtn();
 }
 
 /**
@@ -144,21 +152,60 @@ function getReadableAge(time) {
     // gets the days, hours, minutes, and seconds of the time
     const parsedTime = getParsedTime(time);
 
+    // // return the age based on the largest non-zero time segment (days, hours, minutes)
+    // if (parsedTime[0] > 0) {
+    //     return `${parsedTime[0]} day${parsedTime[0] > 1 ? 's' : ''} ago`;
+    // }
+    // else {
+    //     if (parsedTime[1] > 0) {
+    //         return `${parsedTime[1]} hour${parsedTime[1] > 1 ? 's' : ''} ago`;
+    //     }
+    //     else {
+    //         if (parsedTime[2] > 0) {
+    //             return `${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
+    //         }
+    //         else {
+    //             return `Just Now`;
+    //         }
+    //     }
+    // }
+
     // return the age based on the largest non-zero time segment (days, hours, minutes)
-    if (parsedTime[0] > 0) {
-        return `GAME - ${parsedTime[0]} day${parsedTime[0] > 1 ? 's' : ''} ago`;
+    if (parsedTime[0] > 999) {
+        return '999d+ ago';
     }
     else {
-        if (parsedTime[1] > 0) {
-            return `GAME - ${parsedTime[1]} hour${parsedTime[1] > 1 ? 's' : ''} ago`;
+        if (parsedTime[0] > 0) {
+            return `${parsedTime[0]}d ago`;
         }
         else {
-            if (parsedTime[2] > 0) {
-                return `GAME - ${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
+            if (parsedTime[1] > 0) {
+                return `${parsedTime[1]}h ago`;
             }
             else {
-                return `GAME - Just Now`;
+                if (parsedTime[2] > 0) {
+                    return `${parsedTime[2]}m ago`;
+                }
+                else {
+                    return `Just Now`;
+                }
             }
         }
+    }
+}
+
+function toggleCapturesGalleryBtn() {
+    if (capturesGallery.scrollLeft > 0) {
+        capturesLeftBtn.classList.add('active');
+    }
+    else {
+        capturesLeftBtn.classList.remove('active');
+    }
+    
+    if (capturesGallery.scrollLeft < (capturesGallery.scrollWidth - Math.ceil(boxes['galleryBox'].width))) {
+        capturesRightBtn.classList.add('active');
+    }
+    else {
+        capturesRightBtn.classList.remove('active');
     }
 }

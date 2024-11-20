@@ -97,9 +97,9 @@ html[data-theme='dark'] {
     /* ==== nlabel -> Nav(igation) Label ==== */
     --nlabel-color: #dddddd;
 
-    /* ==== crctr -> Current Recording Container ==== */
-    --crctr-bcolor: #575757;
-    --crctr-bgcolor: #575757;
+    /* ==== crlabelctr -> Current Recording Label Container ==== */
+    --crlabelctr-bcolor: #575757;
+    --crlabelctr-bgcolor: #575757;
 
     /* ==== crtimelabel -> Current Recording Time Label ==== */
     --crtimelabel-color: #14dd40;
@@ -118,14 +118,15 @@ html[data-theme='dark'] {
     --nticon-fill: #dddddd;
 
     /* ==== dctr -> Directory Container ==== */
-    --dctr-bcolor: transparent;
+    --dctr-bcolor: #414344;
     --dctr-bgcolor: #373737;
 
     /* ==== dbtn -> Directory Button ==== */
     --dbtn-alt-bgcolor: #505050;
     
     /* ==== dicon -> Directory Icon ==== */
-    --dicon-fill: #dddddd;
+    --dicon-fill: #787878;
+    --dicon-alt-fill: #dddddd;
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-alt-bgcolor: #505050;
@@ -134,8 +135,11 @@ html[data-theme='dark'] {
     --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
     --vdurlabel-color: #dddddd;
 
-    /* ==== vgameagelabel -> Video Game / Age Label ==== */
-    --vgameagelabel-color: #dddddd;
+    /* ==== vgamelabel -> Video Game Label ==== */
+    --vgamelabel-color: #dddddd;
+
+    /* ==== vagelabel -> Video Age Label ==== */
+    --vagelabel-color: #dddddd;
 
     /* ==== vnamelabel -> Video Name Label ==== */
     --vnamelabel-color: #dddddd;
@@ -311,9 +315,9 @@ html[data-theme='light'] {
     /* ==== nlabel -> Nav(igation) Label ==== */
     --nlabel-color: #363636;
 
-    /* ==== crctr -> Current Recording Container ==== */
-    --crctr-bcolor: #dbdbdb;
-    --crctr-bgcolor: #dbdbdb;
+    /* ==== crlabelctr -> Current Recording Label Container ==== */
+    --crlabelctr-bcolor: #dbdbdb;
+    --crlabelctr-bgcolor: #dbdbdb;
 
     /* ==== crtimelabel -> Current Recording Time Label ==== */
     --crtimelabel-color: #14dd40;
@@ -339,7 +343,8 @@ html[data-theme='light'] {
     --dbtn-alt-bgcolor: #dfe1e5;
 
     /* ==== dicon -> Directory Icon ==== */
-    --dicon-fill: #1a69e0;
+    --dicon-fill: #787878;
+    --dicon-alt-fill: #1a69e0;
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-alt-bgcolor: #dfe1e5;
@@ -348,8 +353,11 @@ html[data-theme='light'] {
     --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
     --vdurlabel-color: #dddddd;
 
-    /* ==== vgameagelabel -> Video Game / Age Label ==== */
-    --vgameagelabel-color: #1a69e0;
+    /* ==== vgamelabel -> Video Game Label ==== */
+    --vgamelabel-color: #1a69e0;
+
+    /* ==== vagelabel -> Video Age Label ==== */
+    --vagelabel-color: #1a69e0;
 
     /* ==== vnamelabel -> Video Name Label ==== */
     --vnamelabel-color: #363636;
@@ -466,8 +474,8 @@ html {
     --nlabel-transition: opacity 0.2s ease 0s;
     --nlabel-alt-transition: opacity 0.2s ease 0.5s;
 
-    /* ==== crctr -> Current Recording Container ==== */
-    --crctr-transition: bottom 0.3s ease 0s;
+    /* ==== crlabelctr -> Current Recording Label Container ==== */
+    --crlabelctr-transition: bottom 0.3s ease 0s;
 
     /* ==== crgamelabel -> Current Recording Game Label ==== */
     --crgamelabel-transition: opacity 0.2s ease 0s;

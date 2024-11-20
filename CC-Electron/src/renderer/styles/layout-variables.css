@@ -117,17 +117,17 @@ html {
     --nlabel-fsize: 20px;
     --nlabel-fweight: 400;
 
-    /* ==== crctr -> Current Recording Container ==== */
-    --crctr-rinset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
-    --crctr-binset: calc(var(--nbar-vgap) + var(--arreslabel-height) + var(--nbar-bpadding));
-    --crctr-alt-binset: calc(var(--crctr-binset) + var(--crctr-tpadding) + var(--crctr-bpadding));
-    --crctr-linset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
-    --crctr-bwidth: 1.5px;
-    --crctr-bradius: 10px;
-    --crctr-hgap: 10px;
-    --crctr-tpadding: 2.5px;  /* calculatable */
-    --crctr-hpadding: 2.5px;
-    --crctr-bpadding: 25px;
+    /* ==== crlabelctr -> Current Recording Label Container ==== */
+    --crlabelctr-rinset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --crlabelctr-binset: calc(var(--nbar-vgap) + var(--arreslabel-height) + var(--nbar-bpadding));
+    --crlabelctr-alt-binset: calc(var(--crlabelctr-binset) + var(--crlabelctr-tpadding) + var(--crlabelctr-bpadding));
+    --crlabelctr-linset: calc(var(--nbar-hpadding) + var(--nbtn-hmargin));
+    --crlabelctr-bwidth: 1.5px;
+    --crlabelctr-bradius: 10px;
+    --crlabelctr-hgap: 10px;
+    --crlabelctr-tpadding: 2.5px;  /* calculatable */
+    --crlabelctr-hpadding: 2.5px;
+    --crlabelctr-bpadding: 25px;
 
     /* ==== crtimelabel -> Current Recording Time Label ==== */
     --crtimelabel-width: calc(var(--nicon-length) + 2 * var(--nbtn-padding));
@@ -150,7 +150,7 @@ html {
     /* ==== dctr -> Directory Container ==== */
     --dctr-bwidth: 1.5px;
     --dctr-bradius: 10px;
-    --dctr-height: calc(2 * var(--dctr-bwidth) + 2 * var(--dgallery-vpadding) + 2 * var(--vpctr-padding) + var(--vthumbnail-height) + 3 * var(--vpctr-vgap) + var(--vgameagelabel-fsize) + var(--vnamelabel-fsize) + 2 * var(--vobtn-padding) + var(--voicon-length) + var(--sbar-length));
+    --dctr-height: calc(2 * var(--dctr-bwidth) + 2 * var(--dgallery-vpadding) + 2 * var(--vpctr-padding) + var(--vthumbnail-height) + 3 * var(--vpctr-vgap) + var(--vlabelctr-height) + var(--vnamelabel-fsize) + 2 * var(--vobtn-padding) + var(--voicon-length) + var(--sbar-length));
 
     /* ==== dicon -> Directory Icon ==== */
     --dicon-length: 15px;
@@ -178,9 +178,17 @@ html {
     --vdurlabel-fsize: 15px;
     --vdurlabel-fweight: 400;
 
-    /* ==== vgameagelabel -> Video Game / Age Label ==== */
-    --vgameagelabel-fsize: 17px;
-    --vgameagelabel-fweight: 350;
+    /* ==== vlabelctr -> Video Label Container ==== */
+    --vlabelctr-width: 256px;
+    --vlabelctr-height: 22px;
+
+    /* ==== vgamelabel -> Video Game Label ==== */
+    --vgamelabel-fsize: 17px;
+    --vgamelabel-fweight: 350;
+
+    /* ==== vagelabel -> Video Age Label ==== */
+    --vagelabel-fsize: 17px;
+    --vagelabel-fweight: 350;
 
     /* ==== vnamelabel -> Video Name Label ==== */
     --vnamelabel-fsize: 11px;

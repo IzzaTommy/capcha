@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
-    startRecord: () => ipcRenderer.invoke('webSocket:StartRecord'), 
+    startRecord: (recordingGame) => ipcRenderer.invoke('webSocket:StartRecord', recordingGame), 
 
     stopRecord: () => ipcRenderer.invoke('webSocket:StopRecord'), 
 

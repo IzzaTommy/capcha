@@ -124,8 +124,9 @@ function initWebSocket() {
 
 
 function initWebSocketL() {
-    ipcMain.handle('webSocket:StartRecord', async (_) => {
+    ipcMain.handle('webSocket:StartRecord', async (_, recordingGame) => {
         // return Promise.reject(new Error("Simulated error for testing"));
+        await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recordingGame}-%MM%DD%YY%hh%mm%ss` }), 3, 2000);
         const recording = (await webSocketSend('StartRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = recording;

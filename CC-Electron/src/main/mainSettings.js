@@ -69,6 +69,9 @@ async function initSettings() {
 
     // set basic settings
     await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' }), 3, 2000);
+
+    // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: 'MANUAL-%MM%DD%YY%hh%mm%ss' }), 3, 2000);
+
     await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), 3, 2000);
     await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), 3, 2000);
     /* file name formatting */
@@ -336,8 +339,6 @@ function initSettingsL() {
                         });
                     });
 
-
-
                     // create thumbnail if it does not exist
                     try {
                         await fs.access(thumbnailPath);
@@ -359,6 +360,7 @@ function initSettingsL() {
                     // return data on the video
                     return {
                         nameExt: video,
+                        game: video.split('-')[0],
                         path: videoPath,
                         size: videoMetaData.size,
                         created: videoMetaData.birthtime, 

@@ -145,27 +145,27 @@
     color: var(--rbtn-span-alt-color);
 }
 
-#ctr-current-recording {
+#label-ctr-current-recording {
     align-items: center;
-    right: var(--crctr-rinset);
-    bottom: var(--crctr-binset);
-    left: var(--crctr-linset);
+    right: var(--crlabelctr-rinset);
+    bottom: var(--crlabelctr-binset);
+    left: var(--crlabelctr-linset);
     position: absolute;
     z-index: 1;
 
-    border: var(--crctr-bwidth) solid var(--crctr-bcolor);
-    border-radius: var(--crctr-bradius);
+    border: var(--crlabelctr-bwidth) solid var(--crlabelctr-bcolor);
+    border-radius: var(--crlabelctr-bradius);
     display: flex;
     flex-flow: row nowrap;
-    gap: var(--crctr-hgap);
-    padding: var(--crctr-tpadding) var(--crctr-tpadding) var(--crctr-bpadding);
+    gap: var(--crlabelctr-hgap);
+    padding: var(--crlabelctr-tpadding) var(--crlabelctr-tpadding) var(--crlabelctr-bpadding);
 
-    background-color: var(--crctr-bgcolor);
-    transition: var(--crctr-transition);    
+    background-color: var(--crlabelctr-bgcolor);
+    transition: var(--crlabelctr-transition);    
 }
 
-#ctr-current-recording.active {
-    bottom: var(--crctr-alt-binset);
+#label-ctr-current-recording.active {
+    bottom: var(--crlabelctr-alt-binset);
 }
 
 #time-label-current-recording {
@@ -189,7 +189,7 @@
     transition: var(--crgamelabel-transition);
 }
 
-#bar-nav.active > #ctr-current-recording > #game-label-current-recording {
+#bar-nav.active > #label-ctr-current-recording > #game-label-current-recording {
     opacity: 1;
     transition: var(--crgamelabel-alt-transition);
 }

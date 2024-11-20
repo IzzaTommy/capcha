@@ -12,7 +12,7 @@ import {
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
@@ -25,7 +25,7 @@ import {
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
+import { initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
 import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
 import { setInitializationStatusLabel, setGeneralStatusLabel } from './rendGeneral.js';
 
@@ -77,7 +77,10 @@ function setActiveSection(section) {
             directoriesSection.classList.add('active');
 
             // unload the editor video
-            flags['videoLoaded'] = false;
+            if (flags['videoLoaded']) {
+                flags['videoLoaded'] = false;
+                setVideoPlayerState('standby');
+            }
             break;
         case 'settings':
             // change the active content section to the settings section
@@ -86,7 +89,10 @@ function setActiveSection(section) {
             settingsSection.classList.add('active');
 
             // unload the editor video
-            flags['videoLoaded'] = false;
+            if (flags['videoLoaded']) {
+                flags['videoLoaded'] = false;
+                setVideoPlayerState('standby');
+            }
             break;
         case 'editor':
             // change the active content section to the editor section

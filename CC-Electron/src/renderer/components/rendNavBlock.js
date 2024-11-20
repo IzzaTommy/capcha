@@ -13,7 +13,7 @@ import {
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
@@ -27,7 +27,7 @@ import {
     initRendVariables 
 } from './rendVariables.js';
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
+import { initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
 import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
 
 /**
@@ -137,7 +137,7 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
                 // set recording flag, toggle the record button, toggle the recording container
                 flags['recording'] = false;
                 recordBtn.classList.remove('active');
-                currentRecordingContainer.classList.remove('active');
+                currentRecordingLabelContainer.classList.remove('active');
                 
                 // clear the recording time label interval
                 clearInterval(state['timerInterval']);
@@ -156,14 +156,14 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
     else {
         // check if it was an auto start / with no manual pause or if it was a manual start
         if ((autoStart && !flags['manualStop']) || !autoStart) {
-            if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
+            if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(recordingGame), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
                 // set auto start flag
                 flags['autoStart'] = autoStart;
 
                 // set recording flag, toggle the record button, toggle the recording container
                 flags['recording'] = true;
                 recordBtn.classList.add('active');
-                currentRecordingContainer.classList.add('active');
+                currentRecordingLabelContainer.classList.add('active');
 
                 // set the recording game
                 currentRecordingGameLabel.textContent = recordingGame;

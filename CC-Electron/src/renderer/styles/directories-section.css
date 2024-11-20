@@ -20,7 +20,7 @@
     transition: var(--dbtn-transition);
 }
 
-.directory-btn:hover {
+.directory-btn.active:hover {
     background-color: var(--dbtn-alt-bgcolor);
 }
 
@@ -31,6 +31,10 @@
     width: var(--dicon-length);
 
     fill: var(--dicon-fill);
+}
+
+.directory-btn.active > .directory-icon {
+    fill: var(--dicon-alt-fill);
 }
 
 .directory-gallery {
@@ -101,12 +105,34 @@
     font-weight: var(--vdurlabel-fweight);
 }
 
-.video-game-age-label {
-    flex: 0 0 fit-content;
+.video-label-ctr {
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    height: var(--vlabelctr-height);
+    width: var(--vlabelctr-width);
+}
 
-    color: var(--vgameagelabel-color);
-    font-size: var(--vgameagelabel-fsize);
-    font-weight: var(--vgameagelabel-fweight);
+.video-game-label {
+    flex: 0 1 fit-content;
+
+    color: var(--vgamelabel-color);
+    font-size: var(--vgamelabel-fsize);
+    font-weight: var(--vgamelabel-fweight);
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.video-age-label {
+    flex: 0 0 fit-content;
+    margin-left: auto;
+
+    color: var(--vagelabel-color);
+    font-size: var(--vagelabel-fsize);
+    font-weight: var(--vagelabel-fweight);
+    line-height: normal;
 }
 
 .video-name-label {

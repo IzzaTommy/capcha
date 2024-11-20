@@ -12,12 +12,12 @@ import {
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
-    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
+    navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
+    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
@@ -28,9 +28,9 @@ import {
 import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
- * @exports initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration
+ * @exports initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration
  */
-export { initRendEditorSection, resizeseekSlider, resizeTimelineSlider, getReadableDuration }
+export { initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration }
 
 /**
  * Initializes the editor section
@@ -61,9 +61,6 @@ function initVideoContainerEL() {
 
     // on play, revert forced playback container opacity and start animation frames
     videoPlayer.addEventListener('play', () => {
-        // allow default opacity behavior
-        playbackContainer.style.opacity = "";
-
         // sync the slider thumbs' movement to each frame of the video
         state['animationID'] = requestAnimationFrame(syncThumbs);
     });
@@ -71,36 +68,72 @@ function initVideoContainerEL() {
     // on pause, show the playback container and cancel animation frames
     videoPlayer.addEventListener('pause', () => {
         // show the playback container
-        playbackContainer.style.opacity = "1";
+        playbackContainer.classList.add('active');
 
         // cancel the syncing to prevent unnecessary computations
         cancelAnimationFrame(state['animationID']);
     });
 
+    // on mousemove, show the playback container and reset the timeout for disappearing
+    videoPlayer.addEventListener('mousemove', () => {
+        // show the playback container
+        playbackContainer.classList.add('active');
+
+        // remove the old timeout for disappearing
+        if (state['playbackContainerTimeout']) {
+            clearTimeout(state['playbackContainerTimeout']);
+        }
+        
+        // restart the timeout for disappearing
+        state['playbackContainerTimeout'] = setTimeout(() => {
+            // if the video is not paused, hide the playback container
+            if (!videoPlayer.paused) {
+                playbackContainer.classList.remove('active');
+            }
+        }, 3000);
+    });
+
+    // on mouseleave, hide the playback container and remove the timeout for disappearing
+    videoPlayer.addEventListener('mouseleave', () => {
+        // if the video is not paused, hide the playback container
+        if (!videoPlayer.paused) {
+            playbackContainer.classList.remove('active');
+
+            // remove the old timeout for disappearing
+            if (state['playbackContainerTimeout']) {
+                clearTimeout(state['playbackContainerTimeout']);
+            }
+        }
+    })
+
     // on click, play/pause the video and change the SVG
-    videoPlayer.addEventListener('click', () => setVideoPlayerState('toggle'));
+    videoPlayer.addEventListener('click', () => {
+        setVideoPlayerState('toggle');
+    });
 
     // on time update, check the video player time
     videoPlayer.addEventListener('timeupdate', () => {
         // check if the video is loaded (editor section is active)
-        if (flags['videoLoaded'] && !flags['timelineSliderDragging'] && !flags['seekSliderDragging']) {
-            // reset the video, change the SVG, and pause the video, depending on if the video has reached the end
-            if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
-                videoPlayer.currentTime = state['timeline'].getStartTime();
-    
+        if (flags['videoLoaded']) {
+            if (!flags['timelineSliderDragging'] && !flags['seekSliderDragging']) {
+                // reset the video, change the SVG, and pause the video, depending on if the video has reached the end
+                if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
+                    videoPlayer.currentTime = state['timeline'].getStartTime();
+        
+                    // pause the video and change the SVG
+                    setVideoPlayerState('pause');
+        
+                    // set the playback slider and timeline slider thumbs
+                    setAllThumbs();
+                }
+        
+                // set the video current time label
+                currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
+            }
+            else {
                 // pause the video and change the SVG
                 setVideoPlayerState('pause');
-    
-                // set the playback slider and timeline slider thumbs
-                setAllThumbs();
             }
-    
-            // set the video current time label
-            currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
-        }
-        else {
-            // pause the video and change the SVG
-            setVideoPlayerState('pause');
         }
     });
 
@@ -119,6 +152,38 @@ function initVideoContainerEL() {
 
         // play the video and change the SVG
         setVideoPlayerState('play');
+    });
+
+    // on mousemove, show the playback container and reset the timeout for disappearing
+    playbackContainer.addEventListener('mousemove', () => {
+        // show the playback container
+        playbackContainer.classList.add('active');
+
+        // remove the old timeout for disappearing
+        if (state['playbackContainerTimeout']) {
+            clearTimeout(state['playbackContainerTimeout']);
+        }
+        
+        // restart the timeout for disappearing
+        state['playbackContainerTimeout'] = setTimeout(() => {
+            // if the video is not paused, hide the playback container
+            if (!videoPlayer.paused) {
+                playbackContainer.classList.remove('active');
+            }
+        }, 3000);
+    });
+
+    // on mouseleave, hide the playback container and remove the timeout for disappearing
+    playbackContainer.addEventListener('mouseleave', () => {
+        // if the video is not paused, hide the playback container
+        if (!videoPlayer.paused) {
+            playbackContainer.classList.remove('active');
+
+            // remove the old timeout for disappearing
+            if (state['playbackContainerTimeout']) {
+                clearTimeout(state['playbackContainerTimeout']);
+            }
+        }
     });
 
     // on click, change the video time based on the click location on the playback slider
@@ -152,6 +217,12 @@ function initVideoContainerEL() {
         flags['previouslyPaused'] = videoPlayer.paused;
     });
 
+    // on mouseleave, change the volume / speed slider widths to hide
+    playbackBar.addEventListener('mouseleave', () => {
+        volumeSlider.style.width = '';
+        speedSlider.style.width = '';
+    });
+
     // on click, play/pause the video and change the SVG
     playPauseBtn.addEventListener('click', () => setVideoPlayerState('toggle'));
 
@@ -183,6 +254,11 @@ function initVideoContainerEL() {
 
         // change the volume SVG
         setvolumeIcon();
+    });
+
+    // on mouse enter, change the volume slider width to show
+    volumeBtn.addEventListener('mouseenter', () => {
+        volumeSlider.style.width = 'var(--vslider-alt-width)';
     });
 
     // on input, set the volume
@@ -237,6 +313,11 @@ function initVideoContainerEL() {
         }
     });
 
+    // on mouse enter, change the speed slider width to show
+    speedBtn.addEventListener('mouseenter', () => {
+        speedSlider.style.width = 'var(--spslider-alt-width)';
+    });
+
     // on click, toggle the video player fullscreen
     fullscreenBtn.addEventListener('click', () => {
         if (document.fullscreenElement !== null) {
@@ -263,6 +344,9 @@ function initVideoContainer() {
     
     // change the volume SVG
     setvolumeIcon();
+
+    // unload the editor video
+    setVideoPlayerState('standby');
 }
 
 /**
@@ -304,7 +388,14 @@ function initTimelineSliderEL() {
                     );
                     
                     // check if the video time is out of the timeline, put it back in bounds
-                    videoPlayer.currentTime = Math.max(state['timeline'].getStartTime(), Math.min(videoPlayer.currentTime, state['timeline'].getEndTime()));
+                    if (videoPlayer.currentTime < state['timeline'].getStartTime()) {
+                        videoPlayer.currentTime = state['timeline'].getStartTime();
+                    } 
+                    else {
+                        if (videoPlayer.currentTime > state['timeline'].getEndTime()) {
+                            videoPlayer.currentTime = state['timeline'].getEndTime();
+                        }
+                    }
 
                     // set the timeline overlay
                     setTimelineOverlay();
@@ -340,7 +431,14 @@ function initTimelineSliderEL() {
                     }
                              
                     // check if the video time is out of the timeline, put it back in bounds
-                    videoPlayer.currentTime = Math.max(state['timeline'].getStartTime(), Math.min(videoPlayer.currentTime, state['timeline'].getEndTime()));
+                    if (videoPlayer.currentTime < state['timeline'].getStartTime()) {
+                        videoPlayer.currentTime = state['timeline'].getStartTime();
+                    } 
+                    else {
+                        if (videoPlayer.currentTime > state['timeline'].getEndTime()) {
+                            videoPlayer.currentTime = state['timeline'].getEndTime();
+                        }
+                    }
 
                     // set the timeline overlay
                     setTimelineOverlay();
@@ -519,6 +617,12 @@ function setVideoPlayerState(action) {
                 playPauseOverlayIcon.style.opacity = '1';
                 videoPlayer.pause();
             }
+            break;
+        case 'standby':
+            // pause the video and change the SVG
+            setSVG(playPauseIcon, 'pause');
+            playPauseOverlayIcon.style.opacity = '';
+            videoPlayer.pause();
             break;
         default:
     }
