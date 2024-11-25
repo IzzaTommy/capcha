@@ -21,9 +21,9 @@
 }
 
 .setting-ctr:hover {
-    border-color: var(--stctr-alt-bcolor);
+    border-color: var(--stctr-bcolor);
 
-    background-color: var(--stctr-alt-bgcolor);
+    background-color: var(--stctr-bgcolor);
 }
 
 .setting-label {
@@ -111,7 +111,7 @@
 
 .setting-toggle-field:checked + .setting-toggle-icon {
     fill: var(--stticon-alt-fill);
-    transform: translateX(var(--stticon-alt-translateX));
+    transform: translateX(var(--stticon-translateX));
 }
 
 .setting-description {

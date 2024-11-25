@@ -8,7 +8,7 @@
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -16,21 +16,25 @@ import {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
- * @exports initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration
+ * @exports initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration
  */
-export { initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration }
+export { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider, getReadableDuration }
 
 /**
  * Initializes the editor section
@@ -45,24 +49,28 @@ function initRendEditorSection() {
  * Initializes the video container event listeners
  */
 function initVideoContainerEL() {
-    // on fullscreen change, change the SVG and resize the playback slider
+    // on fullscreen change, change the icon and resize all the editor sliders
     videoContainer.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement !== null) {
-            setSVG(fullscreenIcon, 'fullscreen-exit');
-            resizeseekSlider();
-            resizeTimelineSlider();
+            setIcon(fullscreenIcon, 'fullscreen-exit');
+            updateSeekSlider();
+            updateTimelineSlider();
+            updateVolumeSlider();
+            updatePlaybackRateSlider();
         }
         else {
-            setSVG(fullscreenIcon, 'fullscreen');
-            resizeseekSlider();
-            resizeTimelineSlider();
+            setIcon(fullscreenIcon, 'fullscreen');
+            updateSeekSlider();
+            updateTimelineSlider();
+            updateVolumeSlider();
+            updatePlaybackRateSlider();
         }
     });
 
-    // on play, revert forced playback container opacity and start animation frames
+    // on play, start animation frames to move sliders smooethly
     videoPlayer.addEventListener('play', () => {
         // sync the slider thumbs' movement to each frame of the video
-        state['animationID'] = requestAnimationFrame(syncThumbs);
+        state['animationID'] = requestAnimationFrame(syncSeekTimelineSliders);
     });
 
     // on pause, show the playback container and cancel animation frames
@@ -70,7 +78,7 @@ function initVideoContainerEL() {
         // show the playback container
         playbackContainer.classList.add('active');
 
-        // cancel the syncing to prevent unnecessary computations
+        // cancel the syncing to prevent unnecessary computations while paused
         cancelAnimationFrame(state['animationID']);
     });
 
@@ -80,9 +88,7 @@ function initVideoContainerEL() {
         playbackContainer.classList.add('active');
 
         // remove the old timeout for disappearing
-        if (state['playbackContainerTimeout']) {
-            clearTimeout(state['playbackContainerTimeout']);
-        }
+        clearTimeout(state['playbackContainerTimeout']);
         
         // restart the timeout for disappearing
         state['playbackContainerTimeout'] = setTimeout(() => {
@@ -100,13 +106,11 @@ function initVideoContainerEL() {
             playbackContainer.classList.remove('active');
 
             // remove the old timeout for disappearing
-            if (state['playbackContainerTimeout']) {
-                clearTimeout(state['playbackContainerTimeout']);
-            }
+            clearTimeout(state['playbackContainerTimeout']);
         }
     })
 
-    // on click, play/pause the video and change the SVG
+    // on click, play/pause the video and change the icon
     videoPlayer.addEventListener('click', () => {
         setVideoPlayerState('toggle');
     });
@@ -116,30 +120,31 @@ function initVideoContainerEL() {
         // check if the video is loaded (editor section is active)
         if (flags['videoLoaded']) {
             if (!flags['timelineSliderDragging'] && !flags['seekSliderDragging']) {
-                // reset the video, change the SVG, and pause the video, depending on if the video has reached the end
+                // reset the video, change the icon, and pause the video, depending on if the video is outside of the timeline bounds
                 if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
                     videoPlayer.currentTime = state['timeline'].getStartTime();
         
-                    // pause the video and change the SVG
+                    // pause the video and change the icon
                     setVideoPlayerState('pause');
         
-                    // set the playback slider and timeline slider thumbs
-                    setAllThumbs();
+                    // set the seek slider and timeline slider
+                    setSeekSlider();
+                    setTimelineSlider();
                 }
         
                 // set the video current time label
                 currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
             }
-            else {
-                // pause the video and change the SVG
-                setVideoPlayerState('pause');
-            }
+            // else {
+            //     // pause the video and change the icon
+            //     // setVideoPlayerState('pause');
+            // }
         }
     });
 
     // on load of meta data, set the editor to default state
     videoPlayer.addEventListener('loadedmetadata', () => {
-        // set the timeline state and timeline overlay
+        // reset the timeline state and timeline overlay
         state['timeline'].update(0, getTruncDecimal(videoPlayer.duration, 6));
         setTimelineOverlay();
 
@@ -150,7 +155,7 @@ function initVideoContainerEL() {
         // set the video loaded flag
         flags['videoLoaded'] = true;
 
-        // play the video and change the SVG
+        // auto play the video and change the icon
         setVideoPlayerState('play');
     });
 
@@ -186,136 +191,110 @@ function initVideoContainerEL() {
         }
     });
 
-    // on click, change the video time based on the click location on the playback slider
+    // on click, change the video time based on the click location on the seek slider
     seekSlider.addEventListener('click', (pointer) => {
-        // get the new time based on click location on the playback slider
-        const newTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['seekSliderBox']);
+        videoPlayer.currentTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['seekSliderBox']);
 
-        // check if the new time is within the timeline's start and end times
-        // videoPlayer.currentTime = (newTime < state['timeline'].getStartTime() || newTime >= state['timeline'].getEndTime()) ? state['timeline'].getStartTime() : newTime;
-        videoPlayer.currentTime = newTime;
-
-        // set the playback slider and timeline slider thumbs
-        setAllThumbs();
+        // set the set slider and timeline slider
+        setSeekSlider();
+        setTimelineSlider();
     });
 
     // on mousemove, set a hover highlight based on pointer location
     seekSlider.addEventListener('mousemove', (pointer) => {
-        const seekSliderPct = getPointerEventPct(pointer, boxes['seekSliderBox']) * 100;
-        
-        seekTrack.style.backgroundImage = `linear-gradient(to right, rgba(220, 220, 220, 0.4) ${seekSliderPct}%, transparent ${seekSliderPct}%)`;
+        setSeekTrack(getPointerEventPct(pointer, boxes['seekSliderBox']) * 100);
     });
 
     // on mouseleave, remove the hover hightlight
     seekSlider.addEventListener('mouseleave', () => {
-        seekTrack.style.backgroundImage = 'none';
+        setSeekTrack(0);
     });
 
-    // on mousedown, set the timeline dragging and previously paused flags
+    // on mousedown, set the seek slider dragging and previously paused flags
     seekSlider.addEventListener('mousedown', () => { 
         flags['seekSliderDragging'] = true; 
         flags['previouslyPaused'] = videoPlayer.paused;
     });
 
-    // on mouseleave, change the volume / speed slider widths to hide
-    playbackBar.addEventListener('mouseleave', () => {
-        volumeSlider.style.width = '';
-        speedSlider.style.width = '';
+    // on mouseleave, hide the volume and speed sliders
+    mediaBar.addEventListener('mouseleave', () => {
+        volumeSlider.classList.remove('active');
+        playbackRateSlider.classList.remove('active');
     });
 
-    // on click, play/pause the video and change the SVG
+    // on click, play/pause the video and change the icon
     playPauseBtn.addEventListener('click', () => setVideoPlayerState('toggle'));
 
-    // on click, mute/unmute the video and change the SVG
+    // on click, mute/unmute the video and change the icon
     volumeBtn.addEventListener('click', () => {
-        // set the video to unmuted if the video is muted
-        if (videoPlayer.muted) {
-            videoPlayer.muted = false;
-            
-            // set the volume to 0.1 if the volume is 0
-            if (videoPlayer.volume === 0) {
-                videoPlayer.volume = 0.1;
-                data['settings']['volume'] = videoPlayer.volume;
-            }
-            
-            // set the volume input slider to match volume
-            volumeSlider.stepUp(videoPlayer.volume * 100);
-        } 
-        else {
-            // set the video to muted
-            videoPlayer.muted = true;
-            
-            // set the volume input slider to match volume
-            volumeSlider.stepDown(videoPlayer.volume * 100);
+        // set the volume to 0.1 in case the video gets unmuted
+        if (videoPlayer.volume === 0) {
+            videoPlayer.volume = data['settings']['volume'] = 0.1;
         }
 
-        // save the setting
-        data['settings']['volumeMuted'] = videoPlayer.muted;
+        videoPlayer.muted = data['settings']['volumeMuted'] = !videoPlayer.muted;
 
-        // change the volume SVG
-        setvolumeIcon();
+        // set the volume slider
+        setVolumeSlider();
     });
 
-    // on mouse enter, change the volume slider width to show
+    // on mouse enter, show the volume slider
     volumeBtn.addEventListener('mouseenter', () => {
-        volumeSlider.style.width = 'var(--vslider-alt-width)';
+        volumeSlider.classList.add('active');
+
+        // wait for the transition to finish, then capture the box
+        setTimeout(() => {
+            boxes['volumeSliderBox'] = volumeSlider.getBoundingClientRect();
+            flags['updateVolumeSlider'] = false;
+        }, 200);
     });
 
-    // on input, set the volume
-    volumeSlider.addEventListener('input', () => {
-        // set the video to muted if the volume is 0
-        videoPlayer.muted = volumeSlider.value === '0';
-
-        // set the video volume
-        videoPlayer.volume = volumeSlider.value;
-
-        // save the settings
-        data['settings']['volume'] = videoPlayer.volume;
-        data['settings']['volumeMuted'] = videoPlayer.muted;
-
-        // change the volume SVG
-        setvolumeIcon();
+    // on mouse down, set the volume slider dragging flag
+    volumeSlider.addEventListener('mousedown', () => { 
+        flags['volumeSliderDragging'] = true; 
     });
 
-    // on input, set the playback speed
-    speedSlider.addEventListener('input', () => {
-        switch (speedSlider.value) {
-            case '-2':
-                videoPlayer.playbackRate = 0.2;
-                speedLabel.textContent = '0.2';
-                break;
-            case '-1':
-                videoPlayer.playbackRate = 0.5;
-                speedLabel.textContent = '0.5';
-                break;
-            case '0':
-                videoPlayer.playbackRate = 0.7;
-                speedLabel.textContent = '0.7';
-                break;
-            default:
-                videoPlayer.playbackRate = speedSlider.value;
-                speedLabel.textContent = speedSlider.value;
-        }
+    // on mouse down, set the playback rate slider dragging flag
+    playbackRateSlider.addEventListener('mousedown', () => { 
+        flags['playbackRateSliderDragging'] = true; 
+    });
+
+    // on click, set the volume
+    volumeSlider.addEventListener('click', (pointer) => {
+        // update the video volume and settings cache
+        videoPlayer.volume = data['settings']['volume'] = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['volumeSliderBox']), 1));
+        videoPlayer.muted = data['settings']['volumeMuted'] = videoPlayer.volume === 0;
+
+        // set the volume slider
+        setVolumeSlider();
+    });
+
+    // on click, set the playback rate
+    playbackRateSlider.addEventListener('click', (pointer) => {
+        // update the video playback rate
+        videoPlayer.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(-2, Math.min(Math.round(getPointerEventLoc(pointer, boxes['playbackRateSliderBox']) / (boxes['playbackRateSliderBox'].width / 6) - 2), 4))];
+
+        // set the playback rate slider
+        setPlaybackRateSlider();
     });
 
     // on click, revert to the default playback speed
-    speedBtn.addEventListener('click', () => {
-        // set the playback speed and speed label to 1
+    playbackRateBtn.addEventListener('click', () => {
         videoPlayer.playbackRate = 1;
-        speedLabel.textContent = '1';
 
-        // set the speed input slider to match playback speed
-        if (speedSlider.value < 1) {
-            speedSlider.stepUp(Math.abs(speedSlider.value - 1));
-        }
-        else {
-            speedSlider.stepDown(speedSlider.value - 1);
-        }
+        // set the playback rate slider
+        setPlaybackRateSlider();
     });
 
-    // on mouse enter, change the speed slider width to show
-    speedBtn.addEventListener('mouseenter', () => {
-        speedSlider.style.width = 'var(--spslider-alt-width)';
+    // on mouse enter, show the playback rate slider
+    playbackRateBtn.addEventListener('mouseenter', () => {
+        playbackRateSlider.classList.add('active');
+
+        // wait for the transition to finish, then capture the box
+        setTimeout(() => {
+            boxes['playbackRateSliderBox'] = playbackRateSlider.getBoundingClientRect();
+            flags['updatePlaybackRateSlider'] = false;
+        }, 200);
     });
 
     // on click, toggle the video player fullscreen
@@ -333,19 +312,15 @@ function initVideoContainerEL() {
  * Initializes the video container
  */
 function initVideoContainer() {
-    // load each settings initial value from stored settings
+    // set the initial video volume
     videoPlayer.volume = data['settings']['volume'];
-    videoPlayer.muted = data['settings']['volumeMuted']
+    videoPlayer.muted = data['settings']['volumeMuted'];
 
-    // set the volume input slider to match volume
-    if (!videoPlayer.muted) {
-        volumeSlider.stepUp(videoPlayer.volume * 100);
-    }
-    
-    // change the volume SVG
-    setvolumeIcon();
+    // set the volume and playback rate sliders
+    setVolumeSlider();
+    setPlaybackRateSlider();
 
-    // unload the editor video
+    // standby will pause the video but hide the play pause icon overlay
     setVideoPlayerState('standby');
 }
 
@@ -358,8 +333,9 @@ function initTimelineSliderEL() {
         // get the time based on click location on the timeline slider
         videoPlayer.currentTime = state['timeline'].getDuration() * getPointerEventPct(pointer, boxes['timelineSliderBox']) + state['timeline'].getStartTime();
 
-        // set the playback slider and timeline slider thumbs
-        setAllThumbs();
+        // set the seek slider and timeline slider
+        setSeekSlider();
+        setTimelineSlider();
     });
 
     // on scroll, "zoom" in/out of the timeline
@@ -400,8 +376,9 @@ function initTimelineSliderEL() {
                     // set the timeline overlay
                     setTimelineOverlay();
 
-                    // set the playback slider and timeline slider thumbs
-                    setAllThumbs();
+                    // set the seek slider and timeline slider
+                    setSeekSlider();
+                    setTimelineSlider();
 
                     // set the video current time label
                     currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
@@ -443,8 +420,9 @@ function initTimelineSliderEL() {
                     // set the timeline overlay
                     setTimelineOverlay();
 
-                    // set the playback slider and timeline slider thumbs
-                    setAllThumbs();
+                    // set the seek slider and timeline slider
+                    setSeekSlider();
+                    setTimelineSlider();
 
                     // set the video current time label
                     currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
@@ -453,7 +431,7 @@ function initTimelineSliderEL() {
         }
     });
 
-    // on mousedown, set the timeline dragging and previously paused flags
+    // on mousedown, set the timeline slider dragging and previously paused flags
     timelineSlider.addEventListener('mousedown', () => { 
         flags['timelineSliderDragging'] = true; 
         flags['previouslyPaused'] = videoPlayer.paused;
@@ -462,24 +440,25 @@ function initTimelineSliderEL() {
     // on mouseup, validate the slider input and change the video time
     document.addEventListener('mouseup', () => { 
         if (flags['timelineSliderDragging'] === true || flags['seekSliderDragging'] === true) {
-            // set the timeline and playback dragging flags to false
+            // set the seek slider and  timeline slider dragging flags to false
             flags['timelineSliderDragging'] = false; 
             flags['seekSliderDragging'] = false;
 
-            // check if the video has reached the end, set it back the start
+            // check if the video is out of the timeline bounds, set it back the start
             if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
                 videoPlayer.currentTime = state['timeline'].getStartTime();
 
-                // pause the video and change the SVG
+                // pause the video and change the icon
                 setVideoPlayerState('pause');
 
-                // set the playback slider and timeline slider thumbs
-                setAllThumbs();
+                // set the seek slider and timeline slider
+                setSeekSlider();
+                setTimelineSlider();
             }
             else {
-                // check if the video was previously paused
+                // check if the video was not previously paused
                 if (!flags['previouslyPaused']) {
-                    // play the video and change the SVG
+                    // play the video and change the icon
                     setVideoPlayerState('play');
                 }
             }
@@ -487,42 +466,32 @@ function initTimelineSliderEL() {
             // set the video current time label
             currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
         }
-    });
-
-    // on mousemove, match playback and timeline slider position and set video time
-    document.addEventListener('mousemove', (pointer) => {
-        // the pointer location on the timeline slider
-        let location;
-
-        // check if the playback slider is dragging
-        if (flags['seekSliderDragging']) {
-            // pause the video and change the SVG
-            setVideoPlayerState('pause');
-
-            // get the pointer location on the playback slider
-            location = getPointerEventLoc(pointer, boxes['seekSliderBox']);
-            
-            // check if the pointer is within the playback slider
-            if (location < 0) {
-                // set the playback slider thumb to the start, set the video time to the start
-                seekThumb.style.transform = `translateX(0px)`;
-                videoPlayer.currentTime = 0;
-            } 
+        else {
+            // set the volume slider dragging or playback rate slider dragging flag to false
+            if (flags['volumeSliderDragging']) {
+                flags['volumeSliderDragging'] = false;
+            }
             else {
-                if (location > boxes['seekSliderBox'].width) {
-                    // set the playback slider thumb to the end, set the video time to the end
-                    seekThumb.style.transform = `translateX(${boxes['seekSliderBox'].width}px)`;
-                    videoPlayer.currentTime = videoPlayer.duration;
-                } 
-                else {
-                    // set the playback slider thumb to the pointer, set the video time to the relative time
-                    seekThumb.style.transform = `translateX(${location}px)`;
-                    videoPlayer.currentTime = getPointerEventPct(pointer, boxes['seekSliderBox']) * videoPlayer.duration;
+                if (flags['playbackRateSliderDragging']) {
+                    flags['playbackRateSliderDragging'] = false;
                 }
             }
+        }
+    });
 
-            // set the playback slider and timeline slider thumbs
-            setAllThumbs();
+    // on mousemove, match seek slider and timeline slider position and set video time
+    document.addEventListener('mousemove', (pointer) => {
+        // check if the seek slider is dragging
+        if (flags['seekSliderDragging']) {
+            // pause the video and change the icon
+            setVideoPlayerState('pause');
+
+            /**/
+            videoPlayer.currentTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['seekSliderBox']), 1)) * videoPlayer.duration;
+
+            // set the seek slider and timeline slider
+            setSeekSlider();
+            setTimelineSlider(); 
 
             // set the video current time label
             currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
@@ -530,61 +499,40 @@ function initTimelineSliderEL() {
         else {
             // check if the timeline slider is dragging
             if (flags['timelineSliderDragging']) {
-                // pause the video and change the SVG
+                // pause the video and change the icon
                 setVideoPlayerState('pause');
 
-                // get the pointer location on the timeline slider
-                location = getPointerEventLoc(pointer, boxes['timelineSliderBox']);
-                
-                // check if the pointer is within the timeline slider
-                if (location < 0) {
-                    // set the timeline slider thumb to the start, set the video time to the start
-                    timelineThumb.style.transform = `translateX(0px)`;
-                    videoPlayer.currentTime = state['timeline'].getStartTime();
-                } 
-                else {
-                    if (location > boxes['timelineSliderBox'].width) {
-                        // set the timeline slider thumb to the end, set the video time to the end
-                        timelineThumb.style.transform = `translateX(${boxes['timelineSliderBox'].width}px)`;
-                        videoPlayer.currentTime = state['timeline'].getEndTime();
-                    } 
-                    else {
-                        // set the timeline slider thumb to the pointer, set the video time to the relative time
-                        timelineThumb.style.transform = `translateX(${location}px)`;
-                        videoPlayer.currentTime = state['timeline'].getStartTime() + getPointerEventPct(pointer, boxes['timelineSliderBox']) * state['timeline'].getDuration();
-                    }
-                }
+                /**/
+                videoPlayer.currentTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['timelineSliderBox']), 1)) * state['timeline'].getDuration() + state['timeline'].getStartTime();
 
-                // set the playback slider thumb
-                setseekThumb();
+                // set the seek slider and timeline slider
+                setSeekSlider();
+                setTimelineSlider();
 
                 // set the video current time label
                 currentVideoTimeLabel.textContent = getReadableDuration(videoPlayer.currentTime);
             }
+            else {
+                if (flags['volumeSliderDragging']) {
+                    // update the video volume and settings cache
+                    videoPlayer.volume = data['settings']['volume'] = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['volumeSliderBox']), 1));
+                    videoPlayer.muted = data['settings']['volumeMuted'] = videoPlayer.volume === 0;
+
+                    // set the volume slider
+                    setVolumeSlider();
+                }
+                else {
+                    if (flags['playbackRateSliderDragging']) {
+                        // update the video playback rate
+                        videoPlayer.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(-2, Math.min(Math.round(getPointerEventLoc(pointer, boxes['playbackRateSliderBox']) / (boxes['playbackRateSliderBox'].width / 6) - 2), 4))];
+
+                        // set the playback rate slider
+                        setPlaybackRateSlider();
+                    }
+                }
+            }
         }
     });
-}
-
-/**
- * Sets the volume SVG based on the volume
- */
-function setvolumeIcon() {
-    if (videoPlayer.muted) {
-        setSVG(volumeIcon, 'volume-off');
-    }
-    else {
-        if (videoPlayer.volume > 0.6) {
-            setSVG(volumeIcon, 'volume-up');
-        }
-        else {
-            if (videoPlayer.volume > 0.1) {
-                setSVG(volumeIcon, 'volume-down');
-            }
-            else {
-                setSVG(volumeIcon, 'volume-mute');
-            }
-        }
-    }
 }
 
 /**
@@ -594,33 +542,33 @@ function setvolumeIcon() {
 function setVideoPlayerState(action) {
     switch (action) {
         case 'play':
-            // play the video and change the SVG
-            setSVG(playPauseIcon, 'pause');
+            // play the video, change the icon to pause, hide the overlay
+            setIcon(playPauseIcon, 'pause');
             playPauseOverlayIcon.style.opacity = '';
             videoPlayer.play();
             break;
         case 'pause':
-            // pause the video and change the SVG
-            setSVG(playPauseIcon, 'play-arrow');
+            // pause the video, change the icon to play, show the overlay
+            setIcon(playPauseIcon, 'play-arrow');
             playPauseOverlayIcon.style.opacity = '1';
             videoPlayer.pause();
             break;
         case 'toggle':
-            // play/pause the video and change the SVG
+            // play/pause the video, change the icon to the opposite, toggle the overlay
             if (videoPlayer.paused || videoPlayer.ended) {
-                setSVG(playPauseIcon, 'pause');
+                setIcon(playPauseIcon, 'pause');
                 playPauseOverlayIcon.style.opacity = '';
                 videoPlayer.play();
             }
             else {
-                setSVG(playPauseIcon, 'play-arrow');
+                setIcon(playPauseIcon, 'play-arrow');
                 playPauseOverlayIcon.style.opacity = '1';
                 videoPlayer.pause();
             }
             break;
         case 'standby':
-            // pause the video and change the SVG
-            setSVG(playPauseIcon, 'pause');
+            // pause the video, change the icon to pause, hide the overlay
+            setIcon(playPauseIcon, 'pause');
             playPauseOverlayIcon.style.opacity = '';
             videoPlayer.pause();
             break;
@@ -651,86 +599,172 @@ function getPointerEventPct(pointer, box) {
 }
 
 /**
- * Sets the playback thumb position based on video time
+ * Truncates a decimal value by a specified number of digits
+ * 
+ * @param {number} value - The value to truncate
+ * @param {number} places - The number of decimal digits to truncate to
+ * @returns 
  */
-function setseekThumb() {
-    seekThumb.style.transform = `translateX(${videoPlayer.currentTime / videoPlayer.duration * boxes['seekSliderBox'].width}px)`;
+function getTruncDecimal(value, places) {
+    return Math.trunc(value * Math.pow(10, places)) / Math.pow(10, places);
 }
 
 /**
- * Resizes the playback slider
+ * Gets the duration in a readable format
+ * 
+ * @param {number} time - The duration in seconds
+ * @returns {string} The readable duration (hh:mm:ss or mm:ss)
  */
-function resizeseekSlider() {
-    // get the new playback slider bounding box
+function getReadableDuration(time) {
+    // gets the days, hours, minutes, and seconds of the time
+    const parsedTime = getParsedTime(time);
+
+    // return the duration in hh:mm:ss or mm:ss format
+    if (parsedTime[1] > 0) {
+        return `${parsedTime[1]}:${parsedTime[2] < 10 ? '0' : ''}${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+    }
+    else {
+        return `${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+    }
+}
+
+/**
+ * Sets the seek slider thumb and overlay
+ */
+function setSeekSlider() {
+    setSeekThumb(videoPlayer.currentTime / videoPlayer.duration * boxes['seekSliderBox'].width);
+    setSeekOverlay(videoPlayer.currentTime / videoPlayer.duration * 100);
+}
+
+/**
+ * Sets the seek slider track
+ * 
+ * @param {number} thumbLocation - The location of the seek thumb
+ */
+function setSeekTrack(thumbLocation) {
+    seekTrack.style.background = `linear-gradient(to right, var(--strack-lgradientcolor) ${thumbLocation}%, var(--strack-bgcolor) ${thumbLocation}%`;
+}
+
+/**
+ * Sets the seek slider overlay
+ * 
+ * @param {number} thumbLocation - The location of the seek thumb
+ */
+function setSeekOverlay(thumbLocation) {
+    seekOverlay.style.background = `linear-gradient(to right, var(--soverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+}
+
+/**
+ * Sets the seek slider thumb
+ * 
+ * @param {number} thumbLocation - The location of the seek thumb
+ */
+function setSeekThumb(thumbLocation) {
+    seekThumb.style.transform = `translateX(${thumbLocation}px)`;
+}
+
+/**
+ * Updates the seek slider
+ */
+function updateSeekSlider() {
+    // get the new seek slider bounding box
     boxes['seekSliderBox'] = seekSlider.getBoundingClientRect();
 
     // if the video is loaded, set the new playback thumb position
     if (flags['videoLoaded']) {
-        setseekThumb();
+        setSeekSlider();
     }
 }
 
 /**
- * Sets the timeline thumb position based on video time
+ * Sets the volume slider thumb and overlay
  */
-function setTimelineThumb() {
-    // get the percentage location of the video time within the timeline bounding box
-    const percentage = (videoPlayer.currentTime - state['timeline'].getStartTime()) / state['timeline'].getDuration();
+function setVolumeSlider() { 
+    // if the video is muted, move the slider to the left and set the muted icon
+    if (videoPlayer.muted) {
+        setIcon(volumeIcon, 'volume-off');
 
-    // set the timeline thumb position within the timeline bounding box
-    if (percentage < 0) {
-        timelineThumb.style.transform = `translateX(0px)`;
+        setVolumeThumb(0);
+        setVolumeOverlay(0);
     }
     else {
-        if (percentage > 1) {
-            timelineThumb.style.transform = `translateX(${boxes['timelineSliderBox'].width}px)`;
+        // else, set the correct volume icon
+        if (videoPlayer.volume > 0.6) {
+            setIcon(volumeIcon, 'volume-up');
         }
         else {
-            timelineThumb.style.transform = `translateX(${percentage * boxes['timelineSliderBox'].width}px)`;
+            if (videoPlayer.volume > 0.1) {
+                setIcon(volumeIcon, 'volume-down');
+            }
+            else {
+                setIcon(volumeIcon, 'volume-mute');
+            }
         }
+
+        // set the volume thumb and overlay (trailing bar)
+        setVolumeThumb(videoPlayer.volume * volumeSliderWidth);
+        setVolumeOverlay(videoPlayer.volume * 100);
     }
 }
 
 /**
- * Resizes the timeline slider
+ * Sets the volume slider overlay
+ * 
+ * @param {number} thumbLocation - The location of the volume thumb
  */
-function resizeTimelineSlider() {
-    // get the new timeline slider bounding box
-    boxes['timelineSliderBox'] = timelineSlider.getBoundingClientRect();
-
-    // set the timeline marker viewbox
-    timelineOverlay.setAttribute('viewbox', `0 0 ${boxes['timelineSliderBox'].width} 60`);
-
-    // if the video is loaded, set the new timeline overlay and thumb position
-    if (flags['videoLoaded']) {
-        setTimelineOverlay();
-        setTimelineThumb();
-    }
+function setVolumeOverlay(thumbLocation) {
+    volumeOverlay.style.background = `linear-gradient(to right, var(--voverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 
 /**
- * Sets the playback and timeline thumb positions based on video time
+ * Sets the volume slider thumb
+ * 
+ * @param {number} thumbLocation - The location of the volume thumb
  */
-function setAllThumbs() {
-    setseekThumb();
-    setTimelineThumb();
+function setVolumeThumb(thumbLocation) {
+    volumeThumb.style.transform = `translateX(${thumbLocation}px)`;
 }
 
 /**
- * Syncs the playback and timeline thumbs to the video frame
+ * Updates the volume slider
  */
-function syncThumbs() {
-    // set the playback slider and timeline slider thumbs
-    setAllThumbs();
-
-    // request the next animation frame if the video is playing
-    if (!videoPlayer.paused && !videoPlayer.ended) {
-        state['animationID'] = requestAnimationFrame(syncThumbs);
-    }
+function updateVolumeSlider() {
+    flags['updateVolumeSlider'] = true;
 }
 
 /**
- * Sets the ticks on the timeline overlay
+ * Sets the playback rate slider thumb
+ */
+function setPlaybackRateSlider() {
+    playbackRateLabel.textContent = videoPlayer.playbackRate;
+    setPlaybackRateThumb(playbackRateSliderWidth / 6 * (PLAYBACK_RATE_MAPPING[videoPlayer.playbackRate] + 2));
+}
+
+/**
+ * Sets the playback rate slider thumb
+ * 
+ * @param {number} thumbLocation - The location of the playback rate thumb
+ */
+function setPlaybackRateThumb(thumbLocation) {
+    playbackRateThumb.style.transform = `translateX(${thumbLocation}px)`;
+}
+
+/**
+ * Updates the playback rate slider
+ */
+function updatePlaybackRateSlider() {
+    flags['updatePlaybackRateSlider'] = true;
+}
+
+/**
+ * Sets the timeline slider thumb
+ */
+function setTimelineSlider() {
+    setTimelineThumb(Math.max(0, Math.min((videoPlayer.currentTime - state['timeline'].getStartTime()) / state['timeline'].getDuration(), 1) * boxes['timelineSliderBox'].width));
+}
+
+/**
+ * Sets the timeline overlay
  */
 function setTimelineOverlay() {
     // get the location of the first tick in seconds and the number of ticks based on the duration
@@ -796,31 +830,42 @@ function setTimelineOverlay() {
 }
 
 /**
- * Truncates a decimal value by a specified number of digits
+ * Sets the timeline slider thumb
  * 
- * @param {number} value - The value to truncate
- * @param {number} places - The number of decimal digits to truncate to
- * @returns 
+ * @param {number} thumbLocation - The location of the timeline thumb
  */
-function getTruncDecimal(value, places) {
-    return Math.trunc(value * Math.pow(10, places)) / Math.pow(10, places);
+function setTimelineThumb(thumbLocation) {
+    // get the percentage location of the video time within the timeline bounding box
+    timelineThumb.style.transform = `translateX(${thumbLocation}px)`;
 }
 
 /**
- * Gets the duration in a readable format
- * 
- * @param {number} time - The duration in seconds
- * @returns {string} The readable duration
+ * Updates the timeline slider
  */
-function getReadableDuration(time) {
-    // gets the days, hours, minutes, and seconds of the time
-    const parsedTime = getParsedTime(time);
+function updateTimelineSlider() {
+    // get the new timeline slider bounding box
+    boxes['timelineSliderBox'] = timelineSlider.getBoundingClientRect();
 
-    // return the duration in hh:mm:ss or mm:ss format
-    if (parsedTime[1] > 0) {
-        return `${parsedTime[1]}:${parsedTime[2] < 10 ? '0' : ''}${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+    // set the timeline marker viewbox
+    timelineOverlay.setAttribute('viewbox', `0 0 ${boxes['timelineSliderBox'].width} 60`);
+
+    // if the video is loaded, set the new timeline overlay and thumb position
+    if (flags['videoLoaded']) {
+        setTimelineOverlay();
+        setTimelineSlider();
     }
-    else {
-        return `${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+}
+
+/**
+ * Syncs the seek and timeline thumbs to the video frame
+ */
+function syncSeekTimelineSliders() {
+    // set the seek slider and timeline slider
+    setSeekSlider();
+    setTimelineSlider();
+
+    // request the next animation frame if the video is playing
+    if (!videoPlayer.paused && !videoPlayer.ended) {
+        state['animationID'] = requestAnimationFrame(syncSeekTimelineSliders);
     }
 }

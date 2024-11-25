@@ -126,7 +126,7 @@
         <div id="block-content">
             <p id="status-label-general">Loading...</p>
 
-            <section id="section-directories" class="content-section active">
+            <section id="section-directories" class="content-section">
                 <h2 class="content-label">Directories</h2>
 
                 <hr class="content-divider">
@@ -207,7 +207,7 @@
                 </div>
             </section>
 
-            <section id="section-editor" class="content-section">
+            <section id="section-editor" class="content-section active">
                 <h2 class="content-label">Editor</h2>
 
                 <hr class="content-divider">
@@ -225,39 +225,64 @@
                         <div id="ctr-playback">
                              <div id="slider-seek">
                                 <div id="track-seek">
+                                    <div id="overlay-seek"></div>
                                     <div id="thumb-seek"></div>
                                 </div>
                              </div>
 
-                            <div id="bar-playback">
-                                <button id="btn-play-pause" class="playback-btn">
-                                    <svg id="icon-play-pause" class="playback-icon">
+                            <div id="bar-media">
+                                <button id="btn-play-pause" class="media-btn">
+                                    <svg id="icon-play-pause" class="media-icon">
                                         <use href="../assets/svg/play-arrow.svg#play-arrow"></use>
                                     </svg>
                                 </button>
 
-                                <button id="btn-volume" class="playback-btn">
-                                    <svg id="icon-volume" class="playback-icon">
+                                <button id="btn-volume" class="media-btn">
+                                    <svg id="icon-volume" class="media-icon">
                                         <use href="../assets/svg/volume-down.svg#volume-down"></use>
                                     </svg>
                                 </button>
 
-                                <input id="slider-volume" class="playback-slider" type="range" min="0" max="1" value="0" step="0.01">
+                                <div id="slider-volume" class="media-slider">
+                                    <div id="track-volume" class="media-track">
+                                        <div id="overlay-volume" class="media-overlay"></div>
+                                        <div id="thumb-volume" class="media-thumb"></div>
+                                    </div>
+                                </div>
 
                                 <div id="label-ctr-current-video">
                                     <span id="time-label-current-video" class="current-video-label">88:88</span>
                                     <span id="duration-label-current-video" class="current-video-label">/88:88</span>
                                 </div>
 
-                                <input id="slider-speed" class="playback-slider" type="range" min="-2" max="4" value="1" step="1">
+                                <div id="slider-playback-rate" class="media-slider">
+                                    <div id="track-playback-rate" class="media-track">
+                                        <svg id="overlay-playback-rate" class="media-overlay" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160 20">
+                                            <!-- <text y="8" x="0">0.2</text>
+                                            <text y="8" x="25">0.5</text>
+                                            <text y="8" x="50">0.7</text>
+                                            <text y="8" x="80">1</text>
+                                            <text y="8" x="104">2</text>
+                                            <text y="8" x="129">3</text>
+                                            <text y="8" x="153">4</text> -->
 
-                                <button id="btn-speed" class="playback-btn">
-                                    <span id="label-speed" class="speed-label">1</span>
-                                    <span id="multiplier-label-speed" class="speed-label">X</span>
+                                            <line y1="17" y2="19" x1="32" x2="32"></line>
+                                            <line y1="17" y2="19" x1="57" x2="57"></line>
+                                            <line y1="17" y2="19" x1="82" x2="82"></line>
+                                            <line y1="17" y2="19" x1="107" x2="107"></line>
+                                            <line y1="17" y2="19" x1="132" x2="132"></line>
+                                        </svg>
+                                        <div id="thumb-playback-rate" class="media-thumb"></div>
+                                    </div>
+                                </div>
+
+                                <button id="btn-playback-rate" class="media-btn">
+                                    <span id="label-playback-rate" class="playback-rate-label">1</span>
+                                    <span id="multiplier-label-playback-rate" class="playback-rate-label">X</span>
                                 </button>
                                 
-                                <button id="btn-fullscreen" class="playback-btn">
-                                    <svg id="icon-fullscreen" class="playback-icon">
+                                <button id="btn-fullscreen" class="media-btn">
+                                    <svg id="icon-fullscreen" class="media-icon">
                                         <use href="../assets/svg/fullscreen.svg#fullscreen"></use>
                                     </svg>
                                 </button>
@@ -266,8 +291,8 @@
                     </div>
 
                     <div id="slider-timeline">
-                        <svg id="overlay-timeline" xmlns="http://www.w3.org/2000/svg"></svg>
                         <div id="track-timeline">
+                            <svg id="overlay-timeline" xmlns="http://www.w3.org/2000/svg"></svg>
                             <div id="thumb-timeline"></div>
                         </div>
                     </div>

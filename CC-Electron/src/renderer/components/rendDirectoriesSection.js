@@ -4,11 +4,12 @@
  * @module rendDirectoriesSection
  * @requires rendVariables
  * @requires rendSharedFunctions
+ * @requires rendEditorSection
  */
 import { 
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -16,22 +17,26 @@ import {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { getReadableDuration } from './rendEditorSection.js';
 
 /**
- * @exports initRendDirectoriesSection, loadGallery, resizeGallery
+ * @exports initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn
  */
-export { initRendDirectoriesSection, loadGallery, resizeGallery }
+export { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn }
 
 /**
  * Initializes the directories section
@@ -71,7 +76,7 @@ function initDirectoryGalleryEL() {
         capturesGallery.scrollBy({left: boxes['galleryBox'].width, behavior: 'smooth'});
     });
 
-
+    // on scroll, toggle the captures gallery buttons
     capturesGallery.addEventListener('scroll', toggleCapturesGalleryBtn);
 }
 
@@ -81,6 +86,7 @@ function initDirectoryGalleryEL() {
 async function loadGallery(initialization) {
     // the clone of the video preview template
     let videoPreviewClone;
+    let videoPreviewContainer;
 
     // get the current date
     const currentDate = new Date();
@@ -88,7 +94,7 @@ async function loadGallery(initialization) {
     // get the videos
     data['videos'] = await attemptAsyncFunction(() => window.filesAPI.getAllVideosData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
-    // remove every video preview from the captures gallery
+    // remove every existing video preview from the captures gallery
     while (capturesGallery.firstElementChild)
     {
         capturesGallery.removeChild(capturesGallery.lastElementChild);
@@ -98,22 +104,23 @@ async function loadGallery(initialization) {
     for (const videoData of data['videos']) {
         // get a clone of the video preview template
         videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
-
-        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(videoData['duration']);
+        videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
 
         // set the video source
-        videoPreviewClone.querySelector('.video-preview-ctr').dataset.src = videoData['path'];
+        videoPreviewContainer.dataset.src = videoData['path'];
         // set the video thumbnail source
         videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', videoData['thumbnailPath']);
-        // set the video age
+        // set the video duration
+        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(videoData['duration']);
+        // set the video game
         videoPreviewClone.querySelector('.video-game-label').textContent = `${videoData['game']}`;
-
+        // set the video age
         videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND)}`;
         // set the video name with extension
         videoPreviewClone.querySelector('.video-name-label').textContent = videoData['nameExt'];
 
         // on click, open the video in the editor section
-        videoPreviewClone.querySelector('.video-preview-ctr').addEventListener('click', () => {
+        videoPreviewContainer.addEventListener('click', () => {
             // set the video player source
             videoPlayer.setAttribute('src', videoData['path']);
 
@@ -125,13 +132,14 @@ async function loadGallery(initialization) {
         capturesGallery.appendChild(videoPreviewClone);
     }
 
+    // on scroll, toggle the captures gallery buttons
     toggleCapturesGalleryBtn();
 }
 
 /**
- * Resizes the gallery
+ * updates the gallery
  */
-function resizeGallery() {
+function updateGallery() {
     let numVideoPreview;
 
     // get the new gallery bounding box
@@ -151,24 +159,6 @@ function resizeGallery() {
 function getReadableAge(time) {
     // gets the days, hours, minutes, and seconds of the time
     const parsedTime = getParsedTime(time);
-
-    // // return the age based on the largest non-zero time segment (days, hours, minutes)
-    // if (parsedTime[0] > 0) {
-    //     return `${parsedTime[0]} day${parsedTime[0] > 1 ? 's' : ''} ago`;
-    // }
-    // else {
-    //     if (parsedTime[1] > 0) {
-    //         return `${parsedTime[1]} hour${parsedTime[1] > 1 ? 's' : ''} ago`;
-    //     }
-    //     else {
-    //         if (parsedTime[2] > 0) {
-    //             return `${parsedTime[2]} minute${parsedTime[2] !== 1 ? 's' : ''} ago`;
-    //         }
-    //         else {
-    //             return `Just Now`;
-    //         }
-    //     }
-    // }
 
     // return the age based on the largest non-zero time segment (days, hours, minutes)
     if (parsedTime[0] > 999) {
@@ -194,7 +184,11 @@ function getReadableAge(time) {
     }
 }
 
+/**
+ * Toggles the captures gallery button on or off (visually)
+ */
 function toggleCapturesGalleryBtn() {
+    // if there is more to scroll left, enable the button
     if (capturesGallery.scrollLeft > 0) {
         capturesLeftBtn.classList.add('active');
     }
@@ -202,6 +196,7 @@ function toggleCapturesGalleryBtn() {
         capturesLeftBtn.classList.remove('active');
     }
     
+    // if there is more to scroll right, enable the button
     if (capturesGallery.scrollLeft < (capturesGallery.scrollWidth - Math.ceil(boxes['galleryBox'].width))) {
         capturesRightBtn.classList.add('active');
     }

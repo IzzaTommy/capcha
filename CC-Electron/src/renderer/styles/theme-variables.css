@@ -159,32 +159,41 @@ html[data-theme='dark'] {
 
     /* ==== strack -> Seek Track ==== */
     --strack-bgcolor: rgba(137, 137, 137, 0.4);
+    --strack-lgradientcolor: rgba(220, 220, 220, 0.4);
 
-    /* ==== sthumb -> Seek Thumb ==== */
-    --sthumb-bscolor: #00a9ff;
+    /* ==== soverlay -> Seek Overlay ==== */
+    --soverlay-lgradientcolor: #00a9ff;
 
-    /* ==== pbar -> Playback Bar ==== */
-    --pbar-lgradientcolor: rgba(0, 0, 0, 0.75);
+    /* ==== mbar -> Media Bar ==== */
+    --mbar-lgradientcolor: rgba(0, 0, 0, 0.75);
 
-    /* ==== picon -> Playback Icon ==== */
-    --picon-fill: #dddddd;
+    /* ==== micon -> Media Icon ==== */
+    --micon-fill: #dddddd;
 
-    /* ==== splabel -> Speed Label ==== */
-    --splabel-color: #dddddd;
+    /* ==== prlabel -> Playback Rate Label ==== */
+    --prlabel-color: #dddddd;
 
-    /* ==== pslider -> Playback Slider ==== */
-    --pslider-thumb-bgcolor: #00a9ff;
+    /* ==== mtrack-> Media Track ==== */
+    --mtrack-bgcolor: #dddddd;
 
-    /* ==== vslider -> Volume Slider ==== */
-    --vslider-thumb-bshadowcolor: #00a9ff;
+    /* ==== mthumb -> Media Thumb ==== */
+    --mthumb-bgcolor: #00a9ff;
 
-    --vslider-track-bgcolor: #dddddd;
+    /* ==== voverlay -> Volume Overlay ==== */
+    --voverlay-lgradientcolor: #00a9ff;
+
+    /* ==== proverlay -> Playback Rate Overlay ==== */
+    --proverlay-fill: #363636;
+    --proverlay-stroke: #363636;
+
+    /* --proverlay-text-fill: #dddddd;
+    --proverlay-text-stroke: #dddddd; */
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-color: #dddddd;
 
-    /* ==== tslider -> Timeline Slider ==== */
-    --tslider-bgcolor: #373737;
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-bgcolor: #373737;
 
     /* ==== toverlay -> Timeline Overlay ==== */
     --toverlay-fill: #8e8e8e;
@@ -197,8 +206,8 @@ html[data-theme='dark'] {
     --tthumb-bgcolor: #dddddd;
 
     /* ==== stctr -> Setting Container ==== */
-    --stctr-alt-bcolor: transparent;
-    --stctr-alt-bgcolor: #3c3c3c;
+    --stctr-bcolor: transparent;
+    --stctr-bgcolor: #3c3c3c;
 
     /* ==== stlabel -> Setting Label ==== */
     --stlabel-color: #dddddd;
@@ -377,32 +386,41 @@ html[data-theme='light'] {
 
     /* ==== strack -> Seek Track ==== */
     --strack-bgcolor: rgba(137, 137, 137, 0.4);
+    --strack-lgradientcolor: rgba(220, 220, 220, 0.4);
 
-    /* ==== sthumb -> Seek Thumb ==== */
-    --sthumb-bscolor: #00a9ff;
+    /* ==== soverlay -> Seek Overlay ==== */
+    --soverlay-lgradientcolor: #00a9ff;
 
-    /* ==== pbar -> Playback Bar ==== */
-    --pbar-lgradientcolor: rgba(0, 0, 0, 0.75);
+    /* ==== mbar -> Media Bar ==== */
+    --mbar-lgradientcolor: rgba(0, 0, 0, 0.75);
 
-    /* ==== picon -> Playback Icon ==== */
-    --picon-fill: #dddddd;
+    /* ==== micon -> Media Icon ==== */
+    --micon-fill: #dddddd;
 
-    /* ==== splabel -> Speed Label ==== */
-    --splabel-color: #dddddd;
+    /* ==== prlabel -> Playback Rate Label ==== */
+    --prlabel-color: #dddddd;
 
-    /* ==== pslider -> Playback Slider ==== */
-    --pslider-thumb-bgcolor: #00a9ff;
+    /* ==== mtrack-> Media Track ==== */
+    --mtrack-bgcolor: #dddddd;
 
-    /* ==== vslider -> Volume Slider ==== */
-    --vslider-thumb-bshadowcolor: #00a9ff;
+    /* ==== mthumb -> Media Thumb ==== */
+    --mthumb-bgcolor: #00a9ff;
 
-    --vslider-track-bgcolor: #dddddd;
+    /* ==== voverlay -> Volume Overlay ==== */
+    --voverlay-lgradientcolor: #00a9ff;
+
+    /* ==== proverlay -> Playback Rate Overlay ==== */
+    --proverlay-fill: #dddddd;
+    --proverlay-stroke: #dddddd;
+
+    /* --proverlay-text-fill: #dddddd;
+    --proverlay-text-stroke: #dddddd; */
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-color: #dddddd;
 
-    /* ==== tslider -> Timeline Slider ==== */
-    --tslider-bgcolor: #dfe1e5;
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-bgcolor: #dfe1e5;
 
     /* ==== toverlay -> Timeline Overlay ==== */
     --toverlay-fill: #797b7e;
@@ -415,8 +433,8 @@ html[data-theme='light'] {
     --tthumb-bgcolor: #1a69e0;
 
     /* ==== stctr -> Setting Container ==== */
-    --stctr-alt-bcolor: #d2dade;
-    --stctr-alt-bgcolor: transparent;
+    --stctr-bcolor: #d2dade;
+    --stctr-bgcolor: transparent;
 
     /* ==== stlabel -> Setting Label ==== */
     --stlabel-color: #1a69e0;
@@ -505,17 +523,14 @@ html {
     /* ==== strack -> Seek Track ==== */
     --strack-transition: transform 0.2s ease 0s;
 
-    /* ==== pbtn -> Playback Button ==== */
-    --pbtn-transition: background-color 0.3s ease 0s;
+    /* ==== mbtn -> Media Button ==== */
+    --mbtn-transition: background-color 0.3s ease 0s;
 
-    /* ==== picon -> Playback Icon ==== */
-    --picon-transition: fill 0.3s ease 0s;
+    /* ==== micon -> Media Icon ==== */
+    --micon-transition: fill 0.3s ease 0s;
 
-    /* ==== vslider -> Volume Slider ==== */
-    --vslider-transition: width 0.1s ease 0s;
-
-    /* ==== spslider -> Speed Slider ==== */
-    --spslider-transition: width 0.1s ease 0s;
+    /* ==== mslider -> Media Slider ==== */
+    --mslider-transition: width 0.1s ease 0s;
 
     /* ==== stctr -> Setting Container ==== */
     --stctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;

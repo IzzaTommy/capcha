@@ -8,7 +8,7 @@ import { TimelineState } from './timelineState.js';
 
 /**
  * @exports GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
- *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
+ *  SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, PLAYBACK_RATE_MAPPING, 
  *  html, 
  *  initializationOverlay, initializationStatusLabel, 
  *  titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -16,19 +16,23 @@ import { TimelineState } from './timelineState.js';
  *  navToggleBtn, navToggleIcon, 
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
  *  videoContainer, videoPlayer, playPauseOverlayIcon, 
- *  playbackContainer, seekSlider, seekTrack, seekThumb, 
- *  playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
- *  timelineSlider, timelineOverlay, timelineTrack, timelineThumb, timeline, 
+ *  playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+ *  mediaBar, playPauseBtn, playPauseIcon, 
+ *  volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+ *  currentVideoTimeLabel, currentVideoDurationLabel, 
+ *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+ *  fullscreenBtn, fullscreenIcon, 
+ *  timelineSlider, timelineOverlay, timelineThumb, timeline, 
  *  mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
  *  data, state, 
  *  initRendVariables 
  */
-export { 
+export {
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -36,9 +40,13 @@ export {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
@@ -46,7 +54,7 @@ export {
     initRendVariables 
 };
 
-// timeline, time, and style constants
+// timeline, time, mapping, and style constants
 const GROW_FACTOR = 0.15;
 const REDUCE_FACTOR = 0.1;
 const MIN_TIMELINE_ZOOM = 30;
@@ -55,6 +63,18 @@ const MSECONDS_IN_SECOND = 1000;
 const SECONDS_IN_DAY = 86400;
 const SECONDS_IN_HOUR = 3600;
 const SECONDS_IN_MINUTE = 60;
+const PLAYBACK_RATE_MAPPING = {
+    '-2': 0.2, 
+    '-1': 0.5, 
+    '0': 0.7, 
+    '1': 1, 
+    '2': 2, 
+    '3': 3, 
+    '4': 4, 
+    '0.7': 0,
+    '0.5': -1, 
+    '0.2': -2 
+};
 const style = getComputedStyle(document.documentElement);
 
 // asynchronous function attempts and delay
@@ -70,9 +90,12 @@ let html,
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playbackBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
 
@@ -135,9 +158,10 @@ function initRendVariables() {
 
     seekSlider = document.getElementById('slider-seek');
     seekTrack = document.getElementById('track-seek');
+    seekOverlay = document.getElementById('overlay-seek');
     seekThumb = document.getElementById('thumb-seek');
 
-    playbackBar = document.getElementById('bar-playback');
+    mediaBar = document.getElementById('bar-media');
 
     playPauseBtn = document.getElementById('btn-play-pause');
     playPauseIcon = playPauseBtn.querySelector('#icon-play-pause > use');
@@ -145,20 +169,24 @@ function initRendVariables() {
     volumeBtn = document.getElementById('btn-volume');
     volumeIcon = volumeBtn.querySelector('#icon-volume > use');
     volumeSlider = document.getElementById('slider-volume');
+    volumeSliderWidth = parseInt(style.getPropertyValue('--vslider-width'));
+    volumeOverlay = document.getElementById('overlay-volume');
+    volumeThumb = document.getElementById('thumb-volume');
 
     currentVideoTimeLabel = document.getElementById('time-label-current-video');
     currentVideoDurationLabel = document.getElementById('duration-label-current-video');
 
-    speedSlider = document.getElementById('slider-speed');
-    speedBtn = document.getElementById('btn-speed');
-    speedLabel = document.getElementById('label-speed');
+    playbackRateSlider = document.getElementById('slider-playback-rate');
+    playbackRateSliderWidth = parseInt(style.getPropertyValue('--prslider-width'));
+    playbackRateThumb = document.getElementById('thumb-playback-rate');
+    playbackRateBtn = document.getElementById('btn-playback-rate');
+    playbackRateLabel = document.getElementById('label-playback-rate');
 
     fullscreenBtn = document.getElementById('btn-fullscreen');
     fullscreenIcon = fullscreenBtn.querySelector('#icon-fullscreen > use');
 
     timelineSlider = document.getElementById('slider-timeline');
     timelineOverlay = document.getElementById('overlay-timeline');
-    timelineTrack = document.getElementById('track-timeline');
     timelineThumb = document.getElementById('thumb-timeline');
 
     // settings section elements
@@ -175,36 +203,42 @@ function initRendVariables() {
     capturesRightBtn = document.getElementById('right-btn-captures');
 
     // boolean flags
-    flags = { 
+    flags = {
         videoLoaded: false, 
         timelineSliderDragging: false, 
         seekSliderDragging: false,
         previouslyPaused: false, 
         recording: false, 
         manualStop: false, 
-        autoStart: false 
+        autoStart: false, 
+        volumeSliderDragging: false, 
+        playbackRateSliderDragging: false, 
+        updateVolumeSlider: false, 
+        updatePlaybackRateSlider: false 
     };
 
     // element boxes
-    boxes = { 
+    boxes = {
         timelineSliderBox: timelineSlider.getBoundingClientRect(),
         seekSliderBox: seekSlider.getBoundingClientRect(),
-        galleryBox: capturesGallery.getBoundingClientRect() 
+        galleryBox: capturesGallery.getBoundingClientRect(), 
+        volumeSliderBox: volumeSlider.getBoundingClientRect(), 
+        playbackRateSliderBox: playbackRateSlider.getBoundingClientRect()
     };
 
     // settings and videos data
-    data = { 
+    data = {
         settings: null, 
         videos: null 
     };
 
     // animationID, recording time, and timer interval
-    state = { 
+    state = {
         animationID: null, 
         generalStatusTimeout: null, 
         playbackContainerTimeout: null, 
         recordingTime: null, 
         timerInterval: null, 
-        timeline: new TimelineState()
+        timeline: new TimelineState() 
      };
 }

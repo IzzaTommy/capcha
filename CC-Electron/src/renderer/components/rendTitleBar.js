@@ -4,10 +4,10 @@
  * @module rendTitleBar
  * @requires rendVariables
  */
-import { 
+import {
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -15,9 +15,13 @@ import {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 

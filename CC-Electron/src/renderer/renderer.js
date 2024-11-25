@@ -11,7 +11,7 @@
  * @requires rendDirectoriesSection
  * @requires rendVariables
  */
-import { generalStatusLabel, initRendVariables } from './components/rendVariables.js';
+import { initRendVariables, titleBar, initializationOverlay } from './components/rendVariables.js';
 import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
 import { initRendTitleBar } from './components/rendTitleBar.js';
 import { initRendNavBlock } from './components/rendNavBlock.js';
@@ -19,24 +19,22 @@ import { initRendSettingsSection } from './components/rendSettingsSection.js';
 import { initRendEditorSection } from './components/rendEditorSection.js';
 import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
 
-import { titleBar, initializationOverlay } from './components/rendVariables.js';
-
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);
 
 /**
- * Initializes the renderer
+ * Initializes the renderer process
  */
 function initRend() {
     init();
 
-    window.windowAPI.reqFinishInit(() => { 
+    window.windowAPI.reqFinishInit(() => {
         finishInit();
     });
 }
 
 /**
- * Initializes the variables, general components, and title bar
+ * Initializes the variables, general components, and title bar (before the main settings)
  */
 function init() {
     initRendVariables();
@@ -45,9 +43,10 @@ function init() {
 }
 
 /**
- * Initializes the settings section, nav block, directories section, and editor section
+ * Initializes the settings section, nav block, directories section, and editor section (after the main settings)
  */
 async function finishInit() {
+    // set the text label to let the user know of the status
     setInitializationStatusLabel('Loading Settings...');
     await initRendSettingsSection();
 
@@ -58,7 +57,7 @@ async function finishInit() {
     
     initRendEditorSection();
 
-    // toggle the auto recording and the initialization overlay
+    // toggle the auto recording and remove the initialization overlay
     window.windowAPI.reqToggleAutoRecord();
     titleBar.style.webkitAppRegion = 'drag';
     initializationOverlay.classList.remove('active');

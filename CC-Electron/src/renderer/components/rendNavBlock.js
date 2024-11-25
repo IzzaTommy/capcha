@@ -4,12 +4,13 @@
  * @module rendNavBlock
  * @requires rendVariables
  * @requires rendSharedFunctions
+ * @requires rendDirectoriesSection
  * @requires rendEditorSection
  */
-import { 
+import {
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -17,21 +18,25 @@ import {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { initRendEditorSection, setVideoPlayerState, resizeseekSlider, resizeTimelineSlider, getReadableDuration } from './rendEditorSection.js';
-import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
+import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn } from './rendDirectoriesSection.js';
+import { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
 /**
- * @exports initRendNavBlock
+ * @exports initRendNavBlock, toggleRecordBtn
  */
 export { initRendNavBlock, toggleRecordBtn };
 
@@ -48,29 +53,29 @@ function initRendNavBlock() {
  * Initializes the nav button event listeners
  */
 function initNavBtnEL() {
-    // on mouse enter, change to the solid SVG
-    directoriesBtn.addEventListener('mouseenter', () => setSVG(directoriesIcon, 'folder-solid'));
-    // on mouse leave, change to the regular SVG
-    directoriesBtn.addEventListener('mouseleave', () => setSVG(directoriesIcon, 'folder'));
+    // on mouse enter, change to the solid icon
+    directoriesBtn.addEventListener('mouseenter', () => setIcon(directoriesIcon, 'folder-solid'));
+    // on mouse leave, change to the regular icon
+    directoriesBtn.addEventListener('mouseleave', () => setIcon(directoriesIcon, 'folder'));
     // on click, change the active content section to the directories section
     directoriesBtn.addEventListener('click', () => setActiveSection('directories'));
 
-    // on mouse enter, change to the solid SVG
-    settingsBtn.addEventListener('mouseenter', () => setSVG(settingsIcon, 'settings-solid'));
-    // on mouse leave, change to the regular SVG
-    settingsBtn.addEventListener('mouseleave', () => setSVG(settingsIcon, 'settings'));
+    // on mouse enter, change to the solid icon
+    settingsBtn.addEventListener('mouseenter', () => setIcon(settingsIcon, 'settings-solid'));
+    // on mouse leave, change to the regular icon
+    settingsBtn.addEventListener('mouseleave', () => setIcon(settingsIcon, 'settings'));
     // on click, change the active content section to the settings section
     settingsBtn.addEventListener('click', () => setActiveSection('settings'));
 
-    // on mouse enter, change to the solid SVG
-    recordBtn.addEventListener('mouseenter', () => setSVG(recordIcon, 'record-solid'));
-    // on mouse leave, change to the regular SVG
-    recordBtn.addEventListener('mouseleave', () => setSVG(recordIcon, 'record'));
+    // on mouse enter, change to the solid icon
+    recordBtn.addEventListener('mouseenter', () => setIcon(recordIcon, 'record-solid'));
+    // on mouse leave, change to the regular icon
+    recordBtn.addEventListener('mouseleave', () => setIcon(recordIcon, 'record'));
     // on click, toggle the recording
     recordBtn.addEventListener('click', async () => await toggleRecordBtn(false, true, 'MANUAL'));
 
     // on click, reallow auto recording
-    autoRecordResumeLabel.addEventListener('click', () => { 
+    autoRecordResumeLabel.addEventListener('click', () => {
         flags['manualStop'] = false;
         autoRecordResumeLabel.classList.remove('active');
      });
@@ -85,22 +90,26 @@ function initNavToggleBtnEL() {
         // toggle the nav bar
         navBar.classList.toggle('active');
 
-        // change the SVG and save the setting, depending on if the nav bar is active
+        // change the icon and save the setting, depending on if the nav bar is active
         if (navBar.classList.contains('active')) {
-            setSVG(navToggleIcon, 'arrow-back-ios');
+            setIcon(navToggleIcon, 'arrow-back-ios');
             data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', true), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         }
         else {
-            setSVG(navToggleIcon, 'arrow-forward-ios');
+            setIcon(navToggleIcon, 'arrow-forward-ios');
             data['settings']['navBarActive'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('navBarActive', false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         }
 
-        // hide the resumeAutoRecord label, then show it again after 500 ms
+        // hide the resume auto record label, then show it again after 500 ms
         autoRecordResumeLabel.style.opacity = '0';
         await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { autoRecordResumeLabel.style.opacity = ''; resolve(); }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
-        // resize all width dependent elements
-        resizeAll();
+        // update all width dependent elements
+        updateGallery();
+        updateSeekSlider();
+        updateTimelineSlider();
+        updateVolumeSlider();
+        updatePlaybackRateSlider();
     });
 }
 
@@ -108,18 +117,22 @@ function initNavToggleBtnEL() {
  * Initializes the nav toggle button
  */
 function initNavToggleBtn() {
-    // toggle the nav bar and change the SVG, depending on setting
+    // toggle the nav bar and change the icon, depending on setting
     if (data['settings']['navBarActive'] === true) {
-        setSVG(navToggleIcon, 'arrow-back-ios');
+        setIcon(navToggleIcon, 'arrow-back-ios');
         navBar.classList.add('active');
     }
 
-    // resize all width dependent elements
-    resizeAll();
+    // update all width dependent elements
+    updateGallery();
+    updateSeekSlider();
+    updateTimelineSlider();
+    updateVolumeSlider();
+    updatePlaybackRateSlider();
 }
 
 /**
- * Toggles the record button
+ * Toggles the record button on or off
  * 
  * @param {boolean} autoStart - if function is called by the main process
  * @param {boolean} manualStop - if function is called by record button click
@@ -127,7 +140,7 @@ function initNavToggleBtn() {
 async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
     // check if recording is in progress
     if (flags['recording']) {
-        // check if it was a manual start / manual stop or auto start / auto stop or auto start / manual stop
+        // check if it was a (manual start / manual stop) or (auto start / auto stop) or (auto start / manual stop)
         if ((!flags['autoStart'] && manualStop) || (flags['autoStart'] && !manualStop) || (flags['autoStart'] && manualStop)) {
             // stop recording
             if (await attemptAsyncFunction(() => window.webSocketAPI.stopRecord(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
@@ -154,7 +167,7 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
         }
     }
     else {
-        // check if it was an auto start / with no manual pause or if it was a manual start
+        // check if it was an (auto start / with no manual stop) or if it was a (manual start)
         if ((autoStart && !flags['manualStop']) || !autoStart) {
             if (await attemptAsyncFunction(() => window.webSocketAPI.startRecord(recordingGame), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false)) {
                 // set auto start flag

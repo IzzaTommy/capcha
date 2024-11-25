@@ -3,11 +3,13 @@
  * 
  * @module rendSettingsSection
  * @requires rendVariables
+ * @requires rendSharedFunctions
+ * @requires rendDirectoriesSection
  */
-import { 
+import {
     GROW_FACTOR, REDUCE_FACTOR, MIN_TIMELINE_ZOOM, MIN_GALLERY_GAP, 
     MSECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, PLAYBACK_RATE_MAPPING, 
     html, 
     initializationOverlay, initializationStatusLabel, 
     titleBar, minimizeBtn, maximizeBtn, closeBtn, 
@@ -15,17 +17,21 @@ import {
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
-    playbackContainer, seekSlider, seekTrack, seekThumb, 
-    playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, currentVideoTimeLabel, currentVideoDurationLabel, speedSlider, speedBtn, speedLabel, fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineTrack, timelineThumb, 
+    playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
+    mediaBar, playPauseBtn, playPauseIcon, 
+    volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
+    currentVideoTimeLabel, currentVideoDurationLabel, 
+    playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
+    fullscreenBtn, fullscreenIcon, 
+    timelineSlider, timelineOverlay, timelineThumb, 
     mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
-import { setSVG, getParsedTime, resizeAll, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { initRendDirectoriesSection, loadGallery, resizeGallery } from './rendDirectoriesSection.js';
+import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendSettingsSection
@@ -44,21 +50,19 @@ async function initRendSettingsSection() {
  * Initializes the setting container event listeners
  */
 function initSettingContainerEL() {
-    // iterate through each setting pill
+    // iterate through each setting field
     for (const setting of mostSettingFields) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
-            data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-            setting.value = data['settings'][setting.name];
+            setting.value = data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         });
     }
 
-    // iterate through each setting toggle switch
+    // iterate through each setting toggle field
     for (const setting of mostSettingToggleFields) {
         // on change, validate the setting, save it, and set the saved value
         setting.addEventListener('change', async () => {
-            data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-            setting.checked = data['settings'][setting.name];
+            setting.checked = data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         });
     }
 
@@ -72,10 +76,9 @@ function initSettingContainerEL() {
         }
     });
 
-    // on change, validate the setting, save it, and set the saved value
+    // on change, validate the dark mode setting, save it, and set the saved value
     darkModeSettingToggleField.addEventListener('change', async () => {
-        data['settings'][darkModeSettingToggleField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(darkModeSettingToggleField.name, darkModeSettingToggleField.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-        darkModeSettingToggleField.checked = data['settings'][darkModeSettingToggleField.name];
+        darkModeSettingToggleField.checked = data['settings'][darkModeSettingToggleField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(darkModeSettingToggleField.name, darkModeSettingToggleField.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
         // change the theme attribute, depending on if dark mode is enabled
         if (darkModeSettingToggleField.checked) {
@@ -94,13 +97,13 @@ async function initSettingContainer() {
     // get the settings
     data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettingsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
 
-    // iterate through each setting pill
+    // iterate through each setting field
     for (const setting of mostSettingFields) {
         // load each settings initial value from stored settings
         setting.value = data['settings'][setting.name];
     }
 
-    // iterate through each setting toggle switch
+    // iterate through each setting toggle field
     for (const setting of mostSettingToggleFields) {
         // load each settings initial value from stored settings
         setting.checked = data['settings'][setting.name];

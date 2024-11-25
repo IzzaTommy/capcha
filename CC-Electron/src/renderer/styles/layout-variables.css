@@ -216,56 +216,66 @@ html {
     --sslider-height: 3px;
     --sslider-hmargin: 6px;
     --sslider-tpadding: 10px;
-    --sslider-bpadding: calc((var(--sslider-height) * var(--strack-alt-transform) - var(--sslider-height)) / 2);
+    --sslider-bpadding: calc((var(--sslider-height) * var(--strack-transform) - var(--sslider-height)) / 2);
 
     /* ==== strack -> Seek Track ==== */
-    --strack-alt-transform: 2.5;
+    --strack-transform: 2.5;
 
-    /* ==== sthumb -> Seek Thumb ==== */
-    --sthumb-bswidth: 100vw;
+    /* ==== mbar -> Media Bar ==== */
+    --mbar-bpadding: 3px;
 
-    /* ==== pbar -> Playback Bar ==== */
-    --pbar-bpadding: 3px;
-
-    /* ==== pbtn -> Playback Button ==== */
-    --pbtn-bradius: 5px;
-    --pbtn-hmargin: 3px;
+    /* ==== mbtn -> Media Button ==== */
+    --mbtn-bradius: 5px;
+    --mbtn-hmargin: 3px;
     
-    /* ==== picon -> Playback Icon ==== */
-    --picon-length: 40px;
+    /* ==== micon -> Media Icon ==== */
+    --micon-length: 40px;
 
-    /* ==== splabel -> Speed Label (class name) ==== */
-    --splabel-fsize: 20px;
-    --splabel-fweight: 400;
+    /* ==== prlabel -> Playback Rate Label (class name) ==== */
+    --prlabel-fsize: 20px;
+    --prlabel-fweight: 400;
 
-    /* ==== splabel -> Speed Label (id name) ==== */
-    --splabel-vpadding: calc((var(--picon-length) - var(--splabel-fsize)) / 2);
-    --splabel-lpadding: var(--splabel-vpadding);
-    --splabel-width: 3ch;
+    /* ==== prlabel -> Playback Rate Label (id name) ==== */
+    --prlabel-vpadding: calc((var(--micon-length) - var(--prlabel-fsize)) / 2);
+    --prlabel-lpadding: var(--prlabel-vpadding);
+    --prlabel-width: 3ch;
 
-    /* ==== spmultlabel -> Speed Multiplier Label ==== */
-    --spmultlabel-vpadding: var(--splabel-vpadding);
-    --spmultlabel-rpadding: var(--splabel-lpadding);
+    /* ==== prmultlabel -> Playback Rate Multiplier Label ==== */
+    --prmultlabel-vpadding: var(--prlabel-vpadding);
+    --prmultlabel-rpadding: var(--prlabel-lpadding);
 
-    /* ==== pslider -> Playback Slider ==== */
-    --pslider-thumb-height: 16px;
-    --pslider-thumb-tmargin: calc((var(--pslider-thumb-height) - var(--pslider-track-height)) / -2);
+    /* ==== mslider -> Media Slider ==== */
+    --mslider-bradius: 2px;
+    --mslider-height: 4px;
+    --mslider-vpadding: calc((var(--micon-length) - var(--mslider-height)) / 2);
 
-    --pslider-track-height: 4px;
+    /* ==== mtrack-> Media Track ==== */
+    --mtrack-bradius: 2px;
+
+    /* ==== moverlay -> Media Overlay ==== */
+    --moverlay-bradius: 2px;
+
+    /* ==== mthumb -> Media Thumb ==== */
+    --mthumb-tinset: -6px;
+    --mthumb-linset: calc(var(--mthumb-width) / -2);
+    --mthumb-bradius: 2px;
+    --mthumb-height: calc(-2 * var(--mthumb-tinset) + var(--mslider-height));
+    --mthumb-width: 4px;
 
     /* ==== vslider -> Volume Slider ==== */
-    --vslider-vpadding: calc((var(--picon-length) - var(--pslider-track-height)) / 2);
-    --vslider-alt-width: 100px;
+    --vslider-width: 100px;
 
-    --vslider-thumb-bradius: calc(var(--pslider-thumb-height) / 2);
-    --vslider-thumb-width: var(--pslider-thumb-height);
+    /* ==== prslider -> Playback Rate Slider ==== */
+    --prslider-width: 150px;
 
-    /* ==== spslider -> Speed Slider ==== */
-    --spslider-vpadding: var(--vslider-vpadding);
-    --spslider-alt-width: 150px;
+    /* ==== proverlay -> Playback Rate Overlay ==== */
+    --proverlay-linset: -7px;
+    --proverlay-height: 20px;
+    --proverlay-width: 160px;
+    --proverlay-swidth: 1px;
 
-    --spslider-thumb-bradius: calc(var(--spslider-thumb-width) / 2);
-    --spslider-thumb-width: 4px;
+    /* --proverlay-text-fsize: 10px;
+    --proverlay-text-fweight: 100; */
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-fsize: 15px;
@@ -279,8 +289,11 @@ html {
     --tslider-height: 60px;
     --tslider-width: var(--vctr-width);
 
+    /* ==== ttrack -> Timeline Track ==== */
+    --ttrack-bradius: 10px;
+
     /* ==== toverlay -> Timeline Overlay ==== */
-    --toverlay-height: var(--tslider-height);
+    --toverlay-bradius: 10px;
     --toverlay-swidth: 1px;
 
     --toverlay-text-fsize: 12px;
@@ -331,7 +344,7 @@ html {
     --stticon-bradius: 7.5px;
     --stticon-height: calc(var(--sticon-length) + 2 * var(--sticon-margin) - 2 * var(--stticon-inset));
     --stticon-width: calc(var(--sttswitch-width) / 2 - var(--stticon-inset));
-    --stticon-alt-translateX: var(--stticon-width);
+    --stticon-translateX: var(--stticon-width);
 
     /* ==== stdesc -> Setting Description ==== */
     --stdesc-fsize: 11px;
