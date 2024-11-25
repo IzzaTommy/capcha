@@ -23,7 +23,7 @@ import { TimelineState } from './timelineState.js';
  *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
  *  fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineThumb, timeline, 
- *  mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
+ *  mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
  *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
  *  flags, boxes, 
  *  data, state, 
@@ -47,7 +47,7 @@ export {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
@@ -96,7 +96,7 @@ let html,
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
 
 // boolean flags, element boxes, settings/videos data, and state data
@@ -191,9 +191,10 @@ function initRendVariables() {
 
     // settings section elements
     mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath'])`);
-    mostSettingToggleFields = document.querySelectorAll(`.setting-toggle-field:not([name='darkMode'])`);
+    mostSettingToggleSwitches = document.querySelectorAll(`.setting-toggle-switch:not(:has(> .setting-toggle-field[name='darkMode']))`);
     capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
     darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
+    darkModeSettingToggleIcon = document.querySelector(`.setting-toggle-field[name='darkMode'] + .setting-toggle-icon > use`);
 
     // directories section elements
     capturesGallery = document.getElementById('gallery-captures');

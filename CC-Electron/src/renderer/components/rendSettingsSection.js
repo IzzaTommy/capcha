@@ -24,7 +24,7 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleFields, capturesPathSettingField, darkModeSettingToggleField, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
     flags, boxes, 
     data, state, 
@@ -51,18 +51,30 @@ async function initRendSettingsSection() {
  */
 function initSettingContainerEL() {
     // iterate through each setting field
-    for (const setting of mostSettingFields) {
+    for (const settingField of mostSettingFields) {
         // on change, validate the setting, save it, and set the saved value
-        setting.addEventListener('change', async () => {
-            setting.value = data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        settingField.addEventListener('change', async () => {
+            settingField.value = data['settings'][settingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingField.name, settingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         });
     }
 
-    // iterate through each setting toggle field
-    for (const setting of mostSettingToggleFields) {
+    // iterate through each setting toggle switch
+    for (const settingToggleSwitch of mostSettingToggleSwitches) {
+        // get the setting toggle field and icon
+        let settingToggleField = settingToggleSwitch.querySelector('.setting-toggle-field');
+        let settingToggleIcon = settingToggleSwitch.querySelector('.setting-toggle-icon > use');
+
         // on change, validate the setting, save it, and set the saved value
-        setting.addEventListener('change', async () => {
-            setting.checked = data['settings'][setting.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(setting.name, setting.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        settingToggleField.addEventListener('change', async () => {
+            settingToggleField.checked = data['settings'][settingToggleField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingToggleField.name, settingToggleField.checked), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+            // set the icon based on if the setting toggle field is checked
+            if (settingToggleField.checked) {
+                setIcon(settingToggleIcon, 'enabled');
+            }
+            else {
+                setIcon(settingToggleIcon, 'disabled');
+            }
         });
     }
 
@@ -82,9 +94,11 @@ function initSettingContainerEL() {
 
         // change the theme attribute, depending on if dark mode is enabled
         if (darkModeSettingToggleField.checked) {
+            setIcon(darkModeSettingToggleIcon, 'enabled');
             html.dataset.theme = 'dark';
         }
         else {
+            setIcon(darkModeSettingToggleIcon, 'disabled');
             html.dataset.theme = 'light';
         }
     });
@@ -98,15 +112,27 @@ async function initSettingContainer() {
     data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettingsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
 
     // iterate through each setting field
-    for (const setting of mostSettingFields) {
+    for (const settingField of mostSettingFields) {
         // load each settings initial value from stored settings
-        setting.value = data['settings'][setting.name];
+        settingField.value = data['settings'][settingField.name];
     }
 
-    // iterate through each setting toggle field
-    for (const setting of mostSettingToggleFields) {
+    // iterate through each setting toggle switch
+    for (const settingToggleSwitch of mostSettingToggleSwitches) {
+        // get the setting toggle field and icon
+        let settingToggleField = settingToggleSwitch.querySelector('.setting-toggle-field');
+        let settingToggleIcon = settingToggleSwitch.querySelector('.setting-toggle-icon > use');
+
         // load each settings initial value from stored settings
-        setting.checked = data['settings'][setting.name];
+        settingToggleField.checked = data['settings'][settingToggleField.name];
+
+        // set the icon based on if the setting toggle field is checked
+        if (settingToggleField.checked) {
+            setIcon(settingToggleIcon, 'enabled');
+        }
+        else {
+            setIcon(settingToggleIcon, 'disabled');
+        }
     }
 
     // load the initial value from stored setting
@@ -114,9 +140,11 @@ async function initSettingContainer() {
 
     // change the theme attribute, depending on if dark mode is enabled
     if (darkModeSettingToggleField.checked) {
+        setIcon(darkModeSettingToggleIcon, 'enabled');
         html.dataset.theme = 'dark';
     }
     else {
+        setIcon(darkModeSettingToggleIcon, 'disabled');
         html.dataset.theme = 'light';
     }
 
