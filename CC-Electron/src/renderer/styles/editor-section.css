@@ -1,5 +1,7 @@
 #ctr1-editor {
     align-items: center;
+
+    visibility: inherit;
 }
 
 #ctr-video {
@@ -313,4 +315,170 @@
     width: var(--tthumb-width);
 
     background-color: var(--tthumb-bgcolor);
+}
+
+#ctr-clip {
+    border: var(--cctr-bwidth) solid var(--cctr-bcolor);
+
+    border-radius: var(--cctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--cctr-bgcolor);
+    overflow: hidden;
+    visibility: inherit;
+}
+
+#icon-clip {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--cicon-length);
+    margin-top: auto;
+    margin-right: var(--cicon-rmargin);
+    margin-bottom: auto;
+    margin-left: var(--cicon-lmargin);
+    width: var(--cicon-length);
+    
+    fill: var(--cicon-fill);
+}
+
+#bar-clip {
+    align-items: center;
+    justify-content: center;
+
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    gap: var(--cbar-hgap);
+    padding-top: var(--cbar-vpadding);
+    padding-bottom: var(--cbar-vpadding);
+    width: 0;
+
+    transition: var(--cbar-transition);
+    visibility: inherit;
+}
+
+#bar-clip.active {
+    width: var(--cbar-width);
+
+    transition: var(--cbar-alt-transition);
+}
+
+.clip-setting-pill {
+    justify-content: center;
+
+    border: var(--cstpill-bwidth) solid transparent;
+    border-radius: var(--cstpill-bradius);
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: column nowrap;
+    gap: var(--cstpill-vgap);
+    padding: var(--cstpill-vpadding) var(--cstpill-hpadding);
+    width: var(--cstpill-width);
+
+    opacity: 0;
+    transition: var(--cstpill-transition);
+    visibility: hidden;
+}
+
+.clip-setting-pill:hover {
+    border-color: var(--cstpill-bcolor);
+
+    background-color: var(--cstpill-bgcolor);
+}
+
+#bar-clip.active > .clip-setting-pill {
+    opacity: 1;
+    transition: var(--cstpill-alt-transition);
+    visibility: inherit;
+}
+
+.clip-setting-label {
+    flex: 0 0 fit-content;
+
+    color: var(--cstlabel-color);
+    font-size: var(--cstlabel-fsize);
+    font-weight: var(--cstlabel-fweight);
+}
+
+.clip-setting-field {
+    border-radius: var(--cstfield-bradius);
+    flex: 0 0 auto;
+    height: var(--cstfield-height);
+    padding-right: var(--cstfield-hpadding);
+    padding-left: var(--cstfield-hpadding);
+
+    background-color: var(--cstfield-bgcolor);
+    box-sizing: content-box;
+    color: var(--cstfield-color);
+}
+
+.clip-options-btn {
+    align-items: center;
+    
+    border: var(--cobtn-bwidth) solid var(--cobtn-bcolor);
+    border-radius: var(--cobtn-bradius);
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    gap: var(--cobtn-hgap);
+    width: var(--cobtn-width);
+    padding: var(--cobtn-padding);
+
+    background-color: var(--cobtn-bgcolor);
+    opacity: 0;
+    transition: var(--cobtn-transition);
+    visibility: hidden;
+}
+
+.clip-options-btn:hover {
+    background-color: var(--cobtn-alt-bgcolor);
+}
+
+
+#bar-clip.active > .clip-options-btn {
+    opacity: 1;
+    transition: var(--cobtn-alt-transition);
+    visibility: inherit;
+}
+
+.clip-options-icon {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--coicon-length);
+    width: var(--coicon-length);
+
+    fill: var(--coicon-fill);
+}
+
+.clip-options-label {
+    flex: 0 0 fit-content;
+
+    color: var(--colabel-color);
+    font-size: var(--colabel-fsize);
+    font-weight: var(--colabel-fweight);
+}
+
+#btn-clip-toggle {
+    align-items: center;
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    transition: var(--ctbtn-transition);
+}
+
+#btn-clip-toggle:hover {
+    background-color: var(--ctbtn-bgcolor);
+}
+
+#icon-clip-toggle {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--cticon-length);
+    width: var(--cticon-length);
+
+    fill: var(--cticon-fill);
 }

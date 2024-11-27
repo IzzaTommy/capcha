@@ -74,7 +74,7 @@
     <div id="area-client">
         <div id="block-nav">
             <nav id="bar-nav">
-                <div id="icon-logo">
+                <div id="display-logo">
                     <svg>
                         <use href="../assets/svg/capcha.svg#capcha"></use>
                     </svg>
@@ -197,7 +197,7 @@
                             <div id="gallery-clips" class="directory-gallery">
                             </div>
 
-                            <button id="right-btn-captures" class="directory-btn">
+                            <button id="right-btn-clips" class="directory-btn">
                                 <svg class="directory-icon">
                                     <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
                                 </svg>
@@ -296,6 +296,51 @@
                             <div id="thumb-timeline"></div>
                         </div>
                     </div>
+
+                    <div id="ctr-clip">
+                        <svg id="icon-clip">
+                            <use href="../assets/svg/clip.svg#clip"></use>
+                        </svg>
+                        <div id="bar-clip">
+                            <div class="clip-setting-pill">
+                                <h4 class="clip-setting-label">Export Resolution</h4>
+                                <select class="clip-setting-field">
+                                    <option value="5">5 GB</option>
+                                    <option value="10">10 GB</option>
+                                    <option value="20">20 GB</option>
+                                </select>
+                            </div>
+
+                            <div class="clip-setting-pill">
+                                <h4 class="clip-setting-label">Export Format</h4>
+                                <select class="clip-setting-field">
+                                    <option value="mp4">.mp4</option>
+                                    <option value="mkv">.mkv</option>
+                                </select>
+                            </div>
+
+                            <button id="btn-clip-view" class="clip-options-btn">
+                                <svg class="clip-options-icon">
+                                    <use href="../assets/svg/record.svg#record"></use>
+                                </svg>
+            
+                                <span class="clip-options-label">View Clip</span>
+                            </button>
+
+                            <button id="btn-clip-create" class="clip-options-btn">
+                                <svg class="clip-options-icon">
+                                    <use href="../assets/svg/record.svg#record"></use>
+                                </svg>
+            
+                                <span class="clip-options-label">Create Clip</span>
+                            </button>
+                        </div>
+                        <button id="btn-clip-toggle">
+                            <svg id="icon-clip-toggle">
+                                <use href="../assets/svg/arrow-forward-ios.svg#arrow-forward-ios"></use>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -358,6 +403,43 @@
                                 </svg>
 
                                 <select class="setting-field" name="capturesLimit">
+                                    <option value="5">5 GB</option>
+                                    <option value="10">10 GB</option>
+                                    <option value="20">20 GB</option>
+                                    <option value="50">50 GB</option>
+                                    <option value="100">100 GB</option>
+                                    <option value="200">200 GB</option>
+                                    <option value="500">500 GB</option>
+                                    <option value="0">No Limit</option>
+                                </select>
+                            </div>
+
+                            <p class="setting-description">When storage limit is exceeded, the oldest videos will be deleted automatically.</p>
+                        </div>
+
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Clips Save Location</h4>
+
+                            <div class="setting-pill">
+                                <svg class="setting-icon">
+                                    <use href="../assets/svg/folder-open-solid.svg#folder-open-solid"></use>
+                                </svg>
+
+                                <input class="setting-field" type="text" name="clipsPath" readonly>
+                            </div>
+
+                            <p class="setting-description">Your clips will be saved in this location.</p>
+                        </div>
+
+                        <div class="setting-ctr">
+                            <h4 class="setting-label">Clips Storage Limit</h4>
+
+                            <div class="setting-pill">
+                                <svg class="setting-icon">
+                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                </svg>
+
+                                <select class="setting-field" name="clipsLimit">
                                     <option value="5">5 GB</option>
                                     <option value="10">10 GB</option>
                                     <option value="20">20 GB</option>

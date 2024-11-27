@@ -84,26 +84,26 @@ html {
     --nbar-tpadding: 10px;
     --nbar-hpadding: 10px;
     --nbar-bpadding: 20px;
-    --nbar-width: calc(var(--licon-svg-length) + 2 * var(--nbar-hpadding));
-    --nbar-alt-width: calc(var(--nbar-width) + var(--licon-hgap) + var(--licon-h1-width));
+    --nbar-width: calc(var(--ldisplay-svg-length) + 2 * var(--nbar-hpadding));
+    --nbar-alt-width: calc(var(--nbar-width) + var(--ldisplay-hgap) + var(--ldisplay-h1-width));
 
     --nbar-hr-height: 1.5px;
     --nbar-hr-lmargin: calc(var(--nbar-hpadding) / -2);
     --nbar-hr-width: calc(100% + var(--nbar-hpadding));
 
-    /* ==== licon -> Logo Icon ==== */
-    --licon-hgap: 20px;
+    /* ==== ldisplay -> Logo Display ==== */
+    --ldisplay-hgap: 20px;
 
-    --licon-svg-length: 60px;
+    --ldisplay-svg-length: 60px;
 
-    --licon-h1-width: 111px;
-    --licon-h1-fsize: 28px;
-    --licon-h1-fweight: 600;
+    --ldisplay-h1-width: 111px;
+    --ldisplay-h1-fsize: 28px;
+    --ldisplay-h1-fweight: 600;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-bradius: 10px;
     --nbtn-hgap: 40px;
-    --nbtn-hmargin: calc((var(--licon-svg-length) - var(--nicon-length) - 2 * var(--nbtn-padding)) / 2);
+    --nbtn-hmargin: calc((var(--ldisplay-svg-length) - var(--nicon-length) - 2 * var(--nbtn-padding)) / 2);
     --nbtn-padding: 10px;
 
     /* ==== rbtn -> Record Button ==== */
@@ -302,10 +302,57 @@ html {
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-tinset: -12px;
     --tthumb-linset: calc(var(--tthumb-width) / -2);
-
     --tthumb-bradius: calc(var(--tthumb-width) / 2);
     --tthumb-height: calc(-2 * var(--tthumb-tinset) + var(--tslider-height));
     --tthumb-width: 4px;
+
+    /* ==== cctr -> Clip Container ==== */
+    --cctr-bwidth: 1.5px;
+    --cctr-bradius: 10px;
+
+    /* ==== cicon -> Clip Icon ==== */
+    --cicon-length: 45px;
+    --cicon-rmargin: 5px;
+    --cicon-lmargin: calc(var(--cicon-rmargin) - var(--cctr-bwidth));
+
+    /* ==== cbar -> Clip Bar ==== */
+    --cbar-hgap: 30px;
+    --cbar-vpadding: calc(5px - var(--cctr-bwidth));
+    --cbar-width: calc(50px + 3 * var(--cbar-hgap) + 2 * var(--cstpill-width) + 2 * var(--cobtn-width));
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-bwidth: 1.5px;
+    --cstpill-bradius: 10px;
+    --cstpill-vgap: 5px;
+    --cstpill-vpadding: calc(var(--sctr1-vpadding) - var(--cstpill-bwidth));
+    --cstpill-hpadding: calc(var(--sctr1-hpadding) - var(--cstpill-bwidth));
+    --cstpill-width: 200px;
+
+    /* ==== cstlabel -> Clip Setting Label ==== */
+    --cstlabel-fsize: 17px;
+    --cstlabel-fweight: 350;
+
+    /* ==== cstfield -> Clip Setting Field ==== */
+    --cstfield-bradius: 5px;
+    --cstfield-height: 35px;
+    --cstfield-hpadding: 10px;
+
+    /* ==== cobtn -> Clip Options Button ==== */
+    --cobtn-bwidth: 1.5px;
+    --cobtn-bradius: 10px;
+    --cobtn-hgap: 10px;
+    --cobtn-width: 150px;
+    --cobtn-padding: calc(10px - var(--cobtn-bwidth));
+
+    /* ==== coicon -> Clip Options Icon ==== */
+    --coicon-length: 25px;
+
+    /* ==== colabel -> Clip Options Label ==== */
+    --colabel-fsize: 17px;
+    --colabel-fweight: 350;
+
+    /* ==== cticon -> Clip Toggle Icon ==== */
+    --cticon-length: 15px;
 
     /* ==== stsgctr -> Settings Group Container ==== */
     --stsgctr-hgap: 30px;

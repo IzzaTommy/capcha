@@ -6,18 +6,17 @@
  * @requires rendGeneral
  * @requires rendTitleBar
  * @requires rendNavBlock
- * @requires rendSettingsSection
  * @requires rendEditorSection
  * @requires rendDirectoriesSection
- * @requires rendVariables
+ * @requires rendSettingsSection
  */
 import { initRendVariables, titleBar, initializationOverlay } from './components/rendVariables.js';
 import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
 import { initRendTitleBar } from './components/rendTitleBar.js';
 import { initRendNavBlock } from './components/rendNavBlock.js';
-import { initRendSettingsSection } from './components/rendSettingsSection.js';
 import { initRendEditorSection } from './components/rendEditorSection.js';
 import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
+import { initRendSettingsSection } from './components/rendSettingsSection.js';
 
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);

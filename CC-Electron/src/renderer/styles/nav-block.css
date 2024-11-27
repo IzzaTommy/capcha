@@ -27,39 +27,39 @@
     transition: var(--nbar-alt-transition);
 }
 
-#icon-logo {
+#display-logo {
     align-items: center;
 
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--licon-hgap);
+    gap: var(--ldisplay-hgap);
 }
 
-#icon-logo > svg {
+#display-logo > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--licon-svg-length);
-    width: var(--licon-svg-length);
+    height: var(--ldisplay-svg-length);
+    width: var(--ldisplay-svg-length);
 
-    fill: var(--licon-svg-fill);
+    fill: var(--ldisplay-svg-fill);
 }
 
-#icon-logo > h1 {
+#display-logo > h1 {
     flex: 0 0 auto;
-    width: var(--licon-h1-width);
+    width: var(--ldisplay-h1-width);
 
-    color: var(--licon-h1-color);
-    font-size: var(--licon-h1-fsize);
-    font-weight: var(--licon-h1-fweight);
+    color: var(--ldisplay-h1-color);
+    font-size: var(--ldisplay-h1-fsize);
+    font-weight: var(--ldisplay-h1-fweight);
     opacity: 0;
     text-align: center;
-    transition: var(--licon-h1-transition);
+    transition: var(--ldisplay-h1-transition);
 }
 
-#bar-nav.active > #icon-logo > h1 {
+#bar-nav.active > #display-logo > h1 {
     opacity: 1;
-    transition: var(--licon-h1-alt-transition);
+    transition: var(--ldisplay-h1-alt-transition);
 }
 
 #bar-nav > hr {

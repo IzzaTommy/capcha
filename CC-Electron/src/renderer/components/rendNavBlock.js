@@ -17,6 +17,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -25,14 +26,13 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn } from './rendDirectoriesSection.js';
+import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 import { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
 /**
@@ -105,7 +105,8 @@ function initNavToggleBtnEL() {
         await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { autoRecordResumeLabel.style.opacity = ''; resolve(); }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
         // update all width dependent elements
-        updateGallery();
+        updateCapturesGallery();
+        updateClipsGallery();
         updateSeekSlider();
         updateTimelineSlider();
         updateVolumeSlider();
@@ -124,7 +125,8 @@ function initNavToggleBtn() {
     }
 
     // update all width dependent elements
-    updateGallery();
+    updateCapturesGallery();
+    updateClipsGallery();
     updateSeekSlider();
     updateTimelineSlider();
     updateVolumeSlider();
@@ -162,7 +164,7 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
                 }
 
                 // reload the gallery for the new video
-                await loadGallery(false);
+                await loadCapturesGallery(false);
             }
         }
     }

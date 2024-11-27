@@ -147,6 +147,33 @@ function initSettingsL() {
 
                 await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), 3, 2000);
                 break;
+            
+            // case 'clipsPath':
+            //     const { canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] });
+        
+            //     if (!canceled && filePaths[0] !== value) {
+            //         value = filePaths[0];
+    
+            //         try {
+            //             // delete the thumbnail directory
+            //             await fs.rm(THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                
+            //             // recreate the thumbnail directory
+            //             await fs.mkdir(THUMBNAIL_DIRECTORY);
+            //         }
+            //         catch {
+            //             console.error('Error reseting thumbnails directory!');
+            //         }
+            //     }
+
+            //     // should realistically never run
+            //     if (!existsSync(value)) {
+            //         value = SETTINGS_DATA_DEFAULTS[key];
+            //     }
+
+            //     console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+            //     data['settings'].set(key, value);
+            //     break;
 
             case 'format':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);

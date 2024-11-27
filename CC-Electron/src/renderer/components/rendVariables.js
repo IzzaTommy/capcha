@@ -15,6 +15,7 @@ import { TimelineState } from './timelineState.js';
  *  navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
  *  navToggleBtn, navToggleIcon, 
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+ *  videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
  *  videoContainer, videoPlayer, playPauseOverlayIcon, 
  *  playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
  *  mediaBar, playPauseBtn, playPauseIcon, 
@@ -23,8 +24,7 @@ import { TimelineState } from './timelineState.js';
  *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
  *  fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineThumb, timeline, 
- *  mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
- *  capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+ *  mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
  *  flags, boxes, 
  *  data, state, 
  *  initRendVariables 
@@ -39,6 +39,7 @@ export {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -47,8 +48,8 @@ export {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -89,6 +90,7 @@ let html,
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn,  clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
@@ -96,8 +98,8 @@ let html,
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn 
+    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon 
 
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, state;
@@ -147,6 +149,16 @@ function initRendVariables() {
     editorSection = document.getElementById('section-editor');
     settingsSection = document.getElementById('section-settings');
 
+    // directories section elements
+    videoPreviewTemplate = document.querySelector('template');
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vthumbnail-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
+    capturesGallery = document.getElementById('gallery-captures');
+    capturesLeftBtn = document.getElementById('left-btn-captures');
+    capturesRightBtn = document.getElementById('right-btn-captures');
+    clipsGallery = document.getElementById('gallery-clips');
+    clipsLeftBtn = document.getElementById('left-btn-clips');
+    clipsRightBtn = document.getElementById('right-btn-clips');
+
     // editor section elements
     videoContainer = document.getElementById('ctr-video');
 
@@ -189,19 +201,20 @@ function initRendVariables() {
     timelineOverlay = document.getElementById('overlay-timeline');
     timelineThumb = document.getElementById('thumb-timeline');
 
+    clipBar = document.getElementById('bar-clip');
+    allClipSettingFields = document.querySelectorAll('.clip-setting-field');
+    clipViewBtn = document.getElementById('btn-clip-view');
+    clipCreateBtn = document.getElementById('btn-clip-create');
+    clipToggleBtn = document.getElementById('btn-clip-toggle');
+    clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
+
     // settings section elements
-    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath'])`);
+    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath'])`);
     mostSettingToggleSwitches = document.querySelectorAll(`.setting-toggle-switch:not(:has(> .setting-toggle-field[name='darkMode']))`);
     capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
+    clipsPathSettingField = document.querySelector(`.setting-field[name='clipsPath']`);
     darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
     darkModeSettingToggleIcon = document.querySelector(`.setting-toggle-field[name='darkMode'] + .setting-toggle-icon > use`);
-
-    // directories section elements
-    capturesGallery = document.getElementById('gallery-captures');
-    videoPreviewTemplate = document.querySelector('template');
-    videoPreviewWidth = parseInt(style.getPropertyValue('--vthumbnail-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
-    capturesLeftBtn = document.getElementById('left-btn-captures');
-    capturesRightBtn = document.getElementById('right-btn-captures');
 
     // boolean flags
     flags = {
@@ -222,7 +235,8 @@ function initRendVariables() {
     boxes = {
         timelineSliderBox: timelineSlider.getBoundingClientRect(),
         seekSliderBox: seekSlider.getBoundingClientRect(),
-        galleryBox: capturesGallery.getBoundingClientRect(), 
+        capturesGalleryBox: capturesGallery.getBoundingClientRect(), 
+        clipsGalleryBox: clipsGallery.getBoundingClientRect(), 
         volumeSliderBox: volumeSlider.getBoundingClientRect(), 
         playbackRateSliderBox: playbackRateSlider.getBoundingClientRect()
     };

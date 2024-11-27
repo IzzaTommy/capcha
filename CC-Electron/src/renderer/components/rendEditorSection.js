@@ -15,6 +15,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -23,8 +24,8 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -43,7 +44,54 @@ function initRendEditorSection() {
     initVideoContainerEL();
     initVideoContainer();
     initTimelineSliderEL();
+    initClipToggleBtnEL();
 }
+
+
+
+
+
+function initClipToggleBtnEL() {
+    // on click, change the nav bar state
+    clipToggleBtn.addEventListener('click', () => {
+        // toggle the nav bar
+        clipBar.classList.toggle('active');
+
+        // change the icon and save the setting, depending on if the nav bar is active
+        if (clipBar.classList.contains('active')) {
+            setIcon(clipToggleIcon, 'arrow-back-ios');
+        }
+        else {
+            setIcon(clipToggleIcon, 'arrow-forward-ios');
+        }
+    });
+
+    clipViewBtn.addEventListener('click', () => {
+        console.log('test');
+    });
+
+    clipCreateBtn.addEventListener('click', () => {
+        console.log('test2');
+    });
+
+
+
+    // iterate through each setting field
+    for (const clipSettingField of allClipSettingFields) {
+        // on change, validate the setting, save it, and set the saved value
+        clipSettingField.addEventListener('change', async () => {
+            // settingField.value = data['settings'][settingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingField.name, settingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        });
+    }
+}
+
+
+
+
+
+
+
+
 
 /**
  * Initializes the video container event listeners

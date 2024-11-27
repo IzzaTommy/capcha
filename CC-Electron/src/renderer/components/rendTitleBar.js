@@ -14,6 +14,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -22,8 +23,7 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 

@@ -35,6 +35,8 @@ const SETTINGS_DATA_DEFAULTS = {
 
     capturesPath: DEF_VIDEO_DIRECTORY,
     capturesLimit: 100,
+    clipsPath: DEF_VIDEO_DIRECTORY,
+    clipsLimit: 100,
     format: 'mp4',
     encoder: 'obs_nvenc_h264_tex',
 
@@ -71,6 +73,13 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'string'
     },
     capturesLimit: {
+        type: 'number',
+        enum: [0, 5, 10, 20, 50, 100, 200, 500]
+    },
+    clipsPath: {
+        type: 'string'
+    },
+    clipsLimit: {
         type: 'number',
         enum: [0, 5, 10, 20, 50, 100, 200, 500]
     },

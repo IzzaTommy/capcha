@@ -49,5 +49,8 @@ contextBridge.exposeInMainWorld('filesAPI', {
     getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
 
     // sends request to renderer
-    reqLoadGallery: (callback) => ipcRenderer.on('files:reqLoadGallery', callback)
+    reqLoadCapturesGallery: (callback) => ipcRenderer.on('files:reqLoadCapturesGallery', callback),
+
+    // sends request to renderer
+    reqLoadClipsGallery: (callback) => ipcRenderer.on('files:reqLoadClipsGallery', callback)
 });

@@ -71,10 +71,10 @@ html[data-theme='dark'] {
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-hr-bgcolor: #a4a4a4;
 
-    /* ==== licon -> Logo Icon ==== */
-    --licon-svg-fill: #dddddd;
+    /* ==== ldisplay -> Logo Display ==== */
+    --ldisplay-svg-fill: #dddddd;
 
-    --licon-h1-color: #dddddd;
+    --ldisplay-h1-color: #dddddd;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-alt-bgcolor: #575757;
@@ -205,6 +205,41 @@ html[data-theme='dark'] {
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #dddddd;
 
+    /* ==== cctr -> Clip Container ==== */
+    --cctr-bcolor: #414344;
+    --cctr-bgcolor: #373737;
+
+    /* ==== cicon -> Clip Icon ==== */
+    --cicon-fill: #dddddd;
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-bcolor: transparent;
+    --cstpill-bgcolor: #3c3c3c;
+
+    /* ==== cstlabel -> Clip Setting Label ==== */
+    --cstlabel-color: #dddddd;
+
+    /* ==== cstfield -> Clip Setting Field ==== */
+    --cstfield-bgcolor: #5a5a5a;
+    --cstfield-color: #dddddd;
+
+    /* ==== cobtn -> Clip Options Button ==== */
+    --cobtn-bcolor: #575757;
+    --cobtn-bgcolor: #373737;
+    --cobtn-alt-bgcolor: #575757;
+
+    /* ==== coicon -> Clip Options Icon ==== */
+    --coicon-fill: #dddddd;
+
+    /* ==== colabel -> Clip Options Label ==== */
+    --colabel-color: #dddddd;
+
+    /* ==== ctbtn -> Clip Toggle Button ==== */
+    --ctbtn-bgcolor: #505050;
+
+    /* ==== cticon -> Clip Toggle Icon ==== */
+    --cticon-fill: #dddddd;
+
     /* ==== stctr -> Setting Container ==== */
     --stctr-bcolor: transparent;
     --stctr-bgcolor: #3c3c3c;
@@ -298,10 +333,10 @@ html[data-theme='light'] {
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-hr-bgcolor: #d0d0d0;
 
-    /* ==== licon -> Logo Icon ==== */
-    --licon-svg-fill: #363636;
+    /* ==== ldisplay -> Logo Display ==== */
+    --ldisplay-svg-fill: #363636;
 
-    --licon-h1-color: #363636;
+    --ldisplay-h1-color: #363636;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-alt-bgcolor: #dbdbdb;
@@ -432,6 +467,41 @@ html[data-theme='light'] {
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #1a69e0;
 
+    /* ==== cctr -> Clip Container ==== */
+    --cctr-bcolor: #dfe1e5;
+    --cctr-bgcolor: transparent;
+
+    /* ==== cicon -> Clip Icon ==== */
+    --cicon-fill: #363636;
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-bcolor: #d2dade;
+    --cstpill-bgcolor: transparent;
+
+    /* ==== cstlabel -> Clip Setting Label ==== */
+    --cstlabel-color: #1a69e0;
+
+    /* ==== cstfield -> Clip Setting Field ==== */
+    --cstfield-bgcolor: #dfe1e5;
+    --cstfield-color: #363636;
+
+    /* ==== cobtn -> Clip Options Button ==== */
+    --cobtn-bcolor: #dbdbdb;
+    --cobtn-bgcolor: #f2f2f2;
+    --cobtn-alt-bgcolor: #dbdbdb;
+
+    /* ==== coicon -> Clip Options Icon ==== */
+    --coicon-fill: #363636;
+
+    /* ==== colabel -> Clip Options Label ==== */
+    --colabel-color: #363636;
+
+    /* ==== ctbtn -> Clip Toggle Button ==== */
+    --ctbtn-bgcolor: #dfe1e5;
+
+    /* ==== cticon -> Clip Toggle Icon ==== */
+    --cticon-fill: #1a69e0;
+
     /* ==== stctr -> Setting Container ==== */
     --stctr-bcolor: #d2dade;
     --stctr-bgcolor: transparent;
@@ -481,9 +551,9 @@ html {
     --nbar-transition: width 0.3s ease 0.2s;
     --nbar-alt-transition: width 0.3s ease 0.2s;
 
-    /* ==== licon -> Logo Icon ==== */
-    --licon-h1-transition: opacity 0.2s ease 0s;
-    --licon-h1-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== ldisplay -> Logo Display ==== */
+    --ldisplay-h1-transition: opacity 0.2s ease 0s;
+    --ldisplay-h1-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-transition: background-color 0.3s ease 0s;
@@ -531,6 +601,21 @@ html {
 
     /* ==== mslider -> Media Slider ==== */
     --mslider-transition: width 0.1s ease 0s;
+
+    /* ==== cbar -> Clip Bar ==== */
+    --cbar-transition: width 0.3s ease 0.2s;
+    --cbar-alt-transition: width 0.3s ease 0s;
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cstpill-alt-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0.3s;
+
+    /* ==== cobtn -> Clip Options Button ==== */
+    --cobtn-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cobtn-alt-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0.3s;
+    
+    /* ==== ctbtn -> Clip Toggle Button ==== */
+    --ctbtn-transition: background-color 0.3s ease 0s;
 
     /* ==== stctr -> Setting Container ==== */
     --stctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;

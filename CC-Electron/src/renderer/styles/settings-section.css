@@ -48,8 +48,8 @@
     display: block;
     flex: 0 0 auto;
     height: var(--sticon-length);
-    width: var(--sticon-length);
     margin: var(--sticon-margin);
+    width: var(--sticon-length);
 
     fill: var(--sticon-fill);
 }
@@ -65,7 +65,7 @@
     color: var(--stfield-color);
 }
 
-.setting-field[name="capturesPath"] {
+.setting-field[name="capturesPath"], .setting-field[name="clipsPath"] {
     width: 500px;
 }
 

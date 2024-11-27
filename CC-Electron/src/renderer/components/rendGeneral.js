@@ -18,6 +18,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -26,15 +27,14 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendNavBlock, toggleRecordBtn } from './rendNavBlock.js';
-import { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn } from './rendDirectoriesSection.js';
+import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 import { updateSeekSlider, updateTimelineSlider, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
 /**
@@ -56,7 +56,8 @@ function initRendGeneral() {
 function initGeneralEL() {
     // on resize, update all width/location dependent elements
     window.addEventListener('resize', () => {
-        updateGallery();
+        updateClipsGallery();
+        updateCapturesGallery();
         updateSeekSlider();
         updateTimelineSlider();
         updateVolumeSlider();
@@ -68,10 +69,16 @@ function initGeneralEL() {
  * Initializes the inter-process communication callbacks for the renderer process
  */
 function initGeneralIPC() {
-    // on request, load the gallery
-    window.filesAPI.reqLoadGallery(async () => {
+    // on request, load the captures gallery
+    window.filesAPI.reqLoadCapturesGallery(async () => {
         // set initialization to false since this is guaranteed to be not the first run
-        await loadGallery(false); 
+        await loadCapturesGallery(false); 
+    });
+
+    // on request, load the clips gallery
+    window.filesAPI.reqLoadClipsGallery(async () => {
+        // set initialization to false since this is guaranteed to be not the first run
+        await loadClipsGallery(false); 
     });
 
     // on request, set the volume and volume mute settings in main

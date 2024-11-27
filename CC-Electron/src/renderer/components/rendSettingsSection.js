@@ -16,6 +16,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -24,14 +25,13 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    capturesGallery, videoPreviewTemplate, videoPreviewWidth, capturesLeftBtn, capturesRightBtn, 
+    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
-import { initRendDirectoriesSection, loadGallery, updateGallery, getReadableAge, toggleCapturesGalleryBtn } from './rendDirectoriesSection.js';
+import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendSettingsSection
@@ -84,7 +84,17 @@ function initSettingContainerEL() {
 
         if (capturesPathSettingField.value !== data['settings'][capturesPathSettingField.name]) {
             capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
-            await loadGallery(false);
+            await loadCapturesGallery(false);
+        }
+    });
+
+    // on change, select directory from dialog, save it, and set the saved value
+    clipsPathSettingField.addEventListener('click', async () => {
+        data['settings'][clipsPathSettingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(clipsPathSettingField.name, clipsPathSettingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        if (clipsPathSettingField.value !== data['settings'][clipsPathSettingField.name]) {
+            clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
+            await loadCapturesGallery(false);
         }
     });
 
@@ -150,4 +160,5 @@ async function initSettingContainer() {
 
     // load the initial value from stored setting
     capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
+    clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
 }
