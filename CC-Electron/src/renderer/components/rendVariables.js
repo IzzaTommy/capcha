@@ -23,7 +23,7 @@ import { TimelineState } from './timelineState.js';
  *  currentVideoTimeLabel, currentVideoDurationLabel, 
  *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
  *  fullscreenBtn, fullscreenIcon, 
- *  timelineSlider, timelineOverlay, timelineThumb, timeline, 
+ *  timelineSlider, timelineOverlay, timelineThumb, timeline, clipLeftThumb, clipRightThumb, 
  *  mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
  *  flags, boxes, 
  *  data, state, 
@@ -47,7 +47,7 @@ export {
     currentVideoTimeLabel, currentVideoDurationLabel, 
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineThumb, 
+    timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
@@ -97,7 +97,7 @@ let html,
     currentVideoTimeLabel, currentVideoDurationLabel, 
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineThumb, 
+    timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon 
 
@@ -200,6 +200,8 @@ function initRendVariables() {
     timelineSlider = document.getElementById('slider-timeline');
     timelineOverlay = document.getElementById('overlay-timeline');
     timelineThumb = document.getElementById('thumb-timeline');
+    clipLeftThumb = document.getElementById('left-thumb-clip');
+    clipRightThumb = document.getElementById('right-thumb-clip'); 
 
     clipBar = document.getElementById('bar-clip');
     allClipSettingFields = document.querySelectorAll('.clip-setting-field');
@@ -228,7 +230,9 @@ function initRendVariables() {
         volumeSliderDragging: false, 
         playbackRateSliderDragging: false, 
         updateVolumeSlider: false, 
-        updatePlaybackRateSlider: false 
+        updatePlaybackRateSlider: false, 
+        clipLeftThumbDragging: false, 
+        clipRightThumbDragging: false 
     };
 
     // element boxes

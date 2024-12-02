@@ -21,7 +21,7 @@
 }
 
 .directory-btn.active:hover {
-    background-color: var(--dbtn-alt-bgcolor);
+    background-color: var(--dbtn-bgcolor);
 }
 
 .directory-icon {
@@ -71,7 +71,7 @@
 }
 
 .video-preview-ctr:hover {
-    background-color: var(--vpctr-alt-bgcolor);
+    background-color: var(--vpctr-bgcolor);
 }
 
 .video-thumbnail-ctr {
@@ -160,11 +160,11 @@
 }
 
 .video-rename-btn:hover {
-    background-color: var(--vrbtn-alt-bgcolor);
+    background-color: var(--vrbtn-bgcolor);
 }
 
 .video-delete-btn:hover {
-    background-color: var(--vdbtn-alt-bgcolor);
+    background-color: var(--vdbtn-bgcolor);
 }
 
 .video-options-icon {

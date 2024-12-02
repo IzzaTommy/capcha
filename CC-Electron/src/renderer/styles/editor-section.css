@@ -236,11 +236,13 @@
     left: var(--proverlay-linset);
 
     height: var(--proverlay-height);
-    width: var(--proverlay-width);
+    width: 0;
 
     fill: var(--proverlay-fill);
     stroke: var(--proverlay-stroke);
     stroke-width: var(--proverlay-swidth);
+
+    pointer-events: none;
 }
 
 /* #overlay-playback-rate > text {
@@ -249,6 +251,10 @@
     font-weight: var(--proverlay-text-fweight);
     stroke: var(--proverlay-text-stroke);
 } */
+
+#slider-playback-rate.active > #track-playback-rate > #overlay-playback-rate {
+    width: var(--proverlay-width);
+}
 
 #label-ctr-current-video {
     justify-content: end;
@@ -309,12 +315,40 @@
     position: absolute;
     top: var(--tthumb-tinset);
     left: var(--tthumb-linset);
+    z-index: 1;
 
     border-radius: var(--tthumb-bradius);
     height: var(--tthumb-height);
     width: var(--tthumb-width);
 
     background-color: var(--tthumb-bgcolor);
+}
+
+.clip-thumb {
+    position: absolute;
+    top: var(--cthumb-tinset);
+    left: var(--cthumb-linset);
+
+    border-radius: var(--cthumb-bradius);
+    height: var(--cthumb-height);
+    width: var(--cthumb-width);
+
+    background-color: var(--cthumb-bgcolor);
+    visibility: hidden;
+}
+
+/* #left-thumb-clip {
+    left: 50px;
+} */
+
+#right-thumb-clip {
+    background-color: salmon;
+
+    /* left: 100px; */
+}
+
+.clip-thumb.active {
+    visibility: visible;
 }
 
 #ctr-clip {

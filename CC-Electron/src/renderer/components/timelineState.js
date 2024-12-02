@@ -10,16 +10,34 @@ export { TimelineState };
  */
 class TimelineState {
     /**
-     * Updates all internal variables based on the new start time and new end time
+     * Updates internal variables based on the new start time and new end time
      * 
      * @param {number} newStartTime - The new start time
      * @param {number} newEndTime - The new end time
      */
-    update(newStartTime, newEndTime) {
+    updateTime(newStartTime, newEndTime) {
         this.startTime = newStartTime;
         this.endTime = newEndTime;
         this.duration = this.endTime - this.startTime;
         [this.interval, this.subInterval, this.clipLength] = this.setTimings();
+    }
+
+    /**
+     * Updates the clip start time
+     * 
+     * @param {number} newClipStartTime - The new clip start time
+     */
+    updateClipStartTime(newClipStartTime) {
+        this.clipStartTime = newClipStartTime;
+    }
+
+    /**
+     * Updates the clip end time
+     * 
+     * @param {number} newClipEndTime - The new clip end time
+     */
+    updateClipEndTime(newClipEndTime) {
+        this.clipEndTime = newClipEndTime;
     }
 
     /**
@@ -118,5 +136,23 @@ class TimelineState {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the clip start time
+     * 
+     * @returns {number} The clip start time
+     */
+    getClipStartTime() {
+        return this.clipStartTime;
+    }
+    
+    /**
+     * Gets the clip end time
+     * 
+     * @returns {number} The clip end time
+     */
+    getClipEndTime() {
+        return this.clipEndTime;
     }
 }

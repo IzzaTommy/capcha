@@ -25,7 +25,8 @@ import {
     currentVideoTimeLabel, currentVideoDurationLabel, 
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineThumb, 
+    timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
+    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
@@ -117,20 +118,23 @@ function initNavToggleBtnEL() {
 /**
  * Initializes the nav toggle button
  */
-function initNavToggleBtn() {
+async function initNavToggleBtn() {
     // toggle the nav bar and change the icon, depending on setting
     if (data['settings']['navBarActive'] === true) {
         setIcon(navToggleIcon, 'arrow-back-ios');
         navBar.classList.add('active');
     }
 
-    // update all width dependent elements
-    updateCapturesGallery();
-    updateClipsGallery();
-    updateSeekSlider();
-    updateTimelineSlider();
-    updateVolumeSlider();
-    updatePlaybackRateSlider();
+    await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { 
+        // update all width dependent elements
+        updateCapturesGallery();
+        updateClipsGallery();
+        updateSeekSlider();
+        updateTimelineSlider();
+        updateVolumeSlider();
+        updatePlaybackRateSlider();
+        resolve();
+    }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 }
 
 /**

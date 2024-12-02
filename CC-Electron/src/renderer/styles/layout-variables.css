@@ -306,13 +306,20 @@ html {
     --tthumb-height: calc(-2 * var(--tthumb-tinset) + var(--tslider-height));
     --tthumb-width: 4px;
 
+    /* ==== cthumb -> Clip Thumb ==== */
+    --cthumb-tinset: -12px;
+    --cthumb-linset: calc(var(--cthumb-width) / -2);
+    --cthumb-bradius: calc(var(--cthumb-width) / 2);
+    --cthumb-height: calc(-2 * var(--cthumb-tinset) + var(--tslider-height));
+    --cthumb-width: 6px;
+
     /* ==== cctr -> Clip Container ==== */
     --cctr-bwidth: 1.5px;
     --cctr-bradius: 10px;
 
     /* ==== cicon -> Clip Icon ==== */
     --cicon-length: 45px;
-    --cicon-rmargin: 5px;
+    --cicon-rmargin: 10px;
     --cicon-lmargin: calc(var(--cicon-rmargin) - var(--cctr-bwidth));
 
     /* ==== cbar -> Clip Bar ==== */

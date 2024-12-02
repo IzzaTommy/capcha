@@ -23,7 +23,7 @@
 }
 
 .title-btn:hover {
-    background-color: var(--tbtn-alt-bgcolor);
+    background-color: var(--tbtn-bgcolor);
 }
 
 #btn-minimize {
@@ -31,7 +31,7 @@
 }
 
 #btn-close:hover {
-    background-color: var(--tcbtn-alt-bgcolor);
+    background-color: var(--tcbtn-bgcolor);
 }
 
 .title-icon {

@@ -36,6 +36,6 @@ async function finishInit() {
     await initMainWebSocket();
     await initMainSettings();
 
-    instances['mainWindow'].webContents.openDevTools();
+    // instances['mainWindow'].webContents.openDevTools();
     instances['mainWindow'].webContents.send('window:reqFinishInit');
 }

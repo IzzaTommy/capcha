@@ -87,7 +87,7 @@
 }
 
 .nav-btn:hover {
-    background-color: var(--nbtn-alt-bgcolor);
+    background-color: var(--nbtn-bgcolor);
 }
 
 #btn-record {
@@ -123,7 +123,7 @@
 }
 
 #btn-record.active > #icon-record {
-    fill: var(--ricon-alt-fill);
+    fill: var(--ricon-fill);
 }
 
 .nav-label {
@@ -142,7 +142,7 @@
 }
 
 #btn-record.active > .nav-label {
-    color: var(--rbtn-span-alt-color);
+    color: var(--rbtn-span-color);
 }
 
 #label-ctr-current-recording {
@@ -235,7 +235,7 @@
 }
 
 #btn-nav-toggle:hover {
-    background-color: var(--ntbtn-alt-bgcolor);
+    background-color: var(--ntbtn-bgcolor);
 }
 
 #icon-nav-toggle {

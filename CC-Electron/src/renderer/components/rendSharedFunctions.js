@@ -23,7 +23,8 @@ import {
     currentVideoTimeLabel, currentVideoDurationLabel, 
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
-    timelineSlider, timelineOverlay, timelineThumb, 
+    timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
+    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
@@ -70,6 +71,11 @@ function setActiveSection(section) {
             editorSection.classList.remove('active');
             directoriesSection.classList.add('active');
 
+            setIcon(clipToggleIcon, 'arrow-forward-ios');
+            clipBar.classList.remove('active');
+            clipLeftThumb.classList.remove('active');
+            clipRightThumb.classList.remove('active');
+
             // unload the editor video
             if (flags['videoLoaded']) {
                 flags['videoLoaded'] = false;
@@ -89,6 +95,11 @@ function setActiveSection(section) {
             directoriesSection.classList.remove('active');
             editorSection.classList.remove('active');
             settingsSection.classList.add('active');
+
+            setIcon(clipToggleIcon, 'arrow-forward-ios');
+            clipBar.classList.remove('active');
+            clipLeftThumb.classList.remove('active');
+            clipRightThumb.classList.remove('active');
 
             // unload the editor video
             if (flags['videoLoaded']) {

@@ -57,10 +57,10 @@ html[data-theme='dark'] {
     --tbar-span-color: #dddddd;
 
     /* ==== tbtn -> Title Button ==== */
-    --tbtn-alt-bgcolor: #3a3a3a;
+    --tbtn-bgcolor: #3a3a3a;
 
     /* ==== tcbtn -> Title Close Button ==== */
-    --tcbtn-alt-bgcolor: #ff0000;
+    --tcbtn-bgcolor: #ff0000;
 
     /* ==== ticon -> Title Icon ==== */
     --ticon-fill: #cccccc;
@@ -77,7 +77,7 @@ html[data-theme='dark'] {
     --ldisplay-h1-color: #dddddd;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
-    --nbtn-alt-bgcolor: #575757;
+    --nbtn-bgcolor: #575757;
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #575757;
@@ -86,10 +86,10 @@ html[data-theme='dark'] {
     --rbtn-alt2-bgcolor: #dddddd;
     --rbtn-alt3-bgcolor: #ffffff;
 
-    --rbtn-span-alt-color: #363636;
+    --rbtn-span-color: #363636;
 
     /* ==== ricon -> Record Icon ==== */
-    --ricon-alt-fill: #ff0000;
+    --ricon-fill: #ff0000;
 
     /* ==== nicon -> Nav(igation) Icon ==== */
     --nicon-fill: #dddddd;
@@ -112,7 +112,7 @@ html[data-theme='dark'] {
     --arreslabel-alt-color: #dddddd;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-alt-bgcolor: #505050;
+    --ntbtn-bgcolor: #505050;
 
     /* ==== nticon -> Nav(igation) Toggle Icon ==== */
     --nticon-fill: #dddddd;
@@ -122,14 +122,14 @@ html[data-theme='dark'] {
     --dctr-bgcolor: #373737;
 
     /* ==== dbtn -> Directory Button ==== */
-    --dbtn-alt-bgcolor: #505050;
+    --dbtn-bgcolor: #505050;
     
     /* ==== dicon -> Directory Icon ==== */
     --dicon-fill: #787878;
     --dicon-alt-fill: #dddddd;
 
     /* ==== vpctr -> Video Preview Container ==== */
-    --vpctr-alt-bgcolor: #505050;
+    --vpctr-bgcolor: #505050;
 
     /* ==== vdurlabel -> Video Duration Label ==== */
     --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
@@ -145,10 +145,10 @@ html[data-theme='dark'] {
     --vnamelabel-color: #dddddd;
 
     /* ==== vrbtn -> Video Rename Button ==== */
-    --vrbtn-alt-bgcolor: #f2a72f;
+    --vrbtn-bgcolor: #f2a72f;
 
     /* ==== vdbtn -> Video Delete Button ==== */
-    --vdbtn-alt-bgcolor: #ea2d2d;
+    --vdbtn-bgcolor: #ea2d2d;
 
     /* ==== voicon -> Video Options Icon ==== */
     --voicon-fill: #dddddd;
@@ -204,6 +204,9 @@ html[data-theme='dark'] {
 
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #dddddd;
+
+    /* ==== cthumb -> Clip Thumb ==== */
+    --cthumb-bgcolor: #ffe100;
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #414344;
@@ -319,10 +322,10 @@ html[data-theme='light'] {
     --tbar-span-color: #363636;
 
     /* ==== tbtn -> Title Button ==== */
-    --tbtn-alt-bgcolor: #c3c3c3;
+    --tbtn-bgcolor: #c3c3c3;
 
     /* ==== tcbtn -> Title Close Button ==== */
-    --tcbtn-alt-bgcolor: #ff0000;
+    --tcbtn-bgcolor: #ff0000;
 
     /* ==== ticon -> Title Icon ==== */
     --ticon-fill: #363636;
@@ -339,7 +342,7 @@ html[data-theme='light'] {
     --ldisplay-h1-color: #363636;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
-    --nbtn-alt-bgcolor: #dbdbdb;
+    --nbtn-bgcolor: #dbdbdb;
 
     /* ==== rbtn -> Record Button ==== */
     --rbtn-bcolor: #dbdbdb;
@@ -348,10 +351,10 @@ html[data-theme='light'] {
     --rbtn-alt2-bgcolor: #dddddd;
     --rbtn-alt3-bgcolor: white;
 
-    --rbtn-span-alt-color: #363636;
+    --rbtn-span-color: #363636;
 
     /* ==== ricon -> Record Icon ==== */
-    --ricon-alt-fill: #ff0000;
+    --ricon-fill: #ff0000;
 
     /* ==== nicon -> Nav(igation) Icon ==== */
     --nicon-fill: #363636;
@@ -374,7 +377,7 @@ html[data-theme='light'] {
     --arreslabel-alt-color: #363636;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-alt-bgcolor: #dfe1e5;
+    --ntbtn-bgcolor: #dfe1e5;
 
     /* ==== nticon -> Nav(igation) Toggle Icon ==== */
     --nticon-fill: #1a69e0;
@@ -384,14 +387,14 @@ html[data-theme='light'] {
     --dctr-bgcolor: transparent;
 
     /* ==== dbtn -> Directory Button ==== */
-    --dbtn-alt-bgcolor: #dfe1e5;
+    --dbtn-bgcolor: #dfe1e5;
 
     /* ==== dicon -> Directory Icon ==== */
     --dicon-fill: #787878;
     --dicon-alt-fill: #1a69e0;
 
     /* ==== vpctr -> Video Preview Container ==== */
-    --vpctr-alt-bgcolor: #dfe1e5;
+    --vpctr-bgcolor: #dfe1e5;
 
     /* ==== vdurlabel -> Video Duration Label ==== */
     --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
@@ -407,10 +410,10 @@ html[data-theme='light'] {
     --vnamelabel-color: #363636;
 
     /* ==== vrbtn -> Video Rename Button ==== */
-    --vrbtn-alt-bgcolor: #f2a72f;
+    --vrbtn-bgcolor: #f2a72f;
 
     /* ==== vdbtn -> Video Delete Button ==== */
-    --vdbtn-alt-bgcolor: #ea2d2d;
+    --vdbtn-bgcolor: #ea2d2d;
 
     /* ==== voicon -> Video Options Icon ==== */
     --voicon-fill: #363636;
@@ -466,6 +469,9 @@ html[data-theme='light'] {
 
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #1a69e0;
+
+    /* ==== cthumb -> Clip Thumb ==== */
+    --cthumb-bgcolor: #ffe100;
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #dfe1e5;
