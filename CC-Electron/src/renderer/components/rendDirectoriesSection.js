@@ -25,8 +25,8 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -45,6 +45,7 @@ export { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery,
 async function initRendDirectoriesSection() {
     initDirectoryGalleryEL();
     await loadCapturesGallery(true);
+    await loadClipsGallery(true);
 }
 
 /**
@@ -76,7 +77,7 @@ function initDirectoryGalleryEL() {
     });
 
     // on scroll, toggle the clips gallery buttons
-    clipsGallery.addEventListener('scroll', toggleClipsGalleryBtn);
+    capturesGallery.addEventListener('scroll', toggleCapturesGalleryBtn);
 
     // on scroll, scroll the clips gallery
     clipsGallery.addEventListener('wheel', (pointer) => {
@@ -118,7 +119,7 @@ async function loadCapturesGallery(initialization) {
     const currentDate = new Date();
 
     // get the videos
-    data['videos'] = await attemptAsyncFunction(() => window.filesAPI.getAllVideosData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
+    data['captures'] = await attemptAsyncFunction(() => window.filesAPI.getAllCapturesData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
     // remove every existing video preview from the captures gallery
     while (capturesGallery.firstElementChild)
@@ -127,28 +128,28 @@ async function loadCapturesGallery(initialization) {
     }
 
     // for each video data
-    for (const videoData of data['videos']) {
+    for (const captureData of data['captures']) {
         // get a clone of the video preview template
         videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
         videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
 
         // set the video source
-        videoPreviewContainer.dataset.src = videoData['path'];
+        videoPreviewContainer.dataset.src = captureData['path'];
         // set the video thumbnail source
-        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', videoData['thumbnailPath']);
+        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', captureData['thumbnailPath']);
         // set the video duration
-        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(videoData['duration']);
+        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(captureData['duration']);
         // set the video game
-        videoPreviewClone.querySelector('.video-game-label').textContent = `${videoData['game']}`;
+        videoPreviewClone.querySelector('.video-game-label').textContent = `${captureData['game']}`;
         // set the video age
-        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND)}`;
+        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - captureData['created']) / MSECONDS_IN_SECOND)}`;
         // set the video name with extension
-        videoPreviewClone.querySelector('.video-name-label').textContent = videoData['nameExt'];
+        videoPreviewClone.querySelector('.video-name-label').textContent = captureData['nameExt'];
 
         // on click, open the video in the editor section
         videoPreviewContainer.addEventListener('click', () => {
             // set the video player source
-            videoPlayer.setAttribute('src', videoData['path']);
+            videoPlayer.setAttribute('src', captureData['path']);
 
             // change the active content section to the editor section
             setActiveSection('editor');
@@ -209,7 +210,7 @@ async function loadClipsGallery(initialization) {
     const currentDate = new Date();
 
     // get the videos
-    data['videos'] = await attemptAsyncFunction(() => window.filesAPI.getAllVideosData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
+    data['clips'] = await attemptAsyncFunction(() => window.filesAPI.getAllClipsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
     // remove every existing video preview from the clips gallery
     while (clipsGallery.firstElementChild)
@@ -218,28 +219,28 @@ async function loadClipsGallery(initialization) {
     }
 
     // for each video data
-    for (const videoData of data['videos']) {
+    for (const clipData of data['clips']) {
         // get a clone of the video preview template
         videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
         videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
 
         // set the video source
-        videoPreviewContainer.dataset.src = videoData['path'];
+        videoPreviewContainer.dataset.src = clipData['path'];
         // set the video thumbnail source
-        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', videoData['thumbnailPath']);
+        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', clipData['thumbnailPath']);
         // set the video duration
-        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(videoData['duration']);
+        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(clipData['duration']);
         // set the video game
-        videoPreviewClone.querySelector('.video-game-label').textContent = `${videoData['game']}`;
+        videoPreviewClone.querySelector('.video-game-label').textContent = `${clipData['game']}`;
         // set the video age
-        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - videoData['created']) / MSECONDS_IN_SECOND)}`;
+        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - clipData['created']) / MSECONDS_IN_SECOND)}`;
         // set the video name with extension
-        videoPreviewClone.querySelector('.video-name-label').textContent = videoData['nameExt'];
+        videoPreviewClone.querySelector('.video-name-label').textContent = clipData['nameExt'];
 
         // on click, open the video in the editor section
         videoPreviewContainer.addEventListener('click', () => {
             // set the video player source
-            videoPlayer.setAttribute('src', videoData['path']);
+            videoPlayer.setAttribute('src', clipData['path']);
 
             // change the active content section to the editor section
             setActiveSection('editor');

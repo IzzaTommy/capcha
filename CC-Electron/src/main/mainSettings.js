@@ -11,9 +11,10 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
     data, state, 
     initMainVariables 
@@ -56,49 +57,45 @@ async function initSettings() {
 
     console.log('\n---------------- SETTINGS DATA ----------------');
 
-    await attemptAsyncFunction(() => psList(), 3, 2000);
+    await attemptAsyncFunction(() => psList(), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
     // create CapCha profile
-    if (!(await attemptAsyncFunction(() => webSocketSend('GetProfileList'), 3, 2000))['responseData']['profiles'].includes('CapCha'))
+    if (!(await attemptAsyncFunction(() => webSocketSend('GetProfileList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['profiles'].includes('CapCha'))
     {
-        await attemptAsyncFunction(() => webSocketSend('CreateProfile', { profileName: 'CapCha' }), 3, 2000);
+        await attemptAsyncFunction(() => webSocketSend('CreateProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
 
     // set to CapCha profile
-    await attemptAsyncFunction(() => webSocketSend('SetCurrentProfile', { profileName: 'CapCha' }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetCurrentProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
     // set basic settings
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' }), 3, 2000);
-
-    // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: 'MANUAL-%MM%DD%YY%hh%mm%ss' }), 3, 2000);
-
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), 3, 2000);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), 3, 2000);
-    /* file name formatting */
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
     // set captures path
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set format
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set encoder
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('encoder') }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('capturesEncoder') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set recording width
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set recording height
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set framerate
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` }), 3, 2000);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set bitrate
     try {
         let recordEncoderData;
 
-        if (data['settings'].get('encoder') == 'obs_x264') {
-            recordEncoderData = { 'bitrate': data['settings'].get('bitrate') };
+        if (data['settings'].get('capturesEncoder') == 'obs_x264') {
+            recordEncoderData = { 'bitrate': data['settings'].get('capturesBitrate') };
         }
         else {
-            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('bitrate') };
+            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('capturesBitrate') };
         }
         writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
         console.log('File has been written successfully with options');
@@ -114,23 +111,24 @@ function initSettingsL() {
     
     // sets the value of a specific setting
     ipcMain.handle('settings:setSetting', async (_, key, value) => {
+        let canceled, filePaths;
         console.log(key, '1: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
 
         value = validateSetting(key, value);
 
         switch (key) {
             case 'capturesPath':
-                const { canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] });
+                ({ canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] }));
         
                 if (!canceled && filePaths[0] !== value) {
                     value = filePaths[0];
     
                     try {
                         // delete the thumbnail directory
-                        await fs.rm(THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                        await fs.rm(CAPTURES_THUMBNAIL_DIRECTORY, { recursive: true, force: true });
                 
                         // recreate the thumbnail directory
-                        await fs.mkdir(THUMBNAIL_DIRECTORY);
+                        await fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY);
                     }
                     catch {
                         console.error('Error reseting thumbnails directory!');
@@ -145,95 +143,95 @@ function initSettingsL() {
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
             
-            // case 'clipsPath':
-            //     const { canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] });
+            case 'clipsPath':
+                ({ canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] }));
         
-            //     if (!canceled && filePaths[0] !== value) {
-            //         value = filePaths[0];
+                if (!canceled && filePaths[0] !== value) {
+                    value = filePaths[0];
     
-            //         try {
-            //             // delete the thumbnail directory
-            //             await fs.rm(THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                    try {
+                        // delete the thumbnail directory
+                        await fs.rm(CLIPS_THUMBNAIL_DIRECTORY, { recursive: true, force: true });
                 
-            //             // recreate the thumbnail directory
-            //             await fs.mkdir(THUMBNAIL_DIRECTORY);
-            //         }
-            //         catch {
-            //             console.error('Error reseting thumbnails directory!');
-            //         }
-            //     }
+                        // recreate the thumbnail directory
+                        await fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY);
+                    }
+                    catch {
+                        console.error('Error reseting thumbnails directory!');
+                    }
+                }
 
-            //     // should realistically never run
-            //     if (!existsSync(value)) {
-            //         value = SETTINGS_DATA_DEFAULTS[key];
-            //     }
+                // should realistically never run
+                if (!existsSync(value)) {
+                    value = SETTINGS_DATA_DEFAULTS[key];
+                }
 
-            //     console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-            //     data['settings'].set(key, value);
-            //     break;
+                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+                data['settings'].set(key, value);
+                break;
 
-            case 'format':
+            case 'capturesFormat':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('format') }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
-            case 'encoder':
+            case 'capturesEncoder':
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
                 try {
                     let recordEncoderData;
             
                     if (value == 'obs_x264') {
-                        recordEncoderData = { 'bitrate': data['settings'].get('bitrate') };
+                        recordEncoderData = { 'bitrate': data['settings'].get('capturesBitrate') };
                     }
                     else {
-                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('bitrate') };
+                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('capturesBitrate') };
                     }
                     writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
                     console.log('File has been written successfully with options');
 
-                    console.log('REAPPLIED BITRATE: ', data['settings'].get('bitrate'));
+                    console.log('REAPPLIED BITRATE: ', data['settings'].get('capturesBitrate'));
                 } 
                 catch (error) {
                     console.error('Error writing to file: ', error);
                 }
                 break;
 
-            case 'recordingWidth':
+            case 'capturesWidth':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('recordingWidth')}` }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
-            case 'recordingHeight':
+            case 'capturesHeight':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('recordingHeight')}` }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
-            case 'framerate':
+            case 'capturesFramerate':
                 console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('framerate')}` }), 3, 2000);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
-            case 'bitrate':
+            case 'capturesBitrate':
                 try {
                     let recordEncoderData;
             
-                    if (data['settings'].get('encoder') == 'obs_x264') {
+                    if (data['settings'].get('capturesEncoder') == 'obs_x264') {
                         recordEncoderData = { 'bitrate': value };
                     }
                     else {
@@ -255,11 +253,6 @@ function initSettingsL() {
                 toggleAutoRecord();
                 break;
 
-            case 'volumeMuted':
-                data['settings'].set(key, value);
-                instances['mainWindow'].destroy();
-                break;
-
             default:
                 console.log(key, '2: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
@@ -270,60 +263,8 @@ function initSettingsL() {
         return value;
     });
     
-    function validateSetting(key, value) {
-        if (SETTINGS_DATA_SCHEMA[key]['type'] === 'boolean') {
-            if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFAULTS[key];
-            }
-        }
-        else {
-            if (SETTINGS_DATA_SCHEMA[key]['type'] === 'number') {
-                if (isNaN(value)) {
-                    value = SETTINGS_DATA_DEFAULTS[key];
-                }
-                else {
-                    if (SETTINGS_DATA_SCHEMA[key]['enum']) {
-                        if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                            value = SETTINGS_DATA_DEFAULTS[key];
-                        }
-                        else {
-                            value = Number(value);
-                        }
-                    }
-                    else {
-                        if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
-                            value = SETTINGS_DATA_SCHEMA[key]['maximum'];
-                        }
-                        else {
-                            if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
-                                value = SETTINGS_DATA_SCHEMA[key]['minimum'];
-                            }
-                            else {
-                                value = Number(value);
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                if (typeof(value) !== 'string') {
-                    value = SETTINGS_DATA_DEFAULTS[key];
-                }
-                else {
-                    if (SETTINGS_DATA_SCHEMA[key]['enum']) {
-                        if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
-                            value = SETTINGS_DATA_DEFAULTS[key];
-                        }
-                    }
-                }
-            }
-        }
-
-        return value;
-    }
-    
     // gets all of the video files and meta data from the save location directory
-    ipcMain.handle('files:getAllVideosData', async (_) => {
+    ipcMain.handle('files:getAllCapturesData', async (_) => {
         // return Promise.reject(new Error("Simulated error for testing"));
 
         // get the save location stored in the settings
@@ -331,7 +272,7 @@ function initSettingsL() {
     
         // make the thumbnail directory and video directory (latter should already exist)
         await Promise.all([
-            fs.mkdir(THUMBNAIL_DIRECTORY, { recursive: true }),
+            fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY, { recursive: true }),
             fs.mkdir(directory, { recursive: true })
         ]);
     
@@ -339,25 +280,25 @@ function initSettingsL() {
         const files = await fs.readdir(directory);
     
         // filter by video extensions
-        const videos = files.filter(file =>
+        const captures = files.filter(file =>
             ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
         );
     
         // get video meta data and thumbnail
-        const videosData = await Promise.all(
-            videos.map(async video => {
+        const capturesData = await Promise.all(
+            captures.map(async capture => {
                 try {
-                    const videoName = path.parse(video).name;
-                    const videoPath = path.join(directory, video);
+                    const captureName = path.parse(capture).name;
+                    const capturePath = path.join(directory, capture);
     
-                    const [videoMetaData, thumbnailPath] = await Promise.all([
-                        fs.stat(videoPath),
-                        path.join(THUMBNAIL_DIRECTORY, `${videoName}.png`)
+                    const [captureMetaData, thumbnailPath] = await Promise.all([
+                        fs.stat(capturePath),
+                        path.join(CAPTURES_THUMBNAIL_DIRECTORY, `${captureName}.png`)
                     ]);
     
 
-                    const videoDuration = await new Promise((resolve, reject) => {
-                        ffmpeg.ffprobe(videoPath, (error, metadata) => {
+                    const captureDuration = await new Promise((resolve, reject) => {
+                        ffmpeg.ffprobe(capturePath, (error, metadata) => {
                             if (error) {
                                 return reject(error);
                             }
@@ -372,26 +313,26 @@ function initSettingsL() {
                     }
                     catch {
                         await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
-                            ffmpeg(videoPath)
+                            ffmpeg(capturePath)
                                 .on('end', resolve)
                                 .on('error', reject)
                                 .screenshots({
                                     timestamps: ['50%'],
-                                    filename: videoName,
-                                    folder: THUMBNAIL_DIRECTORY,
+                                    filename: captureName,
+                                    folder: CAPTURES_THUMBNAIL_DIRECTORY,
                                     size: THUMBNAIL_SIZE
                                 });
-                        }), 3, 4000);
+                        }), ATTEMPTS, SLOW_DELAY_IN_MSECONDS);
                     }
     
                     // return data on the video
                     return {
-                        nameExt: video,
-                        game: video.split('-')[0],
-                        path: videoPath,
-                        size: videoMetaData.size,
-                        created: videoMetaData.birthtime, 
-                        duration: videoDuration, 
+                        nameExt: capture,
+                        game: capture.split('-')[0],
+                        path: capturePath,
+                        size: captureMetaData.size,
+                        created: captureMetaData.birthtime, 
+                        duration: captureDuration, 
                         thumbnailPath: thumbnailPath
                     };
                 }
@@ -403,6 +344,142 @@ function initSettingsL() {
         );
     
         // return all the data on the videos
-        return videosData.filter(videoData => videoData !== null).sort((a, b) => b.created - a.created);
+        return capturesData.filter(captureData => captureData !== null).sort((a, b) => b.created - a.created);
     });
+
+    // gets all of the video files and meta data from the save location directory
+    ipcMain.handle('files:getAllClipsData', async (_) => {
+        // return Promise.reject(new Error("Simulated error for testing"));
+
+        // get the save location stored in the settings
+        const directory = data['settings'].get('clipsPath');
+    
+        // make the thumbnail directory and video directory (latter should already exist)
+        await Promise.all([
+            fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY, { recursive: true }),
+            fs.mkdir(directory, { recursive: true })
+        ]);
+    
+        // read the video directory for files
+        const files = await fs.readdir(directory);
+    
+        // filter by video extensions
+        const clips = files.filter(file =>
+            ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
+        );
+    
+        // get video meta data and thumbnail
+        const clipsData = await Promise.all(
+            clips.map(async clip => {
+                try {
+                    const clipName = path.parse(clip).name;
+                    const clipPath = path.join(directory, clip);
+    
+                    const [clipMetaData, thumbnailPath] = await Promise.all([
+                        fs.stat(clipPath),
+                        path.join(CLIPS_THUMBNAIL_DIRECTORY, `${clipName}.png`)
+                    ]);
+    
+
+                    const clipDuration = await new Promise((resolve, reject) => {
+                        ffmpeg.ffprobe(clipPath, (error, metadata) => {
+                            if (error) {
+                                return reject(error);
+                            }
+           
+                            resolve(metadata.format.duration);
+                        });
+                    });
+
+                    // create thumbnail if it does not exist
+                    try {
+                        await fs.access(thumbnailPath);
+                    }
+                    catch {
+                        await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
+                            ffmpeg(clipPath)
+                                .on('end', resolve)
+                                .on('error', reject)
+                                .screenshots({
+                                    timestamps: ['50%'],
+                                    filename: clipName,
+                                    folder: CLIPS_THUMBNAIL_DIRECTORY,
+                                    size: THUMBNAIL_SIZE
+                                });
+                        }), ATTEMPTS, SLOW_DELAY_IN_MSECONDS);
+                    }
+    
+                    // return data on the video
+                    return {
+                        nameExt: clip,
+                        game: clip.split('-')[0],
+                        path: clipPath,
+                        size: clipMetaData.size,
+                        created: clipMetaData.birthtime, 
+                        duration: clipDuration, 
+                        thumbnailPath: thumbnailPath
+                    };
+                }
+                catch (error) {
+                    console.log('Video Reading Error!:', error);
+                    return null;
+                }
+            })
+        );
+    
+        // return all the data on the videos
+        return clipsData.filter(clipData => clipData !== null).sort((a, b) => b.created - a.created);
+    });
+}
+
+function validateSetting(key, value) {
+    if (SETTINGS_DATA_SCHEMA[key]['type'] === 'boolean') {
+        if (typeof(value) !== 'boolean') {
+            value = SETTINGS_DATA_DEFAULTS[key];
+        }
+    }
+    else {
+        if (SETTINGS_DATA_SCHEMA[key]['type'] === 'number') {
+            if (isNaN(value)) {
+                value = SETTINGS_DATA_DEFAULTS[key];
+            }
+            else {
+                if (SETTINGS_DATA_SCHEMA[key]['enum']) {
+                    if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
+                        value = SETTINGS_DATA_DEFAULTS[key];
+                    }
+                    else {
+                        value = Number(value);
+                    }
+                }
+                else {
+                    if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
+                        value = SETTINGS_DATA_SCHEMA[key]['maximum'];
+                    }
+                    else {
+                        if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
+                            value = SETTINGS_DATA_SCHEMA[key]['minimum'];
+                        }
+                        else {
+                            value = Number(value);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            if (typeof(value) !== 'string') {
+                value = SETTINGS_DATA_DEFAULTS[key];
+            }
+            else {
+                if (SETTINGS_DATA_SCHEMA[key]['enum']) {
+                    if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
+                        value = SETTINGS_DATA_DEFAULTS[key];
+                    }
+                }
+            }
+        }
+    }
+
+    return value;
 }

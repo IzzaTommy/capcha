@@ -11,9 +11,10 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
     data, state, 
     initMainVariables 
@@ -25,9 +26,16 @@ import { initMainSettings } from './mainSettings.js';
 
 export { attemptAsyncFunction };
 
+/**
+ * 
+ * @param {*} asyncFunction 
+ * @param {*} attempts 
+ * @param {*} delay 
+ * @returns 
+ */
 async function attemptAsyncFunction(asyncFunction, attempts, delay) {
     // iterate through each attempt
-    for (let i = 0; i < attempts; i++) {
+    for (let i = 1; i <= attempts; i++) {
         // try the asynchronous function
         try {
             return await asyncFunction();
@@ -36,10 +44,10 @@ async function attemptAsyncFunction(asyncFunction, attempts, delay) {
             console.error(`Attempt ${i} failed: `, error);
 
             // do another attempt after the delay
-            if (i < attempts - 1) {
+            if (i < attempts) {
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
-            // throw an error
+            // throw an error if there are no more attempts
             else {
                 throw new Error(`Function failed after ${attempts} attempts: `, error);
             }

@@ -24,13 +24,14 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
+import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 
 /**
  * @exports initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration
@@ -45,7 +46,6 @@ function initRendEditorSection() {
     initVideoContainer();
     initTimelineSliderEL();
     initClipContainerEL();
-    initClipContainer();
 }
 
 /**
@@ -743,22 +743,11 @@ function initClipContainerEL() {
     });
 
     // on click, create the clip
-    clipCreateBtn.addEventListener('click', () => {
-        console.log('test2');
-    });
-}
+    clipCreateBtn.addEventListener('click', async () => {
+        await attemptAsyncFunction(() => window.clipAPI.createClip(videoPlayer.getAttribute('src'), state['timeline'].getClipStartTime(), state['timeline'].getClipEndTime()), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
-/**
- * Initializes the clip container
- */
-function initClipContainer() {
-    // iterate through each clip setting field
-    for (const clipSettingField of allClipSettingFields) {
-        // on change, validate the clip setting, save it, and set the saved value
-        clipSettingField.addEventListener('change', async () => {
-            // settingField.value = data['settings'][settingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingField.name, settingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-        });
-    }
+        await loadClipsGallery(false);
+    });
 }
 
 /**

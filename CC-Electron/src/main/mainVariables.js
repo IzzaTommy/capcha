@@ -11,20 +11,27 @@ import { exec } from 'child_process';
 
 export { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
     data, state, 
     initMainVariables 
 };
 
-// thumbnail, path, and settings constants
+// thumbnail size
 const THUMBNAIL_SIZE = '320x180';
+
+// paths
 const ACTIVE_DIRECTORY = import.meta.dirname;
-const DEF_VIDEO_DIRECTORY = path.join(app.getPath('videos'), 'CapCha');
-const THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'thumbnails');
+const DEF_CAPTURES_DIRECTORY = path.join(app.getPath('videos'), 'CapCha', 'Captures');
+const DEF_CLIPS_DIRECTORY = path.join(app.getPath('videos'), 'CapCha', 'Clips');
+const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
+const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
 const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+
+// settings
 const SETTINGS_DATA_DEFAULTS = { 
     navBarActive: true,
     
@@ -33,19 +40,22 @@ const SETTINGS_DATA_DEFAULTS = {
 
     darkMode: true,
 
-    capturesPath: DEF_VIDEO_DIRECTORY,
-    capturesLimit: 100,
-    clipsPath: DEF_VIDEO_DIRECTORY,
-    clipsLimit: 100,
-    format: 'mp4',
-    encoder: 'obs_nvenc_h264_tex',
-
-    // recordingDisplay: '',
-    recordingWidth: 1280,
-    recordingHeight: 720,
-    framerate: 60,
-    bitrate: 10000,
+    capturesPath: DEF_CAPTURES_DIRECTORY,
+    capturesLimit: 100, 
+    capturesFormat: 'mp4', 
+    capturesEncoder: 'obs_nvenc_h264_tex', 
+    capturesWidth: 1280, 
+    capturesHeight: 720, 
+    // capturesDisplay: '', 
+    capturesFramerate: 60,
+    capturesBitrate: 10000,
     autoRecord: false,
+
+    clipsPath: DEF_CLIPS_DIRECTORY,
+    clipsLimit: 100, 
+    clipsFormat: 'mp4', 
+    clipsWidth: 1280, 
+    clipsHeight: 720, 
 
     // speaker: '',
     // microphone: '',
@@ -76,6 +86,39 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'number',
         enum: [0, 5, 10, 20, 50, 100, 200, 500]
     },
+    capturesFormat: {
+        type: 'string',
+        enum: ['mp4', 'mkv']
+    },
+    capturesEncoder: {
+        type: 'string',
+        enum: ['obs_nvenc_h264_tex', 'obs_nvenc_hevc_tex', 'obs_x264']
+    },
+    capturesWidth: {
+        type: 'number',
+        minimum: 1,
+        maximum: 4096
+    },
+    capturesHeight: {
+        type: 'number',
+        minimum: 1,
+        maximum: 4096
+    },
+    capturesDisplay: {
+        type: 'string'
+    },
+    capturesFramerate: {
+        type: 'number',
+        enum: [10, 20, 24, 30, 48, 60]
+    },
+    capturesBitrate: {
+        type: 'number',
+        enum: [3000, 5000, 10000, 15000, 20000, 30000, 50000, 100000]
+    },
+    autoRecord: {
+        type: 'boolean'
+    }, 
+
     clipsPath: {
         type: 'string'
     },
@@ -83,37 +126,21 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'number',
         enum: [0, 5, 10, 20, 50, 100, 200, 500]
     },
-    format: {
+    clipsFormat: {
         type: 'string',
         enum: ['mp4', 'mkv']
     },
-    encoder: {
-        type: 'string',
-        enum: ['obs_nvenc_h264_tex', 'obs_nvenc_hevc_tex', 'obs_x264']
+    clipsWidth: {
+        type: 'number',
+        minimum: 1,
+        maximum: 4096
+    },
+    clipsHeight: {
+        type: 'number',
+        minimum: 1,
+        maximum: 4096
     },
 
-    recordingDisplay: {
-        type: 'string'
-    },
-    recordingWidth: {
-        type: 'number',
-        minimum: 1,
-        maximum: 4096
-    },
-    recordingHeight: {
-        type: 'number',
-        minimum: 1,
-        maximum: 4096
-    },
-    framerate: {
-        type: 'number',
-        enum: [10, 20, 24, 30, 48, 60]
-    },
-    bitrate: {
-        type: 'number',
-        enum: [3000, 5000, 10000, 15000, 20000, 30000, 50000, 100000]
-    },
-    
     speaker: {
         type: 'string'
     },
@@ -122,23 +149,29 @@ const SETTINGS_DATA_SCHEMA = {
     },
     webcam: {
         type: 'string'
-    }, 
-
-    autoRecord: {
-        type: 'boolean'
     }
 };
+
+// auto record programs
 const PROGRAMS = { 
     VALORANT: 'Valorant.exe', 
     Notepad: 'Notepad.exe' 
 };
 
-// main window, obs process, websocket INSTANCES
+// asynchronous function attempts and delay
+const ATTEMPTS = 3;
+const FAST_DELAY_IN_MSECONDS = 2000;
+const SLOW_DELAY_IN_MSECONDS = 4000;
+
+// main window, obs process, websocket instances
 let instances;
 
 // boolean flags, settings/videos data, and state data
 let flags, data, state; 
 
+/**
+ * Initializes the variables
+ */
 function initMainVariables() {
     // main window, obs process, and websocket instances
     instances = { 

@@ -11,9 +11,10 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
     data, state, 
     initMainVariables 
@@ -126,7 +127,8 @@ function initWebSocket() {
 function initWebSocketL() {
     ipcMain.handle('webSocket:StartRecord', async (_, recordingGame) => {
         // return Promise.reject(new Error("Simulated error for testing"));
-        await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recordingGame}-%MM%DD%YY%hh%mm%ss` }), 3, 2000);
+        await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recordingGame}-%MM%DD%YY%hh%mm%ss` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        // attempt async here?
         const recording = (await webSocketSend('StartRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = recording;
@@ -136,11 +138,47 @@ function initWebSocketL() {
 
     ipcMain.handle('webSocket:StopRecord', async (_) => {
         // return Promise.reject(new Error("Simulated error for testing"));
+        // attempt async here?
         const recording = (await webSocketSend('StopRecord', {}))['requestStatus']['result'];
 
         flags['recording'] = !recording;
 
         return recording;
+    });
+
+
+    ipcMain.handle('clip:createClip', async (_, videoDataPath, clipStartTime, clipEndTime) => {
+
+        try {
+            // Wrap the FFmpeg logic in a Promise
+            const result = await new Promise((resolve, reject) => {
+                const command = ffmpeg(videoDataPath);
+    
+                command.setStartTime(clipStartTime);
+                command.videoFilters(`scale=${data['settings'].get('clipsWidth')}:${data['settings'].get('clipsHeight')}`);
+                
+                command.duration(clipEndTime - clipStartTime);
+
+                command.videoCodec('libx264');
+                command.audioCodec('copy');
+
+                command.output(path.join(data['settings'].get('clipsPath'), `CLIP-${getFormattedDate()}.${data['settings'].get('clipsFormat')}`));
+    
+                command.on('end', () => {
+                    resolve(path.join(data['settings'].get('clipsPath'), 'testoutput.mp4'))
+                });
+                command.on('error', reject);
+                command.run();
+            });
+    
+            console.log('Processed video saved to:', result);
+            
+        } 
+        catch (error) {
+            console.error('Processing failed:', error);
+        }
+
+        console.log('done?');
     });
 }
 
@@ -159,4 +197,17 @@ function webSocketSend(requestType, requestData) {
 
         instances['webSocket'].send(JSON.stringify({ 'op': 6,'d': { requestType, requestData, requestId } }));
     });
+}
+
+function getFormattedDate() {
+    const now = new Date();
+
+    const MM = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const DD = String(now.getDate()).padStart(2, '0');
+    const YY = String(now.getFullYear()).slice(-2); // Get the last two digits of the year
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+
+    return `${MM}${DD}${YY}${hh}${mm}${ss}`;
 }

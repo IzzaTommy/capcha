@@ -23,12 +23,13 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
+import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 
 /**
  * @exports initRendTitleBar
@@ -51,5 +52,11 @@ function initTitleBtnEL() {
     // on click, maximize the window
     maximizeBtn.addEventListener('click', window.windowAPI.maximizeWindow);
     // on click, close the window
-    closeBtn.addEventListener('click', window.windowAPI.closeWindow);
+    closeBtn.addEventListener('click', async () => {
+        // not run in Promise.all because updating volumeMuted is set to end the program
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volume', data['settings']['volume']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        await attemptAsyncFunction(() => window.settingsAPI.setSetting('volumeMuted', data['settings']['volumeMuted']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        window.windowAPI.closeWindow();
+    });
 }

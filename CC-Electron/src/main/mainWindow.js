@@ -11,9 +11,10 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_VIDEO_DIRECTORY, THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
+    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
     data, state, 
     initMainVariables 
@@ -25,11 +26,17 @@ import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
 export { initMainWindow, toggleAutoRecord };
 
+/**
+ * Initializes the window
+ */
 function initMainWindow() {
     initWindow();
     initWindowL();
 }
 
+/**
+ * Initializes the window
+ */
 function initWindow() {
     instances['mainWindow'] = new BrowserWindow({
         minWidth: 1280,
@@ -43,20 +50,19 @@ function initWindow() {
         }
     });
 
+    // start the main window maximized
     instances['mainWindow'].maximize();
-
     instances['mainWindow'].loadFile('src/renderer/index.html');
 }
 
+/**
+ * Initializes the window listeners
+ */
 function initWindowL() {
-    instances['mainWindow'].on('close', (event) => {
-        event.preventDefault();
-
-        instances['mainWindow'].webContents.send('settings:reqVolumeSettings');
-    });
-
+    // on minimizeWindow, minimize the main window
     ipcMain.on('window:minimizeWindow', (_) => instances['mainWindow'].minimize());
 
+    // on maximizeWindow, maximize the main window
     ipcMain.on('window:maximizeWindow', (_) => {
         if (instances['mainWindow'].isMaximized()) {
             instances['mainWindow'].unmaximize();
@@ -66,43 +72,49 @@ function initWindowL() {
         }
     });
 
+    // on closeWindow, close the main window
     ipcMain.on('window:closeWindow', (_) => instances['mainWindow'].close());
 
+    // on reqToggleAutoRecord, run toggleAutoRecord
     ipcMain.on('window:reqToggleAutoRecord', (_) => {
         toggleAutoRecord();
     }); 
 }
 
+/**
+ * Toggles the auto recording
+ */
 function toggleAutoRecord() {
+    // if auto record is on, start checking the programs list every 3 seconds
     if (data['settings'].get('autoRecord')) {
         state['autoRecordInterval'] = setInterval(async () => await checkPrograms(), 5000);
     }
+    // else cancel the auto recording
     else {
         clearInterval(state['autoRecordInterval']);
         state['autoRecordInterval'] = null;
     }
 }
 
+/**
+ * Checks if certain programs are running and toggle auto recording
+ */
 async function checkPrograms() {
-    const processes = await attemptAsyncFunction(() => psList(), 3, 2000);
+    // get the process list
+    const processes = await attemptAsyncFunction(() => psList(), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
-    console.log('\n---------------- RECORDING ----------------');
-        
-    console.log('Recording Game: ', state['recordingGame']);
-
+    // if recording is on, check if the recording game is not running and stop the recording
     if (flags['recording']) {
-        console.log('Recording Status: Recording');
         if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === PROGRAMS[state['recordingGame']].toLowerCase())) {
             instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn');
-            // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: 'MANUAL-%MM%DD%YY%hh%mm%ss' }), 3, 2000);
         }
     }
+    // else check the program list and toggle recording if a match is found
     else {
-        console.log('Recording Status: Not Recording');
         for (const [key, value] of Object.entries(PROGRAMS)) {
             if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
                 state['recordingGame'] = key;
-                // await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${state['recordingGame']}-%MM%DD%YY%hh%mm%ss` }), 3, 2000);
+
                 instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn', state['recordingGame']);
                 break;
             }

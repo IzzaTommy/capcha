@@ -39,18 +39,22 @@ contextBridge.exposeInMainWorld('settingsAPI', {
 
     // sends setting, returns setting
     setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
-
-    // sends request to renderer
-    reqVolumeSettings: (callback) => ipcRenderer.on('settings:reqVolumeSettings', callback)
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {
     // returns video data
-    getAllVideosData: () => ipcRenderer.invoke('files:getAllVideosData'),
+    getAllCapturesData: () => ipcRenderer.invoke('files:getAllCapturesData'),
 
-    // sends request to renderer
-    reqLoadCapturesGallery: (callback) => ipcRenderer.on('files:reqLoadCapturesGallery', callback),
+    // returns video data
+    getAllClipsData: () => ipcRenderer.invoke('files:getAllClipsData'),
 
-    // sends request to renderer
-    reqLoadClipsGallery: (callback) => ipcRenderer.on('files:reqLoadClipsGallery', callback)
+    // // sends request to renderer
+    // reqLoadCapturesGallery: (callback) => ipcRenderer.on('files:reqLoadCapturesGallery', callback),
+
+    // // sends request to renderer
+    // reqLoadClipsGallery: (callback) => ipcRenderer.on('files:reqLoadClipsGallery', callback)
+});
+
+contextBridge.exposeInMainWorld('clipAPI', {
+    createClip: (videoDataPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('clip:createClip', videoDataPath, clipStartTime, clipEndTime)
 });

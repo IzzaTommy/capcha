@@ -24,7 +24,7 @@ import { TimelineState } from './timelineState.js';
  *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
  *  fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineThumb, timeline, clipLeftThumb, clipRightThumb, 
- *  mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+ *  mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
  *  flags, boxes, 
  *  data, state, 
  *  initRendVariables 
@@ -48,14 +48,15 @@ export {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 };
 
-// timeline, time, mapping, and style constants
+// order of variables
+// timeline, time, mapping, and style
 const GROW_FACTOR = 0.15;
 const REDUCE_FACTOR = 0.1;
 const MIN_TIMELINE_ZOOM = 30;
@@ -98,8 +99,8 @@ let html,
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon 
 
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, state;
@@ -204,14 +205,16 @@ function initRendVariables() {
     clipRightThumb = document.getElementById('right-thumb-clip'); 
 
     clipBar = document.getElementById('bar-clip');
-    allClipSettingFields = document.querySelectorAll('.clip-setting-field');
     clipViewBtn = document.getElementById('btn-clip-view');
     clipCreateBtn = document.getElementById('btn-clip-create');
     clipToggleBtn = document.getElementById('btn-clip-toggle');
     clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
 
     // settings section elements
-    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath'])`);
+    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight'])`);
+    clipsFormatSettingFields = document.querySelectorAll(`[name='clipsFormat']`);
+    clipsWidthSettingFields = document.querySelectorAll(`[name='clipsWidth']`);
+    clipsHeightSettingFields = document.querySelectorAll(`[name='clipsHeight']`);
     mostSettingToggleSwitches = document.querySelectorAll(`.setting-toggle-switch:not(:has(> .setting-toggle-field[name='darkMode']))`);
     capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
     clipsPathSettingField = document.querySelector(`.setting-field[name='clipsPath']`);
@@ -248,7 +251,8 @@ function initRendVariables() {
     // settings and videos data
     data = {
         settings: null, 
-        videos: null 
+        captures: null, 
+        clips: null
     };
 
     // animationID, recording time, and timer interval

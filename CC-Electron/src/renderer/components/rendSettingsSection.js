@@ -25,8 +25,8 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, allClipSettingFields, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -56,6 +56,19 @@ function initSettingContainerEL() {
         // on change, validate the setting, save it, and set the saved value
         settingField.addEventListener('change', async () => {
             settingField.value = data['settings'][settingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingField.name, settingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        });
+    }
+
+    // iterate through each setting field
+    for (const settingFields of [clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields]) {
+        // on change, validate the setting, save it, and set the saved value
+        settingFields[0].addEventListener('change', async () => {
+            settingFields[0].value = settingFields[1].value = data['settings'][settingFields[0].name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingFields[0].name, settingFields[0].value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        });
+
+        // on change, validate the setting, save it, and set the saved value
+        settingFields[1].addEventListener('change', async () => {
+            settingFields[1].value = settingFields[0].value = data['settings'][settingFields[1].name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(settingFields[1].name, settingFields[1].value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
         });
     }
 
@@ -95,7 +108,7 @@ function initSettingContainerEL() {
 
         if (clipsPathSettingField.value !== data['settings'][clipsPathSettingField.name]) {
             clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
-            await loadCapturesGallery(false);
+            await loadClipsGallery(false);
         }
     });
 
@@ -126,6 +139,12 @@ async function initSettingContainer() {
     for (const settingField of mostSettingFields) {
         // load each settings initial value from stored settings
         settingField.value = data['settings'][settingField.name];
+    }
+
+    // iterate through each setting field
+    for (const settingFields of [clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields]) {
+        // load each settings initial value from stored settings
+        settingFields[0].value = settingFields[1].value = data['settings'][settingFields[0].name];
     }
 
     // iterate through each setting toggle switch
