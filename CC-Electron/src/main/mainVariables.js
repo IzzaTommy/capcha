@@ -58,7 +58,9 @@ const SETTINGS_DATA_DEFAULTS = {
     clipsHeight: 720, 
 
     // speaker: '',
-    // microphone: '',
+    speakerVolume: 0.5, 
+    // microphone: '', 
+    microphoneVolume: 0.5, 
     // webcam: ''
 };
 const SETTINGS_DATA_SCHEMA = { 
@@ -144,8 +146,18 @@ const SETTINGS_DATA_SCHEMA = {
     speaker: {
         type: 'string'
     },
+    speakerVolume: {
+        type: 'number',
+        minimum: 0,
+        maximum: 1,
+    },
     microphone: {
         type: 'string'
+    },
+    microphoneVolume: {
+        type: 'number',
+        minimum: 0,
+        maximum: 1,
     },
     webcam: {
         type: 'string'

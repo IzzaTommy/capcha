@@ -27,17 +27,19 @@ import {
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
+import { initRendEditorSection, setVideoPlayerState, getPointerEventLoc, getPointerEventPct, getTruncDecimal, getReadableDuration, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider } from './rendEditorSection.js';
 
 /**
  * @exports initRendSettingsSection
  */
-export { initRendSettingsSection }
+export { initRendSettingsSection, updateSpeakerVolumeSlider, updateMicrophoneVolumeSlider, setSpeakerVolumeSlider, setMicrophoneVolumeSlider }
 
 /**
  * Initializes the settings section
@@ -45,6 +47,9 @@ export { initRendSettingsSection }
 async function initRendSettingsSection() {
     initSettingContainerEL();
     await initSettingContainer();
+
+    initTestEL();
+    initTest();
 }
 
 /**
@@ -181,4 +186,123 @@ async function initSettingContainer() {
     // load the initial value from stored setting
     capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
     clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
+}
+
+
+
+function initTestEL() {
+    // on mouse down, set the speaker volume slider dragging flag
+    speakerVolumeSlider.addEventListener('mousedown', () => { 
+        flags['speakerVolumeSliderDragging'] = true; 
+    });
+
+    // on click, set the volume
+    speakerVolumeSlider.addEventListener('click', async (pointer) => {
+        // update the video volume and settings cache
+        data['settings']['speakerVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('speakerVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['speakerVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        // set the volume slider
+        setSpeakerVolumeSlider();
+    });
+
+
+
+    // on mouse down, set the speaker volume slider dragging flag
+    microphoneVolumeSlider.addEventListener('mousedown', () => { 
+        flags['microphoneVolumeSliderDragging'] = true; 
+    });
+
+    // on click, set the volume
+    microphoneVolumeSlider.addEventListener('click', async (pointer) => {
+        // update the video volume and settings cache
+        data['settings']['microphoneVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('microphoneVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['microphoneVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        // set the volume slider
+        setMicrophoneVolumeSlider();
+    });
+}
+
+
+function initTest() {
+    // set the speaker volume slider
+    setSpeakerVolumeSlider();
+
+
+    // set the speaker volume slider
+    setMicrophoneVolumeSlider();
+}
+
+
+
+/**
+ * Sets the speaker volume slider thumb and overlay
+ */
+function setSpeakerVolumeSlider() { 
+    // set the volume thumb and overlay (trailing bar)
+    setSpeakerVolumeThumb(data['settings']['speakerVolume'] * speakerVolumeSliderWidth);
+    setSpeakerVolumeOverlay(data['settings']['speakerVolume'] * 100);
+}
+
+/**
+ * Sets the speaker volume slider overlay
+ * 
+ * @param {number} thumbLocation - The location of the speaker volume thumb
+ */
+function setSpeakerVolumeOverlay(thumbLocation) {
+    speakerVolumeOverlay.style.background = `linear-gradient(to right, var(--stoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+}
+
+/**
+ * Sets the speaker volume slider thumb
+ * 
+ * @param {number} thumbLocation - The location of the speaker volume thumb
+ */
+function setSpeakerVolumeThumb(thumbLocation) {
+    speakerVolumeThumb.style.transform = `translateX(${thumbLocation}px)`;
+}
+
+/**
+ * Updates the speaker volume slider
+ */
+function updateSpeakerVolumeSlider() {
+    // get the new gallery bounding box
+    boxes['speakerVolumeSliderBox'] = speakerVolumeSlider.getBoundingClientRect();
+}
+
+
+
+
+/**
+ * Sets the speaker volume slider thumb and overlay
+ */
+function setMicrophoneVolumeSlider() { 
+    // set the volume thumb and overlay (trailing bar)
+    setMicrophoneVolumeThumb(data['settings']['microphoneVolume'] * microphoneVolumeSliderWidth);
+    setMicrophoneVolumeOverlay(data['settings']['microphoneVolume'] * 100);
+}
+
+/**
+ * Sets the speaker volume slider overlay
+ * 
+ * @param {number} thumbLocation - The location of the speaker volume thumb
+ */
+function setMicrophoneVolumeOverlay(thumbLocation) {
+    microphoneVolumeOverlay.style.background = `linear-gradient(to right, var(--stoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+}
+
+/**
+ * Sets the speaker volume slider thumb
+ * 
+ * @param {number} thumbLocation - The location of the speaker volume thumb
+ */
+function setMicrophoneVolumeThumb(thumbLocation) {
+    microphoneVolumeThumb.style.transform = `translateX(${thumbLocation}px)`;
+}
+
+/**
+ * Updates the speaker volume slider
+ */
+function updateMicrophoneVolumeSlider() {
+    // get the new gallery bounding box
+    boxes['microphoneVolumeSliderBox'] = microphoneVolumeSlider.getBoundingClientRect();
 }

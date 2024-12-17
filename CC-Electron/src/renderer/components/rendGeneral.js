@@ -29,12 +29,14 @@ import {
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendNavBlock, toggleRecordBtn } from './rendNavBlock.js';
+import { updateSpeakerVolumeSlider, updateMicrophoneVolumeSlider } from './rendSettingsSection.js';
 import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 import { updateSeekSlider, updateTimelineSlider, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
@@ -62,6 +64,8 @@ function initGeneralEL() {
         updateSeekSlider();
         updateTimelineSlider();
         updateVolumeSlider();
+        updateSpeakerVolumeSlider();
+        updateMicrophoneVolumeSlider();
         updatePlaybackRateSlider();
     });
 }

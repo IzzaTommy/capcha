@@ -172,7 +172,7 @@
 }
 
 .media-slider {
-    border-radius: var(--mslider-bradius);
+    /* border-radius: var(--mslider-bradius); */
     flex: 0 0 auto;
     height: var(--mslider-height);
     padding-top: var(--mslider-vpadding);

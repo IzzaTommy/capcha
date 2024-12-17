@@ -26,17 +26,19 @@ import {
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
+import { setSpeakerVolumeSlider, setMicrophoneVolumeSlider } from './rendSettingsSection.js'
 
 /**
  * @exports initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration
  */
-export { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider, getReadableDuration }
+export { initRendEditorSection, setVideoPlayerState, getPointerEventLoc, getPointerEventPct, getTruncDecimal, getReadableDuration, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider }
 
 /**
  * Initializes the editor section
@@ -522,7 +524,7 @@ function initTimelineSliderEL() {
     });
 
     // on mouseup, validate the slider input and change the video time
-    document.addEventListener('mouseup', () => { 
+    document.addEventListener('mouseup', async () => { 
         if (flags['timelineSliderDragging'] === true || flags['seekSliderDragging'] === true) {
             // set the seek slider and  timeline slider dragging flags to false
             flags['timelineSliderDragging'] = false; 
@@ -584,6 +586,20 @@ function initTimelineSliderEL() {
                 else {
                     if (flags['clipRightThumbDragging']) {
                         flags['clipRightThumbDragging'] = false; 
+                    }
+                    else {
+                        if (flags['speakerVolumeSliderDragging']) {
+                            flags['speakerVolumeSliderDragging'] = false;
+                            await attemptAsyncFunction(() => window.settingsAPI.setSetting('speakerVolume', data['settings']['speakerVolume']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+                        }
+                        else {
+                            if (flags['microphoneVolumeSliderDragging']) {
+                                flags['microphoneVolumeSliderDragging'] = false;
+                                await attemptAsyncFunction(() => window.settingsAPI.setSetting('microphoneVolume', data['settings']['microphoneVolume']), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+                            } 
+                        }
                     }
                 }
             }
@@ -682,6 +698,22 @@ function initTimelineSliderEL() {
                                     setTimelineSlider();
                                 }
                             }
+                            else {
+                                if (flags['speakerVolumeSliderDragging']) {
+                                    data['settings']['speakerVolume'] = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['speakerVolumeSliderBox']), 1));
+
+                                    // set the volume slider
+                                    setSpeakerVolumeSlider();
+                                }
+                                else {
+                                    if (flags['microphoneVolumeSliderDragging']) {
+                                        data['settings']['microphoneVolume'] = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['microphoneVolumeSliderBox']), 1));
+
+                                        // set the volume slider
+                                        setMicrophoneVolumeSlider();
+                                    } 
+                                }
+                            }
                         }
                     }
                 }
@@ -752,7 +784,7 @@ function initClipContainerEL() {
 
 /**
  * Sets the video player state
- * 
+ * w
  * @param {string} action - The action to take on the video player state
  */
 function setVideoPlayerState(action) {

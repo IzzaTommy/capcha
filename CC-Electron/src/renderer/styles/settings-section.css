@@ -114,6 +114,52 @@
     transform: translateX(var(--stticon-translateX));
 }
 
+.setting-slider-ctr {
+    padding-right: var(--stsliderctr-hmargin);
+    padding-left: var(--stsliderctr-hmargin);
+
+    background-color: var(--stsliderctr-bgcolor); 
+}
+
+.setting-slider {
+    flex: 0 0 auto;
+    height: var(--stslider-height);
+    padding-top: var(--stslider-vpadding);
+    padding-bottom: var(--stslider-vpadding);
+    width: var(--stslider-width);
+
+    box-sizing: content-box;
+}
+
+.setting-track {
+    position: relative;
+
+    border-radius: var(--sttrack-bradius);
+    height: 100%;
+
+    background-color: var(--sttrack-bgcolor);
+}
+
+.setting-overlay {
+    position: absolute;
+
+    border-radius: var(--stoverlay-bradius);
+    height: 100%;
+    width: 100%;
+}
+
+.setting-thumb {
+    position: absolute;
+    top: var(--stthumb-tinset);
+    left: var(--stthumb-linset);
+
+    border-radius: var(--stthumb-bradius);
+    height: var(--stthumb-height);
+    width: var(--stthumb-width);
+
+    background-color: var(--stthumb-bgcolor);
+}
+
 .setting-description {
     flex: 0 0 fit-content;
 

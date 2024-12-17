@@ -28,12 +28,14 @@ import {
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
 } from './rendVariables.js';
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
+import { updateSpeakerVolumeSlider, updateMicrophoneVolumeSlider } from './rendSettingsSection.js';
 import { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
 /**
@@ -111,6 +113,8 @@ function initNavToggleBtnEL() {
         updateSeekSlider();
         updateTimelineSlider();
         updateVolumeSlider();
+        updateSpeakerVolumeSlider();
+        updateMicrophoneVolumeSlider();
         updatePlaybackRateSlider();
     });
 }
@@ -132,6 +136,8 @@ async function initNavToggleBtn() {
         updateSeekSlider();
         updateTimelineSlider();
         updateVolumeSlider();
+        updateSpeakerVolumeSlider();
+        updateMicrophoneVolumeSlider();
         updatePlaybackRateSlider();
         resolve();
     }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);

@@ -245,7 +245,7 @@ html {
     --prmultlabel-rpadding: var(--prlabel-lpadding);
 
     /* ==== mslider -> Media Slider ==== */
-    --mslider-bradius: 2px;
+    /* --mslider-bradius: 2px; */
     --mslider-height: 4px;
     --mslider-vpadding: calc((var(--micon-length) - var(--mslider-height)) / 2);
 
@@ -399,6 +399,28 @@ html {
     --stticon-height: calc(var(--sticon-length) + 2 * var(--sticon-margin) - 2 * var(--stticon-inset));
     --stticon-width: calc(var(--sttswitch-width) / 2 - var(--stticon-inset));
     --stticon-translateX: var(--stticon-width);
+
+    /* ==== stsliderctr -> Setting Slider Container ==== */
+    --stsliderctr-hmargin: calc(var(--stslider-vpadding) + var(--stthumb-width) / 2 - (var(--stthumb-height) - var(--stslider-height)) / 2);
+
+    /* ==== stslider -> Setting Slider ==== */
+    --stslider-height: 4px;
+    --stslider-vpadding: calc((var(--sticon-length) + 2 * var(--sticon-margin) - var(--stslider-height)) / 2);
+    /* --stslider-width: calc(var(--sttfield-width) + 2 * var(--sttfield-hpadding) - 2 * var(--stsliderctr-hmargin)); */
+    --stslider-width: 107px;
+
+    /* ==== sttrack -> Setting Track ==== */
+    --sttrack-bradius: 2px;
+
+    /* ==== stoverlay -> Setting Overlay ==== */
+    --stoverlay-bradius: 2px;
+
+    /* ==== stthumb -> Setting Thumb ==== */
+    --stthumb-tinset: -6px;
+    --stthumb-linset: calc(var(--stthumb-width) / -2);
+    --stthumb-bradius: 2px;
+    --stthumb-height: calc(-2 * var(--stthumb-tinset) + var(--stslider-height));
+    --stthumb-width: 4px;
 
     /* ==== stdesc -> Setting Description ==== */
     --stdesc-fsize: 11px;

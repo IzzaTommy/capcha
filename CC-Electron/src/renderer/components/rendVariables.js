@@ -25,6 +25,7 @@ import { TimelineState } from './timelineState.js';
  *  fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineThumb, timeline, clipLeftThumb, clipRightThumb, 
  *  mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+ *  speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
  *  flags, boxes, 
  *  data, state, 
  *  initRendVariables 
@@ -50,6 +51,7 @@ export {
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -100,7 +102,8 @@ let html,
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
+    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb 
 
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, state;
@@ -220,6 +223,14 @@ function initRendVariables() {
     clipsPathSettingField = document.querySelector(`.setting-field[name='clipsPath']`);
     darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
     darkModeSettingToggleIcon = document.querySelector(`.setting-toggle-field[name='darkMode'] + .setting-toggle-icon > use`);
+    speakerVolumeSlider = document.getElementById('slider-speaker-volume');
+    speakerVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
+    speakerVolumeOverlay = document.getElementById('overlay-speaker-volume');
+    speakerVolumeThumb = document.getElementById('thumb-speaker-volume');
+    microphoneVolumeSlider = document.getElementById('slider-microphone-volume');
+    microphoneVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
+    microphoneVolumeOverlay = document.getElementById('overlay-microphone-volume');
+    microphoneVolumeThumb = document.getElementById('thumb-microphone-volume');
 
     // boolean flags
     flags = {
@@ -235,7 +246,9 @@ function initRendVariables() {
         updateVolumeSlider: false, 
         updatePlaybackRateSlider: false, 
         clipLeftThumbDragging: false, 
-        clipRightThumbDragging: false 
+        clipRightThumbDragging: false, 
+        speakerVolumeSliderDragging: false, 
+        microphoneVolumeSliderDragging: false 
     };
 
     // element boxes
@@ -245,7 +258,9 @@ function initRendVariables() {
         capturesGalleryBox: capturesGallery.getBoundingClientRect(), 
         clipsGalleryBox: clipsGallery.getBoundingClientRect(), 
         volumeSliderBox: volumeSlider.getBoundingClientRect(), 
-        playbackRateSliderBox: playbackRateSlider.getBoundingClientRect()
+        playbackRateSliderBox: playbackRateSlider.getBoundingClientRect(), 
+        speakerVolumeSliderBox: speakerVolumeSlider.getBoundingClientRect(), 
+        microphoneVolumeSliderBox: microphoneVolumeSlider.getBoundingClientRect() 
     };
 
     // settings and videos data
