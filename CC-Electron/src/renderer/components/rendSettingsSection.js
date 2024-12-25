@@ -26,8 +26,8 @@ import {
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
+    speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -47,9 +47,6 @@ export { initRendSettingsSection, updateSpeakerVolumeSlider, updateMicrophoneVol
 async function initRendSettingsSection() {
     initSettingContainerEL();
     await initSettingContainer();
-
-    initTestEL();
-    initTest();
 }
 
 /**
@@ -131,14 +128,61 @@ function initSettingContainerEL() {
             html.dataset.theme = 'light';
         }
     });
+
+    // on change, validate the setting, save it, and set the saved value
+    capturesDisplaySettingField.addEventListener('change', async () => {
+        capturesDisplaySettingField.value = data['settings'][capturesDisplaySettingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(capturesDisplaySettingField.name, capturesDisplaySettingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    });
+
+    // on change, validate the setting, save it, and set the saved value
+    speakerSettingField.addEventListener('change', async () => {
+        speakerSettingField.value = data['settings'][speakerSettingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(speakerSettingField.name, speakerSettingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    });
+
+    // on mouse down, set the speaker volume slider dragging flag
+    speakerVolumeSlider.addEventListener('mousedown', () => { 
+        flags['speakerVolumeSliderDragging'] = true; 
+    });
+
+    // on click, set the speaker volume
+    speakerVolumeSlider.addEventListener('click', async (pointer) => {
+        // update the speaker volume and settings cache
+        data['settings']['speakerVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('speakerVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['speakerVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        // set the speaker volume slider
+        setSpeakerVolumeSlider();
+    });
+
+    // on change, validate the setting, save it, and set the saved value
+    microphoneSettingField.addEventListener('change', async () => {
+        microphoneSettingField.value = data['settings'][microphoneSettingField.name] = await attemptAsyncFunction(() => window.settingsAPI.setSetting(microphoneSettingField.name, microphoneSettingField.value), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    });
+
+    // on mouse down, set the microphone volume slider dragging flag
+    microphoneVolumeSlider.addEventListener('mousedown', () => { 
+        flags['microphoneVolumeSliderDragging'] = true; 
+    });
+
+    // on click, set the microphone volume
+    microphoneVolumeSlider.addEventListener('click', async (pointer) => {
+        // update the microphone volume and settings cache
+        data['settings']['microphoneVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('microphoneVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['microphoneVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+        // set the microphone volume slider
+        setMicrophoneVolumeSlider();
+    });
 }
 
 /**
  * Initializes the setting container
  */
 async function initSettingContainer() {
+    let settingFieldOption;
+
     // get the settings
     data['settings'] = await attemptAsyncFunction(() => window.settingsAPI.getAllSettingsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
+    data['devices'] = await attemptAsyncFunction(() => window.settingsAPI.getAllDevicesData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
+    data['displays'] = await attemptAsyncFunction(() => window.settingsAPI.getAllDisplaysData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, true);
 
     // iterate through each setting field
     for (const settingField of mostSettingFields) {
@@ -186,59 +230,54 @@ async function initSettingContainer() {
     // load the initial value from stored setting
     capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
     clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
-}
 
 
+    for (const [key, value] of Object.entries(data['displays'])) {
+        settingFieldOption = document.createElement('option');
 
-function initTestEL() {
-    // on mouse down, set the speaker volume slider dragging flag
-    speakerVolumeSlider.addEventListener('mousedown', () => { 
-        flags['speakerVolumeSliderDragging'] = true; 
-    });
+        settingFieldOption.value = key;
+        settingFieldOption.text = key + ` (${value['sizeX']} x ${value['sizeY']}) @ (${value['posX']}, ${value['posY']})`;
 
-    // on click, set the volume
-    speakerVolumeSlider.addEventListener('click', async (pointer) => {
-        // update the video volume and settings cache
-        data['settings']['speakerVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('speakerVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['speakerVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
-
-        // set the volume slider
-        setSpeakerVolumeSlider();
-    });
+        capturesDisplaySettingField.appendChild(settingFieldOption);
+    }
+    
+    capturesDisplaySettingField.value = data['settings'][capturesDisplaySettingField.name];
 
 
+    for (const [key, _] of Object.entries(data['devices']['outputs'])) {
+        settingFieldOption = document.createElement('option');
 
-    // on mouse down, set the speaker volume slider dragging flag
-    microphoneVolumeSlider.addEventListener('mousedown', () => { 
-        flags['microphoneVolumeSliderDragging'] = true; 
-    });
+        settingFieldOption.value = key;
+        settingFieldOption.text = key;
 
-    // on click, set the volume
-    microphoneVolumeSlider.addEventListener('click', async (pointer) => {
-        // update the video volume and settings cache
-        data['settings']['microphoneVolume'] = await attemptAsyncFunction(() => window.settingsAPI.setSetting('microphoneVolume', Math.max(0, Math.min(getPointerEventPct(pointer, boxes['microphoneVolumeSliderBox']), 1))), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        speakerSettingField.appendChild(settingFieldOption);
+    }
+    
+    speakerSettingField.value = data['settings'][speakerSettingField.name];
 
-        // set the volume slider
-        setMicrophoneVolumeSlider();
-    });
-}
-
-
-function initTest() {
     // set the speaker volume slider
     setSpeakerVolumeSlider();
 
+    for (const [key, _] of Object.entries(data['devices']['inputs'])) {
+        settingFieldOption = document.createElement('option');
 
-    // set the speaker volume slider
+        settingFieldOption.value = key;
+        settingFieldOption.text = key;
+
+        microphoneSettingField.appendChild(settingFieldOption);
+    }
+    
+    microphoneSettingField.value = data['settings'][microphoneSettingField.name];
+
+    // set the microphone volume slider
     setMicrophoneVolumeSlider();
 }
-
-
 
 /**
  * Sets the speaker volume slider thumb and overlay
  */
 function setSpeakerVolumeSlider() { 
-    // set the volume thumb and overlay (trailing bar)
+    // set the speaker volume thumb and overlay (trailing bar)
     setSpeakerVolumeThumb(data['settings']['speakerVolume'] * speakerVolumeSliderWidth);
     setSpeakerVolumeOverlay(data['settings']['speakerVolume'] * 100);
 }
@@ -265,44 +304,41 @@ function setSpeakerVolumeThumb(thumbLocation) {
  * Updates the speaker volume slider
  */
 function updateSpeakerVolumeSlider() {
-    // get the new gallery bounding box
+    // get the new speaker volume slider bounding box
     boxes['speakerVolumeSliderBox'] = speakerVolumeSlider.getBoundingClientRect();
 }
 
-
-
-
 /**
- * Sets the speaker volume slider thumb and overlay
+ * Sets the microphone volume slider thumb and overlay
  */
 function setMicrophoneVolumeSlider() { 
-    // set the volume thumb and overlay (trailing bar)
+    // set the microphone volume thumb and overlay (trailing bar)
     setMicrophoneVolumeThumb(data['settings']['microphoneVolume'] * microphoneVolumeSliderWidth);
     setMicrophoneVolumeOverlay(data['settings']['microphoneVolume'] * 100);
 }
 
 /**
- * Sets the speaker volume slider overlay
+ * Sets the microphone volume slider overlay
  * 
- * @param {number} thumbLocation - The location of the speaker volume thumb
+ * @param {number} thumbLocation - The location of the microphone volume thumb
  */
 function setMicrophoneVolumeOverlay(thumbLocation) {
     microphoneVolumeOverlay.style.background = `linear-gradient(to right, var(--stoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 
 /**
- * Sets the speaker volume slider thumb
+ * Sets the microphone volume slider thumb
  * 
- * @param {number} thumbLocation - The location of the speaker volume thumb
+ * @param {number} thumbLocation - The location of the microphone volume thumb
  */
 function setMicrophoneVolumeThumb(thumbLocation) {
     microphoneVolumeThumb.style.transform = `translateX(${thumbLocation}px)`;
 }
 
 /**
- * Updates the speaker volume slider
+ * Updates the microphone volume slider
  */
 function updateMicrophoneVolumeSlider() {
-    // get the new gallery bounding box
+    // get the new microphone volume slider bounding box
     boxes['microphoneVolumeSliderBox'] = microphoneVolumeSlider.getBoundingClientRect();
 }

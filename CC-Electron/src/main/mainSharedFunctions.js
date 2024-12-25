@@ -12,11 +12,12 @@ import { exec } from 'child_process';
 import { 
     THUMBNAIL_SIZE, 
     ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
-    data, state, 
+    data, state, uuid, 
     initMainVariables 
 } from './mainVariables.js';
 import { initMainWindow } from './mainWindow.js';

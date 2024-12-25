@@ -12,11 +12,12 @@ import { exec } from 'child_process';
 import { 
     THUMBNAIL_SIZE, 
     ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
-    data, state, 
+    data, state, uuid, 
     initMainVariables 
 } from './mainVariables.js';
 import { initMainWindow } from './mainWindow.js';
@@ -55,17 +56,11 @@ async function initSettings() {
         }
     }
 
-    console.log('\n---------------- SETTINGS DATA ----------------');
-
-    await attemptAsyncFunction(() => psList(), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-
-    // create CapCha profile
+    // create CapCha profile and set to CapCha profile
     if (!(await attemptAsyncFunction(() => webSocketSend('GetProfileList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['profiles'].includes('CapCha'))
     {
         await attemptAsyncFunction(() => webSocketSend('CreateProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
-
-    // set to CapCha profile
     await attemptAsyncFunction(() => webSocketSend('SetCurrentProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
     // set basic settings
@@ -103,6 +98,119 @@ async function initSettings() {
     catch (error) {
         console.error('Error writing to file: ', error);
     }
+
+
+    // INPUT STUFF HERE
+    data['devices'] = await getDevices();
+    data['displays'] = getDisplays();
+
+    // SCENE
+    data['scenes'] = (await attemptAsyncFunction(() => webSocketSend('GetSceneList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['scenes'];
+    // create CapCha scene and set to CapCha scene
+    if (data['scenes'].some(scene => scene['sceneName'] === 'CapCha'))
+    {
+        uuid['scene'] = data['scenes'][data['scenes'].findIndex(scene => scene['sceneName'] === 'CapCha')]['sceneUuid'];
+    }
+    else {
+        uuid['scene'] = (await attemptAsyncFunction(() => webSocketSend('CreateScene', { sceneName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['sceneUuid'];
+    }
+    await attemptAsyncFunction(async () => webSocketSend('SetCurrentProgramScene', { sceneName: 'CapCha', sceneUuid: uuid['scene'] }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    
+    // INPUTS
+    data['inputs'] = (await attemptAsyncFunction(() => webSocketSend('GetInputList', {}), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputs'];
+
+    if (data['inputs'].some(input => input['inputName'] === 'Desktop Audio'))
+    {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputMute', { inputName: 'Desktop Audio', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Desktop Audio')]['inputUuid'], inputMuted: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    }
+
+    if (data['inputs'].some(input => input['inputName'] === 'Mic/Aux'))
+    {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputMute', { inputName: 'Mic/Aux', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Mic/Aux')]['inputUuid'], inputMuted: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    }
+
+    // SPEAKER
+    if (data['inputs'].some(input => input['inputName'] === 'Speaker Input'))
+    {
+        uuid['speakerInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'];
+    }
+    else {
+        uuid['speakerInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+    }
+
+    if (data['settings'].get('speaker') !== 'Default') {
+        if (data['settings'].get('speaker') in data['devices']['outputs']) {
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { device_id: data['devices']['outputs'][data['settings'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        }
+        else {
+            data['settings'].set('speaker', 'Default');
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        }
+    }
+    else {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    }
+
+    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputVolumeDb: data['settings'].get('speakerVolume') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+
+    // MICROPHONE
+    if (data['inputs'].some(input => input['inputName'] === 'Microphone Input'))
+    {
+        uuid['microphoneInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'];
+    }
+    else {
+        uuid['microphoneInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+    }
+
+    if (data['settings'].get('microphone') !== 'Default') {
+        if (data['settings'].get('microphone') in data['devices']['inputs']) {
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { device_id: data['devices']['inputs'][data['settings'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        }
+        else {
+            data['settings'].set('microphone', 'Default');
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        }
+    }
+    else {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    }
+
+    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputVolumeDb: data['settings'].get('microphoneVolume') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+
+
+    // DISPLAY
+    if (data['inputs'].some(input => input['inputName'] === 'Display Input'))
+    {
+        uuid['displayInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Display Input')]['inputUuid'];
+    }
+    else {
+        uuid['displayInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Display Input', inputKind: 'monitor_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+    }
+
+
+    if (data['settings'].get('capturesDisplay') in data['displays']) {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    }
+    else {
+        if (Object.keys(data['displays']).length === 0) {
+            data['settings'].set('capturesDisplay', '');
+        }
+        else {
+            data['settings'].set('capturesDisplay', Object.keys(data['displays'])[0]);
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        }
+    }
+
+
+    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputKindList', {} ), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
+    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'] }), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
+    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputSettings', { inputName: 'Display Capture', inputUuid: '4cded799-f32b-46ed-aba8-b66b5bd557e5' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
+    // console.log(data['inputs']);
+    // console.log(data['devices']);
+    // console.log(uuid);
+
+    // await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Capture', inputUuid: '2dcf1a89-6149-445e-90c0-5e889ebf8873', inputSettings: { monitor_id: '\\\\?\\DISPLAY#GSM7766#5&44d6669&0&UID37120#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}' }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    console.log(getDisplays());
 }
 
 function initSettingsL() {
@@ -253,6 +361,46 @@ function initSettingsL() {
                 toggleAutoRecord();
                 break;
 
+            case 'capturesDisplay':
+                data['settings'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                break;
+
+            case 'speaker':
+                data['settings'].set(key, value);
+
+                if (data['settings'].get('speaker') !== 'Default') {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { device_id: data['devices']['outputs'][data['settings'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                }
+                else {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                }
+                break;
+
+            case 'speakerVolume':
+                data['settings'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                
+                break;
+
+            case 'microphone':
+                data['settings'].set(key, value);
+            
+                if (data['settings'].get('microphone') !== 'Default') {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { device_id: data['devices']['inputs'][data['settings'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                }
+                else {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                }
+
+                break;
+
+            case 'microphoneVolume':
+                data['settings'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                
+                break;
+
             default:
                 console.log(key, '2: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
                 data['settings'].set(key, value);
@@ -263,6 +411,13 @@ function initSettingsL() {
         return value;
     });
     
+
+
+
+    ipcMain.handle('settings:getAllDevicesData', (_) => { return data['devices'] });
+
+    ipcMain.handle('settings:getAllDisplaysData', (_) => { return data['displays'] });
+
     // gets all of the video files and meta data from the save location directory
     ipcMain.handle('files:getAllCapturesData', async (_) => {
         // return Promise.reject(new Error("Simulated error for testing"));
@@ -482,4 +637,54 @@ function validateSetting(key, value) {
     }
 
     return value;
+}
+
+function getDevices() {
+    return new Promise((resolve, reject) => {
+        const command = `
+            Get-CimInstance Win32_PnPEntity |
+            Where-Object { $_.PNPClass -eq 'AudioEndpoint' } |
+            Select-Object Name, DeviceID |
+            ConvertTo-Json -Compress
+        `;
+        
+        exec(command, { shell: 'powershell.exe' }, (err, stdout, stderr) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            try {
+                const devicesArray = JSON.parse(stdout);
+                const devices = { inputs: {}, outputs: {} };
+
+                devicesArray.forEach(device => {
+                    const name = device.Name;
+                    const deviceId = device.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
+
+                    if (/microphone|line in/i.test(name)) {
+                        devices.inputs[name] = deviceId;
+                    } else if (/speakers|line out|headphones/i.test(name)) {
+                        devices.outputs[name] = deviceId;
+                    } else {
+                        devices.outputs[name] = deviceId;
+                    }
+                });
+
+                resolve(devices);
+            } 
+            catch (parseError) {
+                reject(parseError);
+            }
+        });
+    });
+}
+
+function getDisplays() {
+    try {
+        return JSON.parse(readFileSync(path.join(ACTIVE_DIRECTORY, 'runtime-displays.json'), 'utf8'))
+    } 
+    catch (error) {
+        console.error('Error reading file: ', error);
+    }
 }

@@ -39,6 +39,12 @@ contextBridge.exposeInMainWorld('settingsAPI', {
 
     // sends setting, returns setting
     setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
+
+    // returns devices data
+    getAllDevicesData: () => ipcRenderer.invoke('settings:getAllDevicesData'),
+
+    // returns displays data
+    getAllDisplaysData: () => ipcRenderer.invoke('settings:getAllDisplaysData')
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {

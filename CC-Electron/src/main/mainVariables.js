@@ -12,11 +12,12 @@ import { exec } from 'child_process';
 export { 
     THUMBNAIL_SIZE, 
     ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
     SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
-    data, state, 
+    data, state, uuid, 
     initMainVariables 
 };
 
@@ -30,6 +31,11 @@ const DEF_CLIPS_DIRECTORY = path.join(app.getPath('videos'), 'CapCha', 'Clips');
 const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
 const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
 const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+
+// obs names
+const SCENE_NAME = 'CapCha';
+const SPEAKER_INPUT_NAME = 'CapCha Input';
+const MICROPHONE_INPUT_NAME = 'CapCha Output';
 
 // settings
 const SETTINGS_DATA_DEFAULTS = { 
@@ -46,7 +52,7 @@ const SETTINGS_DATA_DEFAULTS = {
     capturesEncoder: 'obs_nvenc_h264_tex', 
     capturesWidth: 1280, 
     capturesHeight: 720, 
-    // capturesDisplay: '', 
+    capturesDisplay: '', 
     capturesFramerate: 60,
     capturesBitrate: 10000,
     autoRecord: false,
@@ -57,9 +63,9 @@ const SETTINGS_DATA_DEFAULTS = {
     clipsWidth: 1280, 
     clipsHeight: 720, 
 
-    // speaker: '',
+    speaker: 'Default',
     speakerVolume: 0.5, 
-    // microphone: '', 
+    microphone: 'Default', 
     microphoneVolume: 0.5, 
     // webcam: ''
 };
@@ -179,7 +185,7 @@ const SLOW_DELAY_IN_MSECONDS = 4000;
 let instances;
 
 // boolean flags, settings/videos data, and state data
-let flags, data, state; 
+let flags, data, state, uuid; 
 
 /**
  * Initializes the variables
@@ -200,7 +206,11 @@ function initMainVariables() {
     // settings and videos data
     data = { 
         settings: null, 
-        videos: null 
+        videos: null, 
+        scenes: null, 
+        inputs: null, 
+        devices: null, 
+        displays: null 
     };
 
     // pending requests for websocket, recording game, and auto record interval
@@ -208,5 +218,11 @@ function initMainVariables() {
         autoRecordInterval: null, 
         pendingRequests: new Map(), 
         recordingGame: null
+    };
+
+    uuid = {
+        scene: null, 
+        speakerInput: null, 
+        microphoneInput: null 
     };
 }

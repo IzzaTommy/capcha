@@ -24,8 +24,8 @@ import { TimelineState } from './timelineState.js';
  *  playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
  *  fullscreenBtn, fullscreenIcon, 
  *  timelineSlider, timelineOverlay, timelineThumb, timeline, clipLeftThumb, clipRightThumb, 
- *  mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
- *  speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
+ *  mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
+ *  speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
  *  flags, boxes, 
  *  data, state, 
  *  initRendVariables 
@@ -50,8 +50,8 @@ export {
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
+    speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
     data, state, 
     initRendVariables 
@@ -102,8 +102,8 @@ let html,
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
     clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
-    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, 
-    speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb 
+    mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
+    speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb 
 
 // boolean flags, element boxes, settings/videos data, and state data
 let flags, boxes, data, state;
@@ -214,19 +214,29 @@ function initRendVariables() {
     clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
 
     // settings section elements
-    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight'])`);
+    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='capturesDisplay']):not([name='speaker']):not([name='microphone'])`);
+
     clipsFormatSettingFields = document.querySelectorAll(`[name='clipsFormat']`);
     clipsWidthSettingFields = document.querySelectorAll(`[name='clipsWidth']`);
     clipsHeightSettingFields = document.querySelectorAll(`[name='clipsHeight']`);
+
     mostSettingToggleSwitches = document.querySelectorAll(`.setting-toggle-switch:not(:has(> .setting-toggle-field[name='darkMode']))`);
+
     capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
     clipsPathSettingField = document.querySelector(`.setting-field[name='clipsPath']`);
+
     darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
     darkModeSettingToggleIcon = document.querySelector(`.setting-toggle-field[name='darkMode'] + .setting-toggle-icon > use`);
+
+    capturesDisplaySettingField = document.querySelector(`.setting-field[name='capturesDisplay']`);
+
+    speakerSettingField = document.querySelector(`.setting-field[name='speaker']`);
     speakerVolumeSlider = document.getElementById('slider-speaker-volume');
     speakerVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
     speakerVolumeOverlay = document.getElementById('overlay-speaker-volume');
     speakerVolumeThumb = document.getElementById('thumb-speaker-volume');
+
+    microphoneSettingField = document.querySelector(`.setting-field[name='microphone']`);
     microphoneVolumeSlider = document.getElementById('slider-microphone-volume');
     microphoneVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
     microphoneVolumeOverlay = document.getElementById('overlay-microphone-volume');
@@ -267,7 +277,9 @@ function initRendVariables() {
     data = {
         settings: null, 
         captures: null, 
-        clips: null
+        clips: null, 
+        devices: null, 
+        displays: null
     };
 
     // animationID, recording time, and timer interval
