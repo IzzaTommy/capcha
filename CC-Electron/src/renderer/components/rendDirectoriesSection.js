@@ -16,7 +16,7 @@ import {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesStatusLabel, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsStatusLabel, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -45,8 +45,10 @@ export { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery,
  */
 async function initRendDirectoriesSection() {
     initDirectoryGalleryEL();
-    await loadCapturesGallery(true);
-    await loadClipsGallery(true);
+    await attemptAsyncFunction(() => loadCapturesGallery(true), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    // await loadCapturesGallery(true);
+    await attemptAsyncFunction(() => loadClipsGallery(true), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+    // await loadClipsGallery(true);
 }
 
 /**
@@ -112,52 +114,76 @@ function initDirectoryGalleryEL() {
  * Loads the captures gallery with video previews
  */
 async function loadCapturesGallery(initialization) {
-    // the clone of the video preview template
-    let videoPreviewClone;
-    let videoPreviewContainer;
-
     // get the current date
     const currentDate = new Date();
 
-    // get the videos
-    data['captures'] = await attemptAsyncFunction(() => window.filesAPI.getAllCapturesData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
-
     // remove every existing video preview from the captures gallery
-    while (capturesGallery.firstElementChild)
+    while (capturesGallery.children.length > 1)
     {
         capturesGallery.removeChild(capturesGallery.lastElementChild);
     }
 
-    // for each video data
-    for (const captureData of data['captures']) {
-        // get a clone of the video preview template
-        videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
-        videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
+    capturesStatusLabel.textContent = 'Loading...';
+    capturesStatusLabel.classList.add('active');
 
-        // set the video source
-        videoPreviewContainer.dataset.src = captureData['path'];
-        // set the video thumbnail source
-        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', captureData['thumbnailPath']);
-        // set the video duration
-        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(captureData['duration']);
-        // set the video game
-        videoPreviewClone.querySelector('.video-game-label').textContent = `${captureData['game']}`;
-        // set the video age
-        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - captureData['created']) / MSECONDS_IN_SECOND)}`;
-        // set the video name with extension
-        videoPreviewClone.querySelector('.video-name-label').textContent = captureData['nameExt'];
+    // get the videos
+    data['captures'] = await attemptAsyncFunction(() => window.filesAPI.getAllCapturesData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
-        // on click, open the video in the editor section
-        videoPreviewContainer.addEventListener('click', () => {
-            // set the video player source
-            videoPlayer.setAttribute('src', captureData['path']);
+    if (data['captures'].length === 0) {
+        capturesStatusLabel.textContent = 'No Videos Found';
+    }
+    else {
+        capturesStatusLabel.classList.remove('active');
 
-            // change the active content section to the editor section
-            setActiveSection('editor');
-        });
+        // for each video data
+        for (const captureData of data['captures']) {
+            // get a clone of the video preview template
+            let videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
+            let videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
+            let videoRenameBtn = videoPreviewClone.querySelector('.video-rename-btn');
+            let videoRenameIcon = videoPreviewClone.querySelector('.video-rename-icon > use');
+            let videoDeleteBtn = videoPreviewClone.querySelector('.video-delete-btn');
+            let videoDeleteIcon = videoPreviewClone.querySelector('.video-delete-icon > use');
 
-        // append the video preview to the gallery
-        capturesGallery.appendChild(videoPreviewClone);
+            // set the video source
+            videoPreviewContainer.dataset.src = captureData['path'];
+            // set the video thumbnail source
+            videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', captureData['thumbnailPath']);
+            // set the video duration
+            videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(captureData['duration']);
+            // set the video game
+            videoPreviewClone.querySelector('.video-game-label').textContent = `${captureData['game']}`;
+            // set the video age
+            videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - captureData['created']) / MSECONDS_IN_SECOND)}`;
+            // set the video name with extension
+            videoPreviewClone.querySelector('.video-name-label').textContent = captureData['nameExt'];
+
+            // on click, open the video in the editor section
+            videoPreviewContainer.addEventListener('click', () => {
+                // set the video player source
+                videoPlayer.setAttribute('src', captureData['path']);
+
+                // change the active content section to the editor section
+                setActiveSection('editor');
+            });
+
+            // on mouse enter, change to the solid icon
+            videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
+            // on mouse leave, change to the regular icon
+            videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
+            videoRenameBtn.addEventListener('click', () => {
+            });
+
+            // on mouse enter, change to the solid icon
+            videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
+            // on mouse leave, change to the regular icon
+            videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
+            videoDeleteBtn.addEventListener('click', () => {
+            });
+
+            // append the video preview to the gallery
+            capturesGallery.appendChild(videoPreviewClone);
+        }
     }
 
     // on scroll, toggle the captures gallery buttons
@@ -203,52 +229,76 @@ function toggleCapturesGalleryBtn() {
  * Loads the clips gallery with video previews
  */
 async function loadClipsGallery(initialization) {
-    // the clone of the video preview template
-    let videoPreviewClone;
-    let videoPreviewContainer;
-
     // get the current date
     const currentDate = new Date();
 
-    // get the videos
-    data['clips'] = await attemptAsyncFunction(() => window.filesAPI.getAllClipsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
-
     // remove every existing video preview from the clips gallery
-    while (clipsGallery.firstElementChild)
+    while (clipsGallery.children.length > 1)
     {
         clipsGallery.removeChild(clipsGallery.lastElementChild);
     }
 
-    // for each video data
-    for (const clipData of data['clips']) {
-        // get a clone of the video preview template
-        videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
-        videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
+    clipsStatusLabel.textContent = 'Loading...';
+    clipsStatusLabel.classList.add('active');
 
-        // set the video source
-        videoPreviewContainer.dataset.src = clipData['path'];
-        // set the video thumbnail source
-        videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', clipData['thumbnailPath']);
-        // set the video duration
-        videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(clipData['duration']);
-        // set the video game
-        videoPreviewClone.querySelector('.video-game-label').textContent = `${clipData['game']}`;
-        // set the video age
-        videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - clipData['created']) / MSECONDS_IN_SECOND)}`;
-        // set the video name with extension
-        videoPreviewClone.querySelector('.video-name-label').textContent = clipData['nameExt'];
+    // get the videos
+    data['clips'] = await attemptAsyncFunction(() => window.filesAPI.getAllClipsData(), ATTEMPTS, FAST_DELAY_IN_MSECONDS, initialization);
 
-        // on click, open the video in the editor section
-        videoPreviewContainer.addEventListener('click', () => {
-            // set the video player source
-            videoPlayer.setAttribute('src', clipData['path']);
+    if (data['clips'].length === 0) {
+        clipsStatusLabel.textContent = 'No Videos Found';
+    }
+    else {
+        clipsStatusLabel.classList.remove('active');
 
-            // change the active content section to the editor section
-            setActiveSection('editor');
-        });
+        // for each video data
+        for (const clipData of data['clips']) {
+            // get a clone of the video preview template
+            let videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
+            let videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
+            let videoRenameBtn = videoPreviewClone.querySelector('.video-rename-btn');
+            let videoRenameIcon = videoPreviewClone.querySelector('.video-rename-icon > use');
+            let videoDeleteBtn = videoPreviewClone.querySelector('.video-delete-btn');
+            let videoDeleteIcon = videoPreviewClone.querySelector('.video-delete-icon > use');
 
-        // append the video preview to the gallery
-        clipsGallery.appendChild(videoPreviewClone);
+            // set the video source
+            videoPreviewContainer.dataset.src = clipData['path'];
+            // set the video thumbnail source
+            videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', clipData['thumbnailPath']);
+            // set the video duration
+            videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(clipData['duration']);
+            // set the video game
+            videoPreviewClone.querySelector('.video-game-label').textContent = `${clipData['game']}`;
+            // set the video age
+            videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - clipData['created']) / MSECONDS_IN_SECOND)}`;
+            // set the video name with extension
+            videoPreviewClone.querySelector('.video-name-label').textContent = clipData['nameExt'];
+
+            // on click, open the video in the editor section
+            videoPreviewContainer.addEventListener('click', () => {
+                // set the video player source
+                videoPlayer.setAttribute('src', clipData['path']);
+
+                // change the active content section to the editor section
+                setActiveSection('editor');
+            });
+
+            // on mouse enter, change to the solid icon
+            videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
+            // on mouse leave, change to the regular icon
+            videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
+            videoRenameBtn.addEventListener('click', () => {
+            });
+
+            // on mouse enter, change to the solid icon
+            videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
+            // on mouse leave, change to the regular icon
+            videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
+            videoDeleteBtn.addEventListener('click', () => {
+            });
+
+            // append the video preview to the gallery
+            clipsGallery.appendChild(videoPreviewClone);
+        }
     }
 
     // on scroll, toggle the clips gallery buttons

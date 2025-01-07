@@ -15,7 +15,7 @@ import { TimelineState } from './timelineState.js';
  *  navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
  *  navToggleBtn, navToggleIcon, 
  *  generalStatusLabel, directoriesSection, editorSection, settingsSection, 
- *  videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
+ *  videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesStatusLabel, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsStatusLabel, clipsRightBtn, 
  *  videoContainer, videoPlayer, playPauseOverlayIcon, 
  *  playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
  *  mediaBar, playPauseBtn, playPauseIcon, 
@@ -40,7 +40,7 @@ export {
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsRightBtn, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesStatusLabel, capturesRightBtn, clipsGallery, clipsLeftBtn, clipsStatusLabel, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, 
@@ -49,7 +49,7 @@ export {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    clipBar, clipViewBtn, clipViewIcon, clipCreateBtn, clipCreateIcon, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
     speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
@@ -93,7 +93,7 @@ let html,
     navBar, directoriesBtn, directoriesIcon, settingsBtn, settingsIcon, currentRecordingLabelContainer, currentRecordingTimeLabel, currentRecordingGameLabel, recordBtn, recordIcon, autoRecordResumeLabel, 
     navToggleBtn, navToggleIcon, 
     generalStatusLabel, directoriesSection, editorSection, settingsSection, 
-    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesRightBtn,  clipsGallery, clipsLeftBtn, clipsRightBtn, 
+    videoPreviewTemplate, videoPreviewWidth, capturesGallery, capturesLeftBtn, capturesStatusLabel, capturesRightBtn,  clipsGallery, clipsLeftBtn, clipsStatusLabel, clipsRightBtn, 
     videoContainer, videoPlayer, playPauseOverlayIcon, 
     playbackContainer, seekSlider, seekTrack, seekOverlay, seekThumb, 
     mediaBar, playPauseBtn, playPauseIcon, volumeBtn, volumeIcon, volumeSlider, volumeSliderWidth, volumeOverlay, volumeThumb, 
@@ -101,7 +101,7 @@ let html,
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    clipBar, clipViewBtn, clipViewIcon, clipCreateBtn, clipCreateIcon, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
     speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb 
 
@@ -158,9 +158,11 @@ function initRendVariables() {
     videoPreviewWidth = parseInt(style.getPropertyValue('--vthumbnail-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
     capturesGallery = document.getElementById('gallery-captures');
     capturesLeftBtn = document.getElementById('left-btn-captures');
+    capturesStatusLabel = document.getElementById('status-label-captures');
     capturesRightBtn = document.getElementById('right-btn-captures');
     clipsGallery = document.getElementById('gallery-clips');
     clipsLeftBtn = document.getElementById('left-btn-clips');
+    clipsStatusLabel = document.getElementById('status-label-clips');
     clipsRightBtn = document.getElementById('right-btn-clips');
 
     // editor section elements
@@ -209,7 +211,9 @@ function initRendVariables() {
 
     clipBar = document.getElementById('bar-clip');
     clipViewBtn = document.getElementById('btn-clip-view');
+    clipViewIcon = document.querySelector('#icon-clip-view > use');
     clipCreateBtn = document.getElementById('btn-clip-create');
+    clipCreateIcon = document.querySelector('#icon-clip-create > use');
     clipToggleBtn = document.getElementById('btn-clip-toggle');
     clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
 

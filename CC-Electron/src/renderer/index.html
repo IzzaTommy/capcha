@@ -25,13 +25,13 @@
 
             <div class="video-options-ctr">
                 <button class="video-options-btn video-rename-btn">
-                    <svg class="video-options-icon">
+                    <svg class="video-options-icon video-rename-icon">
                         <use href="../assets/svg/edit.svg#edit"></use>
                     </svg>
                 </button>
 
                 <button class="video-options-btn video-delete-btn">
-                    <svg class="video-options-icon">
+                    <svg class="video-options-icon video-delete-icon">
                         <use href="../assets/svg/delete.svg#delete"></use>
                     </svg>
                 </button>
@@ -107,7 +107,7 @@
                 
                 <button id="btn-record" class="nav-btn">
                     <svg id="icon-record" class="nav-icon">
-                        <use href="../assets/svg/record.svg#record"></use>
+                        <use href="../assets/svg/radio-button-checked.svg#radio-button-checked"></use>
                     </svg>
 
                     <span class="nav-label">Record</span>
@@ -145,33 +145,7 @@
                             </button>
 
                             <div id="gallery-captures" class="directory-gallery">
-                                <!-- <div class="video-preview-ctr" data-src="">
-                                    <div class="video-thumbnail-ctr">
-                                        <img class="video-thumbnail" src="" alt="">
-                                        <span class="video-duration-label">88:88</span>
-                                    </div>
-
-                                    <div class="video-label-ctr">
-                                        <span class="video-game-label">Example game with long name</span>
-                                        <span class="video-age-label">&nbsp;- 999d+ ago</span>
-                                    </div>
-
-                                    <span class="video-name-label">Example Text</span>
-
-                                    <div class="video-options-ctr">
-                                        <button class="video-options-btn video-rename-btn">
-                                            <svg class="video-options-icon">
-                                                <use href="../assets/svg/edit.svg#edit"></use>
-                                            </svg>
-                                        </button>
-
-                                        <button class="video-options-btn video-delete-btn">
-                                            <svg class="video-options-icon">
-                                                <use href="../assets/svg/delete.svg#delete"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div> -->
+                                <p id="status-label-captures" class="directory-status-label active">No Videos Found</p>
                             </div>
 
                             <button id="right-btn-captures" class="directory-btn">
@@ -195,6 +169,7 @@
                             </button>
 
                             <div id="gallery-clips" class="directory-gallery">
+                                <p id="status-label-clips" class="directory-status-label active">No Videos Found</p>
                             </div>
 
                             <button id="right-btn-clips" class="directory-btn">
@@ -207,7 +182,7 @@
                 </div>
             </section>
 
-            <section id="section-editor" class="content-section">
+            <section id="section-editor" class="content-section active">
                 <h2 class="content-label">Editor</h2>
 
                 <hr class="content-divider">
@@ -219,10 +194,10 @@
                         </video>
 
                         <svg id="overlay-icon-play-pause">
-                            <use href="../assets/svg/play-circle.svg#play-circle"></use>
+                            <use href="../assets/svg/play-circle-solid.svg#play-circle-solid"></use>
                         </svg>
 
-                        <div id="ctr-playback">
+                        <div id="ctr-playback" class="active">
                              <div id="slider-seek">
                                 <div id="track-seek">
                                     <div id="overlay-seek"></div>
@@ -233,20 +208,22 @@
                             <div id="bar-media">
                                 <button id="btn-play-pause" class="media-btn">
                                     <svg id="icon-play-pause" class="media-icon">
-                                        <use href="../assets/svg/play-arrow.svg#play-arrow"></use>
+                                        <use href="../assets/svg/play-arrow-solid.svg#play-arrow-solid"></use>
                                     </svg>
                                 </button>
 
                                 <button id="btn-volume" class="media-btn">
                                     <svg id="icon-volume" class="media-icon">
-                                        <use href="../assets/svg/volume-down.svg#volume-down"></use>
+                                        <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
                                 </button>
 
-                                <div id="slider-volume" class="media-slider">
-                                    <div id="track-volume" class="media-track">
-                                        <div id="overlay-volume" class="media-overlay"></div>
-                                        <div id="thumb-volume" class="media-thumb"></div>
+                                <div class="media-slider-ctr">
+                                    <div id="slider-volume" class="media-slider active">
+                                        <div id="track-volume" class="media-track">
+                                            <div id="overlay-volume" class="media-overlay"></div>
+                                            <div id="thumb-volume" class="media-thumb"></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -255,24 +232,26 @@
                                     <span id="duration-label-current-video" class="current-video-label">/88:88</span>
                                 </div>
 
-                                <div id="slider-playback-rate" class="media-slider">
-                                    <div id="track-playback-rate" class="media-track">
-                                        <svg id="overlay-playback-rate" class="media-overlay" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160 20">
-                                            <!-- <text y="8" x="0">0.2</text>
-                                            <text y="8" x="25">0.5</text>
-                                            <text y="8" x="50">0.7</text>
-                                            <text y="8" x="80">1</text>
-                                            <text y="8" x="104">2</text>
-                                            <text y="8" x="129">3</text>
-                                            <text y="8" x="153">4</text> -->
+                                <div class="media-slider-ctr">
+                                    <div id="slider-playback-rate" class="media-slider active">
+                                        <div id="track-playback-rate" class="media-track">
+                                            <svg id="overlay-playback-rate" class="media-overlay" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160 20">
+                                                <text y="8" x="0">0.2</text>
+                                                <text y="8" x="25">0.5</text>
+                                                <text y="8" x="50">0.7</text>
+                                                <text y="8" x="80">1</text>
+                                                <text y="8" x="104">2</text>
+                                                <text y="8" x="129">3</text>
+                                                <text y="8" x="153">4</text>
 
-                                            <line y1="17" y2="19" x1="32" x2="32"></line>
-                                            <line y1="17" y2="19" x1="57" x2="57"></line>
-                                            <line y1="17" y2="19" x1="82" x2="82"></line>
-                                            <line y1="17" y2="19" x1="107" x2="107"></line>
-                                            <line y1="17" y2="19" x1="132" x2="132"></line>
-                                        </svg>
-                                        <div id="thumb-playback-rate" class="media-thumb"></div>
+                                                <line y1="17" y2="19" x1="32" x2="32"></line>
+                                                <line y1="17" y2="19" x1="57" x2="57"></line>
+                                                <line y1="17" y2="19" x1="82" x2="82"></line>
+                                                <line y1="17" y2="19" x1="107" x2="107"></line>
+                                                <line y1="17" y2="19" x1="132" x2="132"></line>
+                                            </svg>
+                                            <div id="thumb-playback-rate" class="media-thumb"></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -294,17 +273,21 @@
                         <div id="track-timeline">
                             <svg id="overlay-timeline" xmlns="http://www.w3.org/2000/svg"></svg>
                             <div id="thumb-timeline"></div>
-                            <div id="left-thumb-clip" class="clip-thumb"></div>
-                            <div id="right-thumb-clip" class="clip-thumb"></div>
+                            <svg id="left-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 96">
+                                <path d="M 0 0 V 96 H 12 V 93 Q 11.5 90.5 9 90 H 6 V 6 H 9 Q 11.5 5.5 12 3 V 0 Z" />
+                            </svg>
+                            <svg id="right-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 96">
+                                <path d="M 12 0 V 96 H 0 V 93 Q 0.5 90.5 3 90  H 6 V 6 H 3 Q 0.5 5.5 0 3 V 0 Z" />
+                            </svg>
                         </div>
                     </div>
 
                     <div id="ctr-clip">
                         <svg id="icon-clip">
-                            <use href="../assets/svg/clip.svg#clip"></use>
+                            <use href="../assets/svg/movie-edit-solid.svg#movie-edit-solid"></use>
                         </svg>
                         
-                        <div id="bar-clip" class="active">
+                        <div id="bar-clip">
                             <div class="clip-setting-pill">
                                 <h4 class="clip-setting-label">Clip Width</h4>
 
@@ -326,16 +309,16 @@
                             </div>
 
                             <button id="btn-clip-view" class="clip-options-btn">
-                                <svg class="clip-options-icon">
-                                    <use href="../assets/svg/record.svg#record"></use>
+                                <svg id="icon-clip-view" class="clip-options-icon">
+                                    <use href="../assets/svg/visibility.svg#visibility"></use>
                                 </svg>
             
                                 <span class="clip-options-label">View Clip</span>
                             </button>
 
                             <button id="btn-clip-create" class="clip-options-btn">
-                                <svg class="clip-options-icon">
-                                    <use href="../assets/svg/record.svg#record"></use>
+                                <svg id="icon-clip-create" class="clip-options-icon">
+                                    <use href="../assets/svg/save-as.svg#save-as"></use>
                                 </svg>
             
                                 <span class="clip-options-label">Create Clip</span>
@@ -350,7 +333,7 @@
                 </div>
             </section>
 
-            <section id="section-settings" class="content-section active">
+            <section id="section-settings" class="content-section">
                 <h2 class="content-label">Settings</h2>
 
                 <hr class="content-divider">
@@ -366,13 +349,13 @@
 
                             <div class="setting-pill">
                                 <svg class="setting-icon">
-                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                    <use href="../assets/svg/dark-mode-solid.svg#dark-mode-solid"></use>
                                 </svg>
 
                                 <label class="setting-toggle-switch">
                                     <input class="setting-toggle-field" type="checkbox" name="darkMode">
                                     <svg class="setting-toggle-icon">
-                                        <use href="../assets/svg/disabled.svg#disabled"></use>
+                                        <use href="../assets/svg/close.svg#close"></use>
                                     </svg>
                                 </label>
                             </div>
@@ -428,7 +411,7 @@
 
                             <div class="setting-pill">
                                 <svg class="setting-icon">
-                                    <use href="../assets/svg/draft.svg#draft"></use>
+                                    <use href="../assets/svg/draft-solid.svg#draft-solid"></use>
                                 </svg>
 
                                 <select class="setting-field" name="capturesFormat">
@@ -464,7 +447,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/arrow-range.svg#arrow-range"></use>
                                     </svg>
 
                                     <input class="setting-field" type="text" name="capturesWidth">
@@ -488,7 +471,7 @@
 
                             <div class="setting-pill">
                                 <svg class="setting-icon">
-                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                    <use href="../assets/svg/desktop-windows-solid.svg#desktop-windows-solid"></use>
                                 </svg>
 
                                 <select class="setting-field" name="capturesDisplay">
@@ -544,13 +527,13 @@
 
                             <div class="setting-pill">
                                 <svg class="setting-icon">
-                                    <use href="../assets/svg/storage.svg#storage"></use>
+                                    <use href="../assets/svg/motion-photos-auto-solid.svg#motion-photos-auto-solid"></use>
                                 </svg>
 
                                 <label class="setting-toggle-switch">
                                     <input class="setting-toggle-field" type="checkbox" name="autoRecord">
                                     <svg class="setting-toggle-icon">
-                                        <use href="../assets/svg/disabled.svg#disabled"></use>
+                                        <use href="../assets/svg/close.svg#close"></use>
                                     </svg>
                                 </label>
                             </div>
@@ -606,7 +589,7 @@
 
                             <div class="setting-pill">
                                 <svg class="setting-icon">
-                                    <use href="../assets/svg/draft.svg#draft"></use>
+                                    <use href="../assets/svg/draft-solid.svg#draft-solid"></use>
                                 </svg>
 
                                 <select class="setting-field" name="clipsFormat">
@@ -624,7 +607,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/arrow-range.svg#arrow-range"></use>
                                     </svg>
 
                                     <input class="setting-field" type="text" name="clipsWidth">
@@ -655,7 +638,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/speaker-solid.svg#speaker-solid"></use>
                                     </svg>
 
                                     <select class="setting-field" name="speaker">
@@ -669,7 +652,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
 
                                     <div class="setting-slider-ctr">
@@ -690,7 +673,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/height.svg#height"></use>
+                                        <use href="../assets/svg/mic-solid.svg#mic-solid"></use>
                                     </svg>
 
                                     <select class="setting-field" name="microphone">
@@ -704,7 +687,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/width.svg#width"></use>
+                                        <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
 
                                     <div class="setting-slider-ctr">
@@ -725,7 +708,7 @@
 
                                 <div class="setting-pill">
                                     <svg class="setting-icon">
-                                        <use href="../assets/svg/height.svg#height"></use>
+                                        <use href="../assets/svg/camera-video-solid.svg#camera-video-solid"></use>
                                     </svg>
 
                                     <select class="setting-field" name="webcam">

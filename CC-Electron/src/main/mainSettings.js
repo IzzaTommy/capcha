@@ -189,7 +189,7 @@ async function initSettings() {
 
 
     if (data['settings'].get('capturesDisplay') in data['displays']) {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
     else {
         if (Object.keys(data['displays']).length === 0) {
@@ -197,7 +197,7 @@ async function initSettings() {
         }
         else {
             data['settings'].set('capturesDisplay', Object.keys(data['displays'])[0]);
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
     }
 
@@ -363,7 +363,7 @@ function initSettingsL() {
 
             case 'capturesDisplay':
                 data['settings'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 0, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'speaker':

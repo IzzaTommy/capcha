@@ -171,6 +171,21 @@
     padding-bottom: var(--prmultlabel-vpadding);
 }
 
+
+
+
+.media-slider-ctr {
+    padding-left: 2px;
+    padding-right: 2px;
+    overflow: hidden;
+}
+
+.media-slider-ctr:has(> #slider-playback-rate) {
+    padding-left: 7px;
+    padding-right: 3px;
+    overflow: hidden;
+}
+
 .media-slider {
     /* border-radius: var(--mslider-bradius); */
     flex: 0 0 auto;
@@ -196,6 +211,13 @@
     position: absolute;
 
     border-radius: var(--moverlay-bradius);
+    visibility: hidden;
+    transition: visibility 0s ease 0.1s;
+}
+
+.media-slider.active > .media-track > .media-overlay {
+    visibility: inherit;
+    transition: visibility 0s ease 0s;
 }
 
 .media-thumb {
@@ -214,18 +236,17 @@
     width: var(--mthumb-width);
 }
 
+
+
 #slider-volume.active {
     width: var(--vslider-width);
 }
 
 #overlay-volume {
     height: 100%;
-    width: 100%;
+    width: 100px;
 }
 
-#slider-playback-rate {
-    margin-left: auto;
-}
 
 #slider-playback-rate.active {
     width: var(--prslider-width);
@@ -233,10 +254,12 @@
 
 #overlay-playback-rate {
     bottom: 0;
-    left: var(--proverlay-linset);
+    /* left: var(--proverlay-linset); */
+    left: -7px;
 
     height: var(--proverlay-height);
-    width: 0;
+    /* width: 0; */
+    width: var(--proverlay-width);
 
     fill: var(--proverlay-fill);
     stroke: var(--proverlay-stroke);
@@ -245,16 +268,20 @@
     pointer-events: none;
 }
 
-/* #overlay-playback-rate > text {
+#overlay-playback-rate > text {
     fill: var(--proverlay-text-fill);
     font-size: var(--proverlay-text-fsize);
     font-weight: var(--proverlay-text-fweight);
     stroke: var(--proverlay-text-stroke);
+}
+
+/* #slider-playback-rate.active > #track-playback-rate > #overlay-playback-rate {
+    width: var(--proverlay-width);
 } */
 
-#slider-playback-rate.active > #track-playback-rate > #overlay-playback-rate {
-    width: var(--proverlay-width);
-}
+
+
+
 
 #label-ctr-current-video {
     justify-content: end;
@@ -262,6 +289,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
+    margin-right: auto;
 }
 
 .current-video-label {
@@ -333,18 +361,10 @@
     height: var(--cthumb-height);
     width: var(--cthumb-width);
 
-    background-color: var(--cthumb-bgcolor);
+    fill: var(--cthumb-fill);
+    stroke: var(--cthumb-stroke);
+    stroke-width: var(--cthumb-swidth);
     visibility: hidden;
-}
-
-/* #left-thumb-clip {
-    left: 50px;
-} */
-
-#right-thumb-clip {
-    background-color: salmon;
-
-    /* left: 100px; */
 }
 
 .clip-thumb.active {

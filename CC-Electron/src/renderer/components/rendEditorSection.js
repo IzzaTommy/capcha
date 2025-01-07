@@ -24,7 +24,7 @@ import {
     playbackRateSlider, playbackRateSliderWidth, playbackRateThumb, playbackRateBtn, playbackRateLabel, 
     fullscreenBtn, fullscreenIcon, 
     timelineSlider, timelineOverlay, timelineThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, clipViewBtn, clipCreateBtn, clipToggleBtn, clipToggleIcon, 
+    clipBar, clipViewBtn, clipViewIcon, clipCreateBtn, clipCreateIcon, clipToggleBtn, clipToggleIcon, 
     mostSettingFields, clipsFormatSettingFields, clipsWidthSettingFields, clipsHeightSettingFields, mostSettingToggleSwitches, capturesPathSettingField, clipsPathSettingField, darkModeSettingToggleField, darkModeSettingToggleIcon, capturesDisplaySettingField, 
     speakerSettingField, speakerVolumeSlider, speakerVolumeSliderWidth, speakerVolumeOverlay, speakerVolumeThumb, microphoneSettingField, microphoneVolumeSlider, microphoneVolumeSliderWidth, microphoneVolumeOverlay, microphoneVolumeThumb, 
     flags, boxes, 
@@ -117,6 +117,7 @@ function initVideoContainerEL() {
 
     // on click, play/pause the video and change the icon
     videoPlayer.addEventListener('click', () => {
+        console.log('1');
         setVideoPlayerState('toggle');
     });
 
@@ -124,14 +125,18 @@ function initVideoContainerEL() {
     videoPlayer.addEventListener('timeupdate', () => {
         // check if the video is loaded (editor section is active)
         if (flags['videoLoaded']) {
-            if (!flags['timelineSliderDragging'] && !flags['seekSliderDragging']) {
+            // not necessary?
+            if (!flags['timelineSliderDragging'] && !flags['seekSliderDragging'] && !flags['clipLeftThumbDragging'] && !flags['clipRightThumbDragging']) {
                 // check if clipping is active
                 if (clipBar.classList.contains('active')) {
                     // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
                     if (videoPlayer.currentTime < state['timeline'].getClipStartTime() || videoPlayer.currentTime >= state['timeline'].getClipEndTime()) {
+                        console.log('VPCT 1');
                         videoPlayer.currentTime = state['timeline'].getClipStartTime();
+                        console.log('VPCT 1: ' + videoPlayer.currentTime + ' | ' + state['timeline'].getClipStartTime());
             
                         // pause the video and change the icon
+                        console.log('LBOOL: ' + flags['clipLeftThumbDragging'] + ' | ' + '2');
                         setVideoPlayerState('pause');
             
                         // set the seek slider and timeline slider
@@ -142,9 +147,11 @@ function initVideoContainerEL() {
                 else {
                     // reset the video, change the icon, and pause the video, depending on if the video is outside of the timeline bounds
                     if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
+                        console.log('VPCT 2');
                         videoPlayer.currentTime = state['timeline'].getStartTime();
             
                         // pause the video and change the icon
+                        console.log('3');
                         setVideoPlayerState('pause');
             
                         // set the seek slider and timeline slider
@@ -173,6 +180,7 @@ function initVideoContainerEL() {
         flags['videoLoaded'] = true;
 
         // auto play the video and change the icon
+        console.log('4');
         setVideoPlayerState('play');
     });
 
@@ -224,6 +232,7 @@ function initVideoContainerEL() {
         flags['previouslyPaused'] = videoPlayer.paused;
 
         // set current time based on click location
+        console.log('VPCT 3');
         videoPlayer.currentTime = videoPlayer.duration * getPointerEventPct(pointer, boxes['seekSliderBox']);
 
         // set the seek slider and timeline slider
@@ -238,6 +247,7 @@ function initVideoContainerEL() {
     });
 
     // on click, play/pause the video and change the icon
+    console.log('5');
     playPauseBtn.addEventListener('click', () => setVideoPlayerState('toggle'));
 
     // on click, mute/unmute the video and change the icon
@@ -258,11 +268,13 @@ function initVideoContainerEL() {
     volumeBtn.addEventListener('mouseenter', () => {
         volumeSlider.classList.add('active');
 
-        // wait for the transition to finish, then capture the box size
-        setTimeout(() => {
-            boxes['volumeSliderBox'] = volumeSlider.getBoundingClientRect();
-            flags['updateVolumeSlider'] = false;
-        }, 200);
+        if (flags['updateVolumeSlider']) {
+            // wait for the transition to finish, then capture the box size
+            setTimeout(() => {
+                boxes['volumeSliderBox'] = volumeSlider.getBoundingClientRect();
+                flags['updateVolumeSlider'] = false;
+            }, 200);
+        }
     });
 
     // on mouse down, set the volume slider dragging flag
@@ -307,11 +319,13 @@ function initVideoContainerEL() {
     playbackRateBtn.addEventListener('mouseenter', () => {
         playbackRateSlider.classList.add('active');
 
-        // wait for the transition to finish, then capture the box
-        setTimeout(() => {
-            boxes['playbackRateSliderBox'] = playbackRateSlider.getBoundingClientRect();
-            flags['updatePlaybackRateSlider'] = false;
-        }, 200);
+        if (flags['updatePlaybackRateSlider']) {
+            // wait for the transition to finish, then capture the box
+            setTimeout(() => {
+                boxes['playbackRateSliderBox'] = playbackRateSlider.getBoundingClientRect();
+                flags['updatePlaybackRateSlider'] = false;
+            }, 200);
+        }
     });
 
     // on click, toggle the video player fullscreen
@@ -338,6 +352,7 @@ function initVideoContainer() {
     setPlaybackRateSlider();
 
     // standby will pause the video but hide the play pause icon overlay
+    console.log('6');
     setVideoPlayerState('standby');
 }
 
@@ -372,10 +387,12 @@ function initTimelineSliderEL() {
                     
                     // check if the video time is out of the timeline, put it back in bounds
                     if (videoPlayer.currentTime < state['timeline'].getStartTime()) {
+                        console.log('VPCT 4');
                         videoPlayer.currentTime = state['timeline'].getStartTime();
                     } 
                     else {
                         if (videoPlayer.currentTime > state['timeline'].getEndTime()) {
+                            console.log('VPCT 5');
                             videoPlayer.currentTime = state['timeline'].getEndTime();
                         }
                     }
@@ -444,10 +461,12 @@ function initTimelineSliderEL() {
                              
                     // check if the video time is out of the timeline, put it back in bounds
                     if (videoPlayer.currentTime < state['timeline'].getStartTime()) {
+                        console.log('VPCT 6');
                         videoPlayer.currentTime = state['timeline'].getStartTime();
                     } 
                     else {
                         if (videoPlayer.currentTime > state['timeline'].getEndTime()) {
+                            console.log('VPCT 7');
                             videoPlayer.currentTime = state['timeline'].getEndTime();
                         }
                     }
@@ -500,6 +519,7 @@ function initTimelineSliderEL() {
         flags['previouslyPaused'] = videoPlayer.paused;
 
         // get the time based on click location on the timeline slider
+        console.log('VPCT 8');
         videoPlayer.currentTime = state['timeline'].getDuration() * getPointerEventPct(pointer, boxes['timelineSliderBox']) + state['timeline'].getStartTime();
 
         // set the seek slider and timeline slider
@@ -534,14 +554,24 @@ function initTimelineSliderEL() {
             if (clipBar.classList.contains('active')) {
                 // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
                 if (videoPlayer.currentTime < state['timeline'].getClipStartTime() || videoPlayer.currentTime >= state['timeline'].getClipEndTime()) {
+                    console.log('VPCT 9');
                     videoPlayer.currentTime = state['timeline'].getClipStartTime();
         
                     // pause the video and change the icon
+                    console.log('7');
                     setVideoPlayerState('pause');
         
                     // set the seek slider and timeline slider
                     setSeekSlider();
                     setTimelineSlider();
+                }
+                else {
+                    // check if the video was not previously paused
+                    if (!flags['previouslyPaused']) {
+                        // play the video and change the icon
+                        console.log('93');
+                        setVideoPlayerState('play');
+                    }
                 }
         
                 // set the video current time label
@@ -551,9 +581,11 @@ function initTimelineSliderEL() {
             else {
                 // check if the video is out of the timeline bounds, set it back the start
                 if (videoPlayer.currentTime < state['timeline'].getStartTime() || videoPlayer.currentTime >= state['timeline'].getEndTime()) {
+                    console.log('VPCT 10');
                     videoPlayer.currentTime = state['timeline'].getStartTime();
 
                     // pause the video and change the icon
+                    console.log('8');
                     setVideoPlayerState('pause');
 
                     // set the seek slider and timeline slider
@@ -564,6 +596,7 @@ function initTimelineSliderEL() {
                     // check if the video was not previously paused
                     if (!flags['previouslyPaused']) {
                         // play the video and change the icon
+                        console.log('9');
                         setVideoPlayerState('play');
                     }
                 }
@@ -611,9 +644,11 @@ function initTimelineSliderEL() {
         // check if the seek slider is dragging
         if (flags['seekSliderDragging']) {
             // pause the video and change the icon
+            console.log('10');
             setVideoPlayerState('pause');
 
             // get the time based on pointer location on the seek slider
+            console.log('VPCT 11');
             videoPlayer.currentTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['seekSliderBox']), 1)) * videoPlayer.duration;
 
             // set the seek slider and timeline slider
@@ -627,9 +662,11 @@ function initTimelineSliderEL() {
             // check if the timeline slider is dragging
             if (flags['timelineSliderDragging']) {
                 // pause the video and change the icon
+                console.log('11');
                 setVideoPlayerState('pause');
 
                 // get the time based on pointer location on the timeline slider
+                console.log('VPCT 12');
                 videoPlayer.currentTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['timelineSliderBox']), 1)) * state['timeline'].getDuration() + state['timeline'].getStartTime();
 
                 // set the seek slider and timeline slider
@@ -662,14 +699,14 @@ function initTimelineSliderEL() {
                             let newClipStartTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['timelineSliderBox']), 1)) * state['timeline'].getDuration() + state['timeline'].getStartTime();
 
                             // update the clip start time to be at minimum 5s before the clip end time
-                            state['timeline'].updateClipStartTime(newClipStartTime < state['timeline'].getClipEndTime() - 5 ? newClipStartTime : Math.max(state['timeline'].getStartTime(), state['timeline'].getClipEndTime() - 5));
+                            state['timeline'].updateClipStartTime(getTruncDecimal(newClipStartTime < state['timeline'].getClipEndTime() - 5 ? newClipStartTime : Math.max(state['timeline'].getStartTime(), state['timeline'].getClipEndTime() - 5), 6));
 
                             // set the left clip thumb
                             setClipLeftThumb((state['timeline'].getClipStartTime() - state['timeline'].getStartTime()) / state['timeline'].getDuration() * boxes['timelineSliderBox'].width);
 
                             // update the current time to be within the clip bounds
-                            if (videoPlayer.currentTime < state['timeline'].getClipStartTime())
-                            {
+                            if (videoPlayer.currentTime < state['timeline'].getClipStartTime()) {
+                                console.log('VPCT 13');
                                 videoPlayer.currentTime = state['timeline'].getClipStartTime();
 
                                 // set the seek slider and timeline slider
@@ -683,14 +720,14 @@ function initTimelineSliderEL() {
                                 let newClipEndTime = Math.max(0, Math.min(getPointerEventPct(pointer, boxes['timelineSliderBox']), 1)) * state['timeline'].getDuration() + state['timeline'].getStartTime();
 
                                 // update the clip end time to be at minimum 5s after the clip start time
-                                state['timeline'].updateClipEndTime(newClipEndTime > state['timeline'].getClipStartTime() + 5 ? newClipEndTime : Math.min(state['timeline'].getEndTime(), state['timeline'].getClipStartTime() + 5));
+                                state['timeline'].updateClipEndTime(getTruncDecimal(newClipEndTime > state['timeline'].getClipStartTime() + 5 ? newClipEndTime : Math.min(state['timeline'].getEndTime(), state['timeline'].getClipStartTime() + 5), 6));
 
                                 // set the right clip thumb
                                 setClipRightThumb((state['timeline'].getClipEndTime() - state['timeline'].getStartTime()) / state['timeline'].getDuration() * boxes['timelineSliderBox'].width);
 
                                 // update the current time to be within the clip bounds
-                                if (videoPlayer.currentTime >= state['timeline'].getClipEndTime())
-                                {
+                                if (videoPlayer.currentTime >= state['timeline'].getClipEndTime()) {
+                                    console.log('VPCT 14');
                                     videoPlayer.currentTime = state['timeline'].getClipStartTime();
 
                                     // set the seek slider and timeline slider
@@ -745,8 +782,8 @@ function initClipContainerEL() {
                 let newClipStartTime = videoPlayer.currentTime - state['timeline'].getClipLength() / 2;
                 let newClipEndTime = videoPlayer.currentTime + state['timeline'].getClipLength() / 2;
     
-                state['timeline'].updateClipStartTime(newClipStartTime < state['timeline'].getStartTime() ? state['timeline'].getStartTime() : (newClipEndTime > state['timeline'].getEndTime() ? state['timeline'].getEndTime() - state['timeline'].getClipLength() : newClipStartTime));
-                state['timeline'].updateClipEndTime(newClipStartTime < state['timeline'].getStartTime() ? state['timeline'].getStartTime() + state['timeline'].getClipLength() : (newClipEndTime > state['timeline'].getEndTime() ? state['timeline'].getEndTime() : newClipEndTime));
+                state['timeline'].updateClipStartTime(getTruncDecimal(newClipStartTime < state['timeline'].getStartTime() ? state['timeline'].getStartTime() : (newClipEndTime > state['timeline'].getEndTime() ? state['timeline'].getEndTime() - state['timeline'].getClipLength() : newClipStartTime), 6));
+                state['timeline'].updateClipEndTime(getTruncDecimal(newClipStartTime < state['timeline'].getStartTime() ? state['timeline'].getStartTime() + state['timeline'].getClipLength() : (newClipEndTime > state['timeline'].getEndTime() ? state['timeline'].getEndTime() : newClipEndTime), 6));
             }
             else {
                 state['timeline'].updateClipStartTime(state['timeline'].getStartTime());
@@ -765,20 +802,31 @@ function initClipContainerEL() {
         }
     });
 
+    // on mouse enter, change to the solid icon
+    clipViewBtn.addEventListener('mouseenter', () => setIcon(clipViewIcon, 'visibility-solid'));
+    // on mouse leave, change to the regular icon
+    clipViewBtn.addEventListener('mouseleave', () => setIcon(clipViewIcon, 'visibility'));
     // on click, preview the clip
     clipViewBtn.addEventListener('click', () => {
         // set the video to the clip start time
+        console.log('VPCT 15');
         videoPlayer.currentTime = state['timeline'].getClipStartTime();
 
         // play the video and change the icon
+        console.log('12');
         setVideoPlayerState('play');
     });
 
+    // on mouse enter, change to the solid icon
+    clipCreateBtn.addEventListener('mouseenter', () => setIcon(clipCreateIcon, 'save-as-solid'));
+    // on mouse leave, change to the regular icon
+    clipCreateBtn.addEventListener('mouseleave', () => setIcon(clipCreateIcon, 'save-as'));
     // on click, create the clip
     clipCreateBtn.addEventListener('click', async () => {
         await attemptAsyncFunction(() => window.clipAPI.createClip(videoPlayer.getAttribute('src'), state['timeline'].getClipStartTime(), state['timeline'].getClipEndTime()), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
-        await loadClipsGallery(false);
+        await attemptAsyncFunction(() => loadClipsGallery(false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        // await loadClipsGallery(false);
     });
 }
 
@@ -791,32 +839,32 @@ function setVideoPlayerState(action) {
     switch (action) {
         case 'play':
             // play the video, change the icon to pause, hide the overlay
-            setIcon(playPauseIcon, 'pause');
+            setIcon(playPauseIcon, 'pause-solid');
             playPauseOverlayIcon.style.opacity = '';
             videoPlayer.play();
             break;
         case 'pause':
             // pause the video, change the icon to play, show the overlay
-            setIcon(playPauseIcon, 'play-arrow');
+            setIcon(playPauseIcon, 'play-arrow-solid');
             playPauseOverlayIcon.style.opacity = '1';
             videoPlayer.pause();
             break;
         case 'toggle':
             // play/pause the video, change the icon to the opposite, toggle the overlay
             if (videoPlayer.paused || videoPlayer.ended) {
-                setIcon(playPauseIcon, 'pause');
+                setIcon(playPauseIcon, 'pause-solid');
                 playPauseOverlayIcon.style.opacity = '';
                 videoPlayer.play();
             }
             else {
-                setIcon(playPauseIcon, 'play-arrow');
+                setIcon(playPauseIcon, 'play-arrow-solid');
                 playPauseOverlayIcon.style.opacity = '1';
                 videoPlayer.pause();
             }
             break;
         case 'standby':
             // pause the video, change the icon to pause, hide the overlay
-            setIcon(playPauseIcon, 'pause');
+            setIcon(playPauseIcon, 'pause-solid');
             playPauseOverlayIcon.style.opacity = '';
             videoPlayer.pause();
             break;
@@ -930,7 +978,7 @@ function updateSeekSlider() {
 function setVolumeSlider() { 
     // if the video is muted, move the slider to the left and set the muted icon
     if (videoPlayer.muted) {
-        setIcon(volumeIcon, 'volume-off');
+        setIcon(volumeIcon, 'volume-off-solid');
 
         setVolumeThumb(0);
         setVolumeOverlay(0);
@@ -938,14 +986,14 @@ function setVolumeSlider() {
     else {
         // else, set the correct volume icon
         if (videoPlayer.volume > 0.6) {
-            setIcon(volumeIcon, 'volume-up');
+            setIcon(volumeIcon, 'volume-up-solid');
         }
         else {
             if (videoPlayer.volume > 0.1) {
-                setIcon(volumeIcon, 'volume-down');
+                setIcon(volumeIcon, 'volume-down-solid');
             }
             else {
-                setIcon(volumeIcon, 'volume-mute');
+                setIcon(volumeIcon, 'volume-mute-solid');
             }
         }
 
@@ -961,6 +1009,7 @@ function setVolumeSlider() {
  * @param {number} thumbLocation - The location of the volume thumb
  */
 function setVolumeOverlay(thumbLocation) {
+    // volumeOverlay.style.background = `linear-gradient(to right, var(--voverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
     volumeOverlay.style.background = `linear-gradient(to right, var(--voverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 

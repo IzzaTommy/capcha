@@ -86,10 +86,10 @@ function initSettingContainerEL() {
 
             // set the icon based on if the setting toggle field is checked
             if (settingToggleField.checked) {
-                setIcon(settingToggleIcon, 'enabled');
+                setIcon(settingToggleIcon, 'check');
             }
             else {
-                setIcon(settingToggleIcon, 'disabled');
+                setIcon(settingToggleIcon, 'close');
             }
         });
     }
@@ -100,7 +100,8 @@ function initSettingContainerEL() {
 
         if (capturesPathSettingField.value !== data['settings'][capturesPathSettingField.name]) {
             capturesPathSettingField.value = data['settings'][capturesPathSettingField.name];
-            await loadCapturesGallery(false);
+            await attemptAsyncFunction(() => loadCapturesGallery(false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+            // await loadCapturesGallery(false);
         }
     });
 
@@ -110,7 +111,10 @@ function initSettingContainerEL() {
 
         if (clipsPathSettingField.value !== data['settings'][clipsPathSettingField.name]) {
             clipsPathSettingField.value = data['settings'][clipsPathSettingField.name];
-            await loadClipsGallery(false);
+
+            await attemptAsyncFunction(() => loadClipsGallery(false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+
+            // await loadClipsGallery(false);
         }
     });
 
@@ -120,11 +124,11 @@ function initSettingContainerEL() {
 
         // change the theme attribute, depending on if dark mode is enabled
         if (darkModeSettingToggleField.checked) {
-            setIcon(darkModeSettingToggleIcon, 'enabled');
+            setIcon(darkModeSettingToggleIcon, 'check');
             html.dataset.theme = 'dark';
         }
         else {
-            setIcon(darkModeSettingToggleIcon, 'disabled');
+            setIcon(darkModeSettingToggleIcon, 'close');
             html.dataset.theme = 'light';
         }
     });
@@ -207,10 +211,10 @@ async function initSettingContainer() {
 
         // set the icon based on if the setting toggle field is checked
         if (settingToggleField.checked) {
-            setIcon(settingToggleIcon, 'enabled');
+            setIcon(settingToggleIcon, 'check');
         }
         else {
-            setIcon(settingToggleIcon, 'disabled');
+            setIcon(settingToggleIcon, 'close');
         }
     }
 
@@ -219,11 +223,11 @@ async function initSettingContainer() {
 
     // change the theme attribute, depending on if dark mode is enabled
     if (darkModeSettingToggleField.checked) {
-        setIcon(darkModeSettingToggleIcon, 'enabled');
+        setIcon(darkModeSettingToggleIcon, 'check');
         html.dataset.theme = 'dark';
     }
     else {
-        setIcon(darkModeSettingToggleIcon, 'disabled');
+        setIcon(darkModeSettingToggleIcon, 'close');
         html.dataset.theme = 'light';
     }
 

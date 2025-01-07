@@ -57,6 +57,22 @@
     margin: var(--dgallery-sb-track-margin);
 }
 
+.directory-status-label {
+    align-self: center;
+    display: none;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    color: var(--dstatuslabel-color);
+    font-size: var(--dstatuslabel-fsize);
+    font-weight: var(--dstatuslabel-fweight);
+}
+
+.directory-status-label.active {
+    display: block;
+}
+
 .video-preview-ctr {
     border-radius: var(--vpctr-bradius);
     display: flex;

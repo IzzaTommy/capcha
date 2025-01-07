@@ -161,6 +161,10 @@ html {
 
     --dgallery-sb-track-margin: calc(-1 * var(--sbar-thumb-bwidth));
 
+    /* ==== dstatuslabel -> Directory Status Label ==== */
+    --dstatuslabel-fsize: 40px;
+    --dstatuslabel-fweight: 500;
+
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bradius: 10px;
     --vpctr-vgap: 10px;
@@ -274,8 +278,8 @@ html {
     --proverlay-width: 160px;
     --proverlay-swidth: 1px;
 
-    /* --proverlay-text-fsize: 10px;
-    --proverlay-text-fweight: 100; */
+    --proverlay-text-fsize: 10px;
+    --proverlay-text-fweight: 100;
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-fsize: 15px;
@@ -307,11 +311,12 @@ html {
     --tthumb-width: 4px;
 
     /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-tinset: -12px;
+    --cthumb-tinset: calc(var(--tthumb-tinset) - 6px);
     --cthumb-linset: calc(var(--cthumb-width) / -2);
-    --cthumb-bradius: calc(var(--cthumb-width) / 2);
+    --cthumb-bradius: calc(var(--cthumb-width) / 4);
     --cthumb-height: calc(-2 * var(--cthumb-tinset) + var(--tslider-height));
-    --cthumb-width: 6px;
+    --cthumb-width: 12px;
+    --cthumb-swidth: 1px;
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bwidth: 1.5px;

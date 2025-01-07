@@ -128,6 +128,9 @@ html[data-theme='dark'] {
     --dicon-fill: #787878;
     --dicon-alt-fill: #dddddd;
 
+    /* ==== dstatuslabel -> Directory Status Label ==== */
+    --dstatuslabel-color: #787878;
+
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #505050;
 
@@ -186,8 +189,8 @@ html[data-theme='dark'] {
     --proverlay-fill: #363636;
     --proverlay-stroke: #363636;
 
-    /* --proverlay-text-fill: #dddddd;
-    --proverlay-text-stroke: #dddddd; */
+    --proverlay-text-fill: #dddddd;
+    --proverlay-text-stroke: #dddddd;
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-color: #dddddd;
@@ -206,7 +209,8 @@ html[data-theme='dark'] {
     --tthumb-bgcolor: #dddddd;
 
     /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-bgcolor: #ffe100;
+    --cthumb-fill: #b575e9;
+    --cthumb-stroke: #b575e9;
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #414344;
@@ -405,6 +409,9 @@ html[data-theme='light'] {
     --dicon-fill: #787878;
     --dicon-alt-fill: #1a69e0;
 
+    /* ==== dstatuslabel -> Directory Status Label ==== */
+    --dstatuslabel-color: #787878;
+
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #dfe1e5;
 
@@ -463,8 +470,8 @@ html[data-theme='light'] {
     --proverlay-fill: #dddddd;
     --proverlay-stroke: #dddddd;
 
-    /* --proverlay-text-fill: #dddddd;
-    --proverlay-text-stroke: #dddddd; */
+    --proverlay-text-fill: #dddddd;
+    --proverlay-text-stroke: #dddddd;
 
     /* ==== cvlabel -> Current Video Label ==== */
     --cvlabel-color: #dddddd;
@@ -483,7 +490,8 @@ html[data-theme='light'] {
     --tthumb-bgcolor: #1a69e0;
 
     /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-bgcolor: #ffe100;
+    --cthumb-fill: #b575e9;
+    --cthumb-stroke: #b575e9;
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #dfe1e5;

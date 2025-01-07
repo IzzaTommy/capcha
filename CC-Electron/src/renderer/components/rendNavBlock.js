@@ -71,9 +71,9 @@ function initNavBtnEL() {
     settingsBtn.addEventListener('click', () => setActiveSection('settings'));
 
     // on mouse enter, change to the solid icon
-    recordBtn.addEventListener('mouseenter', () => setIcon(recordIcon, 'record-solid'));
+    recordBtn.addEventListener('mouseenter', () => setIcon(recordIcon, 'radio-button-checked-solid'));
     // on mouse leave, change to the regular icon
-    recordBtn.addEventListener('mouseleave', () => setIcon(recordIcon, 'record'));
+    recordBtn.addEventListener('mouseleave', () => setIcon(recordIcon, 'radio-button-checked'));
     // on click, toggle the recording
     recordBtn.addEventListener('click', async () => await toggleRecordBtn(false, true, 'MANUAL'));
 
@@ -174,7 +174,8 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
                 }
 
                 // reload the gallery for the new video
-                await loadCapturesGallery(false);
+                await attemptAsyncFunction(() => loadCapturesGallery(false), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+                // await loadCapturesGallery(false);
             }
         }
     }
