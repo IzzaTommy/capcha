@@ -155,7 +155,7 @@ function initRendVariables() {
 
     // directories section elements
     videoPreviewTemplate = document.querySelector('template');
-    videoPreviewWidth = parseInt(style.getPropertyValue('--vthumbnail-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vtimage-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
     capturesGallery = document.getElementById('gallery-captures');
     capturesLeftBtn = document.getElementById('left-btn-captures');
     capturesStatusLabel = document.getElementById('status-label-captures');
@@ -170,7 +170,8 @@ function initRendVariables() {
 
     videoPlayer = document.getElementById('player-video');
 
-    playPauseOverlayIcon = document.getElementById('overlay-icon-play-pause');
+    /////////////////////////////
+    playPauseOverlayIcon = document.getElementById('status-icon-play-pause');
 
     playbackContainer = document.getElementById('ctr-playback');
 
@@ -198,7 +199,8 @@ function initRendVariables() {
     playbackRateSliderWidth = parseInt(style.getPropertyValue('--prslider-width'));
     playbackRateThumb = document.getElementById('thumb-playback-rate');
     playbackRateBtn = document.getElementById('btn-playback-rate');
-    playbackRateLabel = document.getElementById('label-playback-rate');
+    ///////////////////////////////////////////
+    playbackRateLabel = document.getElementById('value-label-playback-rate');
 
     fullscreenBtn = document.getElementById('btn-fullscreen');
     fullscreenIcon = fullscreenBtn.querySelector('#icon-fullscreen > use');
@@ -210,39 +212,42 @@ function initRendVariables() {
     clipRightThumb = document.getElementById('right-thumb-clip'); 
 
     clipBar = document.getElementById('bar-clip');
-    clipViewBtn = document.getElementById('btn-clip-view');
-    clipViewIcon = document.querySelector('#icon-clip-view > use');
-    clipCreateBtn = document.getElementById('btn-clip-create');
-    clipCreateIcon = document.querySelector('#icon-clip-create > use');
+    ////////////////////////////////////////////
+    clipViewBtn = document.getElementById('view-btn-clip');
+    clipViewIcon = document.querySelector('#view-icon-clip > use');
+    clipCreateBtn = document.getElementById('create-btn-clip');
+    clipCreateIcon = document.querySelector('#create-icon-clip > use');
+    
     clipToggleBtn = document.getElementById('btn-clip-toggle');
     clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
 
     // settings section elements
-    mostSettingFields = document.querySelectorAll(`.setting-field:not([name='capturesPath']):not([name='clipsPath']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='capturesDisplay']):not([name='speaker']):not([name='microphone'])`);
+    /////////////////////////////////////
+    mostSettingFields = document.querySelectorAll(`.general-setting-field:not([name='capturesPath']):not([name='clipsPath']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='capturesDisplay']):not([name='speaker']):not([name='microphone'])`);
 
     clipsFormatSettingFields = document.querySelectorAll(`[name='clipsFormat']`);
     clipsWidthSettingFields = document.querySelectorAll(`[name='clipsWidth']`);
     clipsHeightSettingFields = document.querySelectorAll(`[name='clipsHeight']`);
 
-    mostSettingToggleSwitches = document.querySelectorAll(`.setting-toggle-switch:not(:has(> .setting-toggle-field[name='darkMode']))`);
+    mostSettingToggleSwitches = document.querySelectorAll(`.general-setting-toggle-switch:not(:has(> .general-setting-toggle-field[name='darkMode']))`);
 
-    capturesPathSettingField = document.querySelector(`.setting-field[name='capturesPath']`);
-    clipsPathSettingField = document.querySelector(`.setting-field[name='clipsPath']`);
+    capturesPathSettingField = document.querySelector(`.general-setting-field[name='capturesPath']`);
+    clipsPathSettingField = document.querySelector(`.general-setting-field[name='clipsPath']`);
 
-    darkModeSettingToggleField = document.querySelector(`.setting-toggle-field[name='darkMode']`);
-    darkModeSettingToggleIcon = document.querySelector(`.setting-toggle-field[name='darkMode'] + .setting-toggle-icon > use`);
+    darkModeSettingToggleField = document.querySelector(`.general-setting-toggle-field[name='darkMode']`);
+    darkModeSettingToggleIcon = document.querySelector(`.general-setting-toggle-field[name='darkMode'] + .general-setting-toggle-icon > use`);
 
-    capturesDisplaySettingField = document.querySelector(`.setting-field[name='capturesDisplay']`);
-
-    speakerSettingField = document.querySelector(`.setting-field[name='speaker']`);
+    capturesDisplaySettingField = document.querySelector(`.general-setting-field[name='capturesDisplay']`);
+//////////////////////////////////
+    speakerSettingField = document.querySelector(`.general-setting-field[name='speaker']`);
     speakerVolumeSlider = document.getElementById('slider-speaker-volume');
-    speakerVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
+    speakerVolumeSliderWidth = parseInt(style.getPropertyValue('--gstslider-width'));
     speakerVolumeOverlay = document.getElementById('overlay-speaker-volume');
     speakerVolumeThumb = document.getElementById('thumb-speaker-volume');
-
-    microphoneSettingField = document.querySelector(`.setting-field[name='microphone']`);
+//////////////////////////////
+    microphoneSettingField = document.querySelector(`.general-setting-field[name='microphone']`);
     microphoneVolumeSlider = document.getElementById('slider-microphone-volume');
-    microphoneVolumeSliderWidth = parseInt(style.getPropertyValue('--stslider-width'));
+    microphoneVolumeSliderWidth = parseInt(style.getPropertyValue('--gstslider-width'));
     microphoneVolumeOverlay = document.getElementById('overlay-microphone-volume');
     microphoneVolumeThumb = document.getElementById('thumb-microphone-volume');
 

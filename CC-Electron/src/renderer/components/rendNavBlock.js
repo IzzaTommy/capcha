@@ -79,6 +79,7 @@ function initNavBtnEL() {
 
     // on click, reallow auto recording
     autoRecordResumeLabel.addEventListener('click', () => {
+        console.log('test');
         flags['manualStop'] = false;
         autoRecordResumeLabel.classList.remove('active');
      });
@@ -104,8 +105,8 @@ function initNavToggleBtnEL() {
         }
 
         // hide the resume auto record label, then show it again after 500 ms
-        autoRecordResumeLabel.style.opacity = '0';
-        await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { autoRecordResumeLabel.style.opacity = ''; resolve(); }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
+        autoRecordResumeLabel.classList.remove('active');
+        await attemptAsyncFunction(() => new Promise(resolve => setTimeout(() => { autoRecordResumeLabel.classList.add('active'); resolve(); }, 500)), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
 
         // update all width dependent elements
         updateCapturesGallery();

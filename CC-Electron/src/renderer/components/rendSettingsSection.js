@@ -77,8 +77,8 @@ function initSettingContainerEL() {
     // iterate through each setting toggle switch
     for (const settingToggleSwitch of mostSettingToggleSwitches) {
         // get the setting toggle field and icon
-        let settingToggleField = settingToggleSwitch.querySelector('.setting-toggle-field');
-        let settingToggleIcon = settingToggleSwitch.querySelector('.setting-toggle-icon > use');
+        let settingToggleField = settingToggleSwitch.querySelector('.general-setting-toggle-field');
+        let settingToggleIcon = settingToggleSwitch.querySelector('.general-setting-toggle-icon > use');
 
         // on change, validate the setting, save it, and set the saved value
         settingToggleField.addEventListener('change', async () => {
@@ -203,8 +203,8 @@ async function initSettingContainer() {
     // iterate through each setting toggle switch
     for (const settingToggleSwitch of mostSettingToggleSwitches) {
         // get the setting toggle field and icon
-        let settingToggleField = settingToggleSwitch.querySelector('.setting-toggle-field');
-        let settingToggleIcon = settingToggleSwitch.querySelector('.setting-toggle-icon > use');
+        let settingToggleField = settingToggleSwitch.querySelector('.general-setting-toggle-field');
+        let settingToggleIcon = settingToggleSwitch.querySelector('.general-setting-toggle-icon > use');
 
         // load each settings initial value from stored settings
         settingToggleField.checked = data['settings'][settingToggleField.name];
@@ -292,7 +292,7 @@ function setSpeakerVolumeSlider() {
  * @param {number} thumbLocation - The location of the speaker volume thumb
  */
 function setSpeakerVolumeOverlay(thumbLocation) {
-    speakerVolumeOverlay.style.background = `linear-gradient(to right, var(--stoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+    speakerVolumeOverlay.style.background = `linear-gradient(to right, var(--gstoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 
 /**
@@ -327,7 +327,7 @@ function setMicrophoneVolumeSlider() {
  * @param {number} thumbLocation - The location of the microphone volume thumb
  */
 function setMicrophoneVolumeOverlay(thumbLocation) {
-    microphoneVolumeOverlay.style.background = `linear-gradient(to right, var(--stoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+    microphoneVolumeOverlay.style.background = `linear-gradient(to right, var(--gstoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 
 /**

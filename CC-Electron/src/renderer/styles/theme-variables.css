@@ -13,6 +13,86 @@ html {
     /* color variables */
 }
 
+/* shared variables */
+html {
+    /* ==== crtimelabel -> Current Recording Time Label ==== */
+    --crtimelabel-color: #14dd40;
+
+    /* ==== vtimage -> Video Thumbnail Image ==== */
+    --vtimage-bgcolor: #000000;
+
+    /* ==== vtdurlabel -> Video Thumbnail Duration Label ==== */
+    --vtdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
+    --vtdurlabel-color: #dddddd;
+
+    /* ==== vprenamebtn -> Video Preview Rename Button ==== */
+    --vprenamebtn-bgcolor: #f2a72f;
+
+    /* ==== vpdeletebtn -> Video Preview Delete Button ==== */
+    --vpdeletebtn-bgcolor: #ea2d2d;
+
+    /* ==== vctr -> Video Container ==== */
+    --vctr-bgcolor: #000000;
+
+    /* ==== ppstatusicon -> Play Pause Status Icon ==== */
+    --ppstatusicon-fill: rgba(255, 255, 255, 0.7);
+
+    /* ==== strack -> Seek Track ==== */
+    --strack-bgcolor: rgba(137, 137, 137, 0.4);
+    --strack-lgradientcolor: rgba(220, 220, 220, 0.4);
+
+    /* ==== soverlay -> Seek Overlay ==== */
+    --soverlay-lgradientcolor: #00a9ff;
+
+    /* ==== mbar -> Media Bar ==== */
+    --mbar-lgradientcolor: rgba(0, 0, 0, 0.75);
+
+    /* ==== micon -> Media Icon ==== */
+    --micon-fill: #dddddd;
+    --micon-alt-fill: #ffffff;
+
+    /* ==== vicon -> Volume Icon ==== */
+    --vicon-fill: #ffffff;
+
+    /* ==== prlabel -> Playback Rate Label ==== */
+    --prlabel-color: #dddddd;
+    --prlabel-alt-color: #ffffff;
+
+    /* ==== mtrack-> Media Track ==== */
+    --mtrack-bgcolor: #dddddd;
+
+    /* ==== mthumb -> Media Thumb ==== */
+    --mthumb-bgcolor: #00a9ff;
+
+    /* ==== voverlay -> Volume Overlay ==== */
+    --voverlay-lgradientcolor: #00a9ff;
+
+
+    /* ==== cvlabel -> Current Video Label ==== */
+    --cvlabel-color: #dddddd;
+
+
+
+    /* ==== cthumb -> Clip Thumb ==== */
+    --cthumb-fill: #b575e9;
+    --cthumb-stroke: #b575e9;
+
+
+
+    /* ==== gsttswitch -> General Setting Toggle Switch ==== */
+    --gsttswitch-alt-bgcolor: #2da347;
+
+    /* ==== gstticon -> General Setting Toggle Icon ==== */
+    --gstticon-alt-fill: #2da347;
+    --gstticon-bgcolor: white;
+
+    /* ==== gstoverlay -> General Setting Overlay ==== */
+    --gstoverlay-lgradientcolor: #00a9ff;
+
+    /* ==== gstthumb -> General Setting Thumb ==== */
+    --gstthumb-bgcolor: #00a9ff;
+}
+
 html[data-theme='dark'] {
     /* ==== sbar -> Scroll Bar ==== */
     --sbar-thumb-bgcolor: #dddddd;
@@ -28,30 +108,30 @@ html[data-theme='dark'] {
 
     --ioverlay-span-color: #dddddd;
     
-    /* ==== istatlabel -> Initialization Status Label ==== */
-    --istatlabel-color: #dddddd;
+    /* ==== istatuslabel -> Initialization Status Label ==== */
+    --istatuslabel-color: #dddddd;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #4a4c51;
 
-    /* ==== gstatlabel -> General Status Label ==== */
-    --gstatlabel-bgcolor: #373737;
-    --gstatlabel-color: #dddddd;
+    /* ==== cstatuslabel -> Content Status Label ==== */
+    --cstatuslabel-bgcolor: #373737;
+    --cstatuslabel-color: #dddddd;
 
-    /* ==== clabel -> Content Label ==== */
-    --clabel-color: #dddddd;
+    /* ==== clabel1 -> Content Label 1 ==== */
+    --clabel1-color: #dddddd;
 
-    /* ==== cdivider -> Content Divider ==== */
-    --cdivider-bgcolor: #a4a4a4;
+    /* ==== cdivider1 -> Content Divider 1 ==== */
+    --cdivider1-bgcolor: #a4a4a4;
 
-    /* ==== sctr1 -> Section Container 1 ==== */
-    --sctr1-bgcolor: #414344;
+    /* ==== cctr1 -> Content Container 1 ==== */
+    --cctr1-bgcolor: #414344;
 
-    /* ==== slabel -> Section Label ==== */
-    --slabel-color: #c9c9c9;
+    /* ==== clabel2 -> Content Label 2 ==== */
+    --clabel2-color: #c9c9c9;
 
-    /* ==== sdivider -> Section Divider ==== */
-    --sdivider-bgcolor: #747474;
+    /* ==== cdivider2 -> Content Divider 2 ==== */
+    --cdivider2-bgcolor: #747474;
 
     /* ==== tbar -> Title Bar ==== */
     --tbar-span-color: #dddddd;
@@ -101,15 +181,12 @@ html[data-theme='dark'] {
     --crlabelctr-bcolor: #575757;
     --crlabelctr-bgcolor: #575757;
 
-    /* ==== crtimelabel -> Current Recording Time Label ==== */
-    --crtimelabel-color: #14dd40;
-
     /* ==== crgamelabel -> Current Recording Game Label ==== */
     --crgamelabel-color: #dddddd;
 
-    /* ==== arreslabel -> Auto Record Resume Label ==== */
-    --arreslabel-color: #88959d;
-    --arreslabel-alt-color: #dddddd;
+    /* ==== arresumelabel -> Auto Record Resume Label ==== */
+    --arresumelabel-color: #88959d;
+    --arresumelabel-alt-color: #dddddd;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-bgcolor: #505050;
@@ -134,56 +211,18 @@ html[data-theme='dark'] {
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #505050;
 
-    /* ==== vdurlabel -> Video Duration Label ==== */
-    --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
-    --vdurlabel-color: #dddddd;
+    /* ==== vpgamelabel -> Video Preview Game Label ==== */
+    --vpgamelabel-color: #dddddd;
 
-    /* ==== vgamelabel -> Video Game Label ==== */
-    --vgamelabel-color: #dddddd;
+    /* ==== vpagelabel -> Video Preview Age Label ==== */
+    --vpagelabel-color: #dddddd;
 
-    /* ==== vagelabel -> Video Age Label ==== */
-    --vagelabel-color: #dddddd;
+    /* ==== vpnamelabel -> Video Preview Name Label ==== */
+    --vpnamelabel-color: #dddddd;
 
-    /* ==== vnamelabel -> Video Name Label ==== */
-    --vnamelabel-color: #dddddd;
-
-    /* ==== vrbtn -> Video Rename Button ==== */
-    --vrbtn-bgcolor: #f2a72f;
-
-    /* ==== vdbtn -> Video Delete Button ==== */
-    --vdbtn-bgcolor: #ea2d2d;
-
-    /* ==== voicon -> Video Options Icon ==== */
-    --voicon-fill: #dddddd;
-    --voicon-alt-fill: white;
-
-    /* ==== ppoverlayicon -> Play Pause Overlay Icon ==== */
-    --ppoverlayicon-fill: rgba(255, 255, 255, 0.7);
-
-    /* ==== strack -> Seek Track ==== */
-    --strack-bgcolor: rgba(137, 137, 137, 0.4);
-    --strack-lgradientcolor: rgba(220, 220, 220, 0.4);
-
-    /* ==== soverlay -> Seek Overlay ==== */
-    --soverlay-lgradientcolor: #00a9ff;
-
-    /* ==== mbar -> Media Bar ==== */
-    --mbar-lgradientcolor: rgba(0, 0, 0, 0.75);
-
-    /* ==== micon -> Media Icon ==== */
-    --micon-fill: #dddddd;
-
-    /* ==== prlabel -> Playback Rate Label ==== */
-    --prlabel-color: #dddddd;
-
-    /* ==== mtrack-> Media Track ==== */
-    --mtrack-bgcolor: #dddddd;
-
-    /* ==== mthumb -> Media Thumb ==== */
-    --mthumb-bgcolor: #00a9ff;
-
-    /* ==== voverlay -> Volume Overlay ==== */
-    --voverlay-lgradientcolor: #00a9ff;
+    /* ==== vpicon -> Video Preview Icon ==== */
+    --vpicon-fill: #dddddd;
+    --vpicon-alt-fill: white;
 
     /* ==== proverlay -> Playback Rate Overlay ==== */
     --proverlay-fill: #363636;
@@ -192,8 +231,11 @@ html[data-theme='dark'] {
     --proverlay-text-fill: #dddddd;
     --proverlay-text-stroke: #dddddd;
 
-    /* ==== cvlabel -> Current Video Label ==== */
-    --cvlabel-color: #dddddd;
+
+
+
+
+
 
     /* ==== ttrack -> Timeline Track ==== */
     --ttrack-bgcolor: #373737;
@@ -208,38 +250,43 @@ html[data-theme='dark'] {
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #dddddd;
 
-    /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-fill: #b575e9;
-    --cthumb-stroke: #b575e9;
+
+
+
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #414344;
     --cctr-bgcolor: #373737;
 
-    /* ==== cicon -> Clip Icon ==== */
-    --cicon-fill: #dddddd;
+    --cctr-svg-fill: #dddddd;
 
-    /* ==== cstpill -> Clip Setting Pill ==== */
-    --cstpill-bcolor: transparent;
-    --cstpill-bgcolor: #3c3c3c;
+    /* ==== cstctr -> Clip Setting Container ==== */
+    --cstctr-bcolor: transparent;
+    --cstctr-bgcolor: #3c3c3c;
 
     /* ==== cstlabel -> Clip Setting Label ==== */
     --cstlabel-color: #dddddd;
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-bgcolor: #373737;
+
+    /* ==== csticon -> Clip Setting Icon ==== */
+    --csticon-fill: #dddddd;
 
     /* ==== cstfield -> Clip Setting Field ==== */
     --cstfield-bgcolor: #5a5a5a;
     --cstfield-color: #dddddd;
 
-    /* ==== cobtn -> Clip Options Button ==== */
-    --cobtn-bcolor: #575757;
-    --cobtn-bgcolor: #373737;
-    --cobtn-alt-bgcolor: #575757;
+    /* ==== cbtn -> Clip Button ==== */
+    --cbtn-bcolor: #575757;
+    --cbtn-bgcolor: #373737;
+    --cbtn-alt-bgcolor: #575757;
 
-    /* ==== coicon -> Clip Options Icon ==== */
-    --coicon-fill: #dddddd;
+    /* ==== cicon -> Clip Icon ==== */
+    --cicon-fill: #dddddd;
 
-    /* ==== colabel -> Clip Options Label ==== */
-    --colabel-color: #dddddd;
+    /* ==== clabel -> Clip Label ==== */
+    --clabel-color: #dddddd;
 
     /* ==== ctbtn -> Clip Toggle Button ==== */
     --ctbtn-bgcolor: #505050;
@@ -247,57 +294,48 @@ html[data-theme='dark'] {
     /* ==== cticon -> Clip Toggle Icon ==== */
     --cticon-fill: #dddddd;
 
-    /* ==== stctr -> Setting Container ==== */
-    --stctr-bcolor: transparent;
-    --stctr-bgcolor: #3c3c3c;
+    /* ==== gstctr -> General Setting Container ==== */
+    --gstctr-bcolor: transparent;
+    --gstctr-bgcolor: #3c3c3c;
 
-    /* ==== stlabel -> Setting Label ==== */
-    --stlabel-color: #dddddd;
+    /* ==== gstlabel -> General Setting Label ==== */
+    --gstlabel-color: #dddddd;
 
-    /* ==== stpill -> Setting Pill ==== */
-    --stpill-bgcolor: #373737;
+    /* ==== gstpill -> General Setting Pill ==== */
+    --gstpill-bgcolor: #373737;
 
-    /* ==== sticon -> Setting Icon ==== */
-    --sticon-fill: #dddddd;
+    /* ==== gsticon -> General Setting Icon ==== */
+    --gsticon-fill: #dddddd;
 
-    /* ==== stfield -> Setting Field ==== */
-    --stfield-bgcolor: #5a5a5a;
-    --stfield-color: #dddddd;
+    /* ==== gstfield -> General Setting Field ==== */
+    --gstfield-bgcolor: #5a5a5a;
+    --gstfield-color: #dddddd;
 
-    /* ==== sttswitch -> Setting Toggle Switch ==== */
-    --sttswitch-bgcolor: #5a5a5a;
-    --sttswitch-alt-bgcolor: #2da347;
+    /* ==== gsttswitch -> General Setting Toggle Switch ==== */
+    --gsttswitch-bgcolor: #5a5a5a;
 
-    /* ==== sttfield -> Setting Toggle Field ==== */
-    --sttfield-bgcolor: #5a5a5a;
-    --sttfield-color: #dddddd;
+    /* ==== gsttfield -> General Setting Toggle Field ==== */
+    --gsttfield-bgcolor: #5a5a5a;
+    --gsttfield-color: #dddddd;
 
-    /* ==== stticon -> Setting Toggle Icon ==== */
-    --stticon-bgcolor: white;
-    --stticon-fill: #5a5a5a;
-    --stticon-alt-fill: #2da347;
+    /* ==== gstticon -> General Setting Toggle Icon ==== */
+    --gstticon-fill: #5a5a5a;
 
-    /* ==== stsliderctr -> Setting Slider Container ==== */
-    --stsliderctr-bgcolor: #5a5a5a;
+    /* ==== gstsliderctr -> General Setting Slider Container ==== */
+    --gstsliderctr-bgcolor: #5a5a5a;
 
-    /* ==== sttrack -> Setting Track ==== */
-    --sttrack-bgcolor: #dddddd;
+    /* ==== gsttrack -> General Setting Track ==== */
+    --gsttrack-bgcolor: #dddddd;
 
-    /* ==== stoverlay -> Setting Overlay ==== */
-    --stoverlay-lgradientcolor: #00a9ff;
-
-    /* ==== stthumb -> Setting Thumb ==== */
-    --stthumb-bgcolor: #00a9ff;
-
-    /* ==== stdesc -> Setting Description ==== */
-    --stdesc-color: #dddddd;
+    /* ==== gstdesc -> General Setting Description ==== */
+    --gstdesc-color: #dddddd;
 }
 
 
 html[data-theme='light'] {
     /* ==== sbar -> Scroll Bar ==== */
     --sbar-thumb-bgcolor: #cccccc;
-    --sbar-thumb-alt-bgcolor: white;
+    --sbar-thumb-alt-bgcolor: #aaaaaa;
 
     /* ==== body -> Body ==== */
     --body-bgcolor: white;
@@ -309,30 +347,30 @@ html[data-theme='light'] {
 
     --ioverlay-span-color: #363636;
 
-    /* ==== istatlabel -> Initialization Status Label ==== */
-    --istatlabel-color: #363636;
+    /* ==== istatuslabel -> Initialization Status Label ==== */
+    --istatuslabel-color: #363636;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #f2f2f2;
 
-    /* ==== gstatlabel -> General Status Label ==== */
-    --gstatlabel-bgcolor: #f2f2f2;
-    --gstatlabel-color: #363636;
+    /* ==== cstatuslabel -> Content Status Label ==== */
+    --cstatuslabel-bgcolor: #f2f2f2;
+    --cstatuslabel-color: #363636;
 
-    /* ==== clabel -> Content Label ==== */
-    --clabel-color: #363636;
+    /* ==== clabel1 -> Content Label 1 ==== */
+    --clabel1-color: #363636;
 
-    /* ==== cdivider -> Content Divider ==== */
-    --cdivider-bgcolor: #d0d0d0;
+    /* ==== cdivider1 -> Content Divider 1 ==== */
+    --cdivider1-bgcolor: #d0d0d0;
 
-    /* ==== sctr1 -> Section Container 1 ==== */
-    --sctr1-bgcolor: transparent;
+    /* ==== cctr1 -> Content Container 1 ==== */
+    --cctr1-bgcolor: transparent;
 
-    /* ==== slabel -> Section Label ==== */
-    --slabel-color: #808080;
+    /* ==== clabel2 -> Content Label 2 ==== */
+    --clabel2-color: #808080;
 
-    /* ==== sdivider -> Section Divider ==== */
-    --sdivider-bgcolor: transparent;
+    /* ==== cdivider2 -> Content Divider 2 ==== */
+    --cdivider2-bgcolor: transparent;
 
     /* ==== tbar -> Title Bar ==== */
     --tbar-span-color: #363636;
@@ -365,7 +403,7 @@ html[data-theme='light'] {
     --rbtn-bgcolor: #f2f2f2;
     --rbtn-alt-bgcolor: #dbdbdb;
     --rbtn-alt2-bgcolor: #dddddd;
-    --rbtn-alt3-bgcolor: white;
+    --rbtn-alt3-bgcolor: #ffffff;
 
     --rbtn-span-color: #363636;
 
@@ -382,15 +420,12 @@ html[data-theme='light'] {
     --crlabelctr-bcolor: #dbdbdb;
     --crlabelctr-bgcolor: #dbdbdb;
 
-    /* ==== crtimelabel -> Current Recording Time Label ==== */
-    --crtimelabel-color: #14dd40;
-
     /* ==== crgamelabel -> Current Recording Game Label ==== */
     --crgamelabel-color: #363636;
 
-    /* ==== arreslabel -> Auto Record Resume Label ==== */
-    --arreslabel-color: #88959d;
-    --arreslabel-alt-color: #363636;
+    /* ==== arresumelabel -> Auto Record Resume Label ==== */
+    --arresumelabel-color: #88959d;
+    --arresumelabel-alt-color: #363636;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-bgcolor: #dfe1e5;
@@ -415,56 +450,18 @@ html[data-theme='light'] {
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #dfe1e5;
 
-    /* ==== vdurlabel -> Video Duration Label ==== */
-    --vdurlabel-bgcolor: rgba(0, 0, 0, 0.84);
-    --vdurlabel-color: #dddddd;
+    /* ==== vpgamelabel -> Video Preview Game Label ==== */
+    --vpgamelabel-color: #1a69e0;
 
-    /* ==== vgamelabel -> Video Game Label ==== */
-    --vgamelabel-color: #1a69e0;
+    /* ==== vpagelabel -> Video Preview Age Label ==== */
+    --vpagelabel-color: #1a69e0;
 
-    /* ==== vagelabel -> Video Age Label ==== */
-    --vagelabel-color: #1a69e0;
+    /* ==== vpnamelabel -> Video Preview Name Label ==== */
+    --vpnamelabel-color: #363636;
 
-    /* ==== vnamelabel -> Video Name Label ==== */
-    --vnamelabel-color: #363636;
-
-    /* ==== vrbtn -> Video Rename Button ==== */
-    --vrbtn-bgcolor: #f2a72f;
-
-    /* ==== vdbtn -> Video Delete Button ==== */
-    --vdbtn-bgcolor: #ea2d2d;
-
-    /* ==== voicon -> Video Options Icon ==== */
-    --voicon-fill: #363636;
-    --voicon-alt-fill: white;
-
-    /* ==== ppoverlayicon -> Play Pause Overlay Icon ==== */
-    --ppoverlayicon-fill: rgba(255, 255, 255, 0.7);
-
-    /* ==== strack -> Seek Track ==== */
-    --strack-bgcolor: rgba(137, 137, 137, 0.4);
-    --strack-lgradientcolor: rgba(220, 220, 220, 0.4);
-
-    /* ==== soverlay -> Seek Overlay ==== */
-    --soverlay-lgradientcolor: #00a9ff;
-
-    /* ==== mbar -> Media Bar ==== */
-    --mbar-lgradientcolor: rgba(0, 0, 0, 0.75);
-
-    /* ==== micon -> Media Icon ==== */
-    --micon-fill: #dddddd;
-
-    /* ==== prlabel -> Playback Rate Label ==== */
-    --prlabel-color: #dddddd;
-
-    /* ==== mtrack-> Media Track ==== */
-    --mtrack-bgcolor: #dddddd;
-
-    /* ==== mthumb -> Media Thumb ==== */
-    --mthumb-bgcolor: #00a9ff;
-
-    /* ==== voverlay -> Volume Overlay ==== */
-    --voverlay-lgradientcolor: #00a9ff;
+    /* ==== vpicon -> Video Preview Icon ==== */
+    --vpicon-fill: #363636;
+    --vpicon-alt-fill: white;
 
     /* ==== proverlay -> Playback Rate Overlay ==== */
     --proverlay-fill: #dddddd;
@@ -473,8 +470,11 @@ html[data-theme='light'] {
     --proverlay-text-fill: #dddddd;
     --proverlay-text-stroke: #dddddd;
 
-    /* ==== cvlabel -> Current Video Label ==== */
-    --cvlabel-color: #dddddd;
+
+
+
+
+
 
     /* ==== ttrack -> Timeline Track ==== */
     --ttrack-bgcolor: #dfe1e5;
@@ -489,38 +489,43 @@ html[data-theme='light'] {
     /* ==== tthumb -> Timeline Thumb ==== */
     --tthumb-bgcolor: #1a69e0;
 
-    /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-fill: #b575e9;
-    --cthumb-stroke: #b575e9;
+
+
+
 
     /* ==== cctr -> Clip Container ==== */
     --cctr-bcolor: #dfe1e5;
     --cctr-bgcolor: transparent;
 
-    /* ==== cicon -> Clip Icon ==== */
-    --cicon-fill: #363636;
+    --cctr-svg-fill: #363636;
 
-    /* ==== cstpill -> Clip Setting Pill ==== */
-    --cstpill-bcolor: #d2dade;
-    --cstpill-bgcolor: transparent;
+    /* ==== cstctr -> Clip Setting Container ==== */
+    --cstctr-bcolor: #d2dade;
+    --cstctr-bgcolor: transparent;
 
     /* ==== cstlabel -> Clip Setting Label ==== */
     --cstlabel-color: #1a69e0;
+
+    /* ==== cstpill -> Clip Setting Pill ==== */
+    --cstpill-bgcolor: #dfe1e5;
+
+    /* ==== csticon -> Clip Setting Icon ==== */
+    --csticon-fill: #363636;
 
     /* ==== cstfield -> Clip Setting Field ==== */
     --cstfield-bgcolor: #dfe1e5;
     --cstfield-color: #363636;
 
-    /* ==== cobtn -> Clip Options Button ==== */
-    --cobtn-bcolor: #dbdbdb;
-    --cobtn-bgcolor: #f2f2f2;
-    --cobtn-alt-bgcolor: #dbdbdb;
+    /* ==== cbtn -> Clip Button ==== */
+    --cbtn-bcolor: #dbdbdb;
+    --cbtn-bgcolor: #f2f2f2;
+    --cbtn-alt-bgcolor: #dbdbdb;
 
-    /* ==== coicon -> Clip Options Icon ==== */
-    --coicon-fill: #363636;
+    /* ==== cicon -> Clip Icon ==== */
+    --cicon-fill: #363636;
 
-    /* ==== colabel -> Clip Options Label ==== */
-    --colabel-color: #363636;
+    /* ==== clabel -> Clip Label ==== */
+    --clabel-color: #363636;
 
     /* ==== ctbtn -> Clip Toggle Button ==== */
     --ctbtn-bgcolor: #dfe1e5;
@@ -528,50 +533,41 @@ html[data-theme='light'] {
     /* ==== cticon -> Clip Toggle Icon ==== */
     --cticon-fill: #1a69e0;
 
-    /* ==== stctr -> Setting Container ==== */
-    --stctr-bcolor: #d2dade;
-    --stctr-bgcolor: transparent;
+    /* ==== gstctr -> General Setting Container ==== */
+    --gstctr-bcolor: #d2dade;
+    --gstctr-bgcolor: transparent;
 
-    /* ==== stlabel -> Setting Label ==== */
-    --stlabel-color: #1a69e0;
+    /* ==== gstlabel -> General Setting Label ==== */
+    --gstlabel-color: #1a69e0;
 
-    /* ==== stpill -> Setting Pill ==== */
-    --stpill-bgcolor: #c4c7cc;
+    /* ==== gstpill -> General Setting Pill ==== */
+    --gstpill-bgcolor: #c4c7cc;
 
-    /* ==== sticon -> Setting Icon ==== */
-    --sticon-fill: #363636;
+    /* ==== gsticon -> General Setting Icon ==== */
+    --gsticon-fill: #363636;
 
-    /* ==== stfield -> Setting Field ==== */
-    --stfield-bgcolor: #dfe1e5;
-    --stfield-color: #363636;
+    /* ==== gstfield -> General Setting Field ==== */
+    --gstfield-bgcolor: #dfe1e5;
+    --gstfield-color: #363636;
 
-    /* ==== sttswitch -> Setting Toggle Switch ==== */
-    --sttswitch-bgcolor: #dfe1e5;
-    --sttswitch-alt-bgcolor: #2da347;
+    /* ==== gsttswitch -> General Setting Toggle Switch ==== */
+    --gsttswitch-bgcolor: #dfe1e5;
 
-    /* ==== sttfield -> Setting Toggle Field ==== */
-    --sttfield-bgcolor: #dfe1e5;
-    --sttfield-color: #363636;
+    /* ==== gsttfield -> General Setting Toggle Field ==== */
+    --gsttfield-bgcolor: #dfe1e5;
+    --gsttfield-color: #363636;
 
-    /* ==== stticon -> Setting Toggle Icon ==== */
-    --stticon-bgcolor: white;
-    --stticon-fill: #acb5c4;
-    --stticon-alt-fill: #2da347;
+    /* ==== gstticon -> General Setting Toggle Icon ==== */
+    --gstticon-fill: #acb5c4;
 
-    /* ==== stsliderctr -> Setting Slider Container ==== */
-    --stsliderctr-bgcolor: #dfe1e5;
+    /* ==== gstsliderctr -> General Setting Slider Container ==== */
+    --gstsliderctr-bgcolor: #dfe1e5;
 
-    /* ==== sttrack -> Setting Track ==== */
-    --sttrack-bgcolor: #dddddd;
+    /* ==== gsttrack -> General Setting Track ==== */
+    --gsttrack-bgcolor: #dddddd;
 
-    /* ==== stoverlay -> Setting Overlay ==== */
-    --stoverlay-lgradientcolor: #00a9ff;
-
-    /* ==== stthumb -> Setting Thumb ==== */
-    --stthumb-bgcolor: #00a9ff;
-
-    /* ==== stdesc -> Setting Description ==== */
-    --stdesc-color: #363636;
+    /* ==== gstdesc -> General General Setting Description ==== */
+    --gstdesc-color: #363636;
 }
 
 html {
@@ -581,34 +577,36 @@ html {
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
 
-    /* ==== gstatlabel -> General Status Label ==== */
-    --gstatlabel-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
-    --gstatlabel-alt-transition: opacity 0.5s ease 0s;
+    /* ==== cstatuslabel -> Content Status Label ==== */
+    --cstatuslabel-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
+    --cstatuslabel-alt-transition: opacity 0.5s ease 0s;
 
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-transition: width 0.3s ease 0.2s;
     --nbar-alt-transition: width 0.3s ease 0.2s;
 
     /* ==== ldisplay -> Logo Display ==== */
-    --ldisplay-h1-transition: opacity 0.2s ease 0s;
+    --ldisplay-h1-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s;
     --ldisplay-h1-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== nbtn -> Nav(igation) Button ==== */
     --nbtn-transition: background-color 0.3s ease 0s;
 
     /* ==== nlabel -> Nav(igation) Label ==== */
-    --nlabel-transition: opacity 0.2s ease 0s;
+    --nlabel-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s;
     --nlabel-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== crlabelctr -> Current Recording Label Container ==== */
-    --crlabelctr-transition: bottom 0.3s ease 0s;
+    --crlabelctr-transition: bottom 0.3s ease 0s, visibility 0s ease 0.3s;
+    --crlabelctr-alt-transition: bottom 0.3s ease 0s;
 
     /* ==== crgamelabel -> Current Recording Game Label ==== */
-    --crgamelabel-transition: opacity 0.2s ease 0s;
+    --crgamelabel-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s;
     --crgamelabel-alt-transition: opacity 0.2s ease 0.5s;
 
-    /* ==== arreslabel -> Auto Record Resume Label ==== */
-    --arreslabel-transition: color 0.3s ease 0s, opacity 0.2s ease 0s;
+    /* ==== arresumelabel -> Auto Record Resume Label ==== */
+    --arresumelabel-transition: color 0.3s ease 0s, opacity 0.3s ease 0s;
+    --arresumelabel-alt-transition: opacity 0.3s ease 0s;
 
     /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
     --ntbtn-transition: background-color 0.3s ease 0s;
@@ -619,11 +617,11 @@ html {
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-transition: background-color 0.2s ease 0s;
 
-    /* ==== vobtn -> Video Options Button ==== */
-    --vobtn-transition: background-color 0.2s ease 0s;
+    /* ==== vpbtn -> Video Preview Button ==== */
+    --vpbtn-transition: background-color 0.2s ease 0s;
 
-    /* ==== voicon -> Video Options Icon ==== */
-    --voicon-transition: fill 0.2s ease 0s;
+    /* ==== vpicon -> Video Preview Icon ==== */
+    --vpicon-transition: fill 0.2s ease 0s;
 
     /* ==== pctr -> Playback Container ==== */
     --pctr-transition: opacity 0.2s ease 0s;
@@ -642,25 +640,28 @@ html {
 
     /* ==== cbar -> Clip Bar ==== */
     --cbar-transition: width 0.3s ease 0.2s;
-    --cbar-alt-transition: width 0.3s ease 0s;
+    --cbar-alt-transition: width 0.3s ease 0.2s;
+    /* --cbar-alt-transition: width 0.3s ease 0s; */
 
-    /* ==== cstpill -> Clip Setting Pill ==== */
-    --cstpill-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
-    --cstpill-alt-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0.3s;
+    /* ==== cstctr -> Clip Setting Container ==== */
+    --cstctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cstctr-alt-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0.5s;
+    /* --cstctr-alt-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0.3s; */
 
-    /* ==== cobtn -> Clip Options Button ==== */
-    --cobtn-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
-    --cobtn-alt-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0.3s;
+    /* ==== cbtn -> Clip Button ==== */
+    --cbtn-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cbtn-alt-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0.5s;
+    /* --cbtn-alt-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0.3s; */
     
     /* ==== ctbtn -> Clip Toggle Button ==== */
     --ctbtn-transition: background-color 0.3s ease 0s;
 
-    /* ==== stctr -> Setting Container ==== */
-    --stctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;
+    /* ==== gstctr -> General Setting Container ==== */
+    --gstctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;
 
-    /* ==== sttswitch -> Setting Toggle Switch ==== */
-    --sttswitch-transition: background-color 0.3s ease 0s;
+    /* ==== gsttswitch -> General Setting Toggle Switch ==== */
+    --gsttswitch-transition: background-color 0.3s ease 0s;
 
-    /* ==== stticon -> Setting Toggle Icon ==== */
-    --stticon-transition: transform 0.3s ease 0s;
+    /* ==== gstticon -> General Setting Toggle Icon ==== */
+    --gstticon-transition: transform 0.3s ease 0s;
 }

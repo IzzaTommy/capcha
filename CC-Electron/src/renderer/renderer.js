@@ -60,4 +60,8 @@ async function finishInit() {
     window.windowAPI.reqToggleAutoRecord();
     titleBar.style.webkitAppRegion = 'drag';
     initializationOverlay.classList.remove('active');
+
+    document.querySelector('#view-btn-clip').addEventListener('click', () => {
+        console.log('test');
+    });
 }

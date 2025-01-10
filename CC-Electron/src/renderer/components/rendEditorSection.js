@@ -840,32 +840,32 @@ function setVideoPlayerState(action) {
         case 'play':
             // play the video, change the icon to pause, hide the overlay
             setIcon(playPauseIcon, 'pause-solid');
-            playPauseOverlayIcon.style.opacity = '';
+            playPauseOverlayIcon.classList.remove('active');
             videoPlayer.play();
             break;
         case 'pause':
             // pause the video, change the icon to play, show the overlay
             setIcon(playPauseIcon, 'play-arrow-solid');
-            playPauseOverlayIcon.style.opacity = '1';
+            playPauseOverlayIcon.classList.add('active');
             videoPlayer.pause();
             break;
         case 'toggle':
             // play/pause the video, change the icon to the opposite, toggle the overlay
             if (videoPlayer.paused || videoPlayer.ended) {
                 setIcon(playPauseIcon, 'pause-solid');
-                playPauseOverlayIcon.style.opacity = '';
+                playPauseOverlayIcon.classList.remove('active');
                 videoPlayer.play();
             }
             else {
                 setIcon(playPauseIcon, 'play-arrow-solid');
-                playPauseOverlayIcon.style.opacity = '1';
+                playPauseOverlayIcon.classList.add('active');
                 videoPlayer.pause();
             }
             break;
         case 'standby':
             // pause the video, change the icon to pause, hide the overlay
             setIcon(playPauseIcon, 'pause-solid');
-            playPauseOverlayIcon.style.opacity = '';
+            playPauseOverlayIcon.classList.remove('active');
             videoPlayer.pause();
             break;
         default:

@@ -140,23 +140,23 @@ async function loadCapturesGallery(initialization) {
             // get a clone of the video preview template
             let videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
             let videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
-            let videoRenameBtn = videoPreviewClone.querySelector('.video-rename-btn');
-            let videoRenameIcon = videoPreviewClone.querySelector('.video-rename-icon > use');
-            let videoDeleteBtn = videoPreviewClone.querySelector('.video-delete-btn');
-            let videoDeleteIcon = videoPreviewClone.querySelector('.video-delete-icon > use');
+            let videoRenameBtn = videoPreviewClone.querySelector('.video-preview-rename-btn');
+            let videoRenameIcon = videoPreviewClone.querySelector('.video-preview-rename-icon > use');
+            let videoDeleteBtn = videoPreviewClone.querySelector('.video-preview-delete-btn');
+            let videoDeleteIcon = videoPreviewClone.querySelector('.video-preview-delete-icon > use');
 
             // set the video source
             videoPreviewContainer.dataset.src = captureData['path'];
             // set the video thumbnail source
-            videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', captureData['thumbnailPath']);
+            videoPreviewClone.querySelector('.video-thumbnail-image').setAttribute('src', captureData['thumbnailPath']);
             // set the video duration
-            videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(captureData['duration']);
+            videoPreviewClone.querySelector('.video-thumbnail-duration-label').textContent = getReadableDuration(captureData['duration']);
             // set the video game
-            videoPreviewClone.querySelector('.video-game-label').textContent = `${captureData['game']}`;
+            videoPreviewClone.querySelector('.video-preview-game-label').textContent = `${captureData['game']}`;
             // set the video age
-            videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - captureData['created']) / MSECONDS_IN_SECOND)}`;
+            videoPreviewClone.querySelector('.video-preview-age-label').textContent = `${getReadableAge((currentDate - captureData['created']) / MSECONDS_IN_SECOND)}`;
             // set the video name with extension
-            videoPreviewClone.querySelector('.video-name-label').textContent = captureData['nameExt'];
+            videoPreviewClone.querySelector('.video-preview-name-label').textContent = captureData['nameExt'];
 
             // on click, open the video in the editor section
             videoPreviewContainer.addEventListener('click', () => {
@@ -255,23 +255,23 @@ async function loadClipsGallery(initialization) {
             // get a clone of the video preview template
             let videoPreviewClone = videoPreviewTemplate.content.cloneNode(true);
             let videoPreviewContainer = videoPreviewClone.querySelector('.video-preview-ctr');
-            let videoRenameBtn = videoPreviewClone.querySelector('.video-rename-btn');
-            let videoRenameIcon = videoPreviewClone.querySelector('.video-rename-icon > use');
-            let videoDeleteBtn = videoPreviewClone.querySelector('.video-delete-btn');
-            let videoDeleteIcon = videoPreviewClone.querySelector('.video-delete-icon > use');
+            let videoRenameBtn = videoPreviewClone.querySelector('.video-preview-rename-btn');
+            let videoRenameIcon = videoPreviewClone.querySelector('.video-preview-rename-icon > use');
+            let videoDeleteBtn = videoPreviewClone.querySelector('.video-preview-delete-btn');
+            let videoDeleteIcon = videoPreviewClone.querySelector('.video-preview-delete-icon > use');
 
             // set the video source
             videoPreviewContainer.dataset.src = clipData['path'];
             // set the video thumbnail source
-            videoPreviewClone.querySelector('.video-thumbnail').setAttribute('src', clipData['thumbnailPath']);
+            videoPreviewClone.querySelector('.video-thumbnail-image').setAttribute('src', clipData['thumbnailPath']);
             // set the video duration
-            videoPreviewClone.querySelector('.video-duration-label').textContent = getReadableDuration(clipData['duration']);
+            videoPreviewClone.querySelector('.video-thumbnail-duration-label').textContent = getReadableDuration(clipData['duration']);
             // set the video game
-            videoPreviewClone.querySelector('.video-game-label').textContent = `${clipData['game']}`;
+            videoPreviewClone.querySelector('.video-preview-game-label').textContent = `${clipData['game']}`;
             // set the video age
-            videoPreviewClone.querySelector('.video-age-label').textContent = `${getReadableAge((currentDate - clipData['created']) / MSECONDS_IN_SECOND)}`;
+            videoPreviewClone.querySelector('.video-preview-age-label').textContent = `${getReadableAge((currentDate - clipData['created']) / MSECONDS_IN_SECOND)}`;
             // set the video name with extension
-            videoPreviewClone.querySelector('.video-name-label').textContent = clipData['nameExt'];
+            videoPreviewClone.querySelector('.video-preview-name-label').textContent = clipData['nameExt'];
 
             // on click, open the video in the editor section
             videoPreviewContainer.addEventListener('click', () => {

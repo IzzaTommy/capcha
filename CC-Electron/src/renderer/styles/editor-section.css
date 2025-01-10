@@ -1,7 +1,5 @@
 #ctr1-editor {
     align-items: center;
-
-    visibility: inherit;
 }
 
 #ctr-video {
@@ -12,37 +10,41 @@
     height: var(--vctr-height);
     width: var(--vctr-width);
 
-    background-color: #000000;
+    background-color: var(--vctr-bgcolor);
 
     cursor: pointer;
-    overflow: hidden;
 }
 
 #player-video {
+    border-radius: inherit;
     display: block;
     height: 100%;
     width: 100%;
 }
 
-#overlay-icon-play-pause {
+#status-icon-play-pause {
     inset: 0;
     position: absolute;
 
     display: block;
-    height: var(--ppoverlayicon-length);
+    height: var(--ppstatusicon-length);
     margin: auto;
-    width: var(--ppoverlayicon-length);
+    width: var(--ppstatusicon-length);
 
-    fill: var(--ppoverlayicon-fill);
-    opacity: 0;
+    fill: var(--ppstatusicon-fill);
+    visibility: hidden;
+}
 
-    pointer-events: none;
+#status-icon-play-pause.active {
+    visibility: inherit;
 }
 
 #ctr-playback {
     inset: auto 0 0;
     position: absolute;
 
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
     display: flex;
     flex-flow: column nowrap;
     
@@ -72,8 +74,6 @@
 
     background-color: var(--strack-bgcolor);
     transition: var(--strack-transition);
-
-    overflow: hidden;
 }
 
 #slider-seek:hover > #track-seek {
@@ -93,16 +93,20 @@
 
 #bar-media {
     align-items: center;
+
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
+    padding-top: var(--mbar-tpadding);
     padding-bottom: var(--mbar-bpadding);
 
     background: linear-gradient(to top, var(--mbar-lgradientcolor), transparent);
 }
 
 .media-btn {
-    border-radius: var(--mbtn-bradius);
+    /* border-radius: var(--mbtn-bradius); */
     flex: 0 0 fit-content;
     margin-right: var(--mbtn-hmargin);
     margin-left: var(--mbtn-hmargin);
@@ -122,6 +126,8 @@
     display: flex;
     flex-flow: row nowrap;
     margin-left: 0;
+    padding-top: var(--prbtn-vpadding);
+    padding-bottom: var(--prbtn-vpadding);
 }
 
 .media-icon {
@@ -135,11 +141,11 @@
 }
 
 .media-btn:hover > .media-icon {
-    fill: #ffffff;
+    fill: var(--micon-alt-fill);
 }
 
-#btn-volume:has(+ #slider-volume:hover) > .media-icon {
-    fill: #ffffff;
+#btn-volume:has(+ #slider-ctr-volume:hover) > #icon-volume {
+    fill: var(--vicon-fill);
 }
 
 .playback-rate-label {
@@ -150,45 +156,35 @@
     font-weight: var(--prlabel-fweight);
 }
 
-.media-btn:hover > .playback-rate-label {
-    color: #ffffff;
+#btn-playback-rate:hover > .playback-rate-label {
+    color: var(--prlabel-alt-color);
 }
 
-#slider-playback-rate:hover + #btn-playback-rate > .playback-rate-label {
-    color: #ffffff;
+#slider-ctr-playback-rate:hover + #btn-playback-rate > .playback-rate-label {
+    color: var(--prlabel-alt-color);
 }
 
-#label-playback-rate {
-    padding-top: var(--prlabel-vpadding);
-    padding-bottom: var(--prlabel-vpadding);
-    padding-left: var(--prlabel-lpadding);
-    width: var(--prlabel-width);
+#value-label-playback-rate {
+    width: var(--prvaluelabel-width);
 }
-
-#multiplier-label-playback-rate {
-    padding-top: var(--prmultlabel-vpadding);
-    padding-right: var(--prmultlabel-rpadding);
-    padding-bottom: var(--prmultlabel-vpadding);
-}
-
-
-
 
 .media-slider-ctr {
-    padding-left: 2px;
-    padding-right: 2px;
+    flex: 0 0 fit-content;
+
     overflow: hidden;
 }
 
-.media-slider-ctr:has(> #slider-playback-rate) {
-    padding-left: 7px;
-    padding-right: 3px;
-    overflow: hidden;
+#slider-ctr-volume {
+    padding-right: var(--vsliderctr-hpadding);
+    padding-left: var(--vsliderctr-hpadding);
+}
+
+#slider-ctr-playback-rate {
+    padding-right: var(--prsliderctr-rpadding);
+    padding-left: var(--prsliderctr-lpadding);
 }
 
 .media-slider {
-    /* border-radius: var(--mslider-bradius); */
-    flex: 0 0 auto;
     height: var(--mslider-height);
     padding-top: var(--mslider-vpadding);
     padding-bottom: var(--mslider-vpadding);
@@ -210,7 +206,7 @@
 .media-overlay {
     position: absolute;
 
-    border-radius: var(--moverlay-bradius);
+    border-radius: inherit;
     visibility: hidden;
     transition: visibility 0s ease 0.1s;
 }
@@ -236,17 +232,14 @@
     width: var(--mthumb-width);
 }
 
-
-
 #slider-volume.active {
     width: var(--vslider-width);
 }
 
 #overlay-volume {
     height: 100%;
-    width: 100px;
+    width: var(--voverlay-width);
 }
-
 
 #slider-playback-rate.active {
     width: var(--prslider-width);
@@ -254,11 +247,9 @@
 
 #overlay-playback-rate {
     bottom: 0;
-    /* left: var(--proverlay-linset); */
-    left: -7px;
+    left: var(--proverlay-linset);
 
     height: var(--proverlay-height);
-    /* width: 0; */
     width: var(--proverlay-width);
 
     fill: var(--proverlay-fill);
@@ -274,14 +265,6 @@
     font-weight: var(--proverlay-text-fweight);
     stroke: var(--proverlay-text-stroke);
 }
-
-/* #slider-playback-rate.active > #track-playback-rate > #overlay-playback-rate {
-    width: var(--proverlay-width);
-} */
-
-
-
-
 
 #label-ctr-current-video {
     justify-content: end;
@@ -314,7 +297,7 @@
 #track-timeline {
     position: relative;
 
-    border-radius: var(--ttrack-bradius);
+    border-radius: inherit;
     height: 100%;
 
     background-color: var(--ttrack-bgcolor);
@@ -323,7 +306,7 @@
 #overlay-timeline {
     position: absolute;
 
-    border-radius: var(--toverlay-bradius);
+    border-radius: inherit;
     height: 100%;
     width: 100%;
 
@@ -343,7 +326,6 @@
     position: absolute;
     top: var(--tthumb-tinset);
     left: var(--tthumb-linset);
-    z-index: 1;
 
     border-radius: var(--tthumb-bradius);
     height: var(--tthumb-height);
@@ -368,33 +350,29 @@
 }
 
 .clip-thumb.active {
-    visibility: visible;
+    visibility: inherit;
 }
 
 #ctr-clip {
     border: var(--cctr-bwidth) solid var(--cctr-bcolor);
-
     border-radius: var(--cctr-bradius);
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
     background-color: var(--cctr-bgcolor);
-    overflow: hidden;
     visibility: inherit;
 }
 
-#icon-clip {
+#ctr-clip > svg {
     display: block;
     flex: 0 0 auto;
-    height: var(--cicon-length);
-    margin-top: auto;
-    margin-right: var(--cicon-rmargin);
-    margin-bottom: auto;
-    margin-left: var(--cicon-lmargin);
-    width: var(--cicon-length);
+    height: var(--cctr-svg-length);
+    margin: auto var(--cctr-svg-rmargin) auto var(--cctr-svg-lmargin);
+
+    width: var(--cctr-svg-length);
     
-    fill: var(--cicon-fill);
+    fill: var(--cctr-svg-fill);
 }
 
 #bar-clip {
@@ -419,33 +397,29 @@
     transition: var(--cbar-alt-transition);
 }
 
-.clip-setting-pill {
-    justify-content: center;
-
-    border: var(--cstpill-bwidth) solid transparent;
-    border-radius: var(--cstpill-bradius);
+.clip-setting-ctr {
+    border: var(--cstctr-bwidth) solid transparent;
+    border-radius: var(--cstctr-bradius);
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--cstpill-vgap);
-    padding: var(--cstpill-vpadding) var(--cstpill-hpadding);
-    width: var(--cstpill-width);
+    gap: var(--cstctr-vgap);
+    padding: var(--cstctr-vpadding) var(--cstctr-hpadding);
 
     opacity: 0;
-    transition: var(--cstpill-transition);
+    transition: var(--cstctr-transition);
     visibility: hidden;
 }
 
-.clip-setting-pill:hover {
-    border-color: var(--cstpill-bcolor);
-
-    background-color: var(--cstpill-bgcolor);
+#bar-clip.active > .clip-setting-ctr {
+    opacity: 1;
+    transition: var(--cstctr-alt-transition);
+    visibility: inherit;
 }
 
-#bar-clip.active > .clip-setting-pill {
-    opacity: 1;
-    transition: var(--cstpill-alt-transition);
-    visibility: inherit;
+.clip-setting-ctr:hover {
+    border-color: var(--cstctr-bcolor);
+    background-color: var(--cstctr-bgcolor);
 }
 
 .clip-setting-label {
@@ -456,67 +430,88 @@
     font-weight: var(--cstlabel-fweight);
 }
 
-.clip-setting-field {
-    border-radius: var(--cstfield-bradius);
+.clip-setting-pill {
+    border-radius: var(--cstpill-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--cstpill-bgcolor);
+}
+
+.clip-setting-icon {
+    display: block;
     flex: 0 0 auto;
-    height: var(--cstfield-height);
+    height: var(--csticon-length);
+    margin: var(--csticon-margin);
+    width: var(--csticon-length);
+
+    fill: var(--csticon-fill);
+}
+
+.clip-setting-field {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    flex: 0 0 auto;
     padding-right: var(--cstfield-hpadding);
     padding-left: var(--cstfield-hpadding);
+    width: var(--cstfield-width);
 
     background-color: var(--cstfield-bgcolor);
     box-sizing: content-box;
     color: var(--cstfield-color);
 }
 
-.clip-options-btn {
+.clip-btn {
     align-items: center;
     
-    border: var(--cobtn-bwidth) solid var(--cobtn-bcolor);
-    border-radius: var(--cobtn-bradius);
+    border: var(--cbtn-bwidth) solid var(--cbtn-bcolor);
+    border-radius: var(--cbtn-bradius);
     display: flex;
     flex: 0 0 auto;
     flex-flow: row nowrap;
-    gap: var(--cobtn-hgap);
-    width: var(--cobtn-width);
-    padding: var(--cobtn-padding);
+    gap: var(--cbtn-hgap);
+    width: var(--cbtn-width);
+    padding: var(--cbtn-padding);
 
-    background-color: var(--cobtn-bgcolor);
+    background-color: var(--cbtn-bgcolor);
     opacity: 0;
-    transition: var(--cobtn-transition);
+    transition: var(--cbtn-transition);
     visibility: hidden;
 }
 
-.clip-options-btn:hover {
-    background-color: var(--cobtn-alt-bgcolor);
+.clip-btn:hover {
+    background-color: var(--cbtn-alt-bgcolor);
 }
 
-
-#bar-clip.active > .clip-options-btn {
+#bar-clip.active > .clip-btn {
     opacity: 1;
-    transition: var(--cobtn-alt-transition);
+    transition: var(--cbtn-alt-transition);
     visibility: inherit;
 }
 
-.clip-options-icon {
+.clip-icon {
     display: block;
     flex: 0 0 auto;
-    height: var(--coicon-length);
-    width: var(--coicon-length);
+    height: var(--cicon-length);
+    width: var(--cicon-length);
 
-    fill: var(--coicon-fill);
+    fill: var(--cicon-fill);
 }
 
-.clip-options-label {
+.clip-label {
     flex: 0 0 fit-content;
 
-    color: var(--colabel-color);
-    font-size: var(--colabel-fsize);
-    font-weight: var(--colabel-fweight);
+    color: var(--clabel-color);
+    font-size: var(--clabel-fsize);
+    font-weight: var(--clabel-fweight);
 }
 
 #btn-clip-toggle {
     align-items: center;
 
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;

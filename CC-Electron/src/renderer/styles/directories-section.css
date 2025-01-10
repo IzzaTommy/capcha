@@ -7,7 +7,6 @@
     height: var(--dctr-height);
 
     background-color: var(--dctr-bgcolor);
-    overflow: hidden;
 }
 
 .directory-btn {
@@ -22,6 +21,16 @@
 
 .directory-btn.active:hover {
     background-color: var(--dbtn-bgcolor);
+}
+
+#left-btn-captures, #left-btn-clips {
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+}
+
+#right-btn-captures, #right-btn-clips {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
 }
 
 .directory-icon {
@@ -54,7 +63,8 @@
 }
 
 .directory-gallery::-webkit-scrollbar-track {
-    margin: var(--dgallery-sb-track-margin);
+    margin-right: var(--dgallery-sb-track-hmargin);
+    margin-left: var(--dgallery-sb-track-hmargin);
 }
 
 .directory-status-label {
@@ -93,106 +103,110 @@
 .video-thumbnail-ctr {
     position: relative;
 
+    border-radius: var(--vtctr-bradius);
     flex: 0 0 fit-content;
 }
 
-.video-thumbnail {
+.video-thumbnail-image {
     aspect-ratio: 16 / 9;
-    border-radius: var(--vthumbnail-bradius);
+    border-radius: inherit;
     display: block;
+    height: var(--vtimage-height);
 
-    height: var(--vthumbnail-height);
-
-    background-color: black;
+    background-color: var(--vtimage-bgcolor);
     object-fit: contain;
 }
 
-.video-duration-label {
+.video-thumbnail-duration-label {
     position: absolute;
-    right: var(--vdurlabel-rinset);
-    bottom: var(--vdurlabel-binset);
+    right: var(--vtdurlabel-rinset);
+    bottom: var(--vtdurlabel-binset);
 
-    border-radius: var(--vdurlabel-bradius);
-    padding: var(--vdurlabel-padding);
+    border-radius: var(--vtdurlabel-bradius);
+    padding: var(--vtdurlabel-padding);
 
-    background-color: var(--vdurlabel-bgcolor);
-    color: var(--vdurlabel-color);
-    font-size: var(--vdurlabel-fsize);
-    font-weight: var(--vdurlabel-fweight);
+    background-color: var(--vtdurlabel-bgcolor);
+    color: var(--vtdurlabel-color);
+    font-size: var(--vtdurlabel-fsize);
+    font-weight: var(--vtdurlabel-fweight);
 }
 
-.video-label-ctr {
+.video-preview-label-ctr {
     display: flex;
     flex: 0 0 auto;
     flex-flow: row nowrap;
-    height: var(--vlabelctr-height);
-    width: var(--vlabelctr-width);
+    height: var(--vplabelctr-height);
+    width: var(--vplabelctr-width);
 }
 
-.video-game-label {
+.video-preview-label {
+    font-size: var(--vpgamelabel-fsize);
+    font-weight: var(--vpgamelabel-fweight);
+    line-height: normal;
+}
+
+.video-preview-game-label {
     flex: 0 1 fit-content;
 
-    color: var(--vgamelabel-color);
-    font-size: var(--vgamelabel-fsize);
-    font-weight: var(--vgamelabel-fweight);
-    line-height: normal;
+    color: var(--vpgamelabel-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.video-age-label {
+.video-preview-age-label {
     flex: 0 0 fit-content;
-    margin-left: auto;
+    margin-left: var(--vpagelabel-lmargin);
 
-    color: var(--vagelabel-color);
-    font-size: var(--vagelabel-fsize);
-    font-weight: var(--vagelabel-fweight);
-    line-height: normal;
+    color: var(--vpagelabel-color);
 }
 
-.video-name-label {
-    flex: 0 0 fit-content;
+.video-preview-name-label {
+    flex: 0 0 auto;
 
-    color: var(--vnamelabel-color);
-    font-size: var(--vnamelabel-fsize);
-    font-weight: var(--vnamelabel-fweight);
+    width: var(--vpnamelabel-width);
+
+    color: var(--vpnamelabel-color);
+    font-size: var(--vpnamelabel-fsize);
+    font-weight: var(--vpnamelabel-fweight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.video-options-ctr {
+.video-preview-btn-ctr {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--voctr-hgap);
+    gap: var(--vpbtnctr-hgap);
 }
 
-.video-options-btn {
-    border-radius: var(--vobtn-bradius);
+.video-preview-btn {
+    border-radius: var(--vpbtn-bradius);
     flex: 0 0 fit-content;
-    margin: 0;
-    padding: var(--vobtn-padding);
+    padding: var(--vpbtn-padding);
 
-    transition: var(--vobtn-transition);
+    transition: var(--vpbtn-transition);
 }
 
-.video-rename-btn:hover {
-    background-color: var(--vrbtn-bgcolor);
+.video-preview-rename-btn:hover {
+    background-color: var(--vprenamebtn-bgcolor);
 }
 
-.video-delete-btn:hover {
-    background-color: var(--vdbtn-bgcolor);
+.video-preview-delete-btn:hover {
+    background-color: var(--vpdeletebtn-bgcolor);
 }
 
-.video-options-icon {
+.video-preview-icon {
     display: block;
     flex: 0 0 auto;
-    height: var(--voicon-length);
-    width: var(--voicon-length);
+    height: var(--vpicon-length);
+    width: var(--vpicon-length);
 
-    fill: var(--voicon-fill);
-    transition: var(--voicon-transition);
+    fill: var(--vpicon-fill);
+    transition: var(--vpicon-transition);
 }
 
-.video-options-btn:hover > .video-options-icon {
-    fill: var(--voicon-alt-fill);
+.video-preview-btn:hover > .video-preview-icon {
+    fill: var(--vpicon-alt-fill);
 }
