@@ -14,12 +14,14 @@ import { initRendVariables, titleBar, initializationOverlay } from './components
 import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
 import { initRendTitleBar } from './components/rendTitleBar.js';
 import { initRendNavBlock } from './components/rendNavBlock.js';
-import { initRendEditorSection } from './components/rendEditorSection.js';
+import { getReadableDuration, initRendEditorSection } from './components/rendEditorSection.js';
 import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
 import { initRendSettingsSection } from './components/rendSettingsSection.js';
 
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);
+
+// import { getReadableRecordingDuration } from './components/rendEditorSection.js';
 
 /**
  * Initializes the renderer process
@@ -61,7 +63,22 @@ async function finishInit() {
     titleBar.style.webkitAppRegion = 'drag';
     initializationOverlay.classList.remove('active');
 
-    document.querySelector('#view-btn-clip').addEventListener('click', () => {
-        console.log('test');
-    });
+    // console.log( getReadableRecordingDuration(800000000) );
+    // console.log( getReadableRecordingDuration(8000000) );
+    // console.log( getReadableRecordingDuration(4000000) );
+    // console.log( getReadableRecordingDuration(87000) );
+    // console.log( getReadableRecordingDuration(86400) );
+    // console.log( getReadableRecordingDuration(37000) );
+    // console.log( getReadableRecordingDuration(3700) );
+    // console.log( getReadableRecordingDuration(3600) );
+    // console.log( getReadableRecordingDuration(630) );
+    // console.log( getReadableRecordingDuration(180) );
+    // console.log( getReadableRecordingDuration(59) );
+    // document.querySelector('.storage-ctr').addEventListener('click', () => {
+    //     console.log('test');
+    // })
+
+    // document.querySelector('#view-bar-btn-clip').addEventListener('click', () => {
+    //     console.log('test2');
+    // })
 }

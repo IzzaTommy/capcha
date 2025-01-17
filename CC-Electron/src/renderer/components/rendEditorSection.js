@@ -38,7 +38,7 @@ import { setSpeakerVolumeSlider, setMicrophoneVolumeSlider } from './rendSetting
 /**
  * @exports initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration
  */
-export { initRendEditorSection, setVideoPlayerState, getPointerEventLoc, getPointerEventPct, getTruncDecimal, getReadableDuration, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider }
+export { initRendEditorSection, setVideoPlayerState, getPointerEventLoc, getPointerEventPct, getTruncDecimal, getReadableDuration, getReadableRecordingDuration, updateSeekSlider, updateVolumeSlider, updatePlaybackRateSlider, updateTimelineSlider }
 
 /**
  * Initializes the editor section
@@ -914,14 +914,93 @@ function getTruncDecimal(value, places) {
 function getReadableDuration(time) {
     // gets the days, hours, minutes, and seconds of the time
     const parsedTime = getParsedTime(time);
+    let readableDuration = '';
 
-    // return the duration in hh:mm:ss or mm:ss format
-    if (parsedTime[1] > 0) {
-        return `${parsedTime[1]}:${parsedTime[2] < 10 ? '0' : ''}${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+    if (parsedTime[0] > 99) {
+        readableDuration += '99:99:99:99+';
     }
     else {
-        return `${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+        if (parsedTime[0] > 0) {
+            readableDuration += `${parsedTime[0]}:`
+        }
+
+        if (parsedTime[1] > 0) {
+            if (parsedTime[1] < 10) {
+                if (parsedTime[0] > 0) {
+                    readableDuration += `0${parsedTime[1]}:`
+                }
+                else {
+                    readableDuration += `${parsedTime[1]}:`
+                }
+            }
+            else {
+                readableDuration += `${parsedTime[1]}:`
+            }
+        }
+        else {
+            if (parsedTime[0] > 0) {
+                readableDuration += `0${parsedTime[1]}:`
+            }
+        }
+
+        if (parsedTime[2] < 10) {
+            if (parsedTime[1] > 0 || parsedTime[0] > 0) {
+                readableDuration += `0${parsedTime[2]}:`
+            }
+            else {
+                readableDuration += `${parsedTime[2]}:`
+            }
+        }
+        else {
+            readableDuration += `${parsedTime[2]}:`
+        }
+
+        if (parsedTime[3] < 10) {
+            readableDuration += `0${parsedTime[3]}`
+        }
+        else {
+            readableDuration += `${parsedTime[3]}`
+        }
     }
+
+    return readableDuration;
+}
+
+function getReadableRecordingDuration(time) {
+    // gets the days, hours, minutes, and seconds of the time
+    const parsedTime = getParsedTime(time);
+    let readableRecordingDuration = '';
+
+    if (parsedTime[0] > 0 || parsedTime[1] > 9) {
+        readableRecordingDuration += '9:99:99+';
+    }
+    else {
+        if (parsedTime[1] > 0) {
+            readableRecordingDuration += `${parsedTime[1]}:`;
+        }
+
+        if (parsedTime[2] < 10) {
+            if (parsedTime[1] > 0) {
+                readableRecordingDuration += `0${parsedTime[2]}:`
+            }
+            else {
+                readableRecordingDuration += `${parsedTime[2]}:`
+            }
+        }
+        else {
+            readableRecordingDuration += `${parsedTime[2]}:`
+        }
+
+        if (parsedTime[3] < 10) {
+            readableRecordingDuration += `0${parsedTime[3]}`
+        }
+        else {
+            readableRecordingDuration += `${parsedTime[3]}`
+        }
+        // return `${parsedTime[1] > 0 ? parsedTime[1] + ':' : ''}${parsedTime[2] < 10 ? (parsedTime[1] > 0 ? '0' : '') : ''}${parsedTime[2]}:${parsedTime[3] < 10 ? '0' : ''}${parsedTime[3]}`;
+    }
+
+    return readableRecordingDuration;
 }
 
 /**
@@ -1009,8 +1088,8 @@ function setVolumeSlider() {
  * @param {number} thumbLocation - The location of the volume thumb
  */
 function setVolumeOverlay(thumbLocation) {
-    // volumeOverlay.style.background = `linear-gradient(to right, var(--voverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
-    volumeOverlay.style.background = `linear-gradient(to right, var(--voverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+    // volumeOverlay.style.background = `linear-gradient(to right, var(--vooverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+    volumeOverlay.style.background = `linear-gradient(to right, var(--vooverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
 }
 
 /**

@@ -15,29 +15,29 @@
     font-weight: var(--tbar-span-fweight);
 }
 
-.title-btn {
+.title-bar-btn {
     flex: 0 0 fit-content;
-    padding: var(--tbtn-vpadding) var(--tbtn-hpadding);
+    padding: var(--tbarbtn-vpadding) var(--tbarbtn-hpadding);
 
     -webkit-app-region: no-drag;
 }
 
-.title-btn:hover {
-    background-color: var(--tbtn-bgcolor);
+.title-bar-btn:hover {
+    background-color: var(--tbarbtn-bgcolor);
 }
 
-#btn-minimize {
+#bar-btn-minimize {
     margin-left: auto;
 }
 
-#btn-close:hover {
-    background-color: var(--tcbtn-bgcolor);
+#bar-btn-close:hover {
+    background-color: var(--tclbarbtn-bgcolor);
 }
 
-.title-icon {
+.title-bar-icon {
     display: block;
-    height: var(--ticon-length);
-    width: var(--ticon-length);
+    height: var(--tbaricon-length);
+    width: var(--tbaricon-length);
 
-    fill: var(--ticon-fill);
+    fill: var(--tbaricon-fill);
 }

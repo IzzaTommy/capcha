@@ -2,7 +2,11 @@
 /* Display & Box Model */
 /* Theme */
 /* Other */
-/* Browser Provided */
+/* Browser Specific */
+
+/* Element */
+/* Element Pseudo Class */
+/* Element with Class/ID */
 
 @import url('styles/layout-variables.css');
 @import url('styles/theme-variables.css');

@@ -1,9 +1,9 @@
 html {
-    /* ==== sbar -> Scroll Bar ==== */
-    --sbar-length: 20px;
+    /* ==== scbar -> Scroll Bar ==== */
+    --scbar-length: 20px;
 
-    --sbar-thumb-bwidth: 7px;
-    --sbar-thumb-bradius: 10px;
+    --scbar-thumb-bwidth: 7px;
+    --scbar-thumb-bradius: 10px;
 
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-svg-length: 100px;
@@ -16,8 +16,8 @@ html {
     --istatuslabel-fsize: 18px;
     --istatuslabel-fweight: 300;
 
-    /* ==== carea -> Client Area ==== */
-    --carea-hgap: 12px;
+    /* ==== ctarea -> Client Area ==== */
+    --ctarea-hgap: 12px;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-tlbradius: 10px;
@@ -55,7 +55,7 @@ html {
     --cctr2-vgap: 10px;
 
     /* ==== clabel2 -> Content Label 2 ==== */
-    --clabel2-fsize: 30px;
+    --clabel2-fsize: 35px;
     --clabel2-fweight: 400;
 
     /* ==== cdivider2 -> Content Divider 2 ==== */
@@ -68,12 +68,12 @@ html {
     --tbar-span-fsize: 11px;
     --tbar-span-fweight: 300;
 
-    /* ==== tbtn -> Title Button ==== */
-    --tbtn-vpadding: 7.5px;
-    --tbtn-hpadding: 15px;
+    /* ==== tbarbtn -> Title Bar Button ==== */
+    --tbarbtn-vpadding: 7.5px;
+    --tbarbtn-hpadding: 15px;
 
-    /* ==== ticon -> Title Icon ==== */
-    --ticon-length: 10px;
+    /* ==== tbaricon -> Title Bar Icon ==== */
+    --tbaricon-length: 10px;
 
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-trbradius: 10px;
@@ -99,43 +99,44 @@ html {
     --ldisplay-h1-fsize: 28px;
     --ldisplay-h1-fweight: 600;
 
-    /* ==== nbtn -> Nav(igation) Button ==== */
-    --nbtn-bradius: 10px;
-    --nbtn-hgap: 40px;
-    --nbtn-hmargin: 5px;
-    --nbtn-padding: 10px;
+    /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
+    --nbarbtn-bradius: 10px;
+    --nbarbtn-hgap: 40px;
+    --nbarbtn-hmargin: 5px;
+    --nbarbtn-padding: 10px;
 
-    /* ==== rbtn -> Record Button ==== */
-    --rbtn-bwidth: 1.5px;
-    --rbtn-padding: 8.5px;
+    /* ==== rbarbtn -> Record Bar Button ==== */
+    --rbarbtn-bwidth: 1.5px;
+    --rbarbtn-padding: 8.5px;
 
-    /* ==== nicon -> Nav(igation) Icon ==== */
-    --nicon-length: 30px;
+    /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
+    --nbaricon-length: 30px;
 
-    /* ==== nlabel -> Nav(igation) Label ==== */
-    --nlabel-fsize: 20px;
-    --nlabel-fweight: 400;
+    /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
+    --nbarlabel-fsize: 20px;
+    --nbarlabel-fweight: 400;
 
-    /* ==== crlabelctr -> Current Recording Label Container ==== */
-    --crlabelctr-rinset: 15px;
-    --crlabelctr-binset: 66px;
-    --crlabelctr-alt-binset: 93.5px;
-    --crlabelctr-linset: 15px;
-    --crlabelctr-bwidth: 1.5px;
-    --crlabelctr-bradius: 10px;
-    --crlabelctr-hgap: 10px;
-    --crlabelctr-tpadding: 2.5px;
-    --crlabelctr-hpadding: 2.5px;
-    --crlabelctr-bpadding: 25px;
+    /* ==== curlabelctr -> Current Recording Label Container ==== */
+    --curlabelctr-rinset: 15px;
+    --curlabelctr-binset: 66px;
+    --curlabelctr-alt-binset: 93.5px;
+    --curlabelctr-linset: 15px;
+    --curlabelctr-bwidth: 1.5px;
+    --curlabelctr-bradius: 10px;
+    --curlabelctr-hgap: 10px;
+    --curlabelctr-tpadding: 2.5px;
+    --curlabelctr-hpadding: 2.5px;
+    --curlabelctr-bpadding: 25px;
 
-    /* ==== crtimelabel -> Current Recording Time Label ==== */
-    --crtimelabel-width: 4ch;
-    --crtimelabel-fsize: 15px;
-    --crtimelabel-fweight: 300;
+    /* ==== curtimelabel -> Current Recording Time Label ==== */
+    --curtimelabel-width: 43px;
+    --curtimelabel-fsize: 10.75px;
+    --curtimelabel-fweight: 300;
 
-    /* ==== crgamelabel -> Current Recording Game Label ==== */
-    --crgamelabel-fsize: 12px;
-    --crgamelabel-fweight: 400;
+    /* ==== curgamelabel -> Current Recording Game Label ==== */
+    --curgamelabel-width: 120px;
+    --curgamelabel-fsize: 12px;
+    --curgamelabel-fweight: 400;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-height: 36px;
@@ -145,6 +146,34 @@ html {
 
     /* ==== nticon -> Nav(igation) Toggle Icon ==== */
     --nticon-length: 15px;
+
+    /* ==== sgctr -> Storage Container ==== */
+    --sgctr-vgap: 2px;
+    --sgctr-tmargin: 5.5px;
+    --sgctr-width: 400px;
+
+    /* ==== dlabel2 -> Directory Label 2==== */
+    --dlabel2-fsize: 15px;
+    --dlabel2-fweight: 400;
+
+    /* ==== dlabel3 -> Directory Label 3 ==== */
+    --dlabel3-fsize: 10px;
+    --dlabel3-fweight: 350;
+
+    /* ==== dbar -> Directory Bar ==== */
+    --dbar-bradius: 10px;
+    --dbar-hgap: 5px;
+    --dbar-padding: 5px;
+
+    /* ==== dstfield -> Directory Setting Field ==== */
+    --dstfield-bradius: 5px;
+    --dstfield-hpadding: 10px;
+
+    /* ==== dbarbtn -> Directory Bar Button ==== */
+    --dbarbtn-bradius: 5px;
+
+    /* ==== dbaricon -> Directory Bar Icon ==== */
+    --dbaricon-length: 25px;
 
     /* ==== dctr -> Directory Container ==== */
     --dctr-bwidth: 1.5px;
@@ -169,19 +198,19 @@ html {
     --vpctr-vgap: 10px;
     --vpctr-padding: 10px;
     
-    /* ==== vtctr -> Video Thumbnail Container ==== */
-    --vtctr-bradius: 10px;
+    /* ==== vtnctr -> Video Thumbnail Container ==== */
+    --vtnctr-bradius: 10px;
 
-    /* ==== vtimage -> Video Thumbnail Image ==== */
-    --vtimage-height: 144px;
+    /* ==== vtnimage -> Video Thumbnail Image ==== */
+    --vtnimage-height: 144px;
 
-    /* ==== vtdurlabel -> Video Thumbnail Duration Label ==== */
-    --vtdurlabel-rinset: 5px;
-    --vtdurlabel-binset: 5px;
-    --vtdurlabel-bradius: 3px;
-    --vtdurlabel-padding: 5px;
-    --vtdurlabel-fsize: 15px;
-    --vtdurlabel-fweight: 400;
+    /* ==== vtndurlabel -> Video Thumbnail Duration Label ==== */
+    --vtndurlabel-rinset: 5px;
+    --vtndurlabel-binset: 5px;
+    --vtndurlabel-bradius: 3px;
+    --vtndurlabel-padding: 5px;
+    --vtndurlabel-fsize: 15px;
+    --vtndurlabel-fweight: 400;
 
     /* ==== vplabelctr -> Video Preview Label Container ==== */
     --vplabelctr-height: 22px;
@@ -191,8 +220,8 @@ html {
     --vplabel-fsize: 17px;
     --vplabel-fweight: 350;
 
-    /* ==== vpagelabel -> Video Preview Age Label ==== */
-    --vpagelabel-lmargin: 10px;
+    /* ==== vpgamelabel -> Video Preview Game Label ==== */
+    --vpgamelabel-rmargin: 15px;
 
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-width: 256px;
@@ -214,8 +243,8 @@ html {
     --vctr-height: 525px;
     --vctr-width: 1100px;
 
-    /* ==== ppstatusicon -> Play Pause Status Icon ==== */
-    --ppstatusicon-length: 80px;
+    /* ==== plpastatusicon -> Play Pause Status Icon ==== */
+    --plpastatusicon-length: 80px;
 
     /* ==== sslider -> Seek Slider ==== */
     --sslider-height: 3px;
@@ -230,154 +259,147 @@ html {
     --mbar-tpadding: 1px;
     --mbar-bpadding: 3px;
 
-    /* ==== mbtn -> Media Button ==== */
-    /* --mbtn-bradius: 5px; */
-    --mbtn-hmargin: 3px;
+    /* ==== mbarbtn -> Media Bar Button ==== */
+    --mbarbtn-hmargin: 3px;
     
-    /* ==== prbtn -> Playback Rate Button ==== */
-    --prbtn-vpadding: 10px;
+    /* ==== pbrtbarbtn -> Playback Rate Bar Button ==== */
+    --pbrtbarbtn-vpadding: 10px;
 
-    /* ==== micon -> Media Icon ==== */
-    --micon-length: 40px;
+    /* ==== mbaricon -> Media Bar Icon ==== */
+    --mbaricon-length: 40px;
 
-    /* ==== prlabel -> Playback Rate Label ==== */
-    --prlabel-fsize: 20px;
-    --prlabel-fweight: 400;
+    /* ==== pbrtlabel -> Playback Rate Label ==== */
+    --pbrtlabel-fsize: 20px;
+    --pbrtlabel-fweight: 400;
 
-    /* ==== prvaluelabel -> Playback Rate Value Label ==== */
-    --prvaluelabel-width: 2.5ch;
+    /* ==== pbrtvaluelabel -> Playback Rate Value Label ==== */
+    --pbrtvaluelabel-width: 2.5ch;
 
-    /* ==== vsliderctr -> Volume Slider Container ==== */
-    --vsliderctr-hpadding: 2px;
+    /* ==== vosliderctr -> Volume Slider Container ==== */
+    --vosliderctr-hpadding: 2px;
 
-    /* ==== prsliderctr -> Playback Rate Slider Container ==== */
-    --prsliderctr-rpadding: 3px;
-    --prsliderctr-lpadding: 7px;
+    /* ==== pbrtsliderctr -> Playback Rate Slider Container ==== */
+    --pbrtsliderctr-rpadding: 3px;
+    --pbrtsliderctr-lpadding: 7px;
 
     /* ==== mslider -> Media Slider ==== */
     --mslider-height: 4px;
     --mslider-vpadding: 18px;
 
+    /* ==== voslider -> Volume Slider ==== */
+    --voslider-width: 100px;
+
+    /* ==== pbrtslider -> Playback Rate Slider ==== */
+    --pbrtslider-width: 150px;
+
     /* ==== mtrack-> Media Track ==== */
     --mtrack-bradius: 2px;
 
+    /* ==== vooverlay -> Volume Overlay ==== */
+    --vooverlay-width: 100px;
+
+    /* ==== pbrtoverlay -> Playback Rate Overlay ==== */
+    --pbrtoverlay-linset: -7px;
+    --pbrtoverlay-height: 20px;
+    --pbrtoverlay-width: 160px;
+    --pbrtoverlay-swidth: 1px;
+
+    --pbrtoverlay-text-fsize: 10px;
+    --pbrtoverlay-text-fweight: 100;
+
     /* ==== mthumb -> Media Thumb ==== */
     --mthumb-tinset: -6px;
-    --mthumb-linset: calc(var(--mthumb-width) / -2);
+    --mthumb-linset: -2px;
     --mthumb-bradius: 2px;
-    --mthumb-height: calc(-2 * var(--mthumb-tinset) + var(--mslider-height));
+    --mthumb-height: 16px;
     --mthumb-width: 4px;
 
-    /* ==== vslider -> Volume Slider ==== */
-    --vslider-width: 100px;
+    /* ==== cuvlabel -> Current Video Label ==== */
+    --cuvlabel-fsize: 15px;
+    --cuvlabel-fweight: 400;
 
-    /* ==== voverlay -> Volume Overlay ==== */
-    --voverlay-width: 100px;
+    /* ==== cuvtimelabel -> Current Video Time Label ==== */
+    --cuvtimelabel-width: 7ch;
 
-    /* ==== prslider -> Playback Rate Slider ==== */
-    --prslider-width: 150px;
+    /* ==== tlslider -> Timeline Slider ==== */
+    --tlslider-bradius: 10px;
+    --tlslider-height: 60px;
+    --tlslider-width: 1100px;
 
-    /* ==== proverlay -> Playback Rate Overlay ==== */
-    --proverlay-linset: -7px;
-    --proverlay-height: 20px;
-    --proverlay-width: 160px;
-    --proverlay-swidth: 1px;
+    /* ==== tloverlay -> Timeline Overlay ==== */
+    --tloverlay-swidth: 1px;
 
-    --proverlay-text-fsize: 10px;
-    --proverlay-text-fweight: 100;
+    --tloverlay-text-fsize: 12px;
+    --tloverlay-text-fweight: 10;
 
-    /* ==== cvlabel -> Current Video Label ==== */
-    --cvlabel-fsize: 15px;
-    --cvlabel-fweight: 400;
+    /* ==== tlthumb -> Timeline Thumb ==== */
+    --tlthumb-tinset: -12px;
+    --tlthumb-linset: -2px;
+    --tlthumb-bradius: 3px;
+    --tlthumb-height: 84px;
+    --tlthumb-width: 4px;
 
-    /* ==== cvtimelabel -> Current Video Time Label ==== */
-    --cvtimelabel-width: 7ch;
+    /* ==== cpthumb -> Clip Thumb ==== */
+    --cpthumb-tinset: -16px;
+    --cpthumb-linset: -4px;
+    --cpthumb-bradius: 3px;
+    --cpthumb-height: 92px;
+    --cpthumb-width: 8px;
+    --cpthumb-swidth: 1px;
 
-    /* ==== tslider -> Timeline Slider ==== */
-    --tslider-bradius: 10px;
-    --tslider-height: 60px;
-    --tslider-width: var(--vctr-width);
+    /* ==== cpctr -> Clip Container ==== */
+    --cpctr-bwidth: 1.5px;
+    --cpctr-bradius: 10px;
 
-    /* ==== toverlay -> Timeline Overlay ==== */
-    --toverlay-swidth: 1px;
+    --cpctr-svg-length: 45px;
+    --cpctr-svg-rmargin: 10px;
+    --cpctr-svg-lmargin: 8.5px;
 
-    --toverlay-text-fsize: 12px;
-    --toverlay-text-fweight: 10;
+    /* ==== cpbar -> Clip Bar ==== */
+    --cpbar-hgap: 30px;
+    --cpbar-vpadding: 3.5px;
+    --cpbar-width: 980px;
 
-    /* ==== tthumb -> Timeline Thumb ==== */
-    --tthumb-tinset: -12px;
-    --tthumb-linset: calc(var(--tthumb-width) / -2);
-    --tthumb-bradius: calc(var(--tthumb-width) / 2);
-    --tthumb-height: calc(-2 * var(--tthumb-tinset) + var(--tslider-height));
-    --tthumb-width: 4px;
+    /* ==== cpstctr -> Clip Setting Container ==== */
+    --cpstctr-bwidth: 1.5px;
+    --cpstctr-bradius: 10px;
+    --cpstctr-vgap: 5px;
+    --cpstctr-vpadding: 8.5px;
+    --cpstctr-hpadding: 23.5px;
 
-    /* ==== cthumb -> Clip Thumb ==== */
-    --cthumb-tinset: calc(var(--tthumb-tinset) - 6px);
-    --cthumb-linset: calc(var(--cthumb-width) / -2);
-    --cthumb-bradius: calc(var(--cthumb-width) / 4);
-    --cthumb-height: calc(-2 * var(--cthumb-tinset) + var(--tslider-height));
-    --cthumb-width: 12px;
-    --cthumb-swidth: 1px;
+    /* ==== cpstlabel -> Clip Setting Label ==== */
+    --cpstlabel-fsize: 17px;
+    --cpstlabel-fweight: 350;
 
+    /* ==== cpstpill -> Clip Setting Pill ==== */
+    --cpstpill-bradius: 5px;
 
+    /* ==== cpsticon -> Clip Setting Icon ==== */
+    --cpsticon-length: 25px;
+    --cpsticon-margin: 5px;
 
+    /* ==== cpstfield -> Clip Setting Field ==== */
+    --cpstfield-hpadding: 10px;
+    --cpstfield-width: 65px;
 
-    /* ==== cctr -> Clip Container ==== */
-    --cctr-bwidth: 1.5px;
-    --cctr-bradius: 10px;
+    /* ==== cpbarbtn -> Clip Bar Button ==== */
+    --cpbarbtn-bwidth: 1.5px;
+    --cpbarbtn-bradius: 10px;
+    --cpbarbtn-hgap: 10px;
+    --cpbarbtn-width: 150px;
+    --cpbarbtn-padding: 8.5px;
 
-    --cctr-svg-length: 45px;
-    --cctr-svg-rmargin: 10px;
-    --cctr-svg-lmargin: 8.5px;
+    /* ==== cpbaricon -> Clip Bar Icon ==== */
+    --cpbaricon-length: 25px;
 
-    /* ==== cbar -> Clip Bar ==== */
-    --cbar-hgap: 30px;
-    --cbar-vpadding: 3.5px;
-    --cbar-width: 980px;
+    /* ==== cpbarlabel -> Clip Bar Label ==== */
+    --cpbarlabel-fsize: 17px;
+    --cpbarlabel-fweight: 350;
 
-    /* ==== cstctr -> Clip Setting Container ==== */
-    --cstctr-bwidth: 1.5px;
-    --cstctr-bradius: 10px;
-    --cstctr-vgap: 5px;
-    --cstctr-vpadding: 8.5px;
-    --cstctr-hpadding: 23.5px;
+    /* ==== cpticon -> Clip Toggle Icon ==== */
+    --cpticon-length: 15px;
 
-    /* ==== cstlabel -> Clip Setting Label ==== */
-    --cstlabel-fsize: 17px;
-    --cstlabel-fweight: 350;
-
-    /* ==== cstpill -> Clip Setting Pill ==== */
-    --cstpill-bradius: 5px;
-
-    /* ==== csticon -> Clip Setting Icon ==== */
-    --csticon-length: 25px;
-    --csticon-margin: 5px;
-
-    /* ==== cstfield -> Clip Setting Field ==== */
-    --cstfield-hpadding: 10px;
-    --cstfield-width: 65px;
-
-    /* ==== cbtn -> Clip Button ==== */
-    --cbtn-bwidth: 1.5px;
-    --cbtn-bradius: 10px;
-    --cbtn-hgap: 10px;
-    --cbtn-width: 150px;
-    --cbtn-padding: 8.5px;
-
-    /* ==== cicon -> Clip Icon ==== */
-    --cicon-length: 25px;
-
-    /* ==== clabel -> Clip Label ==== */
-    --clabel-fsize: 17px;
-    --clabel-fweight: 350;
-
-    /* ==== cticon -> Clip Toggle Icon ==== */
-    --cticon-length: 15px;
-
-
-
-
-    /* ==== gstgroupctr -> General Settings Group Container ==== */
+    /* ==== gstgroupctr -> General Setting Group Container ==== */
     --gstgroupctr-hgap: 30px;
 
     /* ==== gstctr -> General Setting Container ==== */
@@ -402,20 +424,21 @@ html {
     --gstfield-hpadding: 10px;
     --gstfield-width: 110px;
     --gstfield-alt-width: 500px;
+    --gstfield-alt2-width: 275px;
 
-    /* ==== gsttswitch -> General Setting Toggle Switch ==== */
-    --gsttswitch-width: 66px;
+    /* ==== gsttoggleswitch -> General Setting Toggle Switch ==== */
+    --gsttoggleswitch-width: 66px;
 
-    /* ==== gsttfield -> General Setting Toggle Field ==== */
-    --gsttfield-hpadding: 10px;
-    --gsttfield-width: 110px;
+    /* ==== gsttogglefield -> General Setting Toggle Field ==== */
+    --gsttogglefield-hpadding: 10px;
+    --gsttogglefield-width: 110px;
 
-    /* ==== gstticon -> General Setting Toggle Icon ==== */
-    --gstticon-inset: 2px;
-    --gstticon-bradius: 7.5px;
-    --gstticon-height: 31px;
-    --gstticon-width: 31px;
-    --gstticon-translateX: 31px;
+    /* ==== gsttoggleicon -> General Setting Toggle Icon ==== */
+    --gsttoggleicon-inset: 2px;
+    --gsttoggleicon-bradius: 7.5px;
+    --gsttoggleicon-height: 31px;
+    --gsttoggleicon-width: 31px;
+    --gsttoggleicon-translateX: 31px;
 
     /* ==== gstsliderctr -> General Setting Slider Container ==== */
     --gstsliderctr-hmargin: 11.5px;

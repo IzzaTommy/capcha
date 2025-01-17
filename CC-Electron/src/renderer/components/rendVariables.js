@@ -121,25 +121,25 @@ function initRendVariables() {
 
     // title bar elements
     titleBar = document.getElementById('bar-title');
-    minimizeBtn = document.getElementById('btn-minimize');
-    maximizeBtn = document.getElementById('btn-maximize');
-    closeBtn = document.getElementById('btn-close');
+    minimizeBtn = document.getElementById('bar-btn-minimize');
+    maximizeBtn = document.getElementById('bar-btn-maximize');
+    closeBtn = document.getElementById('bar-btn-close');
 
     // nav block elements
     navBar = document.getElementById('bar-nav');
 
-    directoriesBtn = document.getElementById('btn-directories');
-    directoriesIcon = document.querySelector('#icon-directories > use');
+    directoriesBtn = document.getElementById('bar-btn-directories');
+    directoriesIcon = document.querySelector('#bar-icon-directories > use');
 
-    settingsBtn = document.getElementById('btn-settings');
-    settingsIcon = document.querySelector('#icon-settings > use');
+    settingsBtn = document.getElementById('bar-btn-settings');
+    settingsIcon = document.querySelector('#bar-icon-settings > use');
 
     currentRecordingLabelContainer = document.getElementById('label-ctr-current-recording');
     currentRecordingTimeLabel = document.getElementById('time-label-current-recording');
     currentRecordingGameLabel = document.getElementById('game-label-current-recording');
 
-    recordBtn = document.getElementById('btn-record');
-    recordIcon = document.querySelector('#icon-record > use');
+    recordBtn = document.getElementById('bar-btn-record');
+    recordIcon = document.querySelector('#bar-icon-record > use');
 
     autoRecordResumeLabel = document.getElementById('resume-label-auto-record');
 
@@ -147,7 +147,7 @@ function initRendVariables() {
     navToggleIcon = document.querySelector('#icon-nav-toggle > use');
 
     // content block elements
-    generalStatusLabel = document.getElementById('status-label-general');
+    generalStatusLabel = document.getElementById('status-label-content');
 
     directoriesSection = document.getElementById('section-directories');
     editorSection = document.getElementById('section-editor');
@@ -155,7 +155,7 @@ function initRendVariables() {
 
     // directories section elements
     videoPreviewTemplate = document.querySelector('template');
-    videoPreviewWidth = parseInt(style.getPropertyValue('--vtimage-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
+    videoPreviewWidth = parseInt(style.getPropertyValue('--vtnimage-height')) * 16 / 9 + 2 * parseInt(style.getPropertyValue('--vpctr-padding'));
     capturesGallery = document.getElementById('gallery-captures');
     capturesLeftBtn = document.getElementById('left-btn-captures');
     capturesStatusLabel = document.getElementById('status-label-captures');
@@ -182,13 +182,13 @@ function initRendVariables() {
 
     mediaBar = document.getElementById('bar-media');
 
-    playPauseBtn = document.getElementById('btn-play-pause');
-    playPauseIcon = playPauseBtn.querySelector('#icon-play-pause > use');
+    playPauseBtn = document.getElementById('bar-btn-play-pause');
+    playPauseIcon = playPauseBtn.querySelector('#bar-icon-play-pause > use');
 
-    volumeBtn = document.getElementById('btn-volume');
-    volumeIcon = volumeBtn.querySelector('#icon-volume > use');
+    volumeBtn = document.getElementById('bar-btn-volume');
+    volumeIcon = volumeBtn.querySelector('#bar-icon-volume > use');
     volumeSlider = document.getElementById('slider-volume');
-    volumeSliderWidth = parseInt(style.getPropertyValue('--vslider-width'));
+    volumeSliderWidth = parseInt(style.getPropertyValue('--voslider-width'));
     volumeOverlay = document.getElementById('overlay-volume');
     volumeThumb = document.getElementById('thumb-volume');
 
@@ -196,14 +196,14 @@ function initRendVariables() {
     currentVideoDurationLabel = document.getElementById('duration-label-current-video');
 
     playbackRateSlider = document.getElementById('slider-playback-rate');
-    playbackRateSliderWidth = parseInt(style.getPropertyValue('--prslider-width'));
+    playbackRateSliderWidth = parseInt(style.getPropertyValue('--pbrtslider-width'));
     playbackRateThumb = document.getElementById('thumb-playback-rate');
-    playbackRateBtn = document.getElementById('btn-playback-rate');
+    playbackRateBtn = document.getElementById('bar-btn-playback-rate');
     ///////////////////////////////////////////
     playbackRateLabel = document.getElementById('value-label-playback-rate');
 
-    fullscreenBtn = document.getElementById('btn-fullscreen');
-    fullscreenIcon = fullscreenBtn.querySelector('#icon-fullscreen > use');
+    fullscreenBtn = document.getElementById('bar-btn-fullscreen');
+    fullscreenIcon = fullscreenBtn.querySelector('#bar-icon-fullscreen > use');
 
     timelineSlider = document.getElementById('slider-timeline');
     timelineOverlay = document.getElementById('overlay-timeline');
@@ -213,10 +213,10 @@ function initRendVariables() {
 
     clipBar = document.getElementById('bar-clip');
     ////////////////////////////////////////////
-    clipViewBtn = document.getElementById('view-btn-clip');
-    clipViewIcon = document.querySelector('#view-icon-clip > use');
-    clipCreateBtn = document.getElementById('create-btn-clip');
-    clipCreateIcon = document.querySelector('#create-icon-clip > use');
+    clipViewBtn = document.getElementById('view-bar-btn-clip');
+    clipViewIcon = document.querySelector('#view-bar-icon-clip > use');
+    clipCreateBtn = document.getElementById('create-bar-btn-clip');
+    clipCreateIcon = document.querySelector('#create-bar-icon-clip > use');
     
     clipToggleBtn = document.getElementById('btn-clip-toggle');
     clipToggleIcon = document.querySelector('#icon-clip-toggle > use');

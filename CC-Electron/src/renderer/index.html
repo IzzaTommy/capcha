@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script type="module" src="renderer.js"></script>
-    <link rel="shortcut icon" href="../assets/favicon/capcha-favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/favicon/capcha-favicon-icon.svg" type="image/x-icon">
     <title>CapCha</title>
 </head>
 <body>
@@ -52,20 +52,20 @@
     <div id="bar-title">
         <span>CC-0.1.1</span>
 
-        <button id="btn-minimize" class="title-btn">
-            <svg class="title-icon">
+        <button id="bar-btn-minimize" class="title-bar-btn">
+            <svg class="title-bar-icon">
                 <use href="../assets/svg/window-minimize-solid.svg#window-minimize-solid"></use>
             </svg>
         </button>
 
-        <button id="btn-maximize" class="title-btn">
-            <svg class="title-icon">
+        <button id="bar-btn-maximize" class="title-bar-btn">
+            <svg class="title-bar-icon">
                 <use href="../assets/svg/expand-solid.svg#expand-solid"></use>
             </svg>
         </button>
 
-        <button id="btn-close" class="title-btn">
-            <svg class="title-icon">
+        <button id="bar-btn-close" class="title-bar-btn">
+            <svg class="title-bar-icon">
                 <use href="../assets/svg/xmark-solid.svg#xmark-solid"></use>
             </svg>
         </button>
@@ -73,7 +73,7 @@
 
     <div id="area-client">
         <div id="block-nav">
-            <nav id="bar-nav" class="">
+            <nav id="bar-nav" class="active">
                 <div id="display-logo">
                     <svg>
                         <use href="../assets/svg/capcha.svg#capcha"></use>
@@ -84,33 +84,33 @@
 
                 <hr>
 
-                <button id="btn-directories" class="nav-btn">
-                    <svg id="icon-directories" class="nav-icon">
+                <button id="bar-btn-directories" class="nav-bar-btn">
+                    <svg id="bar-icon-directories" class="nav-bar-icon">
                         <use href="../assets/svg/folder.svg#folder"></use>
                     </svg>
 
-                    <span class="nav-label">Files</span>
+                    <span class="nav-bar-label">Files</span>
                 </button>
     
-                <button id="btn-settings" class="nav-btn">
-                    <svg id="icon-settings" class="nav-icon">
+                <button id="bar-btn-settings" class="nav-bar-btn">
+                    <svg id="bar-icon-settings" class="nav-bar-icon">
                         <use href="../assets/svg/settings.svg#settings"></use>
                     </svg>
 
-                    <span class="nav-label">Settings</span>
+                    <span class="nav-bar-label">Settings</span>
                 </button>
     
-                <div id="label-ctr-current-recording">
-                    <span id="time-label-current-recording">88:88</span>
+                <div id="label-ctr-current-recording" class="active">
+                    <span id="time-label-current-recording">8:88:88+</span>
                     <span id="game-label-current-recording">GAME</span>
                 </div>
                 
-                <button id="btn-record" class="nav-btn">
-                    <svg id="icon-record" class="nav-icon">
+                <button id="bar-btn-record" class="nav-bar-btn">
+                    <svg id="bar-icon-record" class="nav-bar-icon">
                         <use href="../assets/svg/radio-button-checked.svg#radio-button-checked"></use>
                     </svg>
 
-                    <span class="nav-label">Record</span>
+                    <span class="nav-bar-label">Record</span>
                 </button>
 
                 <span id="resume-label-auto-record" class="active">RESUME AUTO RECORD</span>
@@ -126,15 +126,46 @@
         <div id="block-content">
             <p id="status-label-content">An error has occurred!</p>
 
-            <section id="section-directories" class="content-section active">
+            <section id="section-directories" class="content-section">
                 <h2 class="content-label1">Directories</h2>
 
                 <hr class="content-divider1">
 
                 <div class="content-ctr1">
                     <div class="content-ctr2">
-                        <h3 class="content-label2">Captures</h3>
-                        
+                        <div class="content-ctr3">
+                            <h3 class="content-label2 directories-label">Captures</h3>
+
+                            <div class="storage-ctr">
+                                <span id="path-label2-captures" class="directory-label2">C:/Directory/Example</span>
+
+                                <div class="directory-label-ctr">
+                                    <span id="usage-label3-captures" class="directory-label3">7 Videos - 32GB</span>
+                                    <span id="total-label3-captures" class="directory-label3">/300 GB</span>
+                                </div>
+                            </div>
+
+                            <div class="directory-bar">
+                                <select class="directory-setting-field" name="capturesGameFilter">
+                                    <option value="All">All</option>
+                                    <option value="League of Legends">League of Legends</option>
+                                    <option value="Valorant">Valorant</option>
+                                    <option value="External">External</option>
+                                </select>
+
+                                <select class="directory-setting-field" name="capturesMetaFilter">
+                                    <option value="name">Name</option>
+                                    <option value="date">Date</option>
+                                </select>
+
+                                <button id="bar-btn-captures" class="directory-bar-btn">
+                                    <svg id="bar-icon-captures" class="directory-bar-icon">
+                                        <use href="../assets/svg/arrow-upward-alt.svg#arrow-upward-alt"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
                         <hr class="content-divider2">
 
                         <div class="directory-ctr">
@@ -146,14 +177,15 @@
 
                             <div id="gallery-captures" class="directory-gallery">
                                 <p id="status-label-captures" class="directory-status-label active">No Videos Found</p>
-                                <div class="video-preview-ctr" data-src="">
+
+                                <!-- <div class="video-preview-ctr" data-src="">
                                     <div class="video-thumbnail-ctr">
                                         <img class="video-thumbnail-image" src="" alt="">
                                         <span class="video-thumbnail-duration-label">88:88</span>
                                     </div>
                         
                                     <div class="video-preview-label-ctr">
-                                        <span class="video-preview-label video-preview-game-label">League of Legends and Valorant</span>
+                                        <span class="video-preview-label video-preview-game-label">League of</span>
                                         <span class="video-preview-label video-preview-age-label">4 hours ago</span>
                                     </div>
                         
@@ -172,7 +204,7 @@
                                             </svg>
                                         </button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <button id="right-btn-captures" class="directory-btn">
@@ -184,7 +216,38 @@
                     </div>
 
                     <div class="content-ctr2">
-                        <h3 class="content-label2">Clips</h3>
+                        <div class="content-ctr3">
+                            <h3 class="content-label2 directories-label">Clips</h3>
+
+                            <div class="storage-ctr">
+                                <span id="path-label2-clips" class="directory-label2">C:/Directory/Example</span>
+
+                                <div class="directory-label-ctr">
+                                    <span id="usage-label3-clips" class="directory-label3">7 Videos - 32GB</span>
+                                    <span id="total-label3-clips" class="directory-label3">/300 GB</span>
+                                </div>
+                            </div>
+
+                            <div class="directory-bar">
+                                <select class="directory-setting-field" name="clipsGameFilter">
+                                    <option value="All">All</option>
+                                    <option value="League of Legends">League of Legends</option>
+                                    <option value="Valorant">Valorant</option>
+                                    <option value="External">External</option>
+                                </select>
+
+                                <select class="directory-setting-field" name="clipsMetaFilter">
+                                    <option value="name">Name</option>
+                                    <option value="date">Date</option>
+                                </select>
+
+                                <button id="bar-btn-clips" class="directory-bar-btn">
+                                    <svg id="bar-icon-clips" class="directory-bar-icon">
+                                        <use href="../assets/svg/arrow-upward-alt.svg#arrow-upward-alt"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
                         <hr class="content-divider2">
 
@@ -209,7 +272,7 @@
                 </div>
             </section>
 
-            <section id="section-editor" class="content-section">
+            <section id="section-editor" class="content-section active">
                 <h2 class="content-label1">Editor</h2>
 
                 <hr class="content-divider1">
@@ -233,14 +296,14 @@
                              </div>
 
                             <div id="bar-media">
-                                <button id="btn-play-pause" class="media-btn">
-                                    <svg id="icon-play-pause" class="media-icon">
+                                <button id="bar-btn-play-pause" class="media-bar-btn">
+                                    <svg id="bar-icon-play-pause" class="media-bar-icon">
                                         <use href="../assets/svg/play-arrow-solid.svg#play-arrow-solid"></use>
                                     </svg>
                                 </button>
 
-                                <button id="btn-volume" class="media-btn">
-                                    <svg id="icon-volume" class="media-icon">
+                                <button id="bar-btn-volume" class="media-bar-btn">
+                                    <svg id="bar-icon-volume" class="media-bar-icon">
                                         <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
                                 </button>
@@ -282,13 +345,13 @@
                                     </div>
                                 </div>
 
-                                <button id="btn-playback-rate" class="media-btn">
+                                <button id="bar-btn-playback-rate" class="media-bar-btn">
                                     <span id="value-label-playback-rate" class="playback-rate-label">1</span>
                                     <span class="playback-rate-label">X</span>
                                 </button>
                                 
-                                <button id="btn-fullscreen" class="media-btn">
-                                    <svg id="icon-fullscreen" class="media-icon">
+                                <button id="bar-btn-fullscreen" class="media-bar-btn">
+                                    <svg id="bar-icon-fullscreen" class="media-bar-icon">
                                         <use href="../assets/svg/fullscreen.svg#fullscreen"></use>
                                     </svg>
                                 </button>
@@ -300,11 +363,11 @@
                         <div id="track-timeline">
                             <svg id="overlay-timeline" xmlns="http://www.w3.org/2000/svg"></svg>
                             <div id="thumb-timeline"></div>
-                            <svg id="left-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 96">
-                                <path d="M 0 0 V 96 H 12 V 93 Q 11.5 90.5 9 90 H 6 V 6 H 9 Q 11.5 5.5 12 3 V 0 Z" />
+                            <svg id="left-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 92">
+                                <path d="M 0 0 V 92 H 8 L 4 88 V 4 L 8 0 V 0 Z" />
                             </svg>
-                            <svg id="right-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 96">
-                                <path d="M 12 0 V 96 H 0 V 93 Q 0.5 90.5 3 90  H 6 V 6 H 3 Q 0.5 5.5 0 3 V 0 Z" />
+                            <svg id="right-thumb-clip" class="clip-thumb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 92">
+                                <path d="M 12 0 V 92 H 0 L 4 88 V 4 L 0 0 V 0 Z" />
                             </svg>
                         </div>
                     </div>
@@ -354,20 +417,20 @@
                                 </div>
                             </div>
 
-                            <button id="view-btn-clip" class="clip-btn">
-                                <svg id="view-icon-clip" class="clip-icon">
+                            <button id="view-bar-btn-clip" class="clip-bar-btn">
+                                <svg id="view-bar-icon-clip" class="clip-bar-icon">
                                     <use href="../assets/svg/visibility.svg#visibility"></use>
                                 </svg>
             
-                                <span class="clip-label">View Clip</span>
+                                <span class="clip-bar-label">View Clip</span>
                             </button>
 
-                            <button id="create-btn-clip" class="clip-btn">
-                                <svg id="create-icon-clip" class="clip-icon">
+                            <button id="create-bar-btn-clip" class="clip-bar-btn">
+                                <svg id="create-bar-icon-clip" class="clip-bar-icon">
                                     <use href="../assets/svg/save-as.svg#save-as"></use>
                                 </svg>
             
-                                <span class="clip-label">Create Clip</span>
+                                <span class="clip-bar-label">Create Clip</span>
                             </button>
                         </div>
 
@@ -409,6 +472,26 @@
 
                             <p class="general-setting-description">Easier on the eyes.</p>
                         </div>
+
+                        <!-- <div class="general-setting-ctr">
+                            <h4 class="general-setting-label">Scale</h4>
+
+                            <div class="general-setting-pill">
+                                <svg class="general-setting-icon">
+                                    <use href="../assets/svg/aspect-ratio-solid.svg#aspect-ratio-solid"></use>
+                                </svg>
+
+                                <div class="general-setting-slider-ctr">
+                                    <div id="slider-scale" class="general-setting-slider">
+                                        <div id="track-scale" class="general-setting-track">
+                                            <div id="overlay-scale" class="general-setting-overlay"></div>
+                                            <div id="thumb-scale" class="general-setting-thumb"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="general-setting-description">Change the appearance size.</p>
+                        </div> -->
                     </div>
 
                     <div class="content-ctr2">
@@ -587,6 +670,12 @@
 
                             <p class="general-setting-description">Automatically record when gameplay is detected.</p>
                         </div>
+
+                        <!-- <div class="general-setting-ctr">
+                            <h4 class="general-setting-label">Programs</h4>
+
+                            <p class="general-setting-description">Select which programs will be automatically recorded.</p>
+                        </div> -->
                     </div>
 
                     <div class="content-ctr2">

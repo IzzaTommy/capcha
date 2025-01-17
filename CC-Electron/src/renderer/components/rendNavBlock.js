@@ -36,7 +36,7 @@ import {
 import { setIcon, getParsedTime, setActiveSection, attemptAsyncFunction } from './rendSharedFunctions.js';
 import { initRendDirectoriesSection, loadCapturesGallery, updateCapturesGallery, toggleCapturesGalleryBtn, getReadableAge, loadClipsGallery, updateClipsGallery, toggleClipsGalleryBtn } from './rendDirectoriesSection.js';
 import { updateSpeakerVolumeSlider, updateMicrophoneVolumeSlider } from './rendSettingsSection.js';
-import { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
+import { initRendEditorSection, setVideoPlayerState, updateSeekSlider, updateTimelineSlider, getReadableDuration, getReadableRecordingDuration, updateVolumeSlider, updatePlaybackRateSlider } from './rendEditorSection.js';
 
 /**
  * @exports initRendNavBlock, toggleRecordBtn
@@ -197,10 +197,10 @@ async function toggleRecordBtn(autoStart, manualStop, recordingGame) {
 
                 // restart the recording time and set the recording time label interval
                 state['recordingTime'] = 0;
-                currentRecordingTimeLabel.textContent = getReadableDuration(state['recordingTime']);
+                currentRecordingTimeLabel.textContent = getReadableRecordingDuration(state['recordingTime']);
                 state['timerInterval'] = setInterval(() => {
                     state['recordingTime']++;
-                    currentRecordingTimeLabel.textContent = getReadableDuration(state['recordingTime']);
+                    currentRecordingTimeLabel.textContent = getReadableRecordingDuration(state['recordingTime']);
                 }, 1000);
             }
         }

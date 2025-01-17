@@ -20,7 +20,7 @@
     transition: var(--gstctr-transition);
 }
 
-.general-setting-ctr:hover {
+.general-setting-ctr:hover/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus)*/ {
     border-color: var(--gstctr-bcolor);
     background-color: var(--gstctr-bgcolor);
 }
@@ -31,6 +31,11 @@
     color: var(--gstlabel-color);
     font-size: var(--gstlabel-fsize);
     font-weight: var(--gstlabel-fweight);
+    transition: var(--gstlabel-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-label/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-label*/ {
+    color: var(--gstlabel-alt-color);
 }
 
 .general-setting-pill {
@@ -50,6 +55,11 @@
     width: var(--gsticon-length);
 
     fill: var(--gsticon-fill);
+    transition: var(--gsticon-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-icon/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-pill > .general-setting-icon*/ {
+    fill: var(--gsticon-alt-fill);
 }
 
 .general-setting-field {
@@ -63,10 +73,19 @@
     background-color: var(--gstfield-bgcolor);
     box-sizing: content-box;
     color: var(--gstfield-color);
+    transition: var(--gstfield-transition);
 }
 
 .general-setting-field[name="capturesPath"], .general-setting-field[name="clipsPath"] {
     width: var(--gstfield-alt-width);
+}
+
+.general-setting-field[name="capturesDisplay"], .general-setting-field[name="speaker"], .general-setting-field[name="microphone"], .general-setting-field[name="webcam"] {
+    width: var(--gstfield-alt2-width);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-field/*, .general-setting-field:focus*/ {
+    color: var(--gstfield-alt-color);
 }
 
 .general-setting-toggle-switch {
@@ -75,45 +94,46 @@
     border-top-right-radius: inherit;
     border-bottom-right-radius: inherit;
     flex: 0 0 auto;
-    width: var(--gsttswitch-width);
+    width: var(--gsttoggleswitch-width);
 
-    background-color: var(--gsttswitch-bgcolor);
-    transition: var(--gsttswitch-transition);
+    background-color: var(--gsttoggleswitch-bgcolor);
+    transition: var(--gsttoggleswitch-transition);
 
     cursor: pointer;
 }
 
 .general-setting-toggle-switch:has(.general-setting-toggle-field:checked) {
-    background-color: var(--gsttswitch-alt-bgcolor);
+    background-color: var(--gsttoggleswitch-alt-bgcolor);
 }
 
 .general-setting-toggle-field {
-    padding-right: var(--gsttfield-hpadding);
-    padding-left: var(--gsttfield-hpadding);
-    width: var(--gsttfield-width);
+    padding-right: var(--gsttogglefield-hpadding);
+    padding-left: var(--gsttogglefield-hpadding);
+    width: var(--gsttogglefield-width);
 
-    background-color: var(--gsttfield-bgcolor);
-    box-sizing: content-box;
-    color: var(--gsttfield-color);
     visibility: hidden;
 }
 
 .general-setting-toggle-icon {
     position: absolute;
-    inset: var(--gstticon-inset);
+    inset: var(--gsttoggleicon-inset);
 
-    border-radius: var(--gstticon-bradius);
-    height: var(--gstticon-height);
-    width: var(--gstticon-width);
+    border-radius: var(--gsttoggleicon-bradius);
+    height: var(--gsttoggleicon-height);
+    width: var(--gsttoggleicon-width);
 
-    background-color: var(--gstticon-bgcolor);
-    fill: var(--gstticon-fill);
-    transition: var(--gstticon-transition);
+    background-color: var(--gsttoggleicon-bgcolor);
+    fill: var(--gsttoggleicon-fill);
+    transition: var(--gsttoggleicon-transition);
 }
 
 .general-setting-toggle-field:checked + .general-setting-toggle-icon {
-    fill: var(--gstticon-alt-fill);
-    transform: translateX(var(--gstticon-translateX));
+    fill: var(--gsttoggleicon-alt-fill);
+    transform: translateX(var(--gsttoggleicon-translateX));
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-icon {
+    background-color: var(--gsttoggleicon-alt-bgcolor);
 }
 
 .general-setting-slider-ctr {
@@ -142,6 +162,11 @@
     height: 100%;
 
     background-color: var(--gsttrack-bgcolor);
+    transition: var(--gsttrack-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-slider-ctr > .general-setting-slider > .general-setting-track {
+    background-color: var(--gsttrack-alt-bgcolor);
 }
 
 .general-setting-overlay {
@@ -170,4 +195,9 @@
     color: var(--gstdesc-color);
     font-size: var(--gstdesc-fsize);
     font-weight: var(--gstdesc-fweight);
+    transition: var(--gstdesc-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-description/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-description*/ {
+    color: var(--gstdesc-alt-color);
 }
