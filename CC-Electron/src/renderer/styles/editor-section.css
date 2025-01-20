@@ -11,8 +11,6 @@
     width: var(--vctr-width);
 
     background-color: var(--vctr-bgcolor);
-
-    cursor: pointer;
 }
 
 #player-video {
@@ -36,7 +34,7 @@
 }
 
 #status-icon-play-pause.active {
-    visibility: inherit;
+    visibility: visible;
 }
 
 #ctr-playback {
@@ -49,7 +47,7 @@
     flex-flow: column nowrap;
     
     opacity: 0;
-    transition: var(--pctr-transition);
+    transition: var(--pbctr-transition);
 }
 
  #ctr-playback.active {
@@ -57,6 +55,7 @@
  }
 
 #slider-seek {
+    box-sizing: content-box;
     flex: 0 0 auto;
     height: var(--sslider-height);
     margin-right: var(--sslider-hmargin);
@@ -64,7 +63,7 @@
     padding-top: var(--sslider-tpadding);
     padding-bottom: var(--sslider-bpadding);
 
-    box-sizing: content-box;
+    cursor: pointer;
 }
 
 #track-seek {
@@ -156,11 +155,11 @@
     transition: var(--pbrtlabel-transition);
 }
 
-#bar-btn-playback-rate:hover > .playback-rate-label {
+#slider-ctr-playback-rate:hover + #bar-btn-playback-rate > .playback-rate-label {
     color: var(--pbrtlabel-alt-color);
 }
 
-#slider-ctr-playback-rate:hover + #bar-btn-playback-rate > .playback-rate-label {
+#bar-btn-playback-rate:hover > .playback-rate-label {
     color: var(--pbrtlabel-alt-color);
 }
 
@@ -170,8 +169,9 @@
 
 .media-slider-ctr {
     flex: 0 0 fit-content;
-
     overflow: hidden;
+
+    cursor: pointer;
 }
 
 #slider-ctr-volume {
@@ -185,12 +185,12 @@
 }
 
 .media-slider {
+    box-sizing: content-box;
     height: var(--mslider-height);
     padding-top: var(--mslider-vpadding);
     padding-bottom: var(--mslider-vpadding);
     width: 0;
 
-    box-sizing: content-box;
     transition: var(--mslider-transition);
 }
 
@@ -228,13 +228,14 @@
     position: absolute;
 
     border-radius: inherit;
+
+    transition: var(--moverlay-transition);
     visibility: hidden;
-    transition: visibility 0s ease 0.1s;
 }
 
 .media-slider.active > .media-track > .media-overlay {
-    visibility: inherit;
-    transition: visibility 0s ease 0s;
+    transition: var(--moverlay-alt-transition);
+    visibility: inherit;  /* Could be visible, but might show if you quickly show the slider then switch sections */
 }
 
 #overlay-volume {
@@ -252,15 +253,9 @@
     fill: var(--pbrtoverlay-fill);
     stroke: var(--pbrtoverlay-stroke);
     stroke-width: var(--pbrtoverlay-swidth);
+    transition: var(--pbrtoverlay-transition);
 
     pointer-events: none;
-
-    transition: var(--pbrtoverlay-transition);
-}
-
-#slider-ctr-playback-rate:has(+ #bar-btn-playback-rate:hover) > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate {
-    fill: var(--pbrtoverlay-alt-fill);
-    stroke: var(--pbrtoverlay-alt-stroke);
 }
 
 #slider-ctr-playback-rate:hover > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate {
@@ -268,23 +263,27 @@
     stroke: var(--pbrtoverlay-alt-stroke);
 }
 
-#overlay-playback-rate > text {
-    fill: var(--pbrtoverlay-text-fill);
-    font-size: var(--pbrtoverlay-text-fsize);
-    font-weight: var(--pbrtoverlay-text-fweight);
-    stroke: var(--pbrtoverlay-text-stroke);
-
-    transition: var(--pbrtoverlay-text-transition);
+#slider-ctr-playback-rate:has(+ #bar-btn-playback-rate:hover) > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate {
+    fill: var(--pbrtoverlay-alt-fill);
+    stroke: var(--pbrtoverlay-alt-stroke);
 }
 
-#slider-ctr-playback-rate:has(+ #bar-btn-playback-rate:hover) > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate > text {
-    fill: var(--pbrtoverlay-text-alt-fill);
-    stroke: var(--pbrtoverlay-text-alt-stroke);
+.playback-rate-text {
+    fill: var(--pbrttext-fill);
+    font-size: var(--pbrttext-fsize);
+    font-weight: var(--pbrttext-fweight);
+    stroke: var(--pbrttext-stroke);
+    transition: var(--pbrttext-transition);
 }
 
-#slider-ctr-playback-rate:hover > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate > text {
-    fill: var(--pbrtoverlay-text-alt-fill);
-    stroke: var(--pbrtoverlay-text-alt-stroke);
+#slider-ctr-playback-rate:hover > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate > .playback-rate-text {
+    fill: var(--pbrttext-alt-fill);
+    stroke: var(--pbrttext-alt-stroke);
+}
+
+#slider-ctr-playback-rate:has(+ #bar-btn-playback-rate:hover) > #slider-playback-rate > #track-playback-rate > #overlay-playback-rate > .playback-rate-text {
+    fill: var(--pbrttext-alt-fill);
+    stroke: var(--pbrttext-alt-stroke);
 }
 
 .media-thumb {
@@ -352,11 +351,11 @@
     stroke-width: var(--tloverlay-swidth);
 }
 
-#overlay-timeline > text {
-    fill: var(--tloverlay-text-fill);
-    font-size: var(--tloverlay-text-fsize);
-    font-weight: var(--tloverlay-text-fweight);
-    stroke: var(--tloverlay-text-stroke);
+.timeline-text {
+    fill: var(--tltext-fill);
+    font-size: var(--tltext-fsize);
+    font-weight: var(--tltext-fweight);
+    stroke: var(--tltext-stroke);
 }
 
 #thumb-timeline {
@@ -370,6 +369,8 @@
     width: var(--tlthumb-width);
 
     background-color: var(--tlthumb-bgcolor);
+
+    cursor: pointer;
 }
 
 .clip-thumb {
@@ -381,14 +382,19 @@
     height: var(--cpthumb-height);
     width: var(--cpthumb-width);
 
-    fill: var(--cpthumb-fill);
-    stroke: var(--cpthumb-stroke);
-    stroke-width: var(--cpthumb-swidth);
     visibility: hidden;
+
+    cursor: pointer;
 }
 
 .clip-thumb.active {
-    visibility: inherit;
+    visibility: visible;
+}
+
+.clip-path {
+    fill: var(--cppath-fill);
+    stroke: var(--cppath-stroke);
+    stroke-width: var(--cppath-swidth);
 }
 
 #ctr-clip {
@@ -399,18 +405,16 @@
     flex-flow: row nowrap;
 
     background-color: var(--cpctr-bgcolor);
-    visibility: inherit;
 }
 
-#ctr-clip > svg {
+#icon-clip {
     display: block;
     flex: 0 0 auto;
-    height: var(--cpctr-svg-length);
-    margin: auto var(--cpctr-svg-rmargin) auto var(--cpctr-svg-lmargin);
-
-    width: var(--cpctr-svg-length);
+    height: var(--cpicon-length);
+    margin: auto var(--cpicon-rmargin) auto var(--cpicon-lmargin);
+    width: var(--cpicon-length);
     
-    fill: var(--cpctr-svg-fill);
+    fill: var(--cpicon-fill);
 }
 
 #bar-clip {
@@ -426,13 +430,10 @@
     width: 0;
 
     transition: var(--cpbar-transition);
-    visibility: inherit;
 }
 
 #bar-clip.active {
     width: var(--cpbar-width);
-
-    transition: var(--cpbar-alt-transition);
 }
 
 .clip-setting-ctr {
@@ -446,18 +447,20 @@
 
     opacity: 0;
     transition: var(--cpstctr-transition);
-    visibility: hidden;
+
+    pointer-events: none;
 }
 
 .clip-setting-ctr:hover {
-    border-color: var(--cpstctr-bcolor);
     background-color: var(--cpstctr-bgcolor);
+    border-color: var(--cpstctr-bcolor);
 }
 
 #bar-clip.active > .clip-setting-ctr {
     opacity: 1;
     transition: var(--cpstctr-alt-transition);
-    visibility: inherit;
+
+    pointer-events: all;
 }
 
 .clip-setting-label {
@@ -500,15 +503,17 @@
 .clip-setting-field {
     border-top-right-radius: inherit;
     border-bottom-right-radius: inherit;
+    box-sizing: content-box;
     flex: 0 0 auto;
     padding-right: var(--cpstfield-hpadding);
     padding-left: var(--cpstfield-hpadding);
     width: var(--cpstfield-width);
 
     background-color: var(--cpstfield-bgcolor);
-    box-sizing: content-box;
     color: var(--cpstfield-color);
     transition: var(--cpstfield-transition);
+
+    cursor: pointer;
 }
 
 .clip-setting-ctr:hover > .clip-setting-pill > .clip-setting-field {
@@ -530,7 +535,9 @@
     background-color: var(--cpbarbtn-bgcolor);
     opacity: 0;
     transition: var(--cpbarbtn-transition);
-    visibility: hidden;
+
+    cursor: pointer;
+    pointer-events: none;
 }
 
 .clip-bar-btn:hover {
@@ -540,7 +547,8 @@
 #bar-clip.active > .clip-bar-btn {
     opacity: 1;
     transition: var(--cpbarbtn-alt-transition);
-    visibility: inherit;
+
+    pointer-events: all;
 }
 
 .clip-bar-icon {
@@ -548,13 +556,34 @@
     flex: 0 0 auto;
     height: var(--cpbaricon-length);
     width: var(--cpbaricon-length);
-
-    fill: var(--cpbaricon-fill);
-    transition: var(--cpbaricon-transition);
 }
 
-.clip-bar-btn:hover > .clip-bar-icon {
-    fill: var(--cpbaricon-alt-fill);
+.clip-bar-path {
+    transition: var(--cpbarpath-transition);
+}
+
+.clip-primary-bar-path {
+    fill: var(--cpprimarybarpath-fill);
+}
+
+.clip-bar-btn:hover > .clip-bar-icon > .clip-primary-bar-path {
+    fill: var(--cpprimarybarpath-alt-fill);
+}
+
+.clip-secondary-bar-path {
+    fill: var(--cpsecondarybarpath-fill);
+}
+
+.clip-bar-btn:hover > .clip-bar-icon > .clip-secondary-bar-path {
+    fill: var(--cpsecondarybarpath-alt-fill);
+}
+
+.clip-tertiary-bar-path {
+    fill: var(--cptertiarybarpath-fill);
+}
+
+.clip-bar-btn:hover > .clip-bar-icon > .clip-tertiary-bar-path {
+    fill: var(--cptertiarybarpath-alt-fill);
 }
 
 .clip-bar-label {
@@ -570,7 +599,7 @@
     color: var(--cpbarlabel-alt-color);
 }
 
-#btn-clip-toggle {
+#toggle-btn-clip {
     align-items: center;
 
     border-top-right-radius: inherit;
@@ -579,23 +608,23 @@
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    transition: var(--cptbtn-transition);
+    transition: var(--cptogglebtn-transition);
 }
 
-#btn-clip-toggle:hover {
-    background-color: var(--cptbtn-bgcolor);
+#toggle-btn-clip:hover {
+    background-color: var(--cptogglebtn-bgcolor);
 }
 
-#icon-clip-toggle {
+#toggle-icon-clip {
     display: block;
     flex: 0 0 auto;
-    height: var(--cpticon-length);
-    width: var(--cpticon-length);
+    height: var(--cptoggleicon-length);
+    width: var(--cptoggleicon-length);
 
-    fill: var(--cpticon-fill);
-    transition: var(--cpticon-transition)
+    fill: var(--cptoggleicon-fill);
+    transition: var(--cptoggleicon-transition)
 }
 
-#btn-clip-toggle:hover > #icon-clip-toggle {
-    fill: var(--cpticon-alt-fill);
+#toggle-btn-clip:hover > #toggle-icon-clip {
+    fill: var(--cptoggleicon-alt-fill);
 }

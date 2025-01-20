@@ -22,53 +22,53 @@
 
 #bar-nav.active {
     width: var(--nbar-alt-width);
-
-    transition: var(--nbar-alt-transition);
 }
 
-#display-logo {
+#display-brand {
     align-items: center;
 
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--ldisplay-hgap);
+    gap: var(--bdisplay-hgap);
 }
 
-#display-logo > svg {
+#icon-brand {
     display: block;
     flex: 0 0 auto;
-    height: var(--ldisplay-svg-length);
-    width: var(--ldisplay-svg-length);
+    height: var(--bicon-length);
+    width: var(--bicon-length);
 
-    fill: var(--ldisplay-svg-fill);
+    fill: var(--bicon-fill);
 }
 
-#display-logo > h1 {
+#name-label-brand {
     flex: 0 0 auto;
-    width: var(--ldisplay-h1-width);
+    width: var(--bnamelabel-width);
 
-    color: var(--ldisplay-h1-color);
-    font-size: var(--ldisplay-h1-fsize);
-    font-weight: var(--ldisplay-h1-fweight);
+    color: var(--bnamelabel-color);
+    font-size: var(--bnamelabel-fsize);
+    font-weight: var(--bnamelabel-fweight);
     opacity: 0;
-    transition: var(--ldisplay-h1-transition);
-    visibility: hidden;
+    transition: var(--bnamelabel-transition);
+
+    pointer-events: none;
 }
 
-#bar-nav.active > #display-logo > h1 {
+#bar-nav.active > #display-brand > #name-label-brand {
     opacity: 1;
-    transition: var(--ldisplay-h1-alt-transition);
-    visibility: visible;
+    transition: var(--bnamelabel-alt-transition);
+
+    pointer-events: all;
 }
 
-#bar-nav > hr {
+#divider-nav {
     flex: 0 0 auto;
-    height: var(--nbar-hr-height);
-    margin-left: var(--nbar-hr-lmargin);
-    width: var(--nbar-hr-width);
+    height: var(--ndivider-height);
+    margin-left: var(--ndivider-lmargin);
+    width: var(--ndivider-width);
 
-    background-color: var(--nbar-hr-bgcolor);
+    background-color: var(--ndivider-bgcolor);
 }
 
 .nav-bar-btn {
@@ -84,6 +84,8 @@
     padding: var(--nbarbtn-padding);
 
     transition: var(--nbarbtn-transition);
+
+    cursor: pointer;
 }
 
 .nav-bar-btn:hover {
@@ -105,8 +107,8 @@
 }
 
 #bar-btn-record.active {
-    border-color: transparent;
     background-color: var(--rbarbtn-alt2-bgcolor);
+    border-color: transparent;
 }
 
 #bar-btn-record.active:hover {
@@ -118,17 +120,54 @@
     flex: 0 0 auto;
     height: var(--nbaricon-length);
     width: var(--nbaricon-length);
-
-    fill: var(--nbaricon-fill);
-    transition: var(--nbaricon-transition);
 }
 
-.nav-bar-btn:hover > .nav-bar-icon {
-    fill: var(--nbaricon-alt-fill);
+.nav-bar-path {
+    transition: var(--nbarpath-transition);
 }
 
-#bar-btn-record.active > #bar-icon-record {
-    fill: var(--rbaricon-fill);
+.nav-primary-bar-path {
+    fill: var(--nprimarybarpath-fill);
+}
+
+.nav-bar-btn:hover > .nav-bar-icon > .nav-primary-bar-path {
+    fill: var(--nprimarybarpath-alt-fill);
+}
+
+#bar-btn-record.active > #bar-icon-record > #primary-bar-path-record {
+    fill: var(--rprimarybarpath-fill);
+}
+
+.nav-secondary-bar-path {
+    fill: var(--nsecondarybarpath-fill);
+}
+
+.nav-bar-btn:hover > .nav-bar-icon > .nav-secondary-bar-path {
+    fill: var(--nsecondarybarpath-alt-fill);
+}
+
+#bar-btn-record.active > #bar-icon-record > #secondary-bar-path-record {
+    fill: var(--rsecondarybarpath-fill);
+}
+
+#bar-btn-record.active:hover > #bar-icon-record > #secondary-bar-path-record {
+    fill: var(--rsecondarybarpath-alt-fill);
+}
+
+.nav-tertiary-bar-path {
+    fill: var(--ntertiarybarpath-fill);
+}
+
+.nav-bar-btn:hover > .nav-bar-icon > .nav-tertiary-bar-path {
+    fill: var(--ntertiarybarpath-alt-fill);
+}
+
+#bar-btn-record.active > #bar-icon-record > #tertiary-bar-path-record {
+    fill: var(--rtertiarybarpath-fill);
+}
+
+#bar-btn-record.active:hover > #bar-icon-record > #tertiary-bar-path-record {
+    fill: var(--rtertiarybarpath-alt-fill);
 }
 
 .nav-bar-label {
@@ -139,7 +178,8 @@
     font-weight: var(--nbarlabel-fweight);
     opacity: 0;
     transition: var(--nbarlabel-transition);
-    visibility: hidden;
+
+    pointer-events: none;
 }
 
 .nav-bar-btn:hover > .nav-bar-label {
@@ -149,11 +189,16 @@
 #bar-nav.active > .nav-bar-btn > .nav-bar-label {
     opacity: 1;
     transition: var(--nbarlabel-alt-transition);
-    visibility: visible;
+
+    pointer-events: all;
 }
 
-#bar-btn-record.active > .nav-bar-label {
-    color: var(--rbarbtn-span-color);
+#bar-btn-record.active > #bar-label-record {
+    color: var(--rbarlabel-color);
+}
+
+#bar-btn-record.active:hover > #bar-label-record {
+    color: var(--rbarlabel-alt-color);
 }
 
 #label-ctr-current-recording {
@@ -172,53 +217,52 @@
 
     background-color: var(--curlabelctr-bgcolor);
     transition: var(--curlabelctr-transition);
-    visibility: hidden;
 }
 
 #label-ctr-current-recording.active {
     bottom: var(--curlabelctr-alt-binset);
-
-    transition: var(--curlabelctr-alt-transition);
-    visibility: visible;
 }
 
 #time-label-current-recording {
+    text-align: center;
+
     flex: 0 0 auto;
+    line-height: normal;
     width: var(--curtimelabel-width);
     
     color: var(--curtimelabel-color);
     font-size: var(--curtimelabel-fsize);
     font-weight: var(--curtimelabel-fweight);
-    line-height: normal;
-    text-align: center;
 }
 
 #game-label-current-recording {
     flex: 0 0 auto;
     margin: auto;
+    overflow: hidden;
     width: var(--curgamelabel-width);
 
     color: var(--curgamelabel-color);
     font-size: var(--curgamelabel-fsize);
     font-weight: var(--curgamelabel-fweight);
     opacity: 0;
-    transition: var(--curgamelabel-transition);
-    visibility: hidden;
-
-    overflow: hidden;
     text-overflow: ellipsis;
+    transition: var(--curgamelabel-transition);
     white-space: nowrap;
+
+    pointer-events: none;
 }
 
 #bar-nav.active > #label-ctr-current-recording > #game-label-current-recording {
     opacity: 1;
     transition: var(--curgamelabel-alt-transition);
-    visibility: visible;
+
+    pointer-events: all;
 }
 
 #resume-label-auto-record {
     align-items: center;
     justify-content: center;
+    text-align: center;
 
     display: flex;
     flex: 0 0 auto;
@@ -230,9 +274,10 @@
     color: var(--arresumelabel-color);
     font-size: var(--arresumelabel-fsize);
     font-weight: var(--arresumelabel-fweight);
-    opacity: 0;
-    text-align: center;
+    opacity: 0;    
     transition: var(--arresumelabel-transition);
+
+    cursor: pointer;
     pointer-events: none;
 }
 
@@ -242,11 +287,11 @@
 
 #resume-label-auto-record.active {
     opacity: 1;
-    transition: var(--arresumelabel-alt-transition);
+
     pointer-events: all;
 }
 
-#btn-nav-toggle {
+#toggle-btn-nav {
     align-items: center;
 
     border-top-right-radius: inherit;
@@ -254,23 +299,23 @@
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
 
-    transition: var(--ntbtn-transition);
+    transition: var(--ntogglebtn-transition);
 }
 
-#btn-nav-toggle:hover {
-    background-color: var(--ntbtn-bgcolor);
+#toggle-btn-nav:hover {
+    background-color: var(--ntogglebtn-bgcolor);
 }
 
-#icon-nav-toggle {
+#toggle-icon-nav {
     display: block;
     flex: 0 0 auto;
-    height: var(--nticon-length);
-    width: var(--nticon-length);
+    height: var(--ntoggleicon-length);
+    width: var(--ntoggleicon-length);
 
-    fill: var(--nticon-fill);
-    transition: var(--nticon-transition)
+    fill: var(--ntoggleicon-fill);
+    transition: var(--ntoggleicon-transition)
 }
 
-#btn-nav-toggle:hover > #icon-nav-toggle {
-    fill: var(--nticon-alt-fill);
+#toggle-btn-nav:hover > #toggle-icon-nav {
+    fill: var(--ntoggleicon-alt-fill);
 }

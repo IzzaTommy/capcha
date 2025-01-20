@@ -57,23 +57,23 @@ function initRendNavBlock() {
  */
 function initNavBtnEL() {
     // on mouse enter, change to the solid icon
-    directoriesBtn.addEventListener('mouseenter', () => setIcon(directoriesIcon, 'folder-solid'));
+    // directoriesBtn.addEventListener('mouseenter', () => setIcon(directoriesIcon, 'folder-solid'));
     // on mouse leave, change to the regular icon
-    directoriesBtn.addEventListener('mouseleave', () => setIcon(directoriesIcon, 'folder'));
+    // directoriesBtn.addEventListener('mouseleave', () => setIcon(directoriesIcon, 'folder'));
     // on click, change the active content section to the directories section
     directoriesBtn.addEventListener('click', () => setActiveSection('directories'));
 
     // on mouse enter, change to the solid icon
-    settingsBtn.addEventListener('mouseenter', () => setIcon(settingsIcon, 'settings-solid'));
+    // settingsBtn.addEventListener('mouseenter', () => setIcon(settingsIcon, 'settings-solid'));
     // on mouse leave, change to the regular icon
-    settingsBtn.addEventListener('mouseleave', () => setIcon(settingsIcon, 'settings'));
+    // settingsBtn.addEventListener('mouseleave', () => setIcon(settingsIcon, 'settings'));
     // on click, change the active content section to the settings section
     settingsBtn.addEventListener('click', () => setActiveSection('settings'));
 
     // on mouse enter, change to the solid icon
-    recordBtn.addEventListener('mouseenter', () => setIcon(recordIcon, 'radio-button-checked-solid'));
+    // recordBtn.addEventListener('mouseenter', () => setIcon(recordIcon, 'radio-button-checked-solid'));
     // on mouse leave, change to the regular icon
-    recordBtn.addEventListener('mouseleave', () => setIcon(recordIcon, 'radio-button-checked'));
+    // recordBtn.addEventListener('mouseleave', () => setIcon(recordIcon, 'radio-button-checked'));
     // on click, toggle the recording
     recordBtn.addEventListener('click', async () => await toggleRecordBtn(false, true, 'MANUAL'));
 

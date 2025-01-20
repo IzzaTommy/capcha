@@ -143,8 +143,8 @@ function initRendVariables() {
 
     autoRecordResumeLabel = document.getElementById('resume-label-auto-record');
 
-    navToggleBtn = document.getElementById('btn-nav-toggle');
-    navToggleIcon = document.querySelector('#icon-nav-toggle > use');
+    navToggleBtn = document.getElementById('toggle-btn-nav');
+    navToggleIcon = document.querySelector('#toggle-icon-nav > use');
 
     // content block elements
     generalStatusLabel = document.getElementById('status-label-content');
@@ -218,8 +218,8 @@ function initRendVariables() {
     clipCreateBtn = document.getElementById('create-bar-btn-clip');
     clipCreateIcon = document.querySelector('#create-bar-icon-clip > use');
     
-    clipToggleBtn = document.getElementById('btn-clip-toggle');
-    clipToggleIcon = document.querySelector('#icon-clip-toggle > use');
+    clipToggleBtn = document.getElementById('toggle-btn-clip');
+    clipToggleIcon = document.querySelector('#toggle-icon-clip > use');
 
     // settings section elements
     /////////////////////////////////////

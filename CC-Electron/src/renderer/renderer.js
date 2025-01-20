@@ -63,22 +63,7 @@ async function finishInit() {
     titleBar.style.webkitAppRegion = 'drag';
     initializationOverlay.classList.remove('active');
 
-    // console.log( getReadableRecordingDuration(800000000) );
-    // console.log( getReadableRecordingDuration(8000000) );
-    // console.log( getReadableRecordingDuration(4000000) );
-    // console.log( getReadableRecordingDuration(87000) );
-    // console.log( getReadableRecordingDuration(86400) );
-    // console.log( getReadableRecordingDuration(37000) );
-    // console.log( getReadableRecordingDuration(3700) );
-    // console.log( getReadableRecordingDuration(3600) );
-    // console.log( getReadableRecordingDuration(630) );
-    // console.log( getReadableRecordingDuration(180) );
-    // console.log( getReadableRecordingDuration(59) );
-    // document.querySelector('.storage-ctr').addEventListener('click', () => {
-    //     console.log('test');
-    // })
-
-    // document.querySelector('#view-bar-btn-clip').addEventListener('click', () => {
-    //     console.log('test2');
-    // })
+    document.querySelector('.clip-bar-btn').addEventListener('click', () => {
+        console.log('test');
+    })
 }

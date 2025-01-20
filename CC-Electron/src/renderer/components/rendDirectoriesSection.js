@@ -168,16 +168,16 @@ async function loadCapturesGallery(initialization) {
             });
 
             // on mouse enter, change to the solid icon
-            videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
+            // videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
             // on mouse leave, change to the regular icon
-            videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
+            // videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
             videoRenameBtn.addEventListener('click', () => {
             });
 
             // on mouse enter, change to the solid icon
-            videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
+            // videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
             // on mouse leave, change to the regular icon
-            videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
+            // videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
             videoDeleteBtn.addEventListener('click', () => {
             });
 
@@ -283,16 +283,16 @@ async function loadClipsGallery(initialization) {
             });
 
             // on mouse enter, change to the solid icon
-            videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
+            // videoRenameBtn.addEventListener('mouseenter', () => setIcon(videoRenameIcon, 'edit-solid'));
             // on mouse leave, change to the regular icon
-            videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
+            // videoRenameBtn.addEventListener('mouseleave', () => setIcon(videoRenameIcon, 'edit'));
             videoRenameBtn.addEventListener('click', () => {
             });
 
             // on mouse enter, change to the solid icon
-            videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
+            // videoDeleteBtn.addEventListener('mouseenter', () => setIcon(videoDeleteIcon, 'delete-solid'));
             // on mouse leave, change to the regular icon
-            videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
+            // videoDeleteBtn.addEventListener('mouseleave', () => setIcon(videoDeleteIcon, 'delete'));
             videoDeleteBtn.addEventListener('click', () => {
             });
 

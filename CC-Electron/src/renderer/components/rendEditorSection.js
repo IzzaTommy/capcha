@@ -803,9 +803,9 @@ function initClipContainerEL() {
     });
 
     // on mouse enter, change to the solid icon
-    clipViewBtn.addEventListener('mouseenter', () => setIcon(clipViewIcon, 'visibility-solid'));
+    // clipViewBtn.addEventListener('mouseenter', () => setIcon(clipViewIcon, 'visibility-solid'));
     // on mouse leave, change to the regular icon
-    clipViewBtn.addEventListener('mouseleave', () => setIcon(clipViewIcon, 'visibility'));
+    // clipViewBtn.addEventListener('mouseleave', () => setIcon(clipViewIcon, 'visibility'));
     // on click, preview the clip
     clipViewBtn.addEventListener('click', () => {
         // set the video to the clip start time
@@ -818,9 +818,9 @@ function initClipContainerEL() {
     });
 
     // on mouse enter, change to the solid icon
-    clipCreateBtn.addEventListener('mouseenter', () => setIcon(clipCreateIcon, 'save-as-solid'));
+    // clipCreateBtn.addEventListener('mouseenter', () => setIcon(clipCreateIcon, 'save-as-solid'));
     // on mouse leave, change to the regular icon
-    clipCreateBtn.addEventListener('mouseleave', () => setIcon(clipCreateIcon, 'save-as'));
+    // clipCreateBtn.addEventListener('mouseleave', () => setIcon(clipCreateIcon, 'save-as'));
     // on click, create the clip
     clipCreateBtn.addEventListener('click', async () => {
         await attemptAsyncFunction(() => window.clipAPI.createClip(videoPlayer.getAttribute('src'), state['timeline'].getClipStartTime(), state['timeline'].getClipEndTime()), ATTEMPTS, FAST_DELAY_IN_MSECONDS, false);
@@ -1160,6 +1160,7 @@ function setTimelineOverlay() {
 
     // set the default tick text vertical location
     tickTextTemplate.setAttribute('y', 45);
+    tickTextTemplate.classList.add('timeline-text');
 
     // remove all timeline overlay ticks
     while (timelineOverlay.firstElementChild)

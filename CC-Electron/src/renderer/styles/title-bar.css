@@ -6,13 +6,13 @@
     flex-flow: row nowrap;
 }
 
-#bar-title > span {
+#version-label-title {
     flex: 0 0 fit-content;
-    margin-left: var(--tbar-span-lmargin);
+    margin-left: var(--tversionlabel-lmargin);
 
-    color: var(--tbar-span-color);
-    font-size: var(--tbar-span-fsize);
-    font-weight: var(--tbar-span-fweight);
+    color: var(--tversionlabel-color);
+    font-size: var(--tversionlabel-fsize);
+    font-weight: var(--tversionlabel-fweight);
 }
 
 .title-bar-btn {

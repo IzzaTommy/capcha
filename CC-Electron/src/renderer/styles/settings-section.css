@@ -21,8 +21,8 @@
 }
 
 .general-setting-ctr:hover/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus)*/ {
-    border-color: var(--gstctr-bcolor);
     background-color: var(--gstctr-bgcolor);
+    border-color: var(--gstctr-bcolor);
 }
 
 .general-setting-label {
@@ -65,15 +65,17 @@
 .general-setting-field {
     border-top-right-radius: inherit;
     border-bottom-right-radius: inherit;
+    box-sizing: content-box;
     flex: 0 0 auto;
     padding-right: var(--gstfield-hpadding);
     padding-left: var(--gstfield-hpadding);
     width: var(--gstfield-width);
 
     background-color: var(--gstfield-bgcolor);
-    box-sizing: content-box;
     color: var(--gstfield-color);
     transition: var(--gstfield-transition);
+
+    cursor: pointer;
 }
 
 .general-setting-field[name="capturesPath"], .general-setting-field[name="clipsPath"] {
@@ -128,8 +130,9 @@
 }
 
 .general-setting-toggle-field:checked + .general-setting-toggle-icon {
-    fill: var(--gsttoggleicon-alt-fill);
     transform: translateX(var(--gsttoggleicon-translateX));
+
+    fill: var(--gsttoggleicon-alt-fill);
 }
 
 .general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-icon {
@@ -143,16 +146,17 @@
     padding-right: var(--gstsliderctr-hmargin);
     padding-left: var(--gstsliderctr-hmargin);
 
-    background-color: var(--gstsliderctr-bgcolor); 
+    background-color: var(--gstsliderctr-bgcolor);
+
+    cursor: pointer;
 }
 
 .general-setting-slider {
+    box-sizing: content-box;
     height: var(--gstslider-height);
     padding-top: var(--gstslider-vpadding);
     padding-bottom: var(--gstslider-vpadding);
     width: var(--gstslider-width);
-
-    box-sizing: content-box;
 }
 
 .general-setting-track {

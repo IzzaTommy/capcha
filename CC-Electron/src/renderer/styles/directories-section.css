@@ -1,5 +1,7 @@
 .directories-label {
     transition: var(--dlabel-transition);
+
+    cursor: pointer;
 }
 
 .directories-label:hover {
@@ -23,14 +25,15 @@
 }
 
 .directory-label2 {
+    text-align: left;
+
     flex: 0 0 fit-content;
+    overflow: hidden;
 
     direction: rtl;
     color: var(--dlabel2-color);
     font-size: var(--dlabel2-fsize);
     font-weight: var(--dlabel2-fweight);
-    overflow: hidden;
-    text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -43,11 +46,11 @@
 
 .directory-label3 {
     flex: 0 1 fit-content;
+    overflow: hidden;
 
     color: var(--dlabel3-color);
     font-size: var(--dlabel3-fsize);
     font-weight: var(--dlabel3-fweight);
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -73,6 +76,8 @@
     background-color: var(--dstfield-bgcolor);
     color: var(--dstfield-color);
     transition: var(--dstfield-transition);
+
+    cursor: pointer;
 }
 
 .directory-setting-field:hover {
@@ -84,6 +89,8 @@
     flex: 0 0 fit-content;
     
     transition: var(--dbarbtn-transition);
+
+    cursor: pointer;
 }
 
 .directory-bar-btn:hover {
@@ -102,12 +109,6 @@
 .directory-bar-btn:hover > .directory-bar-icon {
     fill: var(--dbaricon-fill);
 }
-
-
-
-
-
-
 
 .directory-ctr {
     border: var(--dctr-bwidth) solid var(--dctr-bcolor);
@@ -170,10 +171,9 @@
     flex-flow: row nowrap;
     margin-right: var(--dgallery-hmargin);
     margin-left: var(--dgallery-hmargin);
+    overflow-x: auto;
     padding-top: var(--dgallery-vpadding);
     padding-bottom: var(--dgallery-vpadding);
-
-    overflow-x: auto;
 
     scroll-snap-type: x mandatory;
 }
@@ -185,8 +185,8 @@
 
 .directory-status-label {
     align-self: center;
-    display: none;
 
+    display: none;
     margin-left: auto;
     margin-right: auto;
 
@@ -209,6 +209,7 @@
 
     transition: var(--vpctr-transition);
 
+    cursor: pointer;
     scroll-snap-align: start;
 }
 
@@ -245,7 +246,6 @@
     color: var(--vtndurlabel-color);
     font-size: var(--vtndurlabel-fsize);
     font-weight: var(--vtndurlabel-fweight);
-
     transition: var(--vtndurlabel-transition);
 }
 
@@ -262,18 +262,19 @@
 }
 
 .video-preview-label {
+    line-height: normal;
+
     font-size: var(--vplabel-fsize);
     font-weight: var(--vplabel-fweight);
-    line-height: normal;
     transition: var(--vplabel-transition);
 }
 
 .video-preview-game-label {
     flex: 0 1 fit-content;
     margin-right: var(--vpgamelabel-rmargin);
+    overflow: hidden;
 
     color: var(--vpgamelabel-color);
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -295,13 +296,13 @@
 
 .video-preview-name-label {
     flex: 0 0 auto;
+    overflow: hidden;
 
     width: var(--vpnamelabel-width);
 
     color: var(--vpnamelabel-color);
     font-size: var(--vpnamelabel-fsize);
     font-weight: var(--vpnamelabel-fweight);
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -319,6 +320,8 @@
     padding: var(--vpbtn-padding);
 
     transition: var(--vpbtn-transition);
+
+    cursor: pointer;
 }
 
 .video-preview-rename-btn:hover {
@@ -334,11 +337,44 @@
     flex: 0 0 auto;
     height: var(--vpicon-length);
     width: var(--vpicon-length);
-
-    fill: var(--vpicon-fill);
-    transition: var(--vpicon-transition);
 }
 
-.video-preview-btn:hover > .video-preview-icon {
-    fill: var(--vpicon-alt-fill);
+.video-preview-path {
+    transition: var(--vppath-transition);
+}
+
+.video-preview-primary-path {
+    fill: var(--vpprimarypath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-primary-path {
+    fill: var(--vpprimarypath-alt-fill);
+}
+
+.video-preview-secondary-path {
+    fill: var(--vpsecondarypath-fill);
+}
+
+.video-preview-ctr:hover > .video-preview-btn-ctr > .video-preview-btn > .video-preview-icon > .video-preview-secondary-path {
+    fill: var(--vpsecondarypath-alt-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-secondary-path {
+    fill: var(--vpsecondarypath-alt2-fill)!important;
+}
+
+.video-preview-rename-path {
+    fill: var(--vprenamepath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-rename-path {
+    fill: var(--vprenamepath-alt-fill);
+}
+
+.video-preview-delete-path {
+    fill: var(--vpdeletepath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-delete-path {
+    fill: var(--vpdeletepath-alt-fill);
 }

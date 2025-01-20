@@ -28,8 +28,16 @@ html {
     /* ==== tclbarbtn -> Title Close Bar Button ==== */
     --tclbarbtn-bgcolor: #ff0000;
 
-    /* ==== rbaricon -> Record Bar Icon ==== */
-    --rbaricon-fill: #ff0000;
+    /* ==== rprimarybarpath -> Record Primary Bar Path ==== */
+    --rprimarybarpath-fill: #ff0000;
+
+    /* ==== rsecondarybarpath -> Record Secondary Bar Path ==== */
+    --rsecondarybarpath-fill: #dddddd;
+    --rsecondarybarpath-alt-fill: #ff0000;
+
+    /* ==== rtertiarybarpath -> Record Tertiary Bar Path ==== */
+    --rtertiarybarpath-fill: #ff0000;
+    --rtertiarybarpath-alt-fill: #ffffff;
 
     /* ==== curtimelabel -> Current Recording Time Label ==== */
     --curtimelabel-color: #14dd40;
@@ -88,9 +96,9 @@ html {
     /* ==== cuvlabel -> Current Video Label ==== */
     --cuvlabel-color: #dddddd;
 
-    /* ==== cpthumb -> Clip Thumb ==== */
-    --cpthumb-fill: #b575e9;
-    --cpthumb-stroke: #b575e9;
+    /* ==== cppath -> Clip Path ==== */
+    --cppath-fill: #b575e9;
+    --cppath-stroke: #b575e9;
 
     /* ==== gsttoggleswitch -> General Setting Toggle Switch ==== */
     --gsttoggleswitch-alt-bgcolor: #2da347;
@@ -111,7 +119,7 @@ html {
 html[data-theme='dark'] {
     /* ==== scbar -> Scroll Bar ==== */
     --scbar-thumb-bgcolor: #dddddd;
-    --scbar-thumb-alt-bgcolor: white;
+    --scbar-thumb-alt-bgcolor: #ffffff;
 
     /* ==== body -> Body ==== */
     --body-bgcolor: #5f646a;
@@ -119,9 +127,11 @@ html[data-theme='dark'] {
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-bgcolor: #5f646a;
 
-    --ioverlay-svg-fill: #dddddd;
+    /* ==== iicon -> Initialization Icon ==== */
+    --iicon-fill: #dddddd;
 
-    --ioverlay-span-color: #dddddd;
+    /* ==== inamelabel -> Initialization Name Label ==== */
+    --inamelabel-color: #dddddd;
     
     /* ==== istatuslabel -> Initialization Status Label ==== */
     --istatuslabel-color: #dddddd;
@@ -148,8 +158,8 @@ html[data-theme='dark'] {
     /* ==== cdivider2 -> Content Divider 2 ==== */
     --cdivider2-bgcolor: #747474;
 
-    /* ==== tbar -> Title Bar ==== */
-    --tbar-span-color: #dddddd;
+    /* ==== tversionlabel -> Title Version Label ==== */
+    --tversionlabel-color: #dddddd;
 
     /* ==== tbarbtn -> Title Bar Button ==== */
     --tbarbtn-bgcolor: #3a3a3a;
@@ -160,13 +170,14 @@ html[data-theme='dark'] {
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #373737;
 
-    /* ==== nbar -> Nav(igation) Bar ==== */
-    --nbar-hr-bgcolor: #a4a4a4;
+    /* ==== bicon -> Brand Icon ==== */
+    --bicon-fill: #dddddd;
 
-    /* ==== ldisplay -> Logo Display ==== */
-    --ldisplay-svg-fill: #dddddd;
+    /* ==== bnamelabel -> Brand Name Label ==== */
+    --bnamelabel-color: #dddddd;
 
-    --ldisplay-h1-color: #dddddd;
+    /* ==== ndivider -> Nav(igation) Divider ==== */
+    --ndivider-bgcolor: #a4a4a4;
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bgcolor: #575757;
@@ -178,15 +189,25 @@ html[data-theme='dark'] {
     --rbarbtn-alt2-bgcolor: #dddddd;
     --rbarbtn-alt3-bgcolor: #ffffff;
 
-    --rbarbtn-span-color: #363636;
+    /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
+    --nprimarybarpath-fill: #dddddd;
+    --nprimarybarpath-alt-fill: #ffffff;
 
-    /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
-    --nbaricon-fill: #dddddd;
-    --nbaricon-alt-fill: #ffffff;
+    /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
+    --nsecondarybarpath-fill: #373737;
+    --nsecondarybarpath-alt-fill: #ffffff;
+
+    /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
+    --ntertiarybarpath-fill: #dddddd;
+    --ntertiarybarpath-alt-fill: #575757;
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
     --nbarlabel-color: #dddddd;
     --nbarlabel-alt-color: #ffffff;
+
+    /* ==== rbarlabel -> Record Bar Label ==== */
+    --rbarlabel-color: #363636;
+    --rbarlabel-alt-color: #000000;
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
     --curlabelctr-bcolor: #575757;
@@ -199,12 +220,12 @@ html[data-theme='dark'] {
     --arresumelabel-color: #88959d;
     --arresumelabel-alt-color: #dddddd;
 
-    /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-bgcolor: #505050;
+    /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
+    --ntogglebtn-bgcolor: #505050;
 
-    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
-    --nticon-fill: #dddddd;
-    --nticon-alt-fill: #ffffff;
+    /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
+    --ntoggleicon-fill: #dddddd;
+    --ntoggleicon-alt-fill: #ffffff;
 
     /* ==== dlabel -> Directories Label ==== */
     --dlabel-color: #ffffff;
@@ -259,9 +280,22 @@ html[data-theme='dark'] {
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-color: #dddddd;
 
-    /* ==== vpicon -> Video Preview Icon ==== */
-    --vpicon-fill: #dddddd;
-    --vpicon-alt-fill: white;
+    /* ==== vpprimarypath -> Video Preview Primary Path ==== */
+    --vpprimarypath-fill: #dddddd;
+    --vpprimarypath-alt-fill: #ffffff;
+
+    /* ==== vpsecondarypath -> Video Preview Secondary Path ==== */
+    --vpsecondarypath-fill: #373737;
+    --vpsecondarypath-alt-fill: #505050;
+    --vpsecondarypath-alt2-fill: #ffffff;
+
+    /* ==== vprenamepath -> Video Preview Rename Path ==== */
+    --vprenamepath-fill: #dddddd;
+    --vprenamepath-alt-fill: #f2a72f;
+
+    /* ==== vpdeletepath -> Video Preview Delete Path ==== */
+    --vpdeletepath-fill: #dddddd;
+    --vpdeletepath-alt-fill: #ea2d2d;
 
     /* ==== votrack -> Volume Track ==== */
     --votrack-bgcolor: #ffffff;
@@ -275,10 +309,11 @@ html[data-theme='dark'] {
     --pbrtoverlay-stroke: #363636;
     --pbrtoverlay-alt-stroke: #000000;
 
-    --pbrtoverlay-text-fill: #dddddd;
-    --pbrtoverlay-text-alt-fill: #ffffff;
-    --pbrtoverlay-text-stroke: #dddddd;
-    --pbrtoverlay-text-alt-stroke: #ffffff;
+    /* ==== pbrttext -> Playback Rate Text ==== */
+    --pbrttext-fill: #dddddd;
+    --pbrttext-alt-fill: #ffffff;
+    --pbrttext-stroke: #dddddd;
+    --pbrttext-alt-stroke: #ffffff;
 
     /* ==== tltrack -> Timeline Track ==== */
     --tltrack-bgcolor: #373737;
@@ -287,8 +322,9 @@ html[data-theme='dark'] {
     --tloverlay-fill: #8e8e8e;
     --tloverlay-stroke: #8e8e8e;
 
-    --tloverlay-text-fill: #dddddd;
-    --tloverlay-text-stroke: #dddddd;
+    /* ==== tltext -> Timeline Text ==== */
+    --tltext-fill: #dddddd;
+    --tltext-stroke: #dddddd;
 
     /* ==== tlthumb -> Timeline Thumb ==== */
     --tlthumb-bgcolor: #dddddd;
@@ -297,7 +333,8 @@ html[data-theme='dark'] {
     --cpctr-bcolor: #414344;
     --cpctr-bgcolor: #373737;
 
-    --cpctr-svg-fill: #dddddd;
+    /* ==== cpicon -> Clip Icon ==== */
+    --cpicon-fill: #dddddd;
 
     /* ==== cpstctr -> Clip Setting Container ==== */
     --cpstctr-bcolor: transparent;
@@ -324,20 +361,28 @@ html[data-theme='dark'] {
     --cpbarbtn-bgcolor: #373737;
     --cpbarbtn-alt-bgcolor: #575757;
 
-    /* ==== cpbaricon -> Clip Bar Icon ==== */
-    --cpbaricon-fill: #dddddd;
-    --cpbaricon-alt-fill: #ffffff;
+    /* ==== cpprimarybarpath -> Clip Primary Bar Path ==== */
+    --cpprimarybarpath-fill: #dddddd;
+    --cpprimarybarpath-alt-fill: #ffffff;
+
+    /* ==== cpsecondarybarpath -> Clip Secondary Bar Path ==== */
+    --cpsecondarybarpath-fill: #373737;
+    --cpsecondarybarpath-alt-fill: #ffffff;
+
+    /* ==== cptertiarybarpath -> Clip Tertiary Bar Path ==== */
+    --cptertiarybarpath-fill: #dddddd;
+    --cptertiarybarpath-alt-fill: #575757;
 
     /* ==== cpbarlabel -> Clip Bar Label ==== */
     --cpbarlabel-color: #dddddd;
     --cpbarlabel-alt-color: #ffffff;
 
-    /* ==== cptbtn -> Clip Toggle Button ==== */
-    --cptbtn-bgcolor: #505050;
+    /* ==== cptogglebtn -> Clip Toggle Button ==== */
+    --cptogglebtn-bgcolor: #505050;
 
-    /* ==== cpticon -> Clip Toggle Icon ==== */
-    --cpticon-fill: #dddddd;
-    --cpticon-alt-fill: #ffffff;
+    /* ==== cptoggleicon -> Clip Toggle Icon ==== */
+    --cptoggleicon-fill: #dddddd;
+    --cptoggleicon-alt-fill: #ffffff;
 
     /* ==== gstctr -> General Setting Container ==== */
     --gstctr-bcolor: transparent;
@@ -389,9 +434,11 @@ html[data-theme='light'] {
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-bgcolor: #white;
 
-    --ioverlay-svg-fill: #363636;
+    /* ==== iicon -> Initialization Icon ==== */
+    --iicon-fill: #363636;
 
-    --ioverlay-span-color: #363636;
+    /* ==== inamelabel -> Initialization Name Label ==== */
+    --inamelabel-color: #363636;
 
     /* ==== istatuslabel -> Initialization Status Label ==== */
     --istatuslabel-color: #363636;
@@ -418,8 +465,8 @@ html[data-theme='light'] {
     /* ==== cdivider2 -> Content Divider 2 ==== */
     --cdivider2-bgcolor: transparent;
 
-    /* ==== tbar -> Title Bar ==== */
-    --tbar-span-color: #363636;
+    /* ==== tversionlabel -> Title Version Label ==== */
+    --tversionlabel-color: #363636;
 
     /* ==== tbarbtn -> Title Bar Button ==== */
     --tbarbtn-bgcolor: #c3c3c3;
@@ -430,13 +477,14 @@ html[data-theme='light'] {
     /* ==== nblock -> Nav(igation) Block ==== */
     --nblock-bgcolor: #f2f2f2;
 
-    /* ==== nbar -> Nav(igation) Bar ==== */
-    --nbar-hr-bgcolor: #d0d0d0;
+    /* ==== bicon -> Brand Icon ==== */
+    --bicon-fill: #363636;
 
-    /* ==== ldisplay -> Logo Display ==== */
-    --ldisplay-svg-fill: #363636;
+    /* ==== bnamelabel -> Brand Name Label ==== */
+    --bnamelabel-color: #363636;
 
-    --ldisplay-h1-color: #363636;
+    /* ==== ndivider -> Nav(igation) Divider ==== */
+    --ndivider-bgcolor: #d0d0d0;
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bgcolor: #dbdbdb;
@@ -448,7 +496,17 @@ html[data-theme='light'] {
     --rbarbtn-alt2-bgcolor: #dddddd;
     --rbarbtn-alt3-bgcolor: #ffffff;
 
-    --rbarbtn-span-color: #363636;
+    /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
+    --nprimarybarpath-fill: #dddddd;
+    --nprimarybarpath-alt-fill: #ffffff;
+
+    /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
+    --nsecondarybarpath-fill: #373737;
+    --nsecondarybarpath-alt-fill: #ffffff;
+
+    /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
+    --ntertiarybarpath-fill: #dddddd;
+    --ntertiarybarpath-alt-fill: #575757;
 
     /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
     --nbaricon-fill: #363636;
@@ -457,6 +515,10 @@ html[data-theme='light'] {
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
     --nbarlabel-color: #363636;
     --nbarlabel-alt-color: #000000;
+
+    /* ==== rbarlabel -> Record Bar Label ==== */
+    --rbarlabel-color: #363636;
+    --rbarlabel-alt-color: #000000;
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
     --curlabelctr-bcolor: #dbdbdb;
@@ -469,12 +531,12 @@ html[data-theme='light'] {
     --arresumelabel-color: #88959d;
     --arresumelabel-alt-color: #363636;
 
-    /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-bgcolor: #dfe1e5;
+    /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
+    --ntogglebtn-bgcolor: #dfe1e5;
 
-    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
-    --nticon-fill: #1a69e0;
-    --nticon-alt-fill: #0000ff;
+    /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
+    --ntoggleicon-fill: #1a69e0;
+    --ntoggleicon-alt-fill: #0000ff;
 
     /* ==== dlabel -> Directories Label ==== */
     --dlabel-color: #000000;
@@ -529,9 +591,22 @@ html[data-theme='light'] {
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-color: #363636;
 
-    /* ==== vpicon -> Video Preview Icon ==== */
-    --vpicon-fill: #363636;
-    --vpicon-alt-fill: white;
+    /* ==== vpprimarypath -> Video Preview Primary Path ==== */
+    --vpprimarypath-fill: #dddddd;
+    --vpprimarypath-alt-fill: #ffffff;
+
+    /* ==== vpsecondarypath -> Video Preview Secondary Path ==== */
+    --vpsecondarypath-fill: #373737;
+    --vpsecondarypath-alt-fill: #505050;
+    --vpsecondarypath-alt2-fill: #ffffff;
+
+    /* ==== vprenamepath -> Video Preview Rename Path ==== */
+    --vprenamepath-fill: #dddddd;
+    --vprenamepath-alt-fill: #f2a72f;
+
+    /* ==== vpdeletepath -> Video Preview Delete Path ==== */
+    --vpdeletepath-fill: #dddddd;
+    --vpdeletepath-alt-fill: #ea2d2d;
 
     /* ==== votrack -> Volume Track ==== */
     --votrack-bgcolor: #ffffff;
@@ -545,10 +620,11 @@ html[data-theme='light'] {
     --pbrtoverlay-stroke: #363636;
     --pbrtoverlay-alt-stroke: #000000;
 
-    --pbrtoverlay-text-fill: #dddddd;
-    --pbrtoverlay-text-alt-fill: #ffffff;
-    --pbrtoverlay-text-stroke: #dddddd;
-    --pbrtoverlay-text-alt-stroke: #ffffff;
+    /* ==== pbrttext -> Playback Rate Text ==== */
+    --pbrttext-fill: #dddddd;
+    --pbrttext-alt-fill: #ffffff;
+    --pbrttext-stroke: #dddddd;
+    --pbrttext-alt-stroke: #ffffff;
 
     /* ==== tltrack -> Timeline Track ==== */
     --tltrack-bgcolor: #dfe1e5;
@@ -557,8 +633,9 @@ html[data-theme='light'] {
     --tloverlay-fill: #797b7e;
     --tloverlay-stroke: #797b7e;
 
-    --tloverlay-text-fill: #363636;
-    --tloverlay-text-stroke: #363636;
+    /* ==== tltext -> Timeline Text ==== */
+    --tltext-fill: #363636;
+    --tltext-stroke: #363636;
 
     /* ==== tlthumb -> Timeline Thumb ==== */
     --tlthumb-bgcolor: #1a69e0;
@@ -567,7 +644,8 @@ html[data-theme='light'] {
     --cpctr-bcolor: #dfe1e5;
     --cpctr-bgcolor: transparent;
 
-    --cpctr-svg-fill: #363636;
+    /* ==== cpicon -> Clip Icon ==== */
+    --cpicon-fill: #363636;
 
     /* ==== cpstctr -> Clip Setting Container ==== */
     --cpstctr-bcolor: #d2dade;
@@ -594,20 +672,28 @@ html[data-theme='light'] {
     --cpbarbtn-bgcolor: #f2f2f2;
     --cpbarbtn-alt-bgcolor: #dbdbdb;
 
-    /* ==== cpbaricon -> Clip Bar Icon ==== */
-    --cpbaricon-fill: #363636;
-    --cpbaricon-alt-fill: #000000;
+    /* ==== cpprimarybarpath -> Clip Primary Bar Path ==== */
+    --cpprimarybarpath-fill: #dddddd;
+    --cpprimarybarpath-alt-fill: #ffffff;
+
+    /* ==== cpsecondarybarpath -> Clip Secondary Bar Path ==== */
+    --cpsecondarybarpath-fill: #373737;
+    --cpsecondarybarpath-alt-fill: #ffffff;
+
+    /* ==== cptertiarybarpath -> Clip Tertiary Bar Path ==== */
+    --cptertiarybarpath-fill: #dddddd;
+    --cptertiarybarpath-alt-fill: #575757;
 
     /* ==== cpbarlabel -> Clip Bar Label ==== */
     --cpbarlabel-color: #363636;
     --cpbarlabel-alt-color: #000000;
 
-    /* ==== cptbtn -> Clip Toggle Button ==== */
-    --cptbtn-bgcolor: #dfe1e5;
+    /* ==== cptogglebtn -> Clip Toggle Button ==== */
+    --cptogglebtn-bgcolor: #dfe1e5;
 
-    /* ==== cpticon -> Clip Toggle Icon ==== */
-    --cpticon-fill: #1a69e0;
-    --cpticon-alt-fill: #0000ff;
+    /* ==== cptoggleicon -> Clip Toggle Icon ==== */
+    --cptoggleicon-fill: #1a69e0;
+    --cptoggleicon-alt-fill: #0000ff;
 
     /* ==== gstctr -> General Setting Container ==== */
     --gstctr-bcolor: #d2dade;
@@ -652,47 +738,43 @@ html {
     /* --scbar-thumb-transition: background-color 1s ease 1s; */
 
     /* ==== ioverlay -> Initialization Overlay ==== */
-    --ioverlay-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
+    --ioverlay-transition: opacity 0.5s ease 0s;
 
     /* ==== cstatuslabel -> Content Status Label ==== */
-    --cstatuslabel-transition: opacity 0.5s ease 0s, visibility 0s ease 0.5s;
-    --cstatuslabel-alt-transition: opacity 0.5s ease 0s;
+    --cstatuslabel-transition: opacity 0.5s ease 0s;
 
     /* ==== nbar -> Nav(igation) Bar ==== */
     --nbar-transition: width 0.3s ease 0.2s;
-    --nbar-alt-transition: width 0.3s ease 0.2s;
 
-    /* ==== ldisplay -> Logo Display ==== */
-    --ldisplay-h1-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s;
-    --ldisplay-h1-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== bnamelabel -> Brand Name Label ==== */
+    --bnamelabel-transition: opacity 0.2s ease 0s;
+    --bnamelabel-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-transition: background-color 0.3s ease 0s;
 
-    /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
-    --nbaricon-transition: fill 0.3s ease 0s;
+    /* ==== nbarpath -> Nav(igation) Bar Path ==== */
+    --nbarpath-transition: fill 0.3s ease 0s;
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
-    --nbarlabel-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s, color 0.3s ease 0s;
+    --nbarlabel-transition: opacity 0.2s ease 0s, color 0.3s ease 0s;
     --nbarlabel-alt-transition: opacity 0.2s ease 0.5s, color 0.3s ease 0s;
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
-    --curlabelctr-transition: bottom 0.3s ease 0s, visibility 0s ease 0.3s;
-    --curlabelctr-alt-transition: bottom 0.3s ease 0s;
+    --curlabelctr-transition: bottom 0.3s ease 0s;
 
     /* ==== curgamelabel -> Current Recording Game Label ==== */
-    --curgamelabel-transition: opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --curgamelabel-transition: opacity 0.2s ease 0s;
     --curgamelabel-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-transition: color 0.3s ease 0s, opacity 0.3s ease 0s;
-    --arresumelabel-alt-transition: color 0.3s ease 0s, opacity 0.3s ease 0s;
 
-    /* ==== ntbtn -> Nav(igation) Toggle Button ==== */
-    --ntbtn-transition: background-color 0.3s ease 0s;
+    /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
+    --ntogglebtn-transition: background-color 0.3s ease 0s;
 
-    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
-    --nticon-transition: fill 0.3s ease 0s;
+    /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
+    --ntoggleicon-transition: fill 0.3s ease 0s;
 
     /* ==== dlabel -> Directories Label ==== */
     --dlabel-transition: color 0.3s ease 0s;
@@ -716,7 +798,7 @@ html {
     --dicon-transition: fill 0.3s ease 0s;
 
     /* ==== vpctr -> Video Preview Container ==== */
-    --vpctr-transition: background-color 0.2s ease 0s;
+    --vpctr-transition: background-color 0.3s ease 0s;
 
     /* ==== vtndurlabel -> Video Thumbnail Duration Label ==== */
     --vtndurlabel-transition: color 0.3s ease 0s;
@@ -727,11 +809,11 @@ html {
     /* ==== vpbtn -> Video Preview Button ==== */
     --vpbtn-transition: background-color 0.2s ease 0s;
 
-    /* ==== vpicon -> Video Preview Icon ==== */
-    --vpicon-transition: fill 0.3s ease 0s;
+    /* ==== vppath -> Video Preview Path ==== */
+    --vppath-transition: fill 0.3s ease 0s;
 
-    /* ==== pctr -> Playback Container ==== */
-    --pctr-transition: opacity 0.2s ease 0s;
+    /* ==== pbctr -> Playback Container ==== */
+    --pbctr-transition: opacity 0.2s ease 0s;
 
     /* ==== strack -> Seek Track ==== */
     --strack-transition: transform 0.2s ease 0s;
@@ -751,17 +833,21 @@ html {
     /* ==== mtrack -> Media Track ==== */
     --mtrack-transition: background-color 0.3s ease 0s;
 
+    /* ==== moverlay-> Media Overlay ==== */
+    --moverlay-transition: visibility 0s ease 0.1s;
+    --moverlay-alt-transition: visibility 0s ease 0s;
+
     /* ==== pbrtoverlay -> Playback Rate Overlay ==== */
     --pbrtoverlay-transition: fill 0.3s ease 0s, stroke 0.3s ease 0s;
 
-    --pbrtoverlay-text-transition: fill 0.3s ease 0s, stroke 0.3s ease 0s;
+    /* ==== pbrttext -> Playback Rate Text ==== */
+    --pbrttext-transition: fill 0.3s ease 0s, stroke 0.3s ease 0s;
 
     /* ==== cpbar -> Clip Bar ==== */
     --cpbar-transition: width 0.3s ease 0.2s;
-    --cpbar-alt-transition: width 0.3s ease 0.2s;
 
     /* ==== cpstctr -> Clip Setting Container ==== */
-    --cpstctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cpstctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0s;
     --cpstctr-alt-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s, opacity 0.2s ease 0.5s;
 
     /* ==== cpstlabel -> Clip Setting Label ==== */
@@ -774,20 +860,20 @@ html {
     --cpstfield-transition: color 0.3s ease 0s;
 
     /* ==== cpbarbtn -> Clip Bar Button ==== */
-    --cpbarbtn-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0s, visibility 0s ease 0.2s;
+    --cpbarbtn-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0s;
     --cpbarbtn-alt-transition: background-color 0.3s ease 0s, opacity 0.2s ease 0.5s;
 
-    /* ==== cpbaricon -> Clip Bar Icon ==== */
-    --cpbaricon-transition: fill 0.3s ease 0s;
+    /* ==== cpbarpath -> Clip Bar Path ==== */
+    --cpbarpath-transition: fill 0.3s ease 0s;
     
     /* ==== cpbarlabel -> Clip Bar Label ==== */
     --cpbarlabel-transition: color 0.3s ease 0s;
 
-    /* ==== cptbtn -> Clip Toggle Button ==== */
-    --cptbtn-transition: background-color 0.3s ease 0s;
+    /* ==== cptogglebtn -> Clip Toggle Button ==== */
+    --cptogglebtn-transition: background-color 0.3s ease 0s;
 
-    /* ==== cpticon -> Clip Toggle Icon ==== */
-    --cpticon-transition: fill 0.3s ease 0s;
+    /* ==== cptoggleicon -> Clip Toggle Icon ==== */
+    --cptoggleicon-transition: fill 0.3s ease 0s;
 
     /* ==== gstctr -> General Setting Container ==== */
     --gstctr-transition: background-color 0.3s ease 0s, border-color 0.3s ease 0s;

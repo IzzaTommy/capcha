@@ -5,11 +5,12 @@ html {
     --scbar-thumb-bwidth: 7px;
     --scbar-thumb-bradius: 10px;
 
-    /* ==== ioverlay -> Initialization Overlay ==== */
-    --ioverlay-svg-length: 100px;
+    /* ==== iicon -> Initialization Icon ==== */
+    --iicon-length: 100px;
 
-    --ioverlay-span-fsize: 80px;
-    --ioverlay-span-fweight: 600;
+    /* ==== inamelabel -> Initialization Name Label ==== */
+    --inamelabel-fsize: 80px;
+    --inamelabel-fweight: 600;
 
     /* ==== istatuslabel -> Initialization Status Label ==== */
     --istatuslabel-tmargin: 50px;
@@ -54,6 +55,9 @@ html {
     /* ==== cctr2 -> Content Container 2 ==== */
     --cctr2-vgap: 10px;
 
+    /* ==== cctr3 -> Content Container 3 ==== */
+    --cctr3-hgap: 20px;
+
     /* ==== clabel2 -> Content Label 2 ==== */
     --clabel2-fsize: 35px;
     --clabel2-fweight: 400;
@@ -63,10 +67,10 @@ html {
     --cdivider2-lmargin: -5px;
     --cdivider2-width: calc(100% + 25px);
 
-    /* ==== tbar -> Title Bar ==== */
-    --tbar-span-lmargin: 10px;
-    --tbar-span-fsize: 11px;
-    --tbar-span-fweight: 300;
+    /* ==== tversionlabel -> Title Version Label ==== */
+    --tversionlabel-lmargin: 10px;
+    --tversionlabel-fsize: 11px;
+    --tversionlabel-fweight: 300;
 
     /* ==== tbarbtn -> Title Bar Button ==== */
     --tbarbtn-vpadding: 7.5px;
@@ -86,18 +90,21 @@ html {
     --nbar-width: 80px;
     --nbar-alt-width: 211px;
 
-    --nbar-hr-height: 1.5px;
-    --nbar-hr-lmargin: -5px;
-    --nbar-hr-width: calc(100% + 10px);
+    /* ==== bdisplay -> Brand Display ==== */
+    --bdisplay-hgap: 20px;
 
-    /* ==== ldisplay -> Logo Display ==== */
-    --ldisplay-hgap: 20px;
+    /* ==== bicon -> Brand Icon ==== */
+    --bicon-length: 60px;
 
-    --ldisplay-svg-length: 60px;
+    /* ==== bnamelabel -> Brand Name Label ==== */
+    --bnamelabel-width: 111px;
+    --bnamelabel-fsize: 28px;
+    --bnamelabel-fweight: 600;
 
-    --ldisplay-h1-width: 111px;
-    --ldisplay-h1-fsize: 28px;
-    --ldisplay-h1-fweight: 600;
+    /* ==== ndivider -> Nav(igation) Divider ==== */
+    --ndivider-height: 1.5px;
+    --ndivider-lmargin: -5px;
+    --ndivider-width: calc(100% + 10px);
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bradius: 10px;
@@ -144,8 +151,8 @@ html {
     --arresumelabel-fsize: 12px;
     --arresumelabel-fweight: 400;
 
-    /* ==== nticon -> Nav(igation) Toggle Icon ==== */
-    --nticon-length: 15px;
+    /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
+    --ntoggleicon-length: 15px;
 
     /* ==== sgctr -> Storage Container ==== */
     --sgctr-vgap: 2px;
@@ -304,8 +311,9 @@ html {
     --pbrtoverlay-width: 160px;
     --pbrtoverlay-swidth: 1px;
 
-    --pbrtoverlay-text-fsize: 10px;
-    --pbrtoverlay-text-fweight: 100;
+    /* ==== pbrttext -> Playback Rate Text ==== */
+    --pbrttext-fsize: 10px;
+    --pbrttext-fweight: 100;
 
     /* ==== mthumb -> Media Thumb ==== */
     --mthumb-tinset: -6px;
@@ -329,8 +337,9 @@ html {
     /* ==== tloverlay -> Timeline Overlay ==== */
     --tloverlay-swidth: 1px;
 
-    --tloverlay-text-fsize: 12px;
-    --tloverlay-text-fweight: 10;
+    /* ==== tltext -> Timeline Text ==== */
+    --tltext-fsize: 12px;
+    --tltext-fweight: 10;
 
     /* ==== tlthumb -> Timeline Thumb ==== */
     --tlthumb-tinset: -12px;
@@ -345,15 +354,18 @@ html {
     --cpthumb-bradius: 3px;
     --cpthumb-height: 92px;
     --cpthumb-width: 8px;
-    --cpthumb-swidth: 1px;
+
+    /* ==== cppath -> Clip Path ==== */
+    --cppath-swidth: 1px;
 
     /* ==== cpctr -> Clip Container ==== */
     --cpctr-bwidth: 1.5px;
     --cpctr-bradius: 10px;
 
-    --cpctr-svg-length: 45px;
-    --cpctr-svg-rmargin: 10px;
-    --cpctr-svg-lmargin: 8.5px;
+    /* ==== cpicon -> Clip Icon ==== */
+    --cpicon-length: 45px;
+    --cpicon-rmargin: 10px;
+    --cpicon-lmargin: 8.5px;
 
     /* ==== cpbar -> Clip Bar ==== */
     --cpbar-hgap: 30px;
@@ -396,8 +408,8 @@ html {
     --cpbarlabel-fsize: 17px;
     --cpbarlabel-fweight: 350;
 
-    /* ==== cpticon -> Clip Toggle Icon ==== */
-    --cpticon-length: 15px;
+    /* ==== cptoggleicon -> Clip Toggle Icon ==== */
+    --cptoggleicon-length: 15px;
 
     /* ==== gstgroupctr -> General Setting Group Container ==== */
     --gstgroupctr-hgap: 30px;

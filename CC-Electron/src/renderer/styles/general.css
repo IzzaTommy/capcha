@@ -1,13 +1,13 @@
 * {
     border: none;
+    box-sizing: border-box;
+    line-height: 1;
     margin: 0;
     outline: 1px solid rgba(169, 228, 157, 0.2);
     outline: none;
     padding: 0;
     
     background-color: transparent;
-    box-sizing: border-box;
-    line-height: 1;
 
     -webkit-user-select: none;
 }
@@ -18,10 +18,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
     border: var(--scbar-thumb-bwidth) solid transparent;
     border-radius: var(--scbar-thumb-bradius);
 
-    background-clip: padding-box;
     background-color: var(--scbar-thumb-bgcolor);
     /* transition: var(--scbar-thumb-transition); */
 }
@@ -59,30 +59,32 @@ body {
 
     background-color: var(--ioverlay-bgcolor);
     opacity: 0;
-    visibility: hidden;
     transition: var(--ioverlay-transition);
+
+    pointer-events: none;
 }
 
 #overlay-initialization.active {
     opacity: 1;
-    visibility: visible;
+
+    pointer-events: all;
 }
 
-#overlay-initialization > svg {
+#icon-initialization {
     display: block;
     flex: 0 0 auto;
-    height: var(--ioverlay-svg-length);
-    width: var(--ioverlay-svg-length);
+    height: var(--iicon-length);
+    width: var(--iicon-length);
 
-    fill: var(--ioverlay-svg-fill);
+    fill: var(--iicon-fill);
 }
 
-#overlay-initialization > span {
+#name-label-initialization {
     flex: 0 0 fit-content;
 
-    color: var(--ioverlay-span-color);
-    font-size: var(--ioverlay-span-fsize);
-    font-weight: var(--ioverlay-span-fweight);
+    color: var(--inamelabel-color);
+    font-size: var(--inamelabel-fsize);
+    font-weight: var(--inamelabel-fweight);
 }
 
 #status-label-initialization {
@@ -126,13 +128,14 @@ body {
     font-weight: var(--cstatuslabel-fweight);
     opacity: 0;
     transition: var(--cstatuslabel-transition);
-    visibility: hidden;
+
+    pointer-events: none;
 }
 
 #status-label-content.active {
     opacity: 1;
-    transition: var(--cstatuslabel-alt-transition);
-    visibility: visible;
+
+    pointer-events: all;
 }
 
 .content-section {
@@ -176,10 +179,10 @@ body {
     flex: 1 1 fit-content;
     flex-flow: column nowrap;
     gap: var(--cctr1-vgap);
+    overflow-y: auto;
     padding: var(--cctr1-vpadding) var(--cctr1-hpadding);
 
     background-color: var(--cctr1-bgcolor);
-    overflow-y: auto;
 
     /* scrollbar-gutter: stable; */
 }
@@ -200,9 +203,7 @@ body {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-
-
-    gap:20px;
+    gap: var(--cctr3-hgap);
 }
 
 .content-label2 {
