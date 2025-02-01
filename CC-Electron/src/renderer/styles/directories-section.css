@@ -1,10 +1,10 @@
-.directories-label {
+.directory-label {
     transition: var(--dlabel-transition);
 
     cursor: pointer;
 }
 
-.directories-label:hover {
+.directory-label:hover {
     color: var(--dlabel-color);
 }
 
@@ -20,7 +20,7 @@
     transition: var(--sgctr-transition);
 }
 
-.directories-label:hover + .storage-ctr {
+.directory-label:hover + .storage-ctr {
     opacity: 1;
 }
 

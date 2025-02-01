@@ -11,9 +11,9 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
+    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
@@ -156,17 +156,17 @@ function initWebSocketL() {
                 const command = ffmpeg(videoDataPath);
     
                 command.setStartTime(clipStartTime);
-                command.videoFilters(`scale=${data['settings'].get('clipsWidth')}:${data['settings'].get('clipsHeight')}`);
+                command.videoFilters(`scale=${data['stgs'].get('clipsWidth')}:${data['stgs'].get('clipsHeight')}`);
                 
                 command.duration(clipEndTime - clipStartTime);
 
                 command.videoCodec('libx264');
                 command.audioCodec('copy');
 
-                command.output(path.join(data['settings'].get('clipsPath'), `CLIP-${getFormattedDate()}.${data['settings'].get('clipsFormat')}`));
+                command.output(path.join(data['stgs'].get('clipsPath'), `CLIP-${getFormattedDate()}.${data['stgs'].get('clipsFormat')}`));
     
                 command.on('end', () => {
-                    resolve(path.join(data['settings'].get('clipsPath'), 'testoutput.mp4'))
+                    resolve(path.join(data['stgs'].get('clipsPath'), 'testoutput.mp4'))
                 });
                 command.on('error', reject);
                 command.run();

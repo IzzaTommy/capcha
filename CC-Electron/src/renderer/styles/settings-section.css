@@ -82,7 +82,7 @@
     width: var(--gstfield-alt-width);
 }
 
-.general-setting-field[name="capturesDisplay"], .general-setting-field[name="speaker"], .general-setting-field[name="microphone"], .general-setting-field[name="webcam"] {
+.general-setting-field[name="capturesDisp"], .general-setting-field[name="speaker"], .general-setting-field[name="microphone"], .general-setting-field[name="webcam"] {
     width: var(--gstfield-alt2-width);
 }
 

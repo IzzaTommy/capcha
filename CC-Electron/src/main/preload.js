@@ -5,18 +5,23 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
 
     stopRecord: () => ipcRenderer.invoke('webSocket:StopRecord'), 
 
-    reqToggleRecordBtn: (callback) => ipcRenderer.on('webSocket:reqToggleRecordBtn', (_, recordingGame) => callback(recordingGame))
+    reqTogRecBarBtn: (callback) => ipcRenderer.on('webSocket:reqTogRecBarBtn', (_, recordingGame) => callback(recordingGame))
+});
+
+contextBridge.exposeInMainWorld('processAPI', {
+    // sends request to renderer
+    reqFinishInit: (callback) => ipcRenderer.on('process:reqFinishInit', callback),
 });
 
 contextBridge.exposeInMainWorld('windowAPI', {
     // sends request to main
-    minimizeWindow: () => {
-        ipcRenderer.send('window:minimizeWindow');
+    minWindow: () => {
+        ipcRenderer.send('window:minWindow');
     },
 
     // sends request to main
-    maximizeWindow: () => {
-        ipcRenderer.send('window:maximizeWindow');
+    maxWindow: () => {
+        ipcRenderer.send('window:maxWindow');
     },
 
     // sends request to main
@@ -24,41 +29,35 @@ contextBridge.exposeInMainWorld('windowAPI', {
         ipcRenderer.send('window:closeWindow');
     },
 
-    // sends request to renderer
-    reqFinishInit: (callback) => ipcRenderer.on('window:reqFinishInit', callback),
 
     // sends request to main
-    reqToggleAutoRecord: () => {
-        ipcRenderer.send('window:reqToggleAutoRecord');
+    reqTogAutoRec: () => {
+        ipcRenderer.send('window:reqTogAutoRec');
+    },
+
+    openDir: (isCaps) => {
+        ipcRenderer.send('window:openDir', isCaps);
     }
 });
 
-contextBridge.exposeInMainWorld('settingsAPI', {
-    // returns settings data
-    getAllSettingsData: () => ipcRenderer.invoke('settings:getAllSettingsData'),
+contextBridge.exposeInMainWorld('stgsAPI', {
+    // returns stgs data
+    getAllStgsData: () => ipcRenderer.invoke('stgs:getAllStgsData'),
 
-    // sends setting, returns setting
-    setSetting: (key, value) => ipcRenderer.invoke('settings:setSetting', key, value),
+    // sends stg, returns stg
+    setStg: (key, value) => ipcRenderer.invoke('stgs:setStg', key, value),
 
     // returns devices data
-    getAllDevicesData: () => ipcRenderer.invoke('settings:getAllDevicesData'),
+    getAllDevicesData: () => ipcRenderer.invoke('stgs:getAllDevicesData'),
 
     // returns displays data
-    getAllDisplaysData: () => ipcRenderer.invoke('settings:getAllDisplaysData')
+    getAllDisplaysData: () => ipcRenderer.invoke('stgs:getAllDisplaysData')
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {
-    // returns video data
-    getAllCapturesData: () => ipcRenderer.invoke('files:getAllCapturesData'),
+    getAllDirData: (isCaps) => ipcRenderer.invoke('files:getAllDirData', isCaps),
 
-    // returns video data
-    getAllClipsData: () => ipcRenderer.invoke('files:getAllClipsData'),
-
-    // // sends request to renderer
-    // reqLoadCapturesGallery: (callback) => ipcRenderer.on('files:reqLoadCapturesGallery', callback),
-
-    // // sends request to renderer
-    // reqLoadClipsGallery: (callback) => ipcRenderer.on('files:reqLoadClipsGallery', callback)
+    getDirSize: (isCaps) => ipcRenderer.invoke('files:getDirSize', isCaps),
 });
 
 contextBridge.exposeInMainWorld('clipAPI', {

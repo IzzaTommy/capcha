@@ -11,9 +11,9 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
+    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
@@ -25,7 +25,7 @@ import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
 import { initMainSettings } from './mainSettings.js';
 import { attemptAsyncFunction } from './mainSharedFunctions.js';
 
-export { initMainWindow, toggleAutoRecord };
+export { initMainWindow, togAutoRec };
 
 /**
  * Initializes the window
@@ -43,10 +43,10 @@ function initWindow() {
         minWidth: 1280,
         minHeight: 900,
         show: false,
-        icon: path.join(ACTIVE_DIRECTORY, '..', 'assets', 'app-icon', 'capcha-app-icon.png'),
+        icon: path.join(ACTIVE_DIR, '..', 'assets', 'app-icon', 'capcha-app-icon.png'),
         frame: false,
         webPreferences: {
-            preload: path.join(ACTIVE_DIRECTORY, 'preload.js'),
+            preload: path.join(ACTIVE_DIR, 'preload.js'),
             contextIsolation: true,
         }
     });
@@ -61,10 +61,10 @@ function initWindow() {
  */
 function initWindowL() {
     // on minimizeWindow, minimize the main window
-    ipcMain.on('window:minimizeWindow', (_) => instances['mainWindow'].minimize());
+    ipcMain.on('window:minWindow', (_) => instances['mainWindow'].minimize());
 
     // on maximizeWindow, maximize the main window
-    ipcMain.on('window:maximizeWindow', (_) => {
+    ipcMain.on('window:maxWindow', (_) => {
         if (instances['mainWindow'].isMaximized()) {
             instances['mainWindow'].unmaximize();
         }
@@ -76,24 +76,24 @@ function initWindowL() {
     // on closeWindow, close the main window
     ipcMain.on('window:closeWindow', (_) => instances['mainWindow'].close());
 
-    // on reqToggleAutoRecord, run toggleAutoRecord
-    ipcMain.on('window:reqToggleAutoRecord', (_) => {
-        toggleAutoRecord();
+    // on reqTogAutoRec, run togAutoRec
+    ipcMain.on('window:reqTogAutoRec', (_) => {
+        togAutoRec();
     }); 
 }
 
 /**
  * Toggles the auto recording
  */
-function toggleAutoRecord() {
+function togAutoRec() {
     // if auto record is on, start checking the programs list every 3 seconds
-    if (data['settings'].get('autoRecord')) {
-        state['autoRecordInterval'] = setInterval(async () => await checkPrograms(), 5000);
+    if (data['stgs'].get('autoRecord')) {
+        state['autoRecInterval'] = setInterval(async () => await checkPrograms(), 5000);
     }
     // else cancel the auto recording
     else {
-        clearInterval(state['autoRecordInterval']);
-        state['autoRecordInterval'] = null;
+        clearInterval(state['autoRecInterval']);
+        state['autoRecInterval'] = null;
     }
 }
 
@@ -107,7 +107,7 @@ async function checkPrograms() {
     // if recording is on, check if the recording game is not running and stop the recording
     if (flags['recording']) {
         if (state['recordingGame'] && !processes.some(process => process['name'].toLowerCase() === PROGRAMS[state['recordingGame']].toLowerCase())) {
-            instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn');
+            instances['mainWindow'].webContents.send('webSocket:reqTogRecBarBtn');
         }
     }
     // else check the program list and toggle recording if a match is found
@@ -116,7 +116,7 @@ async function checkPrograms() {
             if (processes.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
                 state['recordingGame'] = key;
 
-                instances['mainWindow'].webContents.send('webSocket:reqToggleRecordBtn', state['recordingGame']);
+                instances['mainWindow'].webContents.send('webSocket:reqTogRecBarBtn', state['recordingGame']);
                 break;
             }
         }

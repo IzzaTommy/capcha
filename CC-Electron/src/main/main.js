@@ -37,5 +37,5 @@ async function finishInit() {
     await initMainSettings();
 
     instances['mainWindow'].webContents.openDevTools();
-    instances['mainWindow'].webContents.send('window:reqFinishInit');
+    instances['mainWindow'].webContents.send('process:reqFinishInit');
 }

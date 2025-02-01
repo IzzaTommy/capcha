@@ -92,6 +92,14 @@
     background-color: var(--nbarbtn-bgcolor);
 }
 
+.nav-bar-btn.active {
+    background-color: var(--nbarbtn-alt-bgcolor);
+}
+
+.nav-bar-btn.active:hover {
+    background-color: var(--nbarbtn-alt2-bgcolor);
+}
+
 #bar-btn-record {
     z-index: 2;
 
@@ -131,11 +139,19 @@
 }
 
 .nav-bar-btn:hover > .nav-bar-icon > .nav-primary-bar-path {
-    fill: var(--nprimarybarpath-alt-fill);
+    fill: var(--nprimarybarpath-alt-fill)!important;
+}
+
+.nav-bar-btn.active > .nav-bar-icon > .nav-primary-bar-path {
+    fill: var(--nprimarybarpath-alt2-fill);
 }
 
 #bar-btn-record.active > #bar-icon-record > #primary-bar-path-record {
     fill: var(--rprimarybarpath-fill);
+}
+
+#bar-btn-record.active:hover > #bar-icon-record > #primary-bar-path-record {
+    fill: var(--rprimarybarpath-alt-fill)!important;
 }
 
 .nav-secondary-bar-path {
@@ -143,7 +159,11 @@
 }
 
 .nav-bar-btn:hover > .nav-bar-icon > .nav-secondary-bar-path {
-    fill: var(--nsecondarybarpath-alt-fill);
+    fill: var(--nsecondarybarpath-alt-fill)!important;
+}
+
+.nav-bar-btn.active > .nav-bar-icon > .nav-secondary-bar-path {
+    fill: var(--nsecondarybarpath-alt2-fill);
 }
 
 #bar-btn-record.active > #bar-icon-record > #secondary-bar-path-record {
@@ -151,7 +171,7 @@
 }
 
 #bar-btn-record.active:hover > #bar-icon-record > #secondary-bar-path-record {
-    fill: var(--rsecondarybarpath-alt-fill);
+    fill: var(--rsecondarybarpath-alt-fill)!important;
 }
 
 .nav-tertiary-bar-path {
@@ -159,7 +179,11 @@
 }
 
 .nav-bar-btn:hover > .nav-bar-icon > .nav-tertiary-bar-path {
-    fill: var(--ntertiarybarpath-alt-fill);
+    fill: var(--ntertiarybarpath-alt-fill)!important;
+}
+
+.nav-bar-btn.active > .nav-bar-icon > .nav-tertiary-bar-path {
+    fill: var(--ntertiarybarpath-alt2-fill);
 }
 
 #bar-btn-record.active > #bar-icon-record > #tertiary-bar-path-record {
@@ -167,7 +191,7 @@
 }
 
 #bar-btn-record.active:hover > #bar-icon-record > #tertiary-bar-path-record {
-    fill: var(--rtertiarybarpath-alt-fill);
+    fill: var(--rtertiarybarpath-alt-fill)!important;
 }
 
 .nav-bar-label {
@@ -223,10 +247,13 @@
     bottom: var(--curlabelctr-alt-binset);
 }
 
+.current-recording-label {
+    flex: 0 0 auto;
+}
+
 #time-label-current-recording {
     text-align: center;
 
-    flex: 0 0 auto;
     line-height: normal;
     width: var(--curtimelabel-width);
     
@@ -236,7 +263,6 @@
 }
 
 #game-label-current-recording {
-    flex: 0 0 auto;
     margin: auto;
     overflow: hidden;
     width: var(--curgamelabel-width);

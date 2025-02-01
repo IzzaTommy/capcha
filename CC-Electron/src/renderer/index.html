@@ -9,7 +9,7 @@
     <title>CapCha</title>
 </head>
 <body>
-    <template>
+    <template id="template-video-preview">
         <div class="video-preview-ctr" data-src="">
             <div class="video-thumbnail-ctr">
                 <img class="video-thumbnail-image" src="" alt="">
@@ -88,7 +88,7 @@
 
                 <hr id="divider-nav">
 
-                <button id="bar-btn-directories" class="nav-bar-btn">
+                <button id="bar-btn-directories" class="nav-bar-btn active">
                     <svg id="bar-icon-directories" class="nav-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                         <path class="nav-bar-path nav-primary-bar-path" d="M184.62-200q-27.62 0-46.12-18.5Q120-237 120-264.62v-430.76q0-27.62 18.5-46.12Q157-760 184.62-760H357q12.92 0 25.12 5.23 12.19 5.23 20.88 13.92L463.85-680h311.53q27.62 0 46.12 18.5Q840-643 840-615.38v350.76q0 27.62-18.5 46.12Q803-200 775.38-200H184.62Z"/>
                         <path class="nav-bar-path nav-secondary-bar-path" d="m184.62-240h590.76q10.77 0 17.7-6.92 6.92-6.93 6.92-17.7v-350.76q0-10.77-6.92-17.7-6.93-6.92-17.7-6.92H447.77l-73.08-73.08q-3.84-3.84-8.07-5.38-4.24-1.54-8.85-1.54H184.62q-10.77 0-17.7 6.92-6.92 6.93-6.92 17.7v430.76q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92ZM160-240v-480 480Z"/>
@@ -108,8 +108,8 @@
                 </button>
     
                 <div id="label-ctr-current-recording" class="">
-                    <span id="time-label-current-recording">8:88:88+</span>
-                    <span id="game-label-current-recording">GAME</span>
+                    <span id="time-label-current-recording" class="current-recording-label">8:88:88+</span>
+                    <span id="game-label-current-recording" class="current-recording-label">GAME</span>
                 </div>
                 
                 <button id="bar-btn-record" class="nav-bar-btn">
@@ -122,7 +122,7 @@
                     <span id="bar-label-record" class="nav-bar-label">Record</span>
                 </button>
 
-                <span id="resume-label-auto-record" class="active">RESUME AUTO RECORD</span>
+                <span id="resume-label-auto-record" class="">RESUME AUTO RECORD</span>
             </nav>
 
             <button id="toggle-btn-nav">
@@ -143,7 +143,7 @@
                 <div class="content-ctr1">
                     <div class="content-ctr2">
                         <div class="content-ctr3">
-                            <h3 class="content-label2 directories-label">Captures</h3>
+                            <h3 id="name-label-captures" class="content-label2 directory-label">Captures</h3>
 
                             <div class="storage-ctr">
                                 <span id="path-label2-captures" class="directory-label2">C:/Directory/Example</span>
@@ -157,19 +157,21 @@
                             <div class="directory-bar">
                                 <select class="directory-setting-field" name="capturesGameFilter">
                                     <option value="All">All</option>
-                                    <option value="League of Legends">League of Legends</option>
                                     <option value="Valorant">Valorant</option>
+                                    <option value="Notepad">Notepad</option>
                                     <option value="External">External</option>
                                 </select>
 
                                 <select class="directory-setting-field" name="capturesMetaFilter">
-                                    <option value="name">Name</option>
                                     <option value="date">Date</option>
+                                    <option value="name">Name</option>
+                                    <option value="size">Size</option>
+                                    <option value="duration">Duration</option>
                                 </select>
 
                                 <button id="bar-btn-captures" class="directory-bar-btn">
                                     <svg id="bar-icon-captures" class="directory-bar-icon">
-                                        <use href="../assets/svg/arrow-upward-alt.svg#arrow-upward-alt"></use>
+                                        <use href="../assets/svg/arrow-downward-alt.svg#arrow-downward-alt"></use>
                                     </svg>
                                 </button>
                             </div>
@@ -198,7 +200,7 @@
 
                     <div class="content-ctr2">
                         <div class="content-ctr3">
-                            <h3 class="content-label2 directories-label">Clips</h3>
+                            <h3 id="name-label-clips" class="content-label2 directory-label">Clips</h3>
 
                             <div class="storage-ctr">
                                 <span id="path-label2-clips" class="directory-label2">C:/Directory/Example</span>
@@ -218,13 +220,15 @@
                                 </select>
 
                                 <select class="directory-setting-field" name="clipsMetaFilter">
-                                    <option value="name">Name</option>
                                     <option value="date">Date</option>
+                                    <option value="name">Name</option>
+                                    <option value="size">Size</option>
+                                    <option value="duration">Duration</option>
                                 </select>
 
                                 <button id="bar-btn-clips" class="directory-bar-btn">
                                     <svg id="bar-icon-clips" class="directory-bar-icon">
-                                        <use href="../assets/svg/arrow-upward-alt.svg#arrow-upward-alt"></use>
+                                        <use href="../assets/svg/arrow-downward-alt.svg#arrow-downward-alt"></use>
                                     </svg>
                                 </button>
                             </div>
@@ -289,8 +293,8 @@
                                     </svg>
                                 </button>
 
-                                <div id="slider-ctr-volume" class="media-slider-ctr">
-                                    <div id="slider-volume" class="media-slider active">
+                                <div id="slider-ctr-volume" class="media-slider-ctr" tabindex="0">
+                                    <div id="slider-volume" class="media-slider">
                                         <div id="track-volume" class="media-track">
                                             <div id="overlay-volume" class="media-overlay"></div>
                                             <div id="thumb-volume" class="media-thumb"></div>
@@ -303,8 +307,8 @@
                                     <span id="duration-label-current-video" class="current-video-label">/88:88</span>
                                 </div>
 
-                                <div id="slider-ctr-playback-rate" class="media-slider-ctr">
-                                    <div id="slider-playback-rate" class="media-slider active">
+                                <div id="slider-ctr-playback-rate" class="media-slider-ctr" tabindex="0">
+                                    <div id="slider-playback-rate" class="media-slider">
                                         <div id="track-playback-rate" class="media-track">
                                             <svg id="overlay-playback-rate" class="media-overlay" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160 20">
                                                 <text class="playback-rate-text" y="8" x="0">0.2</text>
@@ -398,8 +402,8 @@
                                 </div>
                             </div>
 
-                            <button id="view-bar-btn-clip" class="clip-bar-btn">
-                                <svg id="view-bar-icon-clip" class="clip-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                            <button id="bar-btn-view" class="clip-bar-btn">
+                                <svg id="bar-icon-view" class="clip-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                                     <path class="clip-bar-path clip-primary-bar-path" d="m480 -240q-118.62 0-217.58-62.77-98.96-62.77-159.88-164.61-5-8.24-7.12-16.24-2.11-8-2.11-16.42 0-8.42 2.11-16.38 2.12-7.96 7.12-16.2 60.92-101.84 159.88-164.61Q361.38-760 480-760q118.62 0 217.58 62.77 98.96 62.77 159.88 164.61 5 8.24 7.12 16.24 2.11 8 2.11 16.42 0 8.42-2.11 16.38-2.12 7.96-7.12 16.2-60.92 101.84-159.88 164.61Q598.62-240 480-240Z"/>																											 
                                     <path class="clip-bar-path clip-secondary-bar-path" d="m480-500Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
                                     <path class="clip-bar-path clip-tertiary-bar-path" d="M480.18-353.85q60.97 0 103.47-42.68t42.5-103.65q0-60.97-42.68-103.47t-103.65-42.5q-60.97 0-103.47 42.68t-42.5 103.65q0 60.97 42.68 103.47t103.65 42.5Z"/>
@@ -409,8 +413,8 @@
                                 <span class="clip-bar-label">View Clip</span>
                             </button>
 
-                            <button id="create-bar-btn-clip" class="clip-bar-btn">
-                                <svg id="create-bar-icon-clip" class="clip-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                            <button id="bar-btn-create" class="clip-bar-btn">
+                                <svg id="bar-icon-create" class="clip-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                                     <path class="clip-bar-path clip-primary-bar-path" d="M224.62-160q-27.62 0-46.12-18.5Q160-197 160-224.62v-510.76q0-27.62 18.5-46.12Q197-800 224.62-800h411.61q12.92 0 25.12 5.23 12.19 5.23 20.88 13.92l98.62 98.62q8.69 8.69 13.92 20.88 5.23 12.2 5.23 25.12v411.61q0 27.62-18.5 46.12Q763-160 735.38-160H224.62Z"/>
                                     <path class="clip-bar-path clip-secondary-bar-path" d="M760-646 646-760H224.62q-10.77 0-17.7 6.92-6.92 6.93-6.92 17.7v510.76q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h510.76q10.77 0 17.7-6.92 6.92-6.93 6.92-17.7V-646Z"/>
                                     <path class="clip-bar-path clip-tertiary-bar-path" d="M480-298.46q33.08 0 56.54-23.46T560-378.46q0-33.08-23.46-56.54T480-458.46q-33.08 0-56.54 23.46T400-378.46q0 33.08 23.46 56.54T480-298.46Z"/>
@@ -591,7 +595,7 @@
                                     <use href="../assets/svg/desktop-windows-solid.svg#desktop-windows-solid"></use>
                                 </svg>
 
-                                <select class="general-setting-field" name="capturesDisplay">
+                                <select class="general-setting-field" name="capturesDisp">
                                 </select>
                             </div>
 

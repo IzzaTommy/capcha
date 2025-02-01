@@ -1,5 +1,5 @@
 // ES6 imports
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import WebSocket from 'ws';
 import path from 'path';
 import { promises as fs, writeFileSync, existsSync, readFileSync } from 'fs';
@@ -11,9 +11,9 @@ import { exec } from 'child_process';
 
 import { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
+    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
@@ -24,19 +24,20 @@ import { initMainWindow } from './mainWindow.js';
 import { initMainOBS } from './mainOBS.js';
 import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
 import { attemptAsyncFunction } from './mainSharedFunctions.js';
-import { toggleAutoRecord } from './mainWindow.js';
+import { togAutoRec } from './mainWindow.js';
+import { get } from 'http';
 
 export { initMainSettings };
 
 async function initMainSettings() {
-    await initSettings();
-    initSettingsL();
+    await initStgs();
+    initStgsL();
 }
 
-async function initSettings() {
-    // attempt to load the settings
+async function initStgs() {
+    // attempt to load the stgs
     try {
-        data['settings'] = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
+        data['stgs'] = new Store({ defaults: STGS_DATA_DEFAULTS, schema: STGS_DATA_SCHEMA });
     }
     catch (error) {
         // error will occur if the file cannot be read, has corrupted values, or has invalid values (which should only occur if the user manually tampered with it)
@@ -47,8 +48,8 @@ async function initSettings() {
             unlinkSync(path.join(app.getPath('userData'), 'config.json'));
             console.log('config.json deleted.');
 
-            // recreate the settings with the default values
-            data['settings'] = new Store({ defaults: SETTINGS_DATA_DEFAULTS, schema: SETTINGS_DATA_SCHEMA });
+            // recreate the stgs with the default values
+            data['stgs'] = new Store({ defaults: STGS_DATA_DEFAULTS, schema: STGS_DATA_SCHEMA });
             console.log('Store reinitialized with default settings.');
         } 
         catch (fsError) {
@@ -68,31 +69,31 @@ async function initSettings() {
     await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
-    // set captures path
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    // set caps path
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['stgs'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set format
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['stgs'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set encoder
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['settings'].get('capturesEncoder') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['stgs'].get('capturesEncoder') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set recording width
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set recording height
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set framerate
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['stgs'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     // set bitrate
     try {
         let recordEncoderData;
 
-        if (data['settings'].get('capturesEncoder') == 'obs_x264') {
-            recordEncoderData = { 'bitrate': data['settings'].get('capturesBitrate') };
+        if (data['stgs'].get('capturesEncoder') == 'obs_x264') {
+            recordEncoderData = { 'bitrate': data['stgs'].get('capturesBitrate') };
         }
         else {
-            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('capturesBitrate') };
+            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') };
         }
-        writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
+        writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
         console.log('File has been written successfully with options');
     } 
     catch (error) {
@@ -102,7 +103,7 @@ async function initSettings() {
 
     // INPUT STUFF HERE
     data['devices'] = await getDevices();
-    data['displays'] = getDisplays();
+    data['disps'] = getDisps();
 
     // SCENE
     data['scenes'] = (await attemptAsyncFunction(() => webSocketSend('GetSceneList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['scenes'];
@@ -129,75 +130,75 @@ async function initSettings() {
         await attemptAsyncFunction(async () => webSocketSend('SetInputMute', { inputName: 'Mic/Aux', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Mic/Aux')]['inputUuid'], inputMuted: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
 
-    // SPEAKER
+    // SPKR
     if (data['inputs'].some(input => input['inputName'] === 'Speaker Input'))
     {
-        uuid['speakerInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'];
+        uuid['spkrInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'];
     }
     else {
-        uuid['speakerInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+        uuid['spkrInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
     }
 
-    if (data['settings'].get('speaker') !== 'Default') {
-        if (data['settings'].get('speaker') in data['devices']['outputs']) {
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { device_id: data['devices']['outputs'][data['settings'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    if (data['stgs'].get('speaker') !== 'Default') {
+        if (data['stgs'].get('speaker') in data['devices']['outputs']) {
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { device_id: data['devices']['outputs'][data['stgs'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
         else {
-            data['settings'].set('speaker', 'Default');
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            data['stgs'].set('spkr', 'Default');
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
     }
     else {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
 
-    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputVolumeDb: data['settings'].get('speakerVolume') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputVolumeDb: data['stgs'].get('speakerVol') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
-    // MICROPHONE
+    // MIC
     if (data['inputs'].some(input => input['inputName'] === 'Microphone Input'))
     {
-        uuid['microphoneInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'];
+        uuid['micInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'];
     }
     else {
-        uuid['microphoneInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+        uuid['micInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
     }
 
-    if (data['settings'].get('microphone') !== 'Default') {
-        if (data['settings'].get('microphone') in data['devices']['inputs']) {
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { device_id: data['devices']['inputs'][data['settings'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    if (data['stgs'].get('microphone') !== 'Default') {
+        if (data['stgs'].get('microphone') in data['devices']['inputs']) {
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devices']['inputs'][data['stgs'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
         else {
-            data['settings'].set('microphone', 'Default');
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            data['stgs'].set('mic', 'Default');
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
     }
     else {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
 
-    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputVolumeDb: data['settings'].get('microphoneVolume') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: data['stgs'].get('microphoneVol') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
 
-    // DISPLAY
+    // DISP
     if (data['inputs'].some(input => input['inputName'] === 'Display Input'))
     {
-        uuid['displayInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Display Input')]['inputUuid'];
+        uuid['dispInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Display Input')]['inputUuid'];
     }
     else {
-        uuid['displayInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Display Input', inputKind: 'monitor_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
+        uuid['dispInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Display Input', inputKind: 'monitor_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
     }
 
 
-    if (data['settings'].get('capturesDisplay') in data['displays']) {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    if (data['stgs'].get('capturesDisp') in data['disps']) {
+        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
     }
     else {
-        if (Object.keys(data['displays']).length === 0) {
-            data['settings'].set('capturesDisplay', '');
+        if (Object.keys(data['disps']).length === 0) {
+            data['stgs'].set('capturesDisp', '');
         }
         else {
-            data['settings'].set('capturesDisplay', Object.keys(data['displays'])[0]);
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            data['stgs'].set('capturesDisp', Object.keys(data['disps'])[0]);
+            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
         }
     }
 
@@ -210,19 +211,19 @@ async function initSettings() {
     // console.log(uuid);
 
     // await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Capture', inputUuid: '2dcf1a89-6149-445e-90c0-5e889ebf8873', inputSettings: { monitor_id: '\\\\?\\DISPLAY#GSM7766#5&44d6669&0&UID37120#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}' }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    console.log(getDisplays());
+    console.log(getDisps());
 }
 
-function initSettingsL() {
+function initStgsL() {
     // gets the entire settings object
-    ipcMain.handle('settings:getAllSettingsData', (_) => { return data['settings'].store });
+    ipcMain.handle('stgs:getAllStgsData', (_) => { return data['stgs'].store });
     
-    // sets the value of a specific setting
-    ipcMain.handle('settings:setSetting', async (_, key, value) => {
+    // sets the value of a specific stg
+    ipcMain.handle('stgs:setStg', async (_, key, value) => {
         let canceled, filePaths;
-        console.log(key, '1: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
+        console.log(key, '1: ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
 
-        value = validateSetting(key, value);
+        value = validateStg(key, value);
 
         switch (key) {
             case 'capturesPath':
@@ -233,10 +234,10 @@ function initSettingsL() {
     
                     try {
                         // delete the thumbnail directory
-                        await fs.rm(CAPTURES_THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                        await fs.rm(CAPS_THUMBNAIL_DIR, { recursive: true, force: true });
                 
                         // recreate the thumbnail directory
-                        await fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY);
+                        await fs.mkdir(CAPS_THUMBNAIL_DIR);
                     }
                     catch {
                         console.error('Error reseting thumbnails directory!');
@@ -245,13 +246,13 @@ function initSettingsL() {
 
                 // should realistically never run
                 if (!existsSync(value)) {
-                    value = SETTINGS_DATA_DEFAULTS[key];
+                    value = STGS_DATA_DEFAULTS[key];
                 }
 
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['settings'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['stgs'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
             
             case 'clipsPath':
@@ -262,10 +263,10 @@ function initSettingsL() {
     
                     try {
                         // delete the thumbnail directory
-                        await fs.rm(CLIPS_THUMBNAIL_DIRECTORY, { recursive: true, force: true });
+                        await fs.rm(CLIPS_THUMBNAIL_DIR, { recursive: true, force: true });
                 
                         // recreate the thumbnail directory
-                        await fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY);
+                        await fs.mkdir(CLIPS_THUMBNAIL_DIR);
                     }
                     catch {
                         console.error('Error reseting thumbnails directory!');
@@ -274,22 +275,22 @@ function initSettingsL() {
 
                 // should realistically never run
                 if (!existsSync(value)) {
-                    value = SETTINGS_DATA_DEFAULTS[key];
+                    value = STGS_DATA_DEFAULTS[key];
                 }
 
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
                 break;
 
             case 'capturesFormat':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['settings'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['stgs'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesEncoder':
-                data['settings'].set(key, value);
+                data['stgs'].set(key, value);
 
                 await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
 
@@ -297,15 +298,15 @@ function initSettingsL() {
                     let recordEncoderData;
             
                     if (value == 'obs_x264') {
-                        recordEncoderData = { 'bitrate': data['settings'].get('capturesBitrate') };
+                        recordEncoderData = { 'bitrate': data['stgs'].get('capturesBitrate') };
                     }
                     else {
-                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['settings'].get('capturesBitrate') };
+                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') };
                     }
-                    writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
+                    writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
                     console.log('File has been written successfully with options');
 
-                    console.log('REAPPLIED BITRATE: ', data['settings'].get('capturesBitrate'));
+                    console.log('REAPPLIED BITRATE: ', data['stgs'].get('capturesBitrate'));
                 } 
                 catch (error) {
                     console.error('Error writing to file: ', error);
@@ -313,43 +314,43 @@ function initSettingsL() {
                 break;
 
             case 'capturesWidth':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['settings'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesHeight':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['settings'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesFramerate':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['settings'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['stgs'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesBitrate':
                 try {
                     let recordEncoderData;
             
-                    if (data['settings'].get('capturesEncoder') == 'obs_x264') {
+                    if (data['stgs'].get('capturesEncoder') == 'obs_x264') {
                         recordEncoderData = { 'bitrate': value };
                     }
                     else {
                         recordEncoderData = { 'rate_control': 'CBR', 'bitrate': value };
                     }
-                    writeFileSync(path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
+                    writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
                     console.log('File has been written successfully with options');
 
-                    console.log(key, ': ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                    data['settings'].set(key, value);
+                    console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                    data['stgs'].set(key, value);
                 } 
                 catch (error) {
                     console.error('Error writing to file: ', error);
@@ -357,103 +358,103 @@ function initSettingsL() {
                 break;
             
             case 'autoRecord':
-                data['settings'].set(key, value);
-                toggleAutoRecord();
+                data['stgs'].set(key, value);
+                togAutoRec();
                 break;
 
-            case 'capturesDisplay':
-                data['settings'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['displayInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['displays'][data['settings'].get('capturesDisplay')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            case 'capturesDisp':
+                data['stgs'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'speaker':
-                data['settings'].set(key, value);
+                data['stgs'].set(key, value);
 
-                if (data['settings'].get('speaker') !== 'Default') {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { device_id: data['devices']['outputs'][data['settings'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                if (data['stgs'].get('speaker') !== 'Default') {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { device_id: data['devices']['outputs'][data['stgs'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 }
                 else {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 }
                 break;
 
-            case 'speakerVolume':
-                data['settings'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            case 'speakerVol':
+                data['stgs'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 
                 break;
 
             case 'microphone':
-                data['settings'].set(key, value);
+                data['stgs'].set(key, value);
             
-                if (data['settings'].get('microphone') !== 'Default') {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { device_id: data['devices']['inputs'][data['settings'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                if (data['stgs'].get('microphone') !== 'Default') {
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devices']['inputs'][data['stgs'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 }
                 else {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 }
 
                 break;
 
-            case 'microphoneVolume':
-                data['settings'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['microphoneInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            case 'microphoneVol':
+                data['stgs'].set(key, value);
+                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 
                 break;
 
             default:
-                console.log(key, '2: ', value, ': ', typeof(value), ': ', SETTINGS_DATA_SCHEMA[key]['enum']);
-                data['settings'].set(key, value);
+                console.log(key, '2: ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+                data['stgs'].set(key, value);
                 console.log('Not an OBS setting!');
         }
     
-        // return the value to renderer process for display
+        // return the value to renderer process for disp
         return value;
     });
-    
+
+    ipcMain.handle('stgs:getAllDevicesData', (_) => { return data['devices'] });
+
+    ipcMain.handle('stgs:getAllDisplaysData', (_) => { return data['disps'] });
 
 
 
-    ipcMain.handle('settings:getAllDevicesData', (_) => { return data['devices'] });
-
-    ipcMain.handle('settings:getAllDisplaysData', (_) => { return data['displays'] });
-
-    // gets all of the video files and meta data from the save location directory
-    ipcMain.handle('files:getAllCapturesData', async (_) => {
+    ipcMain.handle('files:getAllDirData', async (_, isCaps) => {
         // return Promise.reject(new Error("Simulated error for testing"));
 
         // get the save location stored in the settings
-        const directory = data['settings'].get('capturesPath');
+        const dir = isCaps ? data['stgs'].get('capturesPath') : data['stgs'].get('clipsPath');
     
         // make the thumbnail directory and video directory (latter should already exist)
         await Promise.all([
-            fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY, { recursive: true }),
-            fs.mkdir(directory, { recursive: true })
+            fs.mkdir(isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR, { recursive: true }),
+            fs.mkdir(dir, { recursive: true })
         ]);
     
         // read the video directory for files
-        const files = await fs.readdir(directory);
+        const files = await fs.readdir(dir);
     
+
+
         // filter by video extensions
-        const captures = files.filter(file =>
+        const videos = files.filter(file =>
             ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
         );
     
         // get video meta data and thumbnail
-        const capturesData = await Promise.all(
-            captures.map(async capture => {
+        const videosData = await Promise.all(
+            videos.map(async video => {
                 try {
-                    const captureName = path.parse(capture).name;
-                    const capturePath = path.join(directory, capture);
+                    const videoName = path.parse(video).name;
+                    const videoPath = path.join(dir, video);
     
-                    const [captureMetaData, thumbnailPath] = await Promise.all([
-                        fs.stat(capturePath),
-                        path.join(CAPTURES_THUMBNAIL_DIRECTORY, `${captureName}.png`)
+                    const [videoMetaData, thumbnailPath] = await Promise.all([
+                        fs.stat(videoPath),
+                        path.join(isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR, `${videoName}.png`)
                     ]);
     
 
-                    const captureDuration = await new Promise((resolve, reject) => {
-                        ffmpeg.ffprobe(capturePath, (error, metadata) => {
+                    const videoDuration = await new Promise((resolve, reject) => {
+                        ffmpeg.ffprobe(videoPath, (error, metadata) => {
                             if (error) {
                                 return reject(error);
                             }
@@ -468,13 +469,13 @@ function initSettingsL() {
                     }
                     catch {
                         await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
-                            ffmpeg(capturePath)
+                            ffmpeg(videoPath)
                                 .on('end', resolve)
                                 .on('error', reject)
                                 .screenshots({
                                     timestamps: ['50%'],
-                                    filename: captureName,
-                                    folder: CAPTURES_THUMBNAIL_DIRECTORY,
+                                    filename: videoName,
+                                    folder: isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR,
                                     size: THUMBNAIL_SIZE
                                 });
                         }), ATTEMPTS, SLOW_DELAY_IN_MSECONDS);
@@ -482,13 +483,13 @@ function initSettingsL() {
     
                     // return data on the video
                     return {
-                        nameExt: capture,
-                        game: capture.split('-')[0],
-                        path: capturePath,
-                        size: captureMetaData.size,
-                        created: captureMetaData.birthtime, 
-                        duration: captureDuration, 
-                        thumbnailPath: thumbnailPath
+                        nameExt: video,
+                        game: video.split('-')[1] === undefined ? 'EXTERNAL' : video.split('-')[0],
+                        path: videoPath,
+                        size: videoMetaData.size,
+                        created: videoMetaData.birthtime, 
+                        duration: videoDuration, 
+                        thumbnailPath: thumbnailPath,
                     };
                 }
                 catch (error) {
@@ -499,121 +500,101 @@ function initSettingsL() {
         );
     
         // return all the data on the videos
-        return capturesData.filter(captureData => captureData !== null).sort((a, b) => b.created - a.created);
+        return videosData.filter(videoData => videoData !== null);
     });
 
-    // gets all of the video files and meta data from the save location directory
-    ipcMain.handle('files:getAllClipsData', async (_) => {
-        // return Promise.reject(new Error("Simulated error for testing"));
+    async function getDirSize(dirPath) {
+        let totalSize = 0;
+      
+        // Read all files and subdirectories in the directory
+        const files = await fs.readdir(dirPath);
 
-        // get the save location stored in the settings
-        const directory = data['settings'].get('clipsPath');
-    
-        // make the thumbnail directory and video directory (latter should already exist)
-        await Promise.all([
-            fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY, { recursive: true }),
-            fs.mkdir(directory, { recursive: true })
-        ]);
-    
-        // read the video directory for files
-        const files = await fs.readdir(directory);
-    
-        // filter by video extensions
-        const clips = files.filter(file =>
-            ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
-        );
-    
-        // get video meta data and thumbnail
-        const clipsData = await Promise.all(
-            clips.map(async clip => {
-                try {
-                    const clipName = path.parse(clip).name;
-                    const clipPath = path.join(directory, clip);
-    
-                    const [clipMetaData, thumbnailPath] = await Promise.all([
-                        fs.stat(clipPath),
-                        path.join(CLIPS_THUMBNAIL_DIRECTORY, `${clipName}.png`)
-                    ]);
-    
+        // Loop through each file/subdirectory
+        for (const file of files) {
+          const filePath = path.join(dirPath, file);
+          
+          const stats = await fs.stat(filePath);
+          
+          if (stats.isDirectory()) {
+            // If it's a directory, recurse into it
+            totalSize += await getDirSize(filePath);
+          } 
+          else {
+                if (stats.isFile()) {
+                // If it's a file, add its size
+                totalSize += stats.size;
+            }
+            }
+        }
 
-                    const clipDuration = await new Promise((resolve, reject) => {
-                        ffmpeg.ffprobe(clipPath, (error, metadata) => {
-                            if (error) {
-                                return reject(error);
-                            }
-           
-                            resolve(metadata.format.duration);
-                        });
-                    });
+        console.log('total: ', totalSize);
+        return totalSize;
+    }
 
-                    // create thumbnail if it does not exist
-                    try {
-                        await fs.access(thumbnailPath);
-                    }
-                    catch {
-                        await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
-                            ffmpeg(clipPath)
-                                .on('end', resolve)
-                                .on('error', reject)
-                                .screenshots({
-                                    timestamps: ['50%'],
-                                    filename: clipName,
-                                    folder: CLIPS_THUMBNAIL_DIRECTORY,
-                                    size: THUMBNAIL_SIZE
-                                });
-                        }), ATTEMPTS, SLOW_DELAY_IN_MSECONDS);
-                    }
-    
-                    // return data on the video
-                    return {
-                        nameExt: clip,
-                        game: clip.split('-')[0],
-                        path: clipPath,
-                        size: clipMetaData.size,
-                        created: clipMetaData.birthtime, 
-                        duration: clipDuration, 
-                        thumbnailPath: thumbnailPath
-                    };
-                }
-                catch (error) {
-                    console.log('Video Reading Error!:', error);
-                    return null;
-                }
-            })
-        );
-    
-        // return all the data on the videos
-        return clipsData.filter(clipData => clipData !== null).sort((a, b) => b.created - a.created);
+    ipcMain.handle('files:getDirSize', async (_, isCaps) => {
+        return isCaps ? (await getDirSize(data['stgs'].get('capturesPath'))) : (await getDirSize(data['stgs'].get('clipsPath')));
     });
+
+    ipcMain.on('window:openDir', async (_, isCaps) => {
+        try {
+            const result = await shell.openPath(isCaps ? data['stgs'].get('capturesPath') : data['stgs'].get('clipsPath'));
+
+            if (result) {
+                console.error(`Error opening folder: ${result}`);
+            } 
+            else {
+                console.log('Folder opened successfully!');
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
+    })
 }
 
-function validateSetting(key, value) {
-    if (SETTINGS_DATA_SCHEMA[key]['type'] === 'boolean') {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function validateStg(key, value) {
+    if (STGS_DATA_SCHEMA[key]['type'] === 'boolean') {
         if (typeof(value) !== 'boolean') {
-            value = SETTINGS_DATA_DEFAULTS[key];
+            value = STGS_DATA_DEFAULTS[key];
         }
     }
     else {
-        if (SETTINGS_DATA_SCHEMA[key]['type'] === 'number') {
+        if (STGS_DATA_SCHEMA[key]['type'] === 'number') {
             if (isNaN(value)) {
-                value = SETTINGS_DATA_DEFAULTS[key];
+                value = STGS_DATA_DEFAULTS[key];
             }
             else {
-                if (SETTINGS_DATA_SCHEMA[key]['enum']) {
-                    if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                        value = SETTINGS_DATA_DEFAULTS[key];
+                if (STGS_DATA_SCHEMA[key]['enum']) {
+                    if (!STGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
+                        value = STGS_DATA_DEFAULTS[key];
                     }
                     else {
                         value = Number(value);
                     }
                 }
                 else {
-                    if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
-                        value = SETTINGS_DATA_SCHEMA[key]['maximum'];
+                    if (value > STGS_DATA_SCHEMA[key]['maximum']) {
+                        value = STGS_DATA_SCHEMA[key]['maximum'];
                     }
                     else {
-                        if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
-                            value = SETTINGS_DATA_SCHEMA[key]['minimum'];
+                        if (value < STGS_DATA_SCHEMA[key]['minimum']) {
+                            value = STGS_DATA_SCHEMA[key]['minimum'];
                         }
                         else {
                             value = Number(value);
@@ -624,12 +605,12 @@ function validateSetting(key, value) {
         }
         else {
             if (typeof(value) !== 'string') {
-                value = SETTINGS_DATA_DEFAULTS[key];
+                value = STGS_DATA_DEFAULTS[key];
             }
             else {
-                if (SETTINGS_DATA_SCHEMA[key]['enum']) {
-                    if (!SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)) {
-                        value = SETTINGS_DATA_DEFAULTS[key];
+                if (STGS_DATA_SCHEMA[key]['enum']) {
+                    if (!STGS_DATA_SCHEMA[key]['enum'].includes(value)) {
+                        value = STGS_DATA_DEFAULTS[key];
                     }
                 }
             }
@@ -680,9 +661,9 @@ function getDevices() {
     });
 }
 
-function getDisplays() {
+function getDisps() {
     try {
-        return JSON.parse(readFileSync(path.join(ACTIVE_DIRECTORY, 'runtime-displays.json'), 'utf8'))
+        return JSON.parse(readFileSync(path.join(ACTIVE_DIR, 'runtime-displays.json'), 'utf8'))
     } 
     catch (error) {
         console.error('Error reading file: ', error);

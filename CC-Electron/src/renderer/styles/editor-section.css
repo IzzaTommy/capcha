@@ -31,6 +31,8 @@
 
     fill: var(--plpastatusicon-fill);
     visibility: hidden;
+
+    pointer-events: none;
 }
 
 #status-icon-play-pause.active {
@@ -170,7 +172,9 @@
 .media-slider-ctr {
     flex: 0 0 fit-content;
     overflow: hidden;
+}
 
+.media-slider-ctr:has(.media-slider.active) {
     cursor: pointer;
 }
 

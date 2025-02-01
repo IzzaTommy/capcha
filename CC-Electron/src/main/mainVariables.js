@@ -11,9 +11,9 @@ import { exec } from 'child_process';
 
 export { 
     THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, DEF_CAPTURES_DIRECTORY, DEF_CLIPS_DIRECTORY, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_DATA_DEFAULTS, SETTINGS_DATA_SCHEMA, 
+    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
+    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
+    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
     PROGRAMS, 
     ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
     instances, flags, 
@@ -25,61 +25,69 @@ export {
 const THUMBNAIL_SIZE = '320x180';
 
 // paths
-const ACTIVE_DIRECTORY = import.meta.dirname;
-const DEF_CAPTURES_DIRECTORY = path.join(app.getPath('videos'), 'CapCha', 'Captures');
-const DEF_CLIPS_DIRECTORY = path.join(app.getPath('videos'), 'CapCha', 'Clips');
-const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
-const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
-const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+const ACTIVE_DIR = import.meta.dirname;
+const DEF_CAPS_DIR = path.join(app.getPath('videos'), 'CapCha', 'Captures');
+const DEF_CLIPS_DIR = path.join(app.getPath('videos'), 'CapCha', 'Clips');
+const CAPS_THUMBNAIL_DIR = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
+const CLIPS_THUMBNAIL_DIR = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
+const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 
 // obs names
 const SCENE_NAME = 'CapCha';
-const SPEAKER_INPUT_NAME = 'CapCha Input';
-const MICROPHONE_INPUT_NAME = 'CapCha Output';
+const SPKR_INPUT_NAME = 'CapCha Input';
+const MIC_INPUT_NAME = 'CapCha Output';
 
-// settings
-const SETTINGS_DATA_DEFAULTS = { 
+// stgs
+const STGS_DATA_DEFAULTS = { 
     navBarActive: true,
     
-    volume: 0.25,
-    volumeMuted: true,
+    vol: 0.25,
+    volMuted: true,
 
     darkMode: true,
 
-    capturesPath: DEF_CAPTURES_DIRECTORY,
+    capturesPath: DEF_CAPS_DIR,
     capturesLimit: 100, 
     capturesFormat: 'mp4', 
     capturesEncoder: 'obs_nvenc_h264_tex', 
     capturesWidth: 1280, 
     capturesHeight: 720, 
-    capturesDisplay: '', 
+    capturesDisp: '', 
     capturesFramerate: 60,
     capturesBitrate: 10000,
     autoRecord: false,
 
-    clipsPath: DEF_CLIPS_DIRECTORY,
+    clipsPath: DEF_CLIPS_DIR,
     clipsLimit: 100, 
     clipsFormat: 'mp4', 
     clipsWidth: 1280, 
     clipsHeight: 720, 
 
     speaker: 'Default',
-    speakerVolume: 0.5, 
-    microphone: 'Default', 
-    microphoneVolume: 0.5, 
+    speakerVol: 0.5, 
+    mic: 'Default', 
+    micVol: 0.5, 
     // webcam: ''
+
+    capturesGameFilter: 'all',
+    capturesMetaFilter: 'date',
+    capturesAscending: false,
+
+    clipsGameFilter: 'all',
+    clipsMetaFilter: 'date',
+    clipsAscending: false
 };
-const SETTINGS_DATA_SCHEMA = { 
+const STGS_DATA_SCHEMA = { 
     navBarActive: {
         type: 'boolean'
     },
 
-    volume: {
+    vol: {
         type: 'number',
         minimum: 0,
         maximum: 1,
     },
-    volumeMuted: {
+    volMuted: {
         type: 'boolean'
     },
 
@@ -112,7 +120,7 @@ const SETTINGS_DATA_SCHEMA = {
         minimum: 1,
         maximum: 4096
     },
-    capturesDisplay: {
+    capturesDisp: {
         type: 'string'
     },
     capturesFramerate: {
@@ -152,7 +160,7 @@ const SETTINGS_DATA_SCHEMA = {
     speaker: {
         type: 'string'
     },
-    speakerVolume: {
+    speakerVol: {
         type: 'number',
         minimum: 0,
         maximum: 1,
@@ -160,19 +168,41 @@ const SETTINGS_DATA_SCHEMA = {
     microphone: {
         type: 'string'
     },
-    microphoneVolume: {
+    microphoneVol: {
         type: 'number',
         minimum: 0,
         maximum: 1,
     },
     webcam: {
         type: 'string'
+    },
+
+    capturesGameFilter: {
+        type: 'string'
+    },
+    capturesMetaFilter: {
+        type: 'string',
+        enum: ['name', 'date', 'size', 'duration']
+    },
+    capturesAscending: {
+        type: 'boolean'
+    },
+
+    clipsGameFilter: {
+        type: 'string'
+    },
+    clipsMetaFilter: {
+        type: 'string',
+        enum: ['name', 'date', 'size', 'duration']
+    },
+    clipsAscending: {
+        type: 'boolean'
     }
 };
 
 // auto record programs
 const PROGRAMS = { 
-    VALORANT: 'Valorant.exe', 
+    Valorant: 'Valorant.exe', 
     Notepad: 'Notepad.exe' 
 };
 
@@ -205,24 +235,24 @@ function initMainVariables() {
     
     // settings and videos data
     data = { 
-        settings: null, 
+        stgs: null, 
         videos: null, 
         scenes: null, 
         inputs: null, 
         devices: null, 
-        displays: null 
+        disps: null 
     };
 
     // pending requests for websocket, recording game, and auto record interval
     state = { 
-        autoRecordInterval: null, 
+        autoRecInterval: null, 
         pendingRequests: new Map(), 
         recordingGame: null
     };
 
     uuid = {
         scene: null, 
-        speakerInput: null, 
-        microphoneInput: null 
+        spkrInput: null, 
+        micInput: null 
     };
 }

@@ -1,27 +1,25 @@
 /**
- * Module for initializing all components
+ * Module for initializing all components for the renderer process
  * 
  * @module renderer
- * @requires rendVariables
- * @requires rendGeneral
- * @requires rendTitleBar
- * @requires rendNavBlock
- * @requires rendEditorSection
- * @requires rendDirectoriesSection
- * @requires rendSettingsSection
+ * @requires rendererVariables
+ * @requires rendererGeneral
+ * @requires rendererTitleBar
+ * @requires rendererNavigationBlock
+ * @requires rendererEditorSection
+ * @requires rendererDirectoriesSection
+ * @requires rendererSettingsSection
  */
-import { initRendVariables, titleBar, initializationOverlay } from './components/rendVariables.js';
-import { initRendGeneral, setInitializationStatusLabel } from './components/rendGeneral.js';
-import { initRendTitleBar } from './components/rendTitleBar.js';
-import { initRendNavBlock } from './components/rendNavBlock.js';
-import { getReadableDuration, initRendEditorSection } from './components/rendEditorSection.js';
-import { initRendDirectoriesSection } from './components/rendDirectoriesSection.js';
-import { initRendSettingsSection } from './components/rendSettingsSection.js';
+import { initRendVars, titleBar, initOvrl } from './components/rendererVariables.js';
+import { initRendGen, setInitStatLabel } from './components/rendererGeneral.js';
+import { initRendTitleBar } from './components/rendererTitleBar.js';
+import { initRendNavBlock } from './components/rendererNavigationBlock.js';
+import { initRendEditSect } from './components/rendererEditorSection.js';
+import { initRendDirsSect } from './components/rendererDirectoriesSection.js';
+import { initRendStgsSect } from './components/rendererSettingsSection.js';
 
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);
-
-// import { getReadableRecordingDuration } from './components/rendEditorSection.js';
 
 /**
  * Initializes the renderer process
@@ -29,41 +27,38 @@ window.addEventListener('DOMContentLoaded', initRend);
 function initRend() {
     init();
 
-    window.windowAPI.reqFinishInit(() => {
+    window.processAPI.reqFinishInit(() => {
         finishInit();
     });
 }
 
 /**
- * Initializes the variables, general components, and title bar (before the main settings)
+ * Initializes the variables, general components, and title bar
  */
 function init() {
-    initRendVariables();
-    initRendGeneral();
+    initRendVars();
+    initRendGen();
     initRendTitleBar();
 }
 
 /**
- * Initializes the settings section, nav block, directories section, and editor section (after the main settings)
+ * Initializes the settings section, nav block, directories section, and editor section after the settings are read
  */
 async function finishInit() {
-    // set the text label to let the user know of the status
-    setInitializationStatusLabel('Loading Settings...');
-    await initRendSettingsSection();
+    // indicate to the user the settings are being loaded
+    setInitStatLabel('Loading Settings...');
+    await initRendStgsSect();
 
     initRendNavBlock();
 
-    setInitializationStatusLabel('Loading Files...');
-    await initRendDirectoriesSection();
+    // indicate to the user the files are being loaded
+    setInitStatLabel('Loading Files...');
+    await initRendDirsSect();
     
-    initRendEditorSection();
+    initRendEditSect();
 
-    // toggle the auto recording and remove the initialization overlay
-    window.windowAPI.reqToggleAutoRecord();
+    // toggle the auto recording, allow window dragging, and remove the initialization overlay
+    window.windowAPI.reqTogAutoRec();
     titleBar.style.webkitAppRegion = 'drag';
-    initializationOverlay.classList.remove('active');
-
-    document.querySelector('.clip-bar-btn').addEventListener('click', () => {
-        console.log('test');
-    })
+    initOvrl.classList.remove('active');
 }

@@ -30,6 +30,7 @@ html {
 
     /* ==== rprimarybarpath -> Record Primary Bar Path ==== */
     --rprimarybarpath-fill: #ff0000;
+    --rprimarybarpath-alt-fill: #ff0000;
 
     /* ==== rsecondarybarpath -> Record Secondary Bar Path ==== */
     --rsecondarybarpath-fill: #dddddd;
@@ -181,6 +182,8 @@ html[data-theme='dark'] {
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bgcolor: #575757;
+    --nbarbtn-alt-bgcolor: #4b4b4b;
+    --nbarbtn-alt2-bgcolor: #575757;
 
     /* ==== rbarbtn -> Record Bar Button ==== */
     --rbarbtn-bcolor: #575757;
@@ -192,14 +195,17 @@ html[data-theme='dark'] {
     /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
     --nprimarybarpath-fill: #dddddd;
     --nprimarybarpath-alt-fill: #ffffff;
+    --nprimarybarpath-alt2-fill: #dddddd;
 
     /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
     --nsecondarybarpath-fill: #373737;
     --nsecondarybarpath-alt-fill: #ffffff;
+    --nsecondarybarpath-alt2-fill: #dddddd;
 
     /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
     --ntertiarybarpath-fill: #dddddd;
     --ntertiarybarpath-alt-fill: #575757;
+    --ntertiarybarpath-alt2-fill: #4b4b4b;
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
     --nbarlabel-color: #dddddd;
@@ -227,7 +233,7 @@ html[data-theme='dark'] {
     --ntoggleicon-fill: #dddddd;
     --ntoggleicon-alt-fill: #ffffff;
 
-    /* ==== dlabel -> Directories Label ==== */
+    /* ==== dlabel -> Directory Label ==== */
     --dlabel-color: #ffffff;
 
     /* ==== dlabel2 -> Directory Label 2 ==== */
@@ -488,6 +494,8 @@ html[data-theme='light'] {
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bgcolor: #dbdbdb;
+    --nbarbtn-alt-bgcolor: #4b4b4b;
+    --nbarbtn-alt2-bgcolor: #dbdbdb;
 
     /* ==== rbarbtn -> Record Bar Button ==== */
     --rbarbtn-bcolor: #dbdbdb;
@@ -499,14 +507,17 @@ html[data-theme='light'] {
     /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
     --nprimarybarpath-fill: #dddddd;
     --nprimarybarpath-alt-fill: #ffffff;
+    --nprimarybarpath-alt2-fill: #dddddd;
 
     /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
     --nsecondarybarpath-fill: #373737;
     --nsecondarybarpath-alt-fill: #ffffff;
+    --nsecondarybarpath-alt2-fill: #dddddd;
 
     /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
     --ntertiarybarpath-fill: #dddddd;
     --ntertiarybarpath-alt-fill: #575757;
+    --ntertiarybarpath-alt2-fill: #4b4b4b;
 
     /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
     --nbaricon-fill: #363636;
@@ -538,7 +549,7 @@ html[data-theme='light'] {
     --ntoggleicon-fill: #1a69e0;
     --ntoggleicon-alt-fill: #0000ff;
 
-    /* ==== dlabel -> Directories Label ==== */
+    /* ==== dlabel -> Directory Label ==== */
     --dlabel-color: #000000;
 
     /* ==== dlabel2 -> Directory Label 2 ==== */
@@ -776,7 +787,7 @@ html {
     /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
     --ntoggleicon-transition: fill 0.3s ease 0s;
 
-    /* ==== dlabel -> Directories Label ==== */
+    /* ==== dlabel -> Directory Label ==== */
     --dlabel-transition: color 0.3s ease 0s;
 
     /* ==== sgctr -> Storage Container ==== */
