@@ -1,9 +1,9 @@
 const { contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
-    startRecord: (recordingGame) => ipcRenderer.invoke('webSocket:StartRecord', recordingGame), 
+    startRecord: (recordingGame) => ipcRenderer.invoke('webSocket:startRecord', recordingGame), 
 
-    stopRecord: () => ipcRenderer.invoke('webSocket:StopRecord'), 
+    stopRecord: () => ipcRenderer.invoke('webSocket:stopRecord'), 
 
     reqTogRecBarBtn: (callback) => ipcRenderer.on('webSocket:reqTogRecBarBtn', (_, recordingGame) => callback(recordingGame))
 });
@@ -48,10 +48,10 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     setStg: (key, value) => ipcRenderer.invoke('stgs:setStg', key, value),
 
     // returns devices data
-    getAllDevicesData: () => ipcRenderer.invoke('stgs:getAllDevicesData'),
+    getAllDevsData: () => ipcRenderer.invoke('stgs:getAllDevsData'),
 
     // returns displays data
-    getAllDisplaysData: () => ipcRenderer.invoke('stgs:getAllDisplaysData')
+    getAllDispsData: () => ipcRenderer.invoke('stgs:getAllDispsData')
 });
 
 contextBridge.exposeInMainWorld('filesAPI', {

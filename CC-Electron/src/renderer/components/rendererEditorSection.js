@@ -20,8 +20,8 @@ import {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -33,7 +33,7 @@ import {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -750,14 +750,14 @@ function initTmlnSldrEL() {
                             }
                             else {
                                 if (flags['spkVolSldrDrag']) {
-                                    data['stgs']['spkVol'] = Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX));
+                                    data['stgs']['speakerVolume'] = Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX));
 
                                     // set the speaker volume slider
                                     setSpkVolSldr();
                                 }
                                 else {
                                     if (flags['micVolSldrDrag']) {
-                                        data['stgs']['micVol'] = Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX));
+                                        data['stgs']['microphoneVolume'] = Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX));
 
                                         // set the microphone volume slider
                                         setMicVolSldr();

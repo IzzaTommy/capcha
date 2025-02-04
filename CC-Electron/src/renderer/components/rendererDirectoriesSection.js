@@ -16,8 +16,8 @@ import {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -29,7 +29,7 @@ import {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -70,7 +70,7 @@ async function initContCtr3EL(isCaps) {
     const metaFltDirStgFld = isCaps ? capsMetaFltDirStgFld : clipsMetaFltDirStgFld;
     const barBtn = isCaps ? capsBarBtn : clipsBarBtn;
     const barIcon = isCaps ? capsBarIcon : clipsBarIcon;
-    const ascStr = isCaps ? 'capsAscending' : 'clipsAscending';
+    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // on click, open the appropriate directory
     nameLabel.addEventListener('click', () => {
@@ -81,6 +81,7 @@ async function initContCtr3EL(isCaps) {
     gameFltDirStgFld.addEventListener('change', async () => {
         gameFltDirStgFld.value = data['stgs'][gameFltDirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(gameFltDirStgFld.name, gameFltDirStgFld.value));
     
+        removeAllVideoPrvw(isCaps);
         insertVideoPrvw(isCaps);
     });
 
@@ -88,6 +89,7 @@ async function initContCtr3EL(isCaps) {
     metaFltDirStgFld.addEventListener('change', async () => {
         metaFltDirStgFld.value = data['stgs'][metaFltDirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(metaFltDirStgFld.name, metaFltDirStgFld.value));
     
+        removeAllVideoPrvw(isCaps);
         insertVideoPrvw(isCaps);
     });
 
@@ -100,12 +102,14 @@ async function initContCtr3EL(isCaps) {
             setIcon(barIcon, 'arrow-upward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window.stgsAPI.setStg(ascStr, true));
 
+            removeAllVideoPrvw(isCaps);
             insertVideoPrvw(isCaps);
         }
         else {
             setIcon(barIcon, 'arrow-downward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window.stgsAPI.setStg(ascStr, false));
 
+            removeAllVideoPrvw(isCaps);
             insertVideoPrvw(isCaps);
         }
     });
@@ -118,16 +122,16 @@ async function initContCtr3EL(isCaps) {
  */
 function initContCtr3(isCaps) {
     // get the captures or clips variables
-    const pathLabel2 = isCaps ? capsPathLabel2 : clipsPathLabel2;
+    const dirLabel2 = isCaps ? capsDirLabel2 : clipsDirLabel2;
     const gameFltDirStgFld = isCaps ? capsGameFltDirStgFld : clipsGameFltDirStgFld;
     const metaFltDirStgFld = isCaps ? capsMetaFltDirStgFld : clipsMetaFltDirStgFld;
     const barBtn = isCaps ? capsBarBtn : clipsBarBtn;
     const barIcon = isCaps ? capsBarIcon : clipsBarIcon;
-    const pathStr = isCaps ? 'capsPath' : 'clipsPath';
-    const ascStr = isCaps ? 'capsAscending' : 'clipsAscending';
+    const dirStr = isCaps ? 'capturesDirectory' : 'clipsDirectory';
+    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
-    // set the path label and filter values
-    pathLabel2.textContent = data['stgs'][pathStr];
+    // set the directory label and filter values
+    dirLabel2.textContent = data['stgs'][dirStr];
     gameFltDirStgFld.value = data['stgs'][gameFltDirStgFld.name];
     metaFltDirStgFld.value = data['stgs'][metaFltDirStgFld.name];
 
@@ -189,7 +193,6 @@ function initDirGallEL(isCaps) {
 async function loadGall(isCaps, init) {
     // get the captures or clips variables
     const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
-    const gall = isCaps ? capsGall : clipsGall;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
     const dataStr = isCaps ? 'caps' : 'clips';
 
@@ -197,11 +200,7 @@ async function loadGall(isCaps, init) {
     statLabel.textContent = 'Loading...';
     statLabel.classList.add('active');
 
-    // remove every existing video preview from the gallery
-    while (gall.children.length > 1)
-    {
-        gall.removeChild(gall.lastElementChild);
-    }
+    removeAllVideoPrvw(isCaps);
 
     // get the size of the directory
     usageLabel3.textContent = `${Math.ceil(await atmpAsyncFunc(() => window.filesAPI.getDirSize(isCaps)) / BYTES_IN_GIGABYTE)} GB`;
@@ -234,6 +233,21 @@ function updateGall(isCaps) {
 }
 
 /**
+ * Removes all video previews from a gallery
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function removeAllVideoPrvw(isCaps) {
+    const gall = isCaps ? capsGall : clipsGall;
+
+    // remove every existing video preview from the gallery
+    while (gall.children.length > 1)
+    {
+        gall.removeChild(gall.lastElementChild);
+    }
+}
+
+/**
  * Inserts video previews into a gallery
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
@@ -243,9 +257,9 @@ function insertVideoPrvw(isCaps) {
     const gall = isCaps ? capsGall : clipsGall;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
     const dataStr = isCaps ? 'caps' : 'clips';
-    const gameFilerStr = isCaps ? 'capsGameFilter' : 'clipsGameFilter';
-    const metaFltStr = isCaps ? 'capsMetaFilter' : 'clipsMetaFilter';
-    const ascStr = isCaps ? 'capsAscending' : 'clipsAscending';
+    const gameFltStr = isCaps ? 'capturesGameFilter' : 'clipsGameFilter';
+    const metaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
+    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
     const curDate = new Date();
         
     // sort the video data depending on the meta data filter
@@ -280,7 +294,7 @@ function insertVideoPrvw(isCaps) {
 
         for (const videoData of data[dataStr]) {
             // insert video preview depending on the game filter
-            if (data['stgs'][gameFilerStr] === 'All' || videoData['game'].toLowerCase() === data['stgs'][gameFilerStr].toLowerCase()) {
+            if (data['stgs'][gameFltStr] === 'all' || videoData['game'].toLowerCase() === data['stgs'][gameFltStr].toLowerCase()) {
                 // get a clone of the video preview template
                 const videoPrvwClone = videoPrvwTemplate.content.cloneNode(true);
                 const videoPrvwCtr = videoPrvwClone.querySelector('.video-preview-ctr');

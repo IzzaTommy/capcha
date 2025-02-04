@@ -19,8 +19,8 @@ import {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -32,7 +32,7 @@ import {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -53,7 +53,7 @@ export { initRendNavBlock, togRecBarBtn };
 function initRendNavBlock() {
     initNavBarBtnEL();
 
-    initNavToggleBtnEL();
+    initNavTogBtnEL();
     initNavTogBtn();
 }
 
@@ -81,7 +81,7 @@ function initNavBarBtnEL() {
 /**
  * Initializes the nav toggle button event listener
  */
-function initNavToggleBtnEL() {
+function initNavTogBtnEL() {
     // on click, change the nav bar state
     navTglBtn.addEventListener('click', async () => {
         // toggle the nav bar
@@ -93,11 +93,11 @@ function initNavToggleBtnEL() {
         // change the toggle icon and save the setting, depending on if the nav bar is active
         if (navBar.classList.contains('active')) {
             setIcon(navTglIcon, 'arrow-back-ios');
-            data['stgs']['navBarActive'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('navBarActive', true));  // boolean1 value
+            data['stgs']['navigationBarActive'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('navigationBarActive', true));  // boolean1 value
         }
         else {
             setIcon(navTglIcon, 'arrow-forward-ios');
-            data['stgs']['navBarActive'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('navBarActive', false));  // boolean1 value
+            data['stgs']['navigationBarActive'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('navigationBarActive', false));  // boolean1 value
         }
         
         // update all width dependent elements after the nav bar transition finishes
@@ -126,7 +126,7 @@ function initNavToggleBtnEL() {
  */
 async function initNavTogBtn() {
     // toggle the nav bar and change the icon, depending on setting
-    if (data['stgs']['navBarActive'] === true) {
+    if (data['stgs']['navigationBarActive'] === true) {
         navBar.classList.add('active');
         setIcon(navTglIcon, 'arrow-back-ios');
     }

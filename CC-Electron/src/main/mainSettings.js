@@ -1,594 +1,556 @@
-// ES6 imports
-import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
-import WebSocket from 'ws';
-import path from 'path';
-import { promises as fs, writeFileSync, existsSync, readFileSync } from 'fs';
+/**
+ * Module for initializing the settings for the main process
+ * 
+ * @module mainSettings
+ * @requires child_process
+ * @requires electron
+ * @requires electron-store
+ * @requires fluent-ffmpeg
+ * @requires fs
+ * @requires path
+ * @requires util
+ * @requires mainVariables
+ * @requires mainGeneral
+ * @requires mainWebSocket
+ */
+
+import { exec } from 'child_process';
+import { dialog, ipcMain, shell } from 'electron';
 import Store from 'electron-store';
 import ffmpeg from 'fluent-ffmpeg';
-import { spawn } from 'child_process';
-import psList from 'ps-list';
-import { exec } from 'child_process';
-
+import { promises as fs } from 'fs';
+import path from 'path';
+import { promisify } from 'util'
 import { 
-    THUMBNAIL_SIZE, 
-    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
-    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
-    PROGRAMS, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
-    instances, flags, 
-    data, state, uuid, 
-    initMainVariables 
+    MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
+    ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    CAPTURES_DATE_FORMAT, 
+    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
+    SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+    ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
+    data, flags, inst, progs, state, uuid 
 } from './mainVariables.js';
-import { initMainWindow } from './mainWindow.js';
-import { initMainOBS } from './mainOBS.js';
-import { initMainWebSocket, webSocketSend } from './mainWebSocket.js';
-import { attemptAsyncFunction } from './mainSharedFunctions.js';
-import { togAutoRec } from './mainWindow.js';
-import { get } from 'http';
+import { initMainGeneral, togAutoRec, checkProgs, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
+import { initMainWebSocket, webSocketReq, webSocketBatchReq } from './mainWebSocket.js';
 
+/**
+ * @exports initMainSettings
+ */
 export { initMainSettings };
 
+/**
+ * Initializes the settings for electron-store and OBS
+ */
 async function initMainSettings() {
-    await initStgs();
+    await atmpAsyncFunc(() => initStgs());
     initStgsL();
 }
 
+/**
+ * Initializes the settings
+ */
 async function initStgs() {
-    // attempt to load the stgs
+    data['devs'] = await getDevs();
+    data['disps'] = await getDisps();
+
+    // try to load the settings for electron-store
     try {
         data['stgs'] = new Store({ defaults: STGS_DATA_DEFAULTS, schema: STGS_DATA_SCHEMA });
     }
     catch (error) {
         // error will occur if the file cannot be read, has corrupted values, or has invalid values (which should only occur if the user manually tampered with it)
-        console.log('Error initializing Store: ', error);
+        logProc('Settings', 'ERROR', 'Configuration file cannot be read', false);  // boolean1 isFinalMsg
+        logProc('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         try {
             // delete the corrupted file
-            unlinkSync(path.join(app.getPath('userData'), 'config.json'));
-            console.log('config.json deleted.');
+            atmpAsyncFunc(() => fs.unlink(SETTINGS_PATH_DEF));
+            logProc('Settings', 'ERROR', 'Deleting the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
             // recreate the stgs with the default values
             data['stgs'] = new Store({ defaults: STGS_DATA_DEFAULTS, schema: STGS_DATA_SCHEMA });
-            console.log('Store reinitialized with default settings.');
+            logProc('Settings', 'ERROR', 'Reinitializing settings with default values', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         } 
-        catch (fsError) {
-            console.error('Error deleting or resetting config file:', fsError);
+        catch (error) {
+            logProc('Settings', 'ERROR', 'Could not delete the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            logProc('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         }
     }
 
-    // create CapCha profile and set to CapCha profile
-    if (!(await attemptAsyncFunction(() => webSocketSend('GetProfileList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['profiles'].includes('CapCha'))
+    // create the CapCha profile if it does not exist
+    if (!(await atmpAsyncFunc(() => webSocketReq('GetProfileList')))['responseData']['profiles'].includes('CapCha'))
     {
-        await attemptAsyncFunction(() => webSocketSend('CreateProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        // set OBS to the CapCha profile
+        await atmpAsyncFunc(() => webSocketReq('CreateProfile', { profileName: 'CapCha' }));
     }
-    await attemptAsyncFunction(() => webSocketSend('SetCurrentProfile', { profileName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    
+    // set settings as a batch request
+    await atmpAsyncFunc(() => webSocketBatchReq(false, 0, [
+        // set the profile to the CapCha profile
+        {
+            'requestType': 'SetCurrentProfile', 
+            'requestData': { profileName: 'CapCha' } 
+        }, 
+        // set the setting, recording, and FPS type to accept the right values
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' } 
+        }, 
+        // set the recording path, format, encoder, width, height, and FPS
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['stgs'].get('capturesDirectory') } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['stgs'].get('capturesFormat') } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['stgs'].get('capturesEncoder') } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['stgs'].get('capturesWidth')}` } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['stgs'].get('capturesWidth')}` } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['stgs'].get('capturesHeight')}` } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['stgs'].get('capturesHeight')}` } 
+        }, 
+        {
+            'requestType': 'SetProfileParameter', 
+            'requestData': { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['stgs'].get('capturesFramerate')}` } 
+        }, 
+    ]));
 
-    // set basic settings
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'Mode', parameterValue: 'Advanced' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecType', parameterValue: 'Standard' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSType', parameterValue: '1' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-
-    // set caps path
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['stgs'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set format
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['stgs'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set encoder
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: data['stgs'].get('capturesEncoder') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set recording width
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set recording height
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set framerate
-    await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['stgs'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    // set bitrate
+    // set bitrate by manipulating the file with bitrate information
     try {
-        let recordEncoderData;
-
-        if (data['stgs'].get('capturesEncoder') == 'obs_x264') {
-            recordEncoderData = { 'bitrate': data['stgs'].get('capturesBitrate') };
-        }
-        else {
-            recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') };
-        }
-        writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
-        console.log('File has been written successfully with options');
+        await atmpAsyncFunc(() => fs.writeFile(RECORD_ENCODER_PATH, JSON.stringify(data['stgs'].get('capturesEncoder') == 'obs_x264' ? { 'bitrate': data['stgs'].get('capturesBitrate') } : { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') })));
     } 
     catch (error) {
-        console.error('Error writing to file: ', error);
+        logProc('Settings', 'ERROR', 'Could not set the bitrate', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 
+    // get the list of scenes and inputs
+    data['scenes'] = (await atmpAsyncFunc(() => webSocketReq('GetSceneList')))['responseData']['scenes'];
+    data['inputs'] = (await atmpAsyncFunc(() => webSocketReq('GetInputList', { })))['responseData']['inputs'];
 
-    // INPUT STUFF HERE
-    data['devices'] = await getDevices();
-    data['disps'] = getDisps();
+    // create the CapCha scene if it doesn't exist
+    uuid['scene'] = data['scenes'].some(scene => scene['sceneName'] === 'CapCha') ? data['scenes'][data['scenes'].findIndex(scene => scene['sceneName'] === 'CapCha')]['sceneUuid'] : (await atmpAsyncFunc(() => webSocketReq('CreateScene', { sceneName: 'CapCha' })))['responseData']['sceneUuid'];
 
-    // SCENE
-    data['scenes'] = (await attemptAsyncFunction(() => webSocketSend('GetSceneList'), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['scenes'];
-    // create CapCha scene and set to CapCha scene
-    if (data['scenes'].some(scene => scene['sceneName'] === 'CapCha'))
-    {
-        uuid['scene'] = data['scenes'][data['scenes'].findIndex(scene => scene['sceneName'] === 'CapCha')]['sceneUuid'];
-    }
-    else {
-        uuid['scene'] = (await attemptAsyncFunction(() => webSocketSend('CreateScene', { sceneName: 'CapCha' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['sceneUuid'];
-    }
-    await attemptAsyncFunction(async () => webSocketSend('SetCurrentProgramScene', { sceneName: 'CapCha', sceneUuid: uuid['scene'] }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+    // set the scene to the CapCha scene
+    await atmpAsyncFunc(async () => webSocketReq('SetCurrentProgramScene', { sceneName: 'CapCha', sceneUuid: uuid['scene'] }));
     
-    // INPUTS
-    data['inputs'] = (await attemptAsyncFunction(() => webSocketSend('GetInputList', {}), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputs'];
-
+    // mute the desktop audio (they appear by default and will be redundant)
     if (data['inputs'].some(input => input['inputName'] === 'Desktop Audio'))
     {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputMute', { inputName: 'Desktop Audio', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Desktop Audio')]['inputUuid'], inputMuted: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        await atmpAsyncFunc(async () => webSocketReq('SetInputMute', { inputName: 'Desktop Audio', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Desktop Audio')]['inputUuid'], inputMuted: true }));
     }
 
+    // mute the mic/aux (they appear by default and will be redundant)
     if (data['inputs'].some(input => input['inputName'] === 'Mic/Aux'))
     {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputMute', { inputName: 'Mic/Aux', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Mic/Aux')]['inputUuid'], inputMuted: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+        await atmpAsyncFunc(async () => webSocketReq('SetInputMute', { inputName: 'Mic/Aux', inputUuid: data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Mic/Aux')]['inputUuid'], inputMuted: true }));
     }
 
-    // SPKR
-    if (data['inputs'].some(input => input['inputName'] === 'Speaker Input'))
-    {
-        uuid['spkrInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'];
+    // create the speaker input if it does not exist
+    uuid['spkInput'] = data['inputs'].some(input => input['inputName'] === 'Speaker Input') ? data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'] : (await atmpAsyncFunc(async () => webSocketReq('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: { }, sceneItemEnabled: true })))['responseData']['inputUuid'];
+
+    // check if the speaker is not the default speaker and the speaker is currently available
+    if (data['stgs'].get('speaker') !== 'default' && data['stgs'].get('speaker') in data['devs']['outputs']) {
+        // set the speaker to the device in the settings
+        await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputSettings: { device_id: data['devs']['outputs'][data['stgs'].get('speaker')] }, overlay: true }));
+    }
+    // else, set the speaker to the default
+    else {
+        data['stgs'].set('speaker', 'default');
+        await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputSettings: { }, overlay: false }));
+    }
+
+    // set the speaker volume
+    await atmpAsyncFunc(async () => webSocketReq('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputVolumeDb: data['stgs'].get('speakerVolume') * 100 - 100 }));
+
+    // create the microphone input if it does not exist
+    uuid['micInput'] = data['inputs'].some(input => input['inputName'] === 'Microphone Input') ? data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'] : (await atmpAsyncFunc(async () => webSocketReq('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: { }, sceneItemEnabled: true })))['responseData']['inputUuid'];
+    
+    // check if the microphone is not the default microphone and the microphone is currently available
+    if (data['stgs'].get('microphone') !== 'default' && data['stgs'].get('microphone') in data['devs']['inputs']) {
+        // set the microphone to the device in the settings
+        await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devs']['inputs'][data['stgs'].get('microphone')] }, overlay: true }));
+    }
+    // else, set the microphone to the default
+    else {
+        data['stgs'].set('microphone', 'default');
+        await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }));
+    }
+
+    // set the microphone volume
+    await atmpAsyncFunc(async () => webSocketReq('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: data['stgs'].get('microphoneVolume') * 100 - 100 }));
+
+    // create the display input if it does not exist
+    uuid['dispInput'] = data['inputs'].some(input => input['inputName'] === 'Display Input') ? data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Display Input')]['inputUuid'] : (await atmpAsyncFunc(async () => webSocketReq('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Display Input', inputKind: 'monitor_capture', inputSettings: { }, sceneItemEnabled: true })))['responseData']['inputUuid'];
+
+    // set the display to the device in the settings
+    if (data['stgs'].get('capturesDisplay') in data['disps']) {
+        await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisplay')]['id'] }, overlay: true }));
     }
     else {
-        uuid['spkrInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
-    }
-
-    if (data['stgs'].get('speaker') !== 'Default') {
-        if (data['stgs'].get('speaker') in data['devices']['outputs']) {
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { device_id: data['devices']['outputs'][data['stgs'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-        }
-        else {
-            data['stgs'].set('spkr', 'Default');
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-        }
-    }
-    else {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    }
-
-    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputVolumeDb: data['stgs'].get('speakerVol') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-
-    // MIC
-    if (data['inputs'].some(input => input['inputName'] === 'Microphone Input'))
-    {
-        uuid['micInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'];
-    }
-    else {
-        uuid['micInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
-    }
-
-    if (data['stgs'].get('microphone') !== 'Default') {
-        if (data['stgs'].get('microphone') in data['devices']['inputs']) {
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devices']['inputs'][data['stgs'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-        }
-        else {
-            data['stgs'].set('mic', 'Default');
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-        }
-    }
-    else {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    }
-
-    await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: data['stgs'].get('microphoneVol') * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-
-
-    // DISP
-    if (data['inputs'].some(input => input['inputName'] === 'Display Input'))
-    {
-        uuid['dispInput'] = data['inputs'][data['inputs'].findIndex(input => input['inputName'] === 'Display Input')]['inputUuid'];
-    }
-    else {
-        uuid['dispInput'] = (await attemptAsyncFunction(async () => webSocketSend('CreateInput', { sceneName: 'CapCha', sceneUuid: uuid['scenes'], inputName: 'Display Input', inputKind: 'monitor_capture', inputSettings: {}, sceneItemEnabled: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS))['responseData']['inputUuid'];
-    }
-
-
-    if (data['stgs'].get('capturesDisp') in data['disps']) {
-        await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    }
-    else {
+        // if the list of displays is empty, set the display to nothing
         if (Object.keys(data['disps']).length === 0) {
-            data['stgs'].set('capturesDisp', '');
+            data['stgs'].set('capturesDisplay', '');
         }
+        // else, set the display to the first one in the list
         else {
-            data['stgs'].set('capturesDisp', Object.keys(data['disps'])[0]);
-            await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            data['stgs'].set('capturesDisplay', Object.keys(data['disps'])[0]);
+            await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisplay')]['id'] }, overlay: true }));
         }
     }
-
-
-    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputKindList', {} ), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
-    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['speakerInput'] }), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
-    // console.log(await attemptAsyncFunction(async () => webSocketSend('GetInputSettings', { inputName: 'Display Capture', inputUuid: '4cded799-f32b-46ed-aba8-b66b5bd557e5' }), ATTEMPTS, FAST_DELAY_IN_MSECONDS));
-    // console.log(data['inputs']);
-    // console.log(data['devices']);
-    // console.log(uuid);
-
-    // await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Capture', inputUuid: '2dcf1a89-6149-445e-90c0-5e889ebf8873', inputSettings: { monitor_id: '\\\\?\\DISPLAY#GSM7766#5&44d6669&0&UID37120#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}' }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-    console.log(getDisps());
 }
 
+/**
+ * Initializes the settings listeners
+ */
 function initStgsL() {
-    // gets the entire settings object
+    // gets the settings object
     ipcMain.handle('stgs:getAllStgsData', (_) => { return data['stgs'].store });
     
-    // sets the value of a specific stg
-    ipcMain.handle('stgs:setStg', async (_, key, value) => {
-        let canceled, filePaths;
-        console.log(key, '1: ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
+    // gets the list of devices
+    ipcMain.handle('stgs:getAllDevsData', (_) => { return data['devs'] });
 
+    // gets the list of displays
+    ipcMain.handle('stgs:getAllDispsData', (_) => { return data['disps'] });
+
+    // sets the value of a specific setting
+    ipcMain.handle('stgs:setStg', async (_, key, value) => {
+        // variables for the dialog
+        let canceled, filePaths;
+        // log basic information about the setting
+        logProc('Settings', 'SET', 'Setting a setting', false);  // boolean1 isFinalMsg
+        logProc('Settings', 'SET', `Key: ${key}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'SET', `Value: ${value}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'SET', `Type: ${typeof(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+
+        // validate the setting type and value
         value = validateStg(key, value);
 
+        logProc('Settings', 'SET', `Validated value: ${value}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'SET', `Validated type: ${typeof(value)}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+
+        // certain settings require unique behavior
         switch (key) {
-            case 'capturesPath':
-                ({ canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] }));
+            case 'capturesDirectory':
+                // open the directory
+                ({ canceled, filePaths } = await atmpAsyncFunc(() => dialog.showOpenDialog(inst['mainWindow'], { properties: ['openDirectory'] })));
         
+                // check if the operation was not canceled and there is a new value
                 if (!canceled && filePaths[0] !== value) {
+                    // grab the new value
                     value = filePaths[0];
-    
-                    try {
-                        // delete the thumbnail directory
-                        await fs.rm(CAPS_THUMBNAIL_DIR, { recursive: true, force: true });
-                
-                        // recreate the thumbnail directory
-                        await fs.mkdir(CAPS_THUMBNAIL_DIR);
-                    }
-                    catch {
-                        console.error('Error reseting thumbnails directory!');
-                    }
+
+                    // delete the old thumbnail directory and its content
+                    await atmpAsyncFunc(() => fs.rm(CAPTURES_THUMBNAIL_DIRECTORY, { recursive: true, force: true }));
+            
+                    // recreate the thumbnail directory
+                    await atmpAsyncFunc(() => fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY));
                 }
 
-                // should realistically never run
-                if (!existsSync(value)) {
+                // should realistically never fail, but checks if the new directory exists
+                if (await atmpAsyncFunc(() => fs.access(value))) {
+                    // reverts to the default setting if needed
                     value = STGS_DATA_DEFAULTS[key];
                 }
 
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
+                // sets the new captures directory
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: value }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFilePath', parameterValue: data['stgs'].get('capturesPath') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
             
-            case 'clipsPath':
-                ({ canceled, filePaths } = await dialog.showOpenDialog(instances['mainWindow'], { properties: ['openDirectory'] }));
-        
-                if (!canceled && filePaths[0] !== value) {
-                    value = filePaths[0];
-    
-                    try {
-                        // delete the thumbnail directory
-                        await fs.rm(CLIPS_THUMBNAIL_DIR, { recursive: true, force: true });
-                
-                        // recreate the thumbnail directory
-                        await fs.mkdir(CLIPS_THUMBNAIL_DIR);
-                    }
-                    catch {
-                        console.error('Error reseting thumbnails directory!');
-                    }
-                }
-
-                // should realistically never run
-                if (!existsSync(value)) {
-                    value = STGS_DATA_DEFAULTS[key];
-                }
-
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
-                break;
-
             case 'capturesFormat':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
+                // sets the new captures format
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: value }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecFormat2', parameterValue: data['stgs'].get('capturesFormat') }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesEncoder':
-                data['stgs'].set(key, value);
+                // sets the new captures encoder
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'AdvOut', parameterName: 'RecEncoder', parameterValue: value }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                // changes the bitrate by file manipulation (no websocket implementation for this yet)
+                await atmpAsyncFunc(() => fs.writeFile(RECORD_ENCODER_PATH, JSON.stringify(value == 'obs_x264' ? { 'bitrate': data['stgs'].get('capturesBitrate') } : { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') }), { }));
 
-                try {
-                    let recordEncoderData;
-            
-                    if (value == 'obs_x264') {
-                        recordEncoderData = { 'bitrate': data['stgs'].get('capturesBitrate') };
-                    }
-                    else {
-                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': data['stgs'].get('capturesBitrate') };
-                    }
-                    writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
-                    console.log('File has been written successfully with options');
-
-                    console.log('REAPPLIED BITRATE: ', data['stgs'].get('capturesBitrate'));
-                } 
-                catch (error) {
-                    console.error('Error writing to file: ', error);
-                }
                 break;
 
             case 'capturesWidth':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
+                // sets the new captures width
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${value}` }));
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${value}` }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCX', parameterValue: `${data['stgs'].get('capturesWidth')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesHeight':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
+                // sets the new captures height
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${value}` }));
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${value}` }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'BaseCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'OutputCY', parameterValue: `${data['stgs'].get('capturesHeight')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                break;
+
+            case 'capturesDisplay':
+                // set the new captures display
+                await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][value]['id'] }, overlay: true }));
+
                 break;
 
             case 'capturesFramerate':
-                console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
+                // set the new captures framerate
+                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${value}` }));
 
-                await attemptAsyncFunction(() => webSocketSend('SetProfileParameter', { parameterCategory: 'Video', parameterName: 'FPSInt', parameterValue: `${data['stgs'].get('capturesFramerate')}` }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
                 break;
 
             case 'capturesBitrate':
-                try {
-                    let recordEncoderData;
-            
-                    if (data['stgs'].get('capturesEncoder') == 'obs_x264') {
-                        recordEncoderData = { 'bitrate': value };
-                    }
-                    else {
-                        recordEncoderData = { 'rate_control': 'CBR', 'bitrate': value };
-                    }
-                    writeFileSync(path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json'), JSON.stringify(recordEncoderData), { encoding: 'utf8', mode: 0o644 });
-                    console.log('File has been written successfully with options');
+                // set the new captures bitrate
+                await atmpAsyncFunc(() => fs.writeFile(path.join(RECORD_ENCODER_PATH), JSON.stringify(data['stgs'].get('capturesEncoder') == 'obs_x264' ? { 'bitrate': value } : { 'rate_control': 'CBR', 'bitrate': value }), { }));
 
-                    console.log(key, ': ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                    data['stgs'].set(key, value);
-                } 
-                catch (error) {
-                    console.error('Error writing to file: ', error);
-                }
                 break;
             
             case 'autoRecord':
+                // set the auto record and toggle it
                 data['stgs'].set(key, value);
+
                 togAutoRec();
+                
                 break;
 
-            case 'capturesDisp':
-                data['stgs'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Display Input', inputUuid: uuid['dispInput'], inputSettings: { method: 2, monitor_id: '\\\\?\\' + data['disps'][data['stgs'].get('capturesDisp')]['id'] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+            case 'clipsDirectory':
+                // open the directory
+                ({ canceled, filePaths } = await dialog.showOpenDialog(inst['mainWindow'], { properties: ['openDirectory'] }));
+        
+                // check if the operation was not cancled and there is a new value
+                if (!canceled && filePaths[0] !== value) {
+                    // grab the new value
+                    value = filePaths[0];
+    
+                    // delete the old thumbnail directory and its content
+                    await atmpAsyncFunc(() => fs.rm(CLIPS_THUMBNAIL_DIRECTORY, { recursive: true, force: true }));
+            
+                    // recreate the thumbnail directory
+                    await atmpAsyncFunc(() => fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY));
+                }
+
+                // should realistically never fail, but checks if the new directory exists
+                if (await atmpAsyncFunc(() => fs.access(value))) {
+                    // reverts to the default setting if needed
+                    value = STGS_DATA_DEFAULTS[key];
+                }
+
                 break;
 
             case 'speaker':
-                data['stgs'].set(key, value);
-
-                if (data['stgs'].get('speaker') !== 'Default') {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { device_id: data['devices']['outputs'][data['stgs'].get('speaker')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                // set the new speaker, or set to default
+                if (value !== 'default') {
+                    await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputSettings: { device_id: data['devs']['outputs'][value] }, overlay: true }));
                 }
                 else {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                    await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputSettings: { }, overlay: false }));
                 }
+
                 break;
 
-            case 'speakerVol':
-                data['stgs'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkrInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                
+            case 'speakerVolume':
+                // set the new speaker volume
+                await atmpAsyncFunc(() => webSocketReq('SetInputVolume', { inputName: 'Speaker Input', inputUuid: uuid['spkInput'], inputVolumeDb: value * 100 - 100 }));
+
                 break;
 
             case 'microphone':
-                data['stgs'].set(key, value);
-            
-                if (data['stgs'].get('microphone') !== 'Default') {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devices']['inputs'][data['stgs'].get('microphone')] }, overlay: true }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                // set the new microphone, or set to default
+                if (data['stgs'].get('microphone') !== 'default') {
+                    await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { device_id: data['devs']['inputs'][value] }, overlay: true }));
                 }
                 else {
-                    await attemptAsyncFunction(async () => webSocketSend('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
+                    await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputSettings: { }, overlay: false }));
                 }
 
                 break;
 
-            case 'microphoneVol':
-                data['stgs'].set(key, value);
-                await attemptAsyncFunction(async () => webSocketSend('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: value * 100 - 100 }), ATTEMPTS, FAST_DELAY_IN_MSECONDS);
-                
-                break;
+            case 'microphoneVolume':
+                // set the new microphone volume
+                await atmpAsyncFunc(() => webSocketReq('SetInputVolume', { inputName: 'Microphone Input', inputUuid: uuid['micInput'], inputVolumeDb: value * 100 - 100 }));
 
-            default:
-                console.log(key, '2: ', value, ': ', typeof(value), ': ', STGS_DATA_SCHEMA[key]['enum']);
-                data['stgs'].set(key, value);
-                console.log('Not an OBS setting!');
+                break;
         }
     
-        // return the value to renderer process for disp
+        // save the setting
+        data['stgs'].set(key, value);
+
+        // return the value to renderer process to show in the setting field
         return value;
     });
 
-    ipcMain.handle('stgs:getAllDevicesData', (_) => { return data['devices'] });
-
-    ipcMain.handle('stgs:getAllDisplaysData', (_) => { return data['disps'] });
-
-
-
+    // gets the videos data for the directory
     ipcMain.handle('files:getAllDirData', async (_, isCaps) => {
-        // return Promise.reject(new Error("Simulated error for testing"));
+        // get the captures or clips variable
+        const frmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
+        const dir = data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
+        const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+        let files, videos, videosData;
 
-        // get the save location stored in the settings
-        const dir = isCaps ? data['stgs'].get('capturesPath') : data['stgs'].get('clipsPath');
-    
-        // make the thumbnail directory and video directory (latter should already exist)
-        await Promise.all([
-            fs.mkdir(isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR, { recursive: true }),
-            fs.mkdir(dir, { recursive: true })
-        ]);
+        // ensures the thumbnail directory exists
+        if (await atmpAsyncFunc(() => fs.access(tbnlDir))) {
+            await atmpAsyncFunc(() => fs.mkdir(tbnlDir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        }
+        
+        // ensures the video directory exists
+        if (await atmpAsyncFunc(() => fs.access(dir))) {
+            await atmpAsyncFunc(() => fs.mkdir(dir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        }
     
         // read the video directory for files
-        const files = await fs.readdir(dir);
-    
+        files = await atmpAsyncFunc(() => fs.readdir(dir));
 
+        // filter the files by video extension
+        videos = files.filter(file => STGS_DATA_SCHEMA[frmtStr]['enum'].includes(path.extname(file).toLowerCase().replace('.', '')));
 
-        // filter by video extensions
-        const videos = files.filter(file =>
-            ['.mp4', '.mkv'].includes(path.extname(file).toLowerCase())
-        );
-    
-        // get video meta data and thumbnail
-        const videosData = await Promise.all(
-            videos.map(async video => {
-                try {
-                    const videoName = path.parse(video).name;
-                    const videoPath = path.join(dir, video);
-    
-                    const [videoMetaData, thumbnailPath] = await Promise.all([
-                        fs.stat(videoPath),
-                        path.join(isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR, `${videoName}.png`)
-                    ]);
-    
-
-                    const videoDuration = await new Promise((resolve, reject) => {
-                        ffmpeg.ffprobe(videoPath, (error, metadata) => {
-                            if (error) {
-                                return reject(error);
-                            }
-           
-                            resolve(metadata.format.duration);
-                        });
-                    });
-
-                    // create thumbnail if it does not exist
-                    try {
-                        await fs.access(thumbnailPath);
-                    }
-                    catch {
-                        await attemptAsyncFunction(async () => await new Promise((resolve, reject) => {
-                            ffmpeg(videoPath)
-                                .on('end', resolve)
-                                .on('error', reject)
-                                .screenshots({
-                                    timestamps: ['50%'],
-                                    filename: videoName,
-                                    folder: isCaps ? CAPS_THUMBNAIL_DIR : CLIPS_THUMBNAIL_DIR,
-                                    size: THUMBNAIL_SIZE
-                                });
-                        }), ATTEMPTS, SLOW_DELAY_IN_MSECONDS);
-                    }
-    
-                    // return data on the video
-                    return {
-                        nameExt: video,
-                        game: video.split('-')[1] === undefined ? 'EXTERNAL' : video.split('-')[0],
-                        path: videoPath,
-                        size: videoMetaData.size,
-                        created: videoMetaData.birthtime, 
-                        duration: videoDuration, 
-                        thumbnailPath: thumbnailPath,
-                    };
-                }
-                catch (error) {
-                    console.log('Video Reading Error!:', error);
-                    return null;
-                }
-            })
-        );
+        // get the data and thumbnail for each video
+        videosData = await Promise.all(videos.map(video => getVideoData(video, dir, isCaps)));
     
         // return all the data on the videos
         return videosData.filter(videoData => videoData !== null);
     });
 
-    async function getDirSize(dirPath) {
-        let totalSize = 0;
-      
-        // Read all files and subdirectories in the directory
-        const files = await fs.readdir(dirPath);
-
-        // Loop through each file/subdirectory
-        for (const file of files) {
-          const filePath = path.join(dirPath, file);
-          
-          const stats = await fs.stat(filePath);
-          
-          if (stats.isDirectory()) {
-            // If it's a directory, recurse into it
-            totalSize += await getDirSize(filePath);
-          } 
-          else {
-                if (stats.isFile()) {
-                // If it's a file, add its size
-                totalSize += stats.size;
-            }
-            }
-        }
-
-        console.log('total: ', totalSize);
-        return totalSize;
-    }
-
+    // gets the size of a directory
     ipcMain.handle('files:getDirSize', async (_, isCaps) => {
-        return isCaps ? (await getDirSize(data['stgs'].get('capturesPath'))) : (await getDirSize(data['stgs'].get('clipsPath')));
+        return await getDirSize(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory'));
     });
 
+    // opens the directory
     ipcMain.on('window:openDir', async (_, isCaps) => {
-        try {
-            const result = await shell.openPath(isCaps ? data['stgs'].get('capturesPath') : data['stgs'].get('clipsPath'));
-
-            if (result) {
-                console.error(`Error opening folder: ${result}`);
-            } 
-            else {
-                console.log('Folder opened successfully!');
-            }
-        } catch (error) {
-            console.error('Unexpected error:', error);
-        }
-    })
+        await atmpAsyncFunc(() => shell.openPath(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory')));
+    });
 }
 
+/**
+ * Gets the meta data of the video
+ * 
+ * @param {string} video - The video to get the meta data of
+ * @param {string} dir - The directory of the video
+ * @param {boolean} isCaps - If the call is for captures or clips
+ * @returns {Object} The list of video meta data
+ */
+async function getVideoData(video, dir, isCaps) {
+    // turn ffprobe into a promise based function and get basic video data
+    const ffprobeProm = promisify(ffmpeg.ffprobe);
+    const videoName = path.parse(video).name;
+    const videoPath = path.join(dir, video);
+    const videoMetaData = await atmpAsyncFunc(() => fs.stat(videoPath));
+    const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+    const tbnlPath = path.join(tbnlDir, `${videoName}.png`);
+    const videoDuration = (await atmpAsyncFunc(() => ffprobeProm(videoPath))).format.duration;
 
+    // check if the thumbnail for this video already exists
+    if (!(await atmpAsyncFunc(() => fs.access(tbnlPath)))) {
+        // create the thumbnail
+        await atmpAsyncFunc(() => new Promise((resolve, reject) => {
+            ffmpeg(videoPath)
+                .on('end', resolve)
+                .on('error', reject)
+                .screenshots({
+                    timestamps: ['50%'],
+                    filename: videoName,
+                    folder: tbnlDir,
+                    size: THUMBNAIL_SIZE
+                });
+        }));
+    }
 
+    return {
+        created: videoMetaData.birthtime, 
+        duration: videoDuration, 
+        game: video.split('-')[1] ? video.split('-')[0] : 'EXTERNAL',
+        nameExt: video,
+        path: videoPath,
+        size: videoMetaData.size,
+        thumbnailPath: tbnlPath 
+    };
+}
 
+/**
+ * Gets the size of the directory
+ * 
+ * @param {string} dir - The directory to get the size of
+ * @returns {number} The size of the directory
+ */
+async function getDirSize(dir) {  
+    // get all the files and subdirectories in the directory
+    const files = await atmpAsyncFunc(() => fs.readdir(dir));
+    let size = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-function validateStg(key, value) {
-    if (STGS_DATA_SCHEMA[key]['type'] === 'boolean') {
-        if (typeof(value) !== 'boolean') {
-            value = STGS_DATA_DEFAULTS[key];
+    for (const file of files) {
+        // get the full path of the file
+        const filePath = path.join(dir, file);
+        const stats = await atmpAsyncFunc(() => fs.stat(filePath));
+        
+        // if the 'file' is a directory, do a recursive call into it
+        if (stats.isDirectory()) {
+            size += await getDirSize(filePath);
+        } 
+        else {
+            // if it's a file, add its size
+            if (stats.isFile()) {
+                size += stats.size;
+            }
         }
     }
-    else {
-        if (STGS_DATA_SCHEMA[key]['type'] === 'number') {
+
+    return size;
+}
+
+/**
+ * Validates the settings type and value, if enumerated or bound
+ * 
+ * @param {string} key - The key (name) of the setting
+ * @param {boolean | number | string} value - The value of the setting
+ * @returns {boolean | number | string} The validated value of the setting
+ */
+function validateStg(key, value) {
+    // check what type this setting SHOULD have
+    switch(STGS_DATA_SCHEMA[key]['type']) {
+        case 'boolean':
+            // if the type is not boolean, revert to the default value
+            if (typeof(value) !== 'boolean') {
+                value = STGS_DATA_DEFAULTS[key];
+            }
+
+            break;
+
+        case 'number':
+            // if the value is not a number, revert to the default value
             if (isNaN(value)) {
                 value = STGS_DATA_DEFAULTS[key];
             }
             else {
+                // if the key has an enumeration, ensure the value is in it, or revert to the default value
                 if (STGS_DATA_SCHEMA[key]['enum']) {
-                    if (!STGS_DATA_SCHEMA[key]['enum'].includes(Number(value))) {
-                        value = STGS_DATA_DEFAULTS[key];
-                    }
-                    else {
-                        value = Number(value);
-                    }
+                    value = !STGS_DATA_SCHEMA[key]['enum'].includes(Number(value)) ? STGS_DATA_DEFAULTS[key] : Number(value);
                 }
                 else {
+                    // set it to the closest bound, or keep the value
                     if (value > STGS_DATA_SCHEMA[key]['maximum']) {
                         value = STGS_DATA_SCHEMA[key]['maximum'];
                     }
@@ -602,70 +564,55 @@ function validateStg(key, value) {
                     }
                 }
             }
-        }
-        else {
-            if (typeof(value) !== 'string') {
+            
+            break;
+
+        case 'string':
+            // if the type is not string or the value is not un the enumeration, revert to the default value
+            if (typeof(value) !== 'string' || (STGS_DATA_SCHEMA[key]['enum'] && !STGS_DATA_SCHEMA[key]['enum'].includes(value))) {
                 value = STGS_DATA_DEFAULTS[key];
             }
-            else {
-                if (STGS_DATA_SCHEMA[key]['enum']) {
-                    if (!STGS_DATA_SCHEMA[key]['enum'].includes(value)) {
-                        value = STGS_DATA_DEFAULTS[key];
-                    }
-                }
-            }
-        }
-    }
+        
+            break;
+    }    
 
     return value;
 }
 
-function getDevices() {
-    return new Promise((resolve, reject) => {
-        const command = `
-            Get-CimInstance Win32_PnPEntity |
-            Where-Object { $_.PNPClass -eq 'AudioEndpoint' } |
-            Select-Object Name, DeviceID |
-            ConvertTo-Json -Compress
-        `;
-        
-        exec(command, { shell: 'powershell.exe' }, (err, stdout, stderr) => {
-            if (err) {
-                reject(err);
-                return;
-            }
+/**
+ * Gets the list of input and output devices
+ * 
+ * @returns {Object} The list of inputs and outputs, each with the name and ID of the device
+ */
+async function getDevs() {
+    // turn exec into a promise based function and get the list of devices
+    const execProm = promisify(exec);
+    const { stdout } = await atmpAsyncFunc(() => execProm(SHELL_DEVICES_COMMAND, { shell: 'powershell.exe' }));
+    const devs = { inputs: {}, outputs: {} };
 
-            try {
-                const devicesArray = JSON.parse(stdout);
-                const devices = { inputs: {}, outputs: {} };
-
-                devicesArray.forEach(device => {
-                    const name = device.Name;
-                    const deviceId = device.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
-
-                    if (/microphone|line in/i.test(name)) {
-                        devices.inputs[name] = deviceId;
-                    } else if (/speakers|line out|headphones/i.test(name)) {
-                        devices.outputs[name] = deviceId;
-                    } else {
-                        devices.outputs[name] = deviceId;
-                    }
-                });
-
-                resolve(devices);
-            } 
-            catch (parseError) {
-                reject(parseError);
-            }
-        });
+    JSON.parse(stdout).forEach(dev => {
+        if (/microphone|line in/i.test(dev.Name)) {
+            devs.inputs[dev.Name] = dev.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
+        } 
+        else {
+            devs.outputs[dev.Name] = dev.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
+        }
     });
+
+    return devs;
 }
 
-function getDisps() {
+/**
+ * Gets the list of displays
+ * 
+ * @returns {Object} The list of displays including position, size, and id
+ */
+async function getDisps() {
     try {
-        return JSON.parse(readFileSync(path.join(ACTIVE_DIR, 'runtime-displays.json'), 'utf8'))
+        return JSON.parse(await atmpAsyncFunc(() => fs.readFile(path.join(ACTIVE_DIRECTORY, 'runtime-displays.json'))));
     } 
     catch (error) {
-        console.error('Error reading file: ', error);
+        logProc('Settings', 'ERROR', 'Cannot get list of displays', false);  // boolean1 isFinalMsg
+        logProc('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 }

@@ -8,7 +8,7 @@ import { TimelineState } from './timelineState.js';
 
 /**
  * @exports CONTENT_STATUS_LABEL_TIMEOUT, NAV_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, PLAYBACK_CONTAINER_TIMEOUT, PLAYBACK_GROW_VALUE, PLAYBACK_REDUCE_VALUE, 
-    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+ *  VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
  *  PLAYBACK_RATE_DEF, PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
  *  TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_MIN_ZOOM, CLIP_MIN_LENGTH, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
  *  MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
@@ -19,8 +19,8 @@ import { TimelineState } from './timelineState.js';
  *  navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
  *  navTglBtn, navTglIcon, 
  *  contStatLabel, dirsSect, editSect, stgsSect, 
- *  capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
- *  clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+ *  capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+ *  clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
  *  videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
  *  videoCtr, videoPlr, playPauseStatIcon, 
  *  plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -32,7 +32,7 @@ import { TimelineState } from './timelineState.js';
  *  tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
  *  clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
  *  mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
- *  mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+ *  mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
  *  spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
  *  boxes, data, flags, state, 
  *  initRendVars 
@@ -50,8 +50,8 @@ export {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -63,7 +63,7 @@ export {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -133,8 +133,8 @@ let html,
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -146,11 +146,9 @@ let html,
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb 
-
-// element boxes, video/setting/display/device data, boolean flags, and state data
-let boxes, data, flags, state;
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
+    boxes, data, flags, state
 
 /**
  * Initializes the variables
@@ -201,7 +199,7 @@ function initRendVars() {
     // directories section elements
     capsNameLabel = document.getElementById('name-label-captures');
 
-    capsPathLabel2 = document.getElementById('path-label2-captures');
+    capsDirLabel2 = document.getElementById('directory-label2-captures');
     capsUsageLabel3 = document.getElementById('usage-label3-captures');
     capsTotalLabel3 = document.getElementById('total-label3-captures');
 
@@ -213,7 +211,7 @@ function initRendVars() {
 
     clipsNameLabel = document.getElementById('name-label-clips');
 
-    clipsPathLabel2 = document.getElementById('path-label2-clips');
+    clipsDirLabel2 = document.getElementById('directory-label2-clips');
     clipsUsageLabel3 = document.getElementById('usage-label3-clips');
     clipsTotalLabel3 = document.getElementById('total-label3-clips');
 
@@ -300,13 +298,13 @@ function initRendVars() {
     darkModeStgTglFld = document.querySelector(`.general-setting-toggle-field[name='darkMode']`);
     darkModeStgTglIcon = document.querySelector(`.general-setting-toggle-field[name='darkMode'] + .general-setting-toggle-icon > use`);
 
-    mostStgFlds = document.querySelectorAll(`.general-setting-field:not([name='capsturePath']):not([name='capturesLimit']):not([name='capturesDisp']):not([name='clipsPath']):not([name='clipsLimit']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='speaker']):not([name='microphone'])`);
+    mostStgFlds = document.querySelectorAll(`.general-setting-field:not([name='capturesDirectory']):not([name='capturesLimit']):not([name='capturesDisplay']):not([name='clipsDirectory']):not([name='clipsLimit']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='speaker']):not([name='microphone'])`);
 
-    capsPathStgFld = document.querySelector(`.general-setting-field[name='capturesPath']`);
+    capsDirStgFld = document.querySelector(`.general-setting-field[name='capturesDirectory']`);
     capsLimitStgFld = document.querySelector(`[name='capturesLimit']`);
-    capsDispStgFld = document.querySelector(`.general-setting-field[name='capturesDisp']`);
+    capsDispStgFld = document.querySelector(`.general-setting-field[name='capturesDisplay']`);
 
-    clipsPathStgFld = document.querySelector(`.general-setting-field[name='clipsPath']`);
+    clipsDirStgFld = document.querySelector(`.general-setting-field[name='clipsDirectory']`);
     clipsLimitStgFld = document.querySelector(`[name='clipsLimit']`);
 
     clipsFrmStgFlds = document.querySelectorAll(`[name='clipsFormat']`);
@@ -381,5 +379,5 @@ function initRendVars() {
         plbkCtrTmo: null, 
         recTimeIntv: null, 
         tmln: new TimelineState() 
-     };
+    };
 }

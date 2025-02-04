@@ -27,6 +27,7 @@ window.addEventListener('DOMContentLoaded', initRend);
 function initRend() {
     init();
 
+    // on request, finish initialization
     window.processAPI.reqFinishInit(() => {
         finishInit();
     });
@@ -42,7 +43,7 @@ function init() {
 }
 
 /**
- * Initializes the settings section, nav block, directories section, and editor section after the settings are read
+ * Initializes the settings section, navigation block, directories section, and editor section after the settings are read
  */
 async function finishInit() {
     // indicate to the user the settings are being loaded

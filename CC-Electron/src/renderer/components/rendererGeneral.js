@@ -19,8 +19,8 @@ import {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsGall, capsLeftBtn, capsStatLabel, capsRightBtn, clipsGall, clipsLeftBtn, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -32,7 +32,7 @@ import {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -408,7 +408,6 @@ async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DE
 
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
-            // throw an error if there are no more attempts remaining
             else {
                 // set the right text label depending on if this is an initialization or runtime error
                 init ? setInitStatLabel(`Program Failure: ${error.message}`) : setContStatLabel(`Program Failure: ${error.message}`);

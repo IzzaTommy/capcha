@@ -19,8 +19,8 @@ import {
     navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsPathLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsPathLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
@@ -32,7 +32,7 @@ import {
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsPathStgFld, capsLimitStgFld, capsDispStgFld, clipsPathStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
+    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
     boxes, data, flags, state, 
     initRendVars 
@@ -95,17 +95,17 @@ function initStgCtrEL() {
         });
     }
 
-    // iterate through each path setting field
-    for (const [index, pathStgFld] of [capsPathStgFld, clipsPathStgFld].entries()) {
+    // iterate through each directory setting field
+    for (const [index, dirStgFld] of [capsDirStgFld, clipsDirStgFld].entries()) {
         // get the captures or clips variable
         const isCaps = index === 0 ? true : false;
 
         // on click, set the setting, update the setting cache, update the setting field value, and reload the gallery
-        pathStgFld.addEventListener('click', async () => {
-            data['stgs'][pathStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(pathStgFld.name, pathStgFld.value));
+        dirStgFld.addEventListener('click', async () => {
+            data['stgs'][dirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(dirStgFld.name, dirStgFld.value));
 
-            if (pathStgFld.value !== data['stgs'][pathStgFld.name]) {
-                pathStgFld.value = data['stgs'][pathStgFld.name];
+            if (dirStgFld.value !== data['stgs'][dirStgFld.name]) {
+                dirStgFld.value = data['stgs'][dirStgFld.name];
 
                 await atmpAsyncFunc(() => loadGall(isCaps, false));
             }
@@ -171,8 +171,8 @@ async function initStgCtr() {
 
     // get the settings, devices (speakers, microphones, webcams), and displays
     data['stgs'] = await atmpAsyncFunc(() => window.stgsAPI.getAllStgsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
-    data['devs'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDevicesData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
-    data['disps'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDisplaysData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
+    data['devs'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDevsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
+    data['disps'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDispsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
 
     // iterate through each stg tglgle swt
     for (const stgTglSwt of mostStgTglSwtes) {
@@ -206,9 +206,19 @@ async function initStgCtr() {
     }
 
     // iterate through each setting field
-    for (const stgFld of [...mostStgFlds, capsPathStgFld, clipsPathStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds]) {
+    for (const stgFld of [...mostStgFlds, capsDirStgFld, clipsDirStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds]) {
         // load each initial setting value from the stored settings
         stgFld.value = data['stgs'][stgFld.name];
+    }
+
+    // iterate through each limit setting field
+    for (const [index, limitStgFld] of [capsLimitStgFld, clipsLimitStgFld].entries()) {
+        // get the captures or clips variable
+        const totalLabel3 = index === 0 ? capsTotalLabel3 : clipsTotalLabel3;
+
+        // load each initial setting value from the stored settings
+        limitStgFld.value = data['stgs'][limitStgFld.name];
+        totalLabel3.textContent = `/${data['stgs'][limitStgFld.name]} GB`;
     }
 
     // iterate through each display
@@ -271,8 +281,8 @@ async function initStgCtr() {
  */
 function setSpkVolSldr() { 
     // set the speaker volume thumb and overlay (trailing bar)
-    setSpkVolThumb(data['stgs']['spkVol'] * spkVolSldrWidth);
-    setSpkVolOvrl(data['stgs']['spkVol'] * 100);
+    setSpkVolThumb(data['stgs']['speakerVolume'] * spkVolSldrWidth);
+    setSpkVolOvrl(data['stgs']['speakerVolume'] * 100);
 }
 
 /**
@@ -306,8 +316,8 @@ function updateSpkVolSldr() {
  */
 function setMicVolSldr() { 
     // set the microphone volume thumb and overlay (trailing bar)
-    setMicVolThumb(data['stgs']['micVol'] * micVolSldrWidth);
-    setMicVolOvrl(data['stgs']['micVol'] * 100);
+    setMicVolThumb(data['stgs']['microphoneVolume'] * micVolSldrWidth);
+    setMicVolOvrl(data['stgs']['microphoneVolume'] * 100);
 }
 
 /**

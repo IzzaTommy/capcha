@@ -1,93 +1,96 @@
-// ES6 imports
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import WebSocket from 'ws';
+/**
+ * Module for initializing the variabels for the main process
+ * 
+ * @module mainVariables
+ * @requires electron
+ * @requires path
+ */
+import { app } from 'electron';
 import path from 'path';
-import { promises as fs, writeFileSync, existsSync } from 'fs';
-import Store from 'electron-store';
-import ffmpeg from 'fluent-ffmpeg';
-import { spawn } from 'child_process';
-import psList from 'ps-list';
-import { exec } from 'child_process';
 
+/**
+ * @exports MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
+ *  ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+ *  CAPTURES_DATE_FORMAT, 
+ *  SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
+ *  SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+ *  ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
+ *  data, flags, inst, progs, state, uuid 
+ */
 export { 
-    THUMBNAIL_SIZE, 
-    ACTIVE_DIR, DEF_CAPS_DIR, DEF_CLIPS_DIR, CAPS_THUMBNAIL_DIR, CLIPS_THUMBNAIL_DIR, OBS_EXECUTABLE_PATH, 
-    SCENE_NAME, SPKR_INPUT_NAME, MIC_INPUT_NAME, 
-    STGS_DATA_DEFAULTS, STGS_DATA_SCHEMA, 
-    PROGRAMS, 
-    ATTEMPTS, FAST_DELAY_IN_MSECONDS, SLOW_DELAY_IN_MSECONDS, 
-    instances, flags, 
-    data, state, uuid, 
-    initMainVariables 
+    MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
+    ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
+    CAPTURES_DATE_FORMAT, 
+    SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
+    SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+    ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
+    data, flags, inst, progs, state, uuid 
 };
+
+// unexported
+const INITIALIZATION_DATE = new Date();
+
+// minimum window size, delays, logs path
+const MAIN_WINDOW_WIDTH_MIN = 1280;
+const MAIN_WINDOW_HEIGHT_MIN = 900;
+const CHECK_PROGRAMS_DELAY_IN_MSECONDS = 5000;
+const PAD = (num) => num.toString().padStart(2, '0');
+const LOGS_PATH = path.join(app.getPath('logs'), `${INITIALIZATION_DATE.getFullYear()}-${PAD(INITIALIZATION_DATE.getMonth() + 1)}-${PAD(INITIALIZATION_DATE.getDate())}_${PAD(INITIALIZATION_DATE.getHours())}-${PAD(INITIALIZATION_DATE.getMinutes())}-${PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
+const LOGS_DIVIDER = '------------------------------------------------------------';
 
 // thumbnail size
 const THUMBNAIL_SIZE = '320x180';
 
-// paths
-const ACTIVE_DIR = import.meta.dirname;
-const DEF_CAPS_DIR = path.join(app.getPath('videos'), 'CapCha', 'Captures');
-const DEF_CLIPS_DIR = path.join(app.getPath('videos'), 'CapCha', 'Clips');
-const CAPS_THUMBNAIL_DIR = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
-const CLIPS_THUMBNAIL_DIR = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
-const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIR, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+// directories and paths
+const ACTIVE_DIRECTORY = import.meta.dirname;  // CC-Electron/src/main
+const CAPTURES_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Captures');  // not used?
+const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');  // not used?
+const CLIPS_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Clips');  // not used?
+const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');  // not used?
+const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 
-// obs names
+const CAPTURES_DATE_FORMAT = '%MM%DD%YY%hh%mm%ss';
+
+// OBS input names
 const SCENE_NAME = 'CapCha';
-const SPKR_INPUT_NAME = 'CapCha Input';
-const MIC_INPUT_NAME = 'CapCha Output';
+const SPEAKER_INPUT_NAME = 'CapCha Input';
+const MICROPHONE_INPUT_NAME = 'CapCha Output';
 
-// stgs
-const STGS_DATA_DEFAULTS = { 
-    navBarActive: true,
-    
-    vol: 0.25,
-    volMuted: true,
-
-    darkMode: true,
-
-    capturesPath: DEF_CAPS_DIR,
-    capturesLimit: 100, 
-    capturesFormat: 'mp4', 
-    capturesEncoder: 'obs_nvenc_h264_tex', 
-    capturesWidth: 1280, 
-    capturesHeight: 720, 
-    capturesDisp: '', 
-    capturesFramerate: 60,
-    capturesBitrate: 10000,
-    autoRecord: false,
-
-    clipsPath: DEF_CLIPS_DIR,
-    clipsLimit: 100, 
-    clipsFormat: 'mp4', 
-    clipsWidth: 1280, 
-    clipsHeight: 720, 
-
-    speaker: 'Default',
-    speakerVol: 0.5, 
-    mic: 'Default', 
-    micVol: 0.5, 
-    // webcam: ''
-
-    capturesGameFilter: 'all',
-    capturesMetaFilter: 'date',
-    capturesAscending: false,
-
-    clipsGameFilter: 'all',
-    clipsMetaFilter: 'date',
-    clipsAscending: false
-};
+// settings
+const SETTINGS_PATH_DEF = path.join(app.getPath('userData'), 'config.json');
 const STGS_DATA_SCHEMA = { 
-    navBarActive: {
+    navigationBarActive: {
         type: 'boolean'
     },
 
-    vol: {
+    capturesGameFilter: {
+        type: 'string'
+    },
+    capturesMetaFilter: {
+        type: 'string',
+        enum: ['name', 'date', 'size', 'duration']
+    },
+    capturesAscending: {
+        type: 'boolean'
+    },
+
+    clipsGameFilter: {
+        type: 'string'
+    },
+    clipsMetaFilter: {
+        type: 'string',
+        enum: ['name', 'date', 'size', 'duration']
+    },
+    clipsAscending: {
+        type: 'boolean'
+    }, 
+
+    volume: {
         type: 'number',
         minimum: 0,
         maximum: 1,
     },
-    volMuted: {
+    volumeMuted: {
         type: 'boolean'
     },
 
@@ -95,7 +98,7 @@ const STGS_DATA_SCHEMA = {
         type: 'boolean'
     },
 
-    capturesPath: {
+    capturesDirectory: {
         type: 'string'
     },
     capturesLimit: {
@@ -120,7 +123,7 @@ const STGS_DATA_SCHEMA = {
         minimum: 1,
         maximum: 4096
     },
-    capturesDisp: {
+    capturesDisplay: {
         type: 'string'
     },
     capturesFramerate: {
@@ -135,7 +138,7 @@ const STGS_DATA_SCHEMA = {
         type: 'boolean'
     }, 
 
-    clipsPath: {
+    clipsDirectory: {
         type: 'string'
     },
     clipsLimit: {
@@ -160,7 +163,7 @@ const STGS_DATA_SCHEMA = {
     speaker: {
         type: 'string'
     },
-    speakerVol: {
+    speakerVolume: {
         type: 'number',
         minimum: 0,
         maximum: 1,
@@ -168,91 +171,96 @@ const STGS_DATA_SCHEMA = {
     microphone: {
         type: 'string'
     },
-    microphoneVol: {
+    microphoneVolume: {
         type: 'number',
         minimum: 0,
         maximum: 1,
     },
     webcam: {
         type: 'string'
-    },
-
-    capturesGameFilter: {
-        type: 'string'
-    },
-    capturesMetaFilter: {
-        type: 'string',
-        enum: ['name', 'date', 'size', 'duration']
-    },
-    capturesAscending: {
-        type: 'boolean'
-    },
-
-    clipsGameFilter: {
-        type: 'string'
-    },
-    clipsMetaFilter: {
-        type: 'string',
-        enum: ['name', 'date', 'size', 'duration']
-    },
-    clipsAscending: {
-        type: 'boolean'
     }
+};
+const STGS_DATA_DEFAULTS = { 
+    navigationBarActive: true,
+    
+    capturesGameFilter: 'all',
+    capturesMetaFilter: 'date',
+    capturesAscending: false,
+
+    clipsGameFilter: 'all',
+    clipsMetaFilter: 'date',
+    clipsAscending: false,
+
+    volume: 0.1,
+    volumeMuted: true,
+
+    darkMode: true,
+
+    capturesDirectory: CAPTURES_DIRECTORY_DEF,
+    capturesLimit: 50, 
+    capturesFormat: 'mp4', 
+    capturesEncoder: 'obs_nvenc_h264_tex', 
+    capturesWidth: 1280, 
+    capturesHeight: 720, 
+    capturesDisplay: '', 
+    capturesFramerate: 30,
+    capturesBitrate: 3000,
+    autoRecord: false,
+
+    clipsDirectory: CLIPS_DIRECTORY_DEF,
+    clipsLimit: 50, 
+    clipsFormat: 'mp4', 
+    clipsWidth: 1280, 
+    clipsHeight: 720, 
+
+    speaker: 'default',
+    speakerVolume: 0.5, 
+    microphone: 'default', 
+    microphoneVolume: 0.5
+    // webcam: ''
+};
+const RECORD_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
+const SHELL_DEVICES_COMMAND = `Get-CimInstance Win32_PnPEntity | Where-Object { $_.PNPClass -eq 'AudioEndpoint' } | Select-Object Name, DeviceID | ConvertTo-Json -Compress`;
+
+// asynchronous function attempts and delay
+const ASYNC_ATTEMPTS = 3;
+const ASYNC_DELAY_IN_MSECONDS = 3000;
+
+// video/setting/display/device data
+const data = { 
+    devs: null, 
+    disps: null, 
+    inputs: null, 
+    scenes: null, 
+    stgs: null, 
+    videos: null 
+};
+
+// boolean flags
+const flags = { 
+    isRec: false 
+};
+
+// instances
+const inst = { 
+    mainWindow: null, 
+    obsProcess: null, 
+    webSocket: null 
 };
 
 // auto record programs
-const PROGRAMS = { 
-    Valorant: 'Valorant.exe', 
-    Notepad: 'Notepad.exe' 
+const progs = {};
+
+// state data
+const state = { 
+    autoRecIntv: null, 
+    recGame: null, 
+    pendReqs: new Map() 
 };
 
-// asynchronous function attempts and delay
-const ATTEMPTS = 3;
-const FAST_DELAY_IN_MSECONDS = 2000;
-const SLOW_DELAY_IN_MSECONDS = 4000;
-
-// main window, obs process, websocket instances
-let instances;
-
-// boolean flags, settings/videos data, and state data
-let flags, data, state, uuid; 
-
-/**
- * Initializes the variables
- */
-function initMainVariables() {
-    // main window, obs process, and websocket instances
-    instances = { 
-        mainWindow: null, 
-        obsProcess: null, 
-        webSocket: null 
-    };
-
-    // boolean flags
-    flags = { 
-        recording: false 
-    };
-    
-    // settings and videos data
-    data = { 
-        stgs: null, 
-        videos: null, 
-        scenes: null, 
-        inputs: null, 
-        devices: null, 
-        disps: null 
-    };
-
-    // pending requests for websocket, recording game, and auto record interval
-    state = { 
-        autoRecInterval: null, 
-        pendingRequests: new Map(), 
-        recordingGame: null
-    };
-
-    uuid = {
-        scene: null, 
-        spkrInput: null, 
-        micInput: null 
-    };
-}
+// device uuids
+const uuid = {
+    micInput: null, 
+    scene: null, 
+    spkInput: null 
+};
