@@ -9,19 +9,23 @@
  * @requires rendererSettingsSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, NAV_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, PLAYBACK_RATE_MAPPING, 
-    TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_MIN_ZOOM, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
     initOvrl, initStatLabel, 
     titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
+    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsGall, capsLeftBtn, capsStatLabel, capsRightBtn, clipsGall, clipsLeftBtn, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -30,11 +34,11 @@ import {
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
+    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
-    boxes, data, flags, state, 
+    boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
 import { initRendNavBlock, togRecBarBtn } from './rendererNavigationBlock.js';
@@ -43,9 +47,9 @@ import { initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSe
 import { initRendStgsSect, setSpkVolSldr, setSpkVolOvrl, setSpkVolThumb, updateSpkVolSldr, setMicVolSldr, setMicVolOvrl, setMicVolThumb, updateMicVolSldr } from './rendererSettingsSection.js';
 
 /**
- * @exports initRendGen, setInitStatLabel, setContStatLabel, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc
+ * @exports initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc
  */
-export { initRendGen, setInitStatLabel, setContStatLabel, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc };
+export { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc };
 
 /**
  * Initializes general components
@@ -79,9 +83,7 @@ function initGenEL() {
  */
 function initGenIPC() {
     // on request, toggle the record button (initiated from the main auto recording process)
-    window.webSocketAPI.reqTogRecBarBtn(async (recGame) => {
-        await atmpAsyncFunc(() => togRecBarBtn(true, false, recGame));  // boolean1 isAutoStart, boolean2 isManualStop
-    });
+    window['stgsAPI'].reqTogRecBarBtn(async (recGame) => await atmpAsyncFunc(() => togRecBarBtn(true, false, recGame)));  // boolean1 isAutoStart, boolean2 isManualStop
 }
 
 /**
@@ -100,16 +102,25 @@ function setInitStatLabel(msg) {
  */
 function setContStatLabel(msg) {
     // clear any existing timeout
-    if (state['contStatLabelTmo']) {
-        clearTimeout(state['contStatLabelTmo']);
-    }
+    if (states['contStatLabelTmo'])
+        clearTimeout(states['contStatLabelTmo']);
 
     // set the label text and show the label
     contStatLabel.textContent = msg;
     contStatLabel.classList.add('active');
 
     // start a new timeout to hide the label after 5 seconds
-    state['contStatLabelTmo'] = setTimeout(() => contStatLabel.classList.remove('active'), CONTENT_STATUS_LABEL_TIMEOUT);
+    states['contStatLabelTmo'] = setTimeout(() => contStatLabel.classList.remove('active'), CONTENT_STATUS_LABEL_TIMEOUT);
+}
+
+/**
+ * Gets a modifiable object of an element's bounding client rectangle
+ * 
+ * @param {DOMRect} box - The element bounding box
+ * @returns {Object} The modifiable element bounding box
+ */
+function getModBox(box) {
+    return { 'left': box['left'], 'right': box['right'], 'width': box['width'] };
 }
 
 /**
@@ -121,8 +132,8 @@ function setActiveSect(sect) {
     switch (sect) {
         case 'directories':
             // unload the editor video
-            if (flags['videoLoaded']) {
-                flags['videoLoaded'] = false;
+            if (flags['isVideoLoaded']) {
+                flags['isVideoLoaded'] = false;
                 
                 // standby will pause the video but hide the play pause icon overlay
                 setVideoPlayerState('standby');
@@ -159,8 +170,8 @@ function setActiveSect(sect) {
 
         case 'settings':
             // unload the editor video
-            if (flags['videoLoaded']) {
-                flags['videoLoaded'] = false;
+            if (flags['isVideoLoaded']) {
+                flags['isVideoLoaded'] = false;
 
                 // standby will pause the video but hide the play pause icon overlay
                 setVideoPlayerState('standby');
@@ -202,7 +213,7 @@ function setIcon(icon, name) {
  * @returns {number[]} The [days, hours, minutes, seconds] of the time
  */
 function getParsedTime(time) {
-    return [Math.floor(time / SECONDS_IN_DAY), Math.floor(time % SECONDS_IN_DAY / SECONDS_IN_HOUR), Math.floor(time % SECONDS_IN_HOUR / SECONDS_IN_MINUTE), Math.floor(time % SECONDS_IN_MINUTE)];
+    return [ Math.floor(time / SECONDS_IN_DAY), Math.floor(time % SECONDS_IN_DAY / SECONDS_IN_HOUR), Math.floor(time % SECONDS_IN_HOUR / SECONDS_IN_MINUTE), Math.floor(time % SECONDS_IN_MINUTE) ];
 }
 
 /**
@@ -216,24 +227,19 @@ function getRdblAge(time) {
     const parsedTime = getParsedTime(time);
 
     // return the age based on the largest non-zero time segment (days, hours, minutes)
-    if (parsedTime[0] > 999) {
+    if (parsedTime[0] > 999)
         return '999d+ ago';
-    }
     else {
-        if (parsedTime[0] > 0) {
+        if (parsedTime[0] > 0)
             return `${parsedTime[0]}d ago`;
-        }
         else {
-            if (parsedTime[1] > 0) {
+            if (parsedTime[1] > 0)
                 return `${parsedTime[1]}h ago`;
-            }
             else {
-                if (parsedTime[2] > 0) {
+                if (parsedTime[2] > 0)
                     return `${parsedTime[2]}m ago`;
-                }
-                else {
+                else
                     return `Just Now`;
-                }
             }
         }
     }
@@ -251,55 +257,37 @@ function getRdblDur(time) {
     let rdblDur = '';
 
     // if the number of days exceeds 99, return a string indicating max time
-    if (parsedTime[0] > 99) {
-        rdblDur += '99:99:99:99+';
-    }
+    if (parsedTime[0] > 99)
+        rdblDur += '99:23:59:59+';
     else {
         // append the days if it exceeds 0
-        if (parsedTime[0] > 0) {
-            rdblDur += `${parsedTime[0]}:`
-        }
+        if (parsedTime[0] > 0)
+            rdblDur += `${parsedTime[0]}:`;
 
         // append the hours if it exceeds 0, and pad with a 0 if it is less than 10 or if there are non-zero days
         if (parsedTime[1] > 0) {
-            if (parsedTime[1] < 10) {
-                if (parsedTime[0] > 0) {
-                    rdblDur += `0${parsedTime[1]}:`
-                }
-                else {
-                    rdblDur += `${parsedTime[1]}:`
-                }
-            }
-            else {
-                rdblDur += `${parsedTime[1]}:`
-            }
+            if (parsedTime[0] > 0)
+                rdblDur += `${TIME_PAD(parsedTime[1])}:`;
+            else
+                rdblDur += `${parsedTime[1]}:`;
         }
         else {
-            if (parsedTime[0] > 0) {
-                rdblDur += `0${parsedTime[1]}:`
-            }
+            if (parsedTime[0] > 0)
+                rdblDur += `${TIME_PAD(parsedTime[1])}:`;
         }
 
         // append the minutes, and pad with a 0 if it is less than 10 or if there are non-zero hours or days
         if (parsedTime[2] < 10) {
-            if (parsedTime[1] > 0 || parsedTime[0] > 0) {
-                rdblDur += `0${parsedTime[2]}:`
-            }
-            else {
-                rdblDur += `${parsedTime[2]}:`
-            }
+            if (parsedTime[0] > 0 || parsedTime[1] > 0)
+                rdblDur += `${TIME_PAD(parsedTime[2])}:`;
+            else
+                rdblDur += `${parsedTime[2]}:`;
         }
-        else {
-            rdblDur += `${parsedTime[2]}:`
-        }
+        else
+            rdblDur += `${parsedTime[2]}:`;
 
         // append the seconds, and pad with a 0 if it is less than 10
-        if (parsedTime[3] < 10) {
-            rdblDur += `0${parsedTime[3]}`
-        }
-        else {
-            rdblDur += `${parsedTime[3]}`
-        }
+        rdblDur += TIME_PAD(parsedTime[3]);
     }
 
     return rdblDur;
@@ -317,35 +305,25 @@ function getRdblRecDur(time) {
     let rdblRecDur = '';
 
     // if the time exceeds 9 hours, return a string indicating max time
-    if (parsedTime[0] > 0 || parsedTime[1] > 9) {
-        rdblRecDur += '9:99:99+';
-    }
+    if (parsedTime[0] > 0 || parsedTime[1] > 9)
+        rdblRecDur += '9:59:59+';
     else {
         // append the hours if it exceeds 0
-        if (parsedTime[1] > 0) {
+        if (parsedTime[1] > 0)
             rdblRecDur += `${parsedTime[1]}:`;
-        }
 
-        // append the minutes, and pad with a 0 if it is less than 10
+        // append the minutes, and pad with a 0 if it is less than 10 or if there are non-zero hours or days
         if (parsedTime[2] < 10) {
-            if (parsedTime[1] > 0) {
-                rdblRecDur += `0${parsedTime[2]}:`
-            }
-            else {
-                rdblRecDur += `${parsedTime[2]}:`
-            }
+            if (parsedTime[0] > 0 || parsedTime[1] > 0)
+                rdblRecDur += `${TIME_PAD(parsedTime[2])}:`;
+            else
+                rdblRecDur += `${parsedTime[2]}:`;
         }
-        else {
-            rdblRecDur += `${parsedTime[2]}:`
-        }
+        else
+            rdblRecDur += `${parsedTime[2]}:`;
 
         // append the seconds, and pad with a 0 if it is less than 10
-        if (parsedTime[3] < 10) {
-            rdblRecDur += `0${parsedTime[3]}`
-        }
-        else {
-            rdblRecDur += `${parsedTime[3]}`
-        }
+        rdblRecDur += TIME_PAD(parsedTime[3]);
     }
 
     return rdblRecDur;
@@ -390,10 +368,10 @@ function getTruncDec(value, places) {
  * @param {Function} asyncFunc - The asynchronous function
  * @param {number} atmps - The number of attempts
  * @param {number} delay - The delay between attempts in milliseconds
- * @param {boolean} init - If the asynchronous function is run during initialization
+ * @param {boolean} isInit - If the asynchronous function is run during initialization
  * @returns {Promise} The result of the attempts
  */
-async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS, init = false) {
+async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS, isInit = false) {
     // repeat for the number of attempts
     for (let i = 1; i <= atmps; i++) {
         // try the asynchronous function
@@ -404,14 +382,13 @@ async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DE
             // do another attempt after the delay
             if (i < atmps) {
                 // set the right text label depending on if this is an initialization or runtime error
-                init ? setInitStatLabel(`Attempt ${i} failed: ${error.message}`) : setContStatLabel(`Attempt ${i} failed: ${error.message}`);
+                isInit ? setInitStatLabel(`Attempt ${i} failed: ${error.message}`) : setContStatLabel(`Attempt ${i} failed: ${error.message}`);
 
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
-            else {
+            else
                 // set the right text label depending on if this is an initialization or runtime error
-                init ? setInitStatLabel(`Program Failure: ${error.message}`) : setContStatLabel(`Program Failure: ${error.message}`);
-            }
+                isInit ? setInitStatLabel(`Program Failure: ${error.message}`) : setContStatLabel(`Program Failure: ${error.message}`);
         }
     }
 }

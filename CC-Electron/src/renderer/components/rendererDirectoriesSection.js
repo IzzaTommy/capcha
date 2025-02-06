@@ -6,14 +6,18 @@
  * @requires rendererGeneral
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, NAV_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, PLAYBACK_RATE_MAPPING, 
-    TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_MIN_ZOOM, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
     initOvrl, initStatLabel, 
     titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
+    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
@@ -27,14 +31,14 @@ import {
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
+    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
-    boxes, data, flags, state, 
+    boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 
 /**
  * @exports initRendDirsSect, loadGall, updateGall
@@ -54,8 +58,8 @@ async function initRendDirsSect() {
     initDirGallEL(true);  // boolean1 isCaps
     initDirGallEL(false);  // boolean1 isCaps
 
-    await atmpAsyncFunc(() => loadGall(true, true));  // boolean1 isCaps, boolean2 init
-    await atmpAsyncFunc(() => loadGall(false, true));  // boolean1 isCaps, boolean2 init
+    await atmpAsyncFunc(() => loadGall(true, true));  // boolean1 isCaps, boolean2 isInit
+    await atmpAsyncFunc(() => loadGall(false, true));  // boolean1 isCaps, boolean2 isInit
 }
 
 /**
@@ -73,21 +77,19 @@ async function initContCtr3EL(isCaps) {
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // on click, open the appropriate directory
-    nameLabel.addEventListener('click', () => {
-        window.windowAPI.openDir(isCaps);
-    });
+    nameLabel.addEventListener('click', () => window['stgsAPI'].openDir(isCaps));
 
-    // on change, set the game filter setting and re-insert the video previews in the new order
+    // on change, set the game filter setting, then remove and re-insert the video previews in the new order
     gameFltDirStgFld.addEventListener('change', async () => {
-        gameFltDirStgFld.value = data['stgs'][gameFltDirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(gameFltDirStgFld.name, gameFltDirStgFld.value));
+        gameFltDirStgFld.value = data['stgs'][gameFltDirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(gameFltDirStgFld.name, gameFltDirStgFld.value));
     
         removeAllVideoPrvw(isCaps);
         insertVideoPrvw(isCaps);
     });
 
-    // on change, set the meta filter setting and re-insert the video previews in the new order
+    // on change, set the meta filter setting, then remove and re-insert the video previews in the new order
     metaFltDirStgFld.addEventListener('change', async () => {
-        metaFltDirStgFld.value = data['stgs'][metaFltDirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(metaFltDirStgFld.name, metaFltDirStgFld.value));
+        metaFltDirStgFld.value = data['stgs'][metaFltDirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltDirStgFld.name, metaFltDirStgFld.value));
     
         removeAllVideoPrvw(isCaps);
         insertVideoPrvw(isCaps);
@@ -97,17 +99,17 @@ async function initContCtr3EL(isCaps) {
     barBtn.addEventListener('click', async () => {
         barBtn.classList.toggle('active');
 
-        // change the icon, save the order setting, and re-insert the video previews
+        // change the icon, save the order setting, then remove and re-insert the video previews
         if (barBtn.classList.contains('active')) {
             setIcon(barIcon, 'arrow-upward-alt');
-            data['stgs'][ascStr] = await atmpAsyncFunc(() => window.stgsAPI.setStg(ascStr, true));
+            data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true));
 
             removeAllVideoPrvw(isCaps);
             insertVideoPrvw(isCaps);
         }
         else {
             setIcon(barIcon, 'arrow-downward-alt');
-            data['stgs'][ascStr] = await atmpAsyncFunc(() => window.stgsAPI.setStg(ascStr, false));
+            data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false));
 
             removeAllVideoPrvw(isCaps);
             insertVideoPrvw(isCaps);
@@ -155,42 +157,31 @@ function initDirGallEL(isCaps) {
     const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
 
     // on click, scroll the gallery left by approximately its width
-    leftBtn.addEventListener('click', () => {
-        gall.scrollBy({left: -boxes[gallBoxStr].width, behavior: 'smooth'});
-    });
+    leftBtn.addEventListener('click', () => gall.scrollBy({ 'left': -boxes[gallBoxStr]['width'] }));
 
     // on scroll, scroll the gallery by increments of the video preview
-    gall.addEventListener('wheel', (pointer) => {
+    gall.addEventListener('wheel', (ptr) => {
         // prevent scrolling vertically on section container 1
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // scroll the gallery by approximately the video preview width
-        if (pointer.deltaY < 0) {
-            gall.scrollBy({left: -videoPrvwCtrWidth});
-        }
-        else {
-            gall.scrollBy({left: videoPrvwCtrWidth});
-        }
+        gall.scrollBy({ 'left': ptr['deltaY'] < 0 ? -videoPrvwCtrWidth : videoPrvwCtrWidth }); 
     });
 
     // on scroll, toggle the gallery buttons
-    gall.addEventListener('scroll', () => {
-        togDirBtn(isCaps);
-    });
+    gall.addEventListener('scroll', () => togDirBtn(isCaps));
 
     // on click, scroll the gallery right by approximately its width
-    rightBtn.addEventListener('click', () => {
-        gall.scrollBy({left: boxes[gallBoxStr].width, behavior: 'smooth'});
-    });
+    rightBtn.addEventListener('click', () => gall.scrollBy({ 'left': boxes[gallBoxStr]['width'] }));
 }
 
 /**
  * Loads the directory gallery
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
- * @param {boolean} init - If the function is run during initialization
+ * @param {boolean} isInit - If the function is run during initialization
  */
-async function loadGall(isCaps, init) {
+async function loadGall(isCaps, isInit) {
     // get the captures or clips variables
     const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
@@ -203,10 +194,10 @@ async function loadGall(isCaps, init) {
     removeAllVideoPrvw(isCaps);
 
     // get the size of the directory
-    usageLabel3.textContent = `${Math.ceil(await atmpAsyncFunc(() => window.filesAPI.getDirSize(isCaps)) / BYTES_IN_GIGABYTE)} GB`;
+    usageLabel3.textContent = `${Math.ceil(await atmpAsyncFunc(() => window['stgsAPI'].getDirSize(isCaps)) / BYTES_IN_GIGABYTE)} GB`;
 
     // get the video data
-    data[dataStr] = await atmpAsyncFunc(() => window.filesAPI.getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, init);
+    data[dataStr] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
 
     // insert the video previews into the gallery
     insertVideoPrvw(isCaps);
@@ -224,12 +215,12 @@ function updateGall(isCaps) {
     let numvideoPrvw;
 
     // get the new gallery bounding box
-    boxes[gallBoxStr] = gall.getBoundingClientRect();
+    boxes[gallBoxStr] = getModBox(gall.getBoundingClientRect());
 
     // calculate and set the gap between the video previews based on the width of the gallery
-    numvideoPrvw = Math.floor(boxes[gallBoxStr].width / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
+    numvideoPrvw = Math.floor(boxes[gallBoxStr]['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
 
-    gall.style.gap = `${(boxes[gallBoxStr].width - (numvideoPrvw * videoPrvwCtrWidth)) / (numvideoPrvw - 1)}px`;
+    gall.style.gap = `${(boxes[gallBoxStr]['width'] - (numvideoPrvw * videoPrvwCtrWidth)) / (numvideoPrvw - 1)}px`;
 }
 
 /**
@@ -265,30 +256,29 @@ function insertVideoPrvw(isCaps) {
     // sort the video data depending on the meta data filter
     switch (data['stgs'][metaFltStr]) {
         case 'name':
-            data['stgs'][ascStr] ? data[dataStr ].sort((a, b) => a['nameExt'].localeCompare(b['nameExt'])) : data[dataStr ].sort((a, b) => b['nameExt'].localeCompare(a['nameExt']));
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['fullName'].localeCompare(b['fullName'])) : data[dataStr].sort((a, b) => b['fullName'].localeCompare(a['fullName']));
 
             break;
 
         case 'date':
-            data['stgs'][ascStr] ? data[dataStr ].sort((a, b) => a['created'] - b['created']) : data[dataStr ].sort((a, b) => b['created'] - a['created']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['created'] - b['created']) : data[dataStr].sort((a, b) => b['created'] - a['created']);
 
             break;
 
         case 'size':
-            data['stgs'][ascStr] ? data[dataStr ].sort((a, b) => a['size'] - b['size']) : data[dataStr ].sort((a, b) => b['size'] - a['size']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['size'] - b['size']) : data[dataStr].sort((a, b) => b['size'] - a['size']);
 
             break;
 
         case 'duration':
-            data['stgs'][ascStr] ? data[dataStr ].sort((a, b) => a['duration'] - b['duration']) : data[dataStr ].sort((a, b) => b['duration'] - a['duration']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['duration'] - b['duration']) : data[dataStr].sort((a, b) => b['duration'] - a['duration']);
 
             break;
     }
 
     // indicate that no videos are found, or hide the label
-    if (data[dataStr].length === 0) {
+    if (data[dataStr]['length'] === 0)
         statLabel.textContent = 'No Videos Found';
-    }
     else {
         statLabel.classList.remove('active');
 
@@ -314,7 +304,7 @@ function insertVideoPrvw(isCaps) {
                 // set the video age
                 videoPrvwClone.querySelector('.video-preview-age-label').textContent = `${getRdblAge((curDate - videoData['created']) / MSECONDS_IN_SECOND)}`;
                 // set the video name with the extension
-                videoPrvwClone.querySelector('.video-preview-name-label').textContent = videoData['nameExt'];
+                videoPrvwClone.querySelector('.video-preview-name-label').textContent = videoData['fullName'];
 
                 // on click, open the video in the editor section
                 videoPrvwCtr.addEventListener('click', () => {
@@ -354,18 +344,8 @@ function togDirBtn(isCaps) {
     const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
 
     // if there is more to scroll left, enable the left button
-    if (gall.scrollLeft > 0) {
-        leftBtn.classList.add('active');
-    }
-    else {
-        leftBtn.classList.remove('active');
-    }
+    gall.scrollLeft > 0 ? leftBtn.classList.add('active') : leftBtn.classList.remove('active');
     
     // if there is more to scroll right, enable the right button
-    if (gall.scrollLeft < (gall.scrollWidth - Math.ceil(boxes[gallBoxStr].width))) {
-        rightBtn.classList.add('active');
-    }
-    else {
-        rightBtn.classList.remove('active');
-    }
+    gall.scrollLeft < (gall.scrollWidth - Math.ceil(boxes[gallBoxStr]['width'])) ? rightBtn.classList.add('active') : rightBtn.classList.remove('active');
 }

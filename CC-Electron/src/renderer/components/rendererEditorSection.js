@@ -8,16 +8,18 @@
  * @requires rendererSettingsSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, NAV_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, PLAYBACK_CONTAINER_TIMEOUT, PLAYBACK_GROW_VALUE, PLAYBACK_REDUCE_VALUE, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
     VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
-    PLAYBACK_RATE_DEF, PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_MIN_ZOOM, CLIP_MIN_LENGTH, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
     initOvrl, initStatLabel, 
     titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
+    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
@@ -31,14 +33,14 @@ import {
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
+    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
-    boxes, data, flags, state, 
+    boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
 import { initRendStgsSect, setSpkVolSldr, setSpkVolOvrl, setSpkVolThumb, updateSpkVolSldr, setMicVolSldr, setMicVolOvrl, setMicVolThumb, updateMicVolSldr } from './rendererSettingsSection.js';
 
@@ -66,7 +68,7 @@ function initVideoCtrEL() {
     // on keydown, check and execute premapped hotkeys
     document.addEventListener('keydown', (event) => {
         // check if a video is loaded
-        if (flags['videoLoaded']) {
+        if (flags['isVideoLoaded']) {
             switch (event.key) {
                 // spacebar - toggle the video player state
                 case ' ':
@@ -76,7 +78,7 @@ function initVideoCtrEL() {
                 
                 // left arrow - decrease the volume, playback rate, or current time
                 case 'ArrowLeft':
-                    if (flags['volBarBtnHover'] || flags['volSldrCtrHover']) {
+                    if (flags['isVolBarBtnHover'] || flags['isVolSldrCtrHover']) {
                         videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume - VOLUME_REDUCE_VALUE, VOLUME_MAX));
                         videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
 
@@ -84,20 +86,20 @@ function initVideoCtrEL() {
                         setVolSldr();
                     }
                     else {
-                        if (flags['plbkRateBarBtnHover'] || flags['plbkRateSldrCtrHover']) {
+                        if (flags['isPlbkRateBarBtnHover'] || flags['isPlbkRateSldrCtrHover']) {
                             videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_MAX))];
                 
                             // set the playback rate slider
                             setPlbkRateSldr();
                         }
                         else {
-                            videoPlr.currentTime -= PLAYBACK_REDUCE_VALUE;
+                            videoPlr.currentTime -= PLAYBACK_CONTAINER_REDUCE_VALUE;
 
                             // check if clipping is active
                             if (clipBar.classList.contains('active')) {
                                 // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
-                                if (videoPlr.currentTime < state['tmln'].getClipStartTime() || videoPlr.currentTime >= state['tmln'].getClipEndTime()) {
-                                    videoPlr.currentTime = state['tmln'].getClipStartTime();
+                                if (videoPlr.currentTime < states['tmln'].getClipStartTime() || videoPlr.currentTime >= states['tmln'].getClipEndTime()) {
+                                    videoPlr.currentTime = states['tmln'].getClipStartTime();
                         
                                     // pause the video and change the icon
                                     setVideoPlayerState('pause');
@@ -112,8 +114,8 @@ function initVideoCtrEL() {
                             }
                             else {
                                 // check if the video is out of the tmln bounds, set it back the start
-                                if (videoPlr.currentTime < state['tmln'].getStartTime() || videoPlr.currentTime >= state['tmln'].getEndTime()) {
-                                    videoPlr.currentTime = state['tmln'].getStartTime();
+                                if (videoPlr.currentTime < states['tmln'].getStartTime() || videoPlr.currentTime >= states['tmln'].getEndTime()) {
+                                    videoPlr.currentTime = states['tmln'].getStartTime();
 
                                     // pause the video and change the icon
                                     setVideoPlayerState('pause');
@@ -137,7 +139,7 @@ function initVideoCtrEL() {
 
                 // right arrow - increase the volume, playback rate, or current time
                 case 'ArrowRight':
-                    if (flags['volBarBtnHover'] || flags['volSldrCtrHover']) {
+                    if (flags['isVolBarBtnHover'] || flags['isVolSldrCtrHover']) {
                         videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
                         videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
 
@@ -145,20 +147,20 @@ function initVideoCtrEL() {
                         setVolSldr();
                     }
                     else {
-                        if (flags['plbkRateBarBtnHover'] || flags['plbkRateSldrCtrHover']) {
+                        if (flags['isPlbkRateBarBtnHover'] || flags['isPlbkRateSldrCtrHover']) {
                             videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_REDUCE_VALUE, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
                     
                             // set the playback rate slider
                             setPlbkRateSldr();
                         }
                         else {
-                            videoPlr.currentTime += PLAYBACK_GROW_VALUE;
+                            videoPlr.currentTime += PLAYBACK_CONTAINER_GROW_VALUE;
 
                             // check if clipping is active
                             if (clipBar.classList.contains('active')) {
                                 // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
-                                if (videoPlr.currentTime < state['tmln'].getClipStartTime() || videoPlr.currentTime >= state['tmln'].getClipEndTime()) {
-                                    videoPlr.currentTime = state['tmln'].getClipStartTime();
+                                if (videoPlr.currentTime < states['tmln'].getClipStartTime() || videoPlr.currentTime >= states['tmln'].getClipEndTime()) {
+                                    videoPlr.currentTime = states['tmln'].getClipStartTime();
                         
                                     // pause the video and change the icon
                                     setVideoPlayerState('pause');
@@ -173,8 +175,8 @@ function initVideoCtrEL() {
                             }
                             else {
                                 // check if the video is out of the tmln bounds, set it back the start
-                                if (videoPlr.currentTime < state['tmln'].getStartTime() || videoPlr.currentTime >= state['tmln'].getEndTime()) {
-                                    videoPlr.currentTime = state['tmln'].getStartTime();
+                                if (videoPlr.currentTime < states['tmln'].getStartTime() || videoPlr.currentTime >= states['tmln'].getEndTime()) {
+                                    videoPlr.currentTime = states['tmln'].getStartTime();
 
                                     // pause the video and change the icon
                                     setVideoPlayerState('pause');
@@ -217,9 +219,8 @@ function initVideoCtrEL() {
                 // m - mute the volume
                 case 'm':
                     // set the vol to 0.1 in case the video gets unmuted
-                    if (videoPlr.volume === VOLUME_MIN) {
+                    if (videoPlr.volume === VOLUME_MIN)
                         videoPlr.volume = data['stgs']['volume'] = VOLUME_MUTED;
-                    }
 
                     // toggle the muted state
                     videoPlr.muted = data['stgs']['volumeMuted'] = !videoPlr.muted;
@@ -260,7 +261,7 @@ function initVideoCtrEL() {
     // on load of meta data, set the editor to default state
     videoPlr.addEventListener('loadedmetadata', () => {
         // reset the timeline state
-        state['tmln'].updateTime(0, videoPlr.duration);
+        states['tmln'].updateTime(0, videoPlr.duration);
 
         // update the playback and playback rate sliders
         setSeekSldr();
@@ -273,7 +274,7 @@ function initVideoCtrEL() {
         curVideoDurLabel.textContent = `/${getRdblDur(videoPlr.duration)}`;
 
         // set the video loaded flag
-        flags['videoLoaded'] = true;
+        flags['isVideoLoaded'] = true;
 
         // auto play the video and change the icon
         setVideoPlayerState('play');
@@ -282,14 +283,14 @@ function initVideoCtrEL() {
     // on time update, check the video player time and update the playback sliders
     videoPlr.addEventListener('timeupdate', () => {
         // check if the video is loaded (editor section is active)
-        if (flags['videoLoaded']) {
+        if (flags['isVideoLoaded']) {
             // not necessary?
-            if (!flags['tmlnSldrDrag'] && !flags['seekSldrDrag'] && !flags['clipLeftThumbDrag'] && !flags['clipRightThumbDrag']) {
+            if (!flags['isTmlnSldrDrag'] && !flags['isSeekSldrDrag'] && !flags['isClipLeftThumbDrag'] && !flags['isClipRightThumbDrag']) {
                 // check if clipping is active
                 if (clipBar.classList.contains('active')) {
                     // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
-                    if (videoPlr.currentTime < state['tmln'].getClipStartTime() || videoPlr.currentTime >= state['tmln'].getClipEndTime()) {
-                        videoPlr.currentTime = state['tmln'].getClipStartTime();
+                    if (videoPlr.currentTime < states['tmln'].getClipStartTime() || videoPlr.currentTime >= states['tmln'].getClipEndTime()) {
+                        videoPlr.currentTime = states['tmln'].getClipStartTime();
             
                         // pause the video and change the icon
                         setVideoPlayerState('pause');
@@ -301,8 +302,8 @@ function initVideoCtrEL() {
                 }
                 else {
                     // reset the video, change the icon, and pause the video, depending on if the video is outside of the tmln bounds
-                    if (videoPlr.currentTime < state['tmln'].getStartTime() || videoPlr.currentTime >= state['tmln'].getEndTime()) {
-                        videoPlr.currentTime = state['tmln'].getStartTime();
+                    if (videoPlr.currentTime < states['tmln'].getStartTime() || videoPlr.currentTime >= states['tmln'].getEndTime()) {
+                        videoPlr.currentTime = states['tmln'].getStartTime();
             
                         // pause the video and change the icon
                         setVideoPlayerState('pause');
@@ -324,14 +325,13 @@ function initVideoCtrEL() {
         // show the playback container
         plbkCtr.classList.add('active');
 
-        flags['videoPlrHover'] = true;
+        flags['isVideoPlrHover'] = true;
 
         // restart the timeout for hiding the playback container
-        state['plbkCtrTmo'] = setTimeout(() => {
+        states['plbkCtrTmo'] = setTimeout(() => {
             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-            if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                 plbkCtr.classList.remove('active');
-            }
         }, PLAYBACK_CONTAINER_TIMEOUT);
     });
 
@@ -341,27 +341,21 @@ function initVideoCtrEL() {
         plbkCtr.classList.add('active');
 
         // remove the old timeout
-        clearTimeout(state['plbkCtrTmo']);
+        clearTimeout(states['plbkCtrTmo']);
         
         // reset the timeout for hiding
-        state['plbkCtrTmo'] = setTimeout(() => {
+        states['plbkCtrTmo'] = setTimeout(() => {
             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-            if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                 plbkCtr.classList.remove('active');
-            }
         }, PLAYBACK_CONTAINER_TIMEOUT);
     });
 
     // on click, toggle the video state
-    videoPlr.addEventListener('click', () => {
-        setVideoPlayerState('toggle');
-    });
+    videoPlr.addEventListener('click', () => setVideoPlayerState('toggle'));
 
-    // on play, start animation frames to move the playback sliders smoothly
-    videoPlr.addEventListener('play', () => {
-        // sync the slider thumbs' movement to each frame of the video
-        state['animID'] = requestAnimationFrame(syncSeekTmlnSldrs);
-    });
+    // on play, start animation frames to sync the slider thumbs' movement to each frame of the video
+    videoPlr.addEventListener('play', () => states['animID'] = requestAnimationFrame(syncSeekTmlnSldrs));
 
     // on pause, show the playback container and cancel animation frames
     videoPlr.addEventListener('pause', () => {
@@ -369,20 +363,19 @@ function initVideoCtrEL() {
         plbkCtr.classList.add('active');
 
         // cancel the syncing to prevent unnecessary computations while paused
-        cancelAnimationFrame(state['animID']);
+        cancelAnimationFrame(states['animID']);
     });
 
     // on mouseleave, conditionally hide the playback ctr and remove the timeout for disappearing
     videoPlr.addEventListener('mouseleave', () => {
-        flags['videoPlrHover'] = false;
+        flags['isVideoPlrHover'] = false;
 
         // remove the old timeout
-        clearTimeout(state['plbkCtrTmo']);
+        clearTimeout(states['plbkCtrTmo']);
 
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-        if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
             plbkCtr.classList.remove('active');
-        }
     })
 
     // on mouseenter, show the playback container
@@ -390,35 +383,34 @@ function initVideoCtrEL() {
         // show the playback container
         plbkCtr.classList.add('active');
 
-        flags['plbkCtrHover'] = true;
+        flags['isPlbkCtrHover'] = true;
     });
 
     // on mouseleave, conditionally hide the playback ctr and remove the timeout for disappearing
     plbkCtr.addEventListener('mouseleave', () => {
-        flags['plbkCtrHover'] = false;
+        flags['isPlbkCtrHover'] = false;
 
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-        if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
             plbkCtr.classList.remove('active');
-        }
     });
 
     // on mousemove, show a hover highlight based on the pointer location
-    seekSldr.addEventListener('mousemove', (pointer) => {
-        setSeekTrack(getPtrEventPct(pointer, boxes['seekSldrBox']) * 100);
+    seekSldr.addEventListener('mousemove', (ptr) => {
+        setSeekTrack(getPtrEventPct(ptr, boxes['seekSldrBox']) * 100);
     });
 
     // on mousedown, set the current time based on the pointer location
-    seekSldr.addEventListener('mousedown', (pointer) => { 
+    seekSldr.addEventListener('mousedown', (ptr) => { 
         // set current time based on click location
-        videoPlr.currentTime = videoPlr.duration * getPtrEventPct(pointer, boxes['seekSldrBox']);
+        videoPlr.currentTime = videoPlr.duration * getPtrEventPct(ptr, boxes['seekSldrBox']);
 
         // set the playback sliders
         setSeekSldr();
         setTmlnSldr();
 
-        flags['seekSldrDrag'] = true; 
-        flags['prevPaused'] = videoPlr.paused;
+        flags['isSeekSldrDrag'] = true; 
+        flags['isPrevPaused'] = videoPlr.paused;
     });
 
     // on mouseleave, hide the hover hightlight
@@ -428,13 +420,11 @@ function initVideoCtrEL() {
 
     // on mouseleave, hide the volume and playback rate sliders if they are not dragging
     mediaBar.addEventListener('mouseleave', () => {
-        if (!flags['volSldrDrag']) {
+        if (!flags['isVolSldrDrag'])
             volSldr.classList.remove('active');
-        }
 
-        if (!flags['plbkRateSldrDrag']) {
+        if (!flags['isPlbkRateSldrDrag'])
             plbkRateSldr.classList.remove('active');
-        }
     });
 
     // on click, toggle the video state and change the icon
@@ -445,15 +435,7 @@ function initVideoCtrEL() {
         // show the volume slider
         volSldr.classList.add('active');
 
-        flags['volBarBtnHover'] = true
-
-        if (flags['updateVolSldr']) {
-            // wait for the transition to finish, then update the box size
-            setTimeout(() => {
-                boxes['volSldrBox'] = volSldr.getBoundingClientRect();
-                flags['updateVolSldr'] = false;
-            }, 200);
-        }
+        flags['isVolBarBtnHover'] = true
     });
 
     // on click, mute/unmute the volume and change the icon
@@ -471,12 +453,12 @@ function initVideoCtrEL() {
     });
 
     // on wheel, increase or decrease the volume
-    volBarBtn.addEventListener('wheel', (pointer) => {
+    volBarBtn.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // if scrolling 'up', increase the volume
-        if (pointer.deltaY < 0) {
+        if (ptr.deltaY < 0) {
             videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
             videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
 
@@ -494,18 +476,18 @@ function initVideoCtrEL() {
     });
 
     // on mouseleave, disable the hover flag
-    volBarBtn.addEventListener('mouseleave', () => flags['volBarBtnHover'] = false);
+    volBarBtn.addEventListener('mouseleave', () => flags['isVolBarBtnHover'] = false);
 
     // on mouseenter, enable the hover flag
-    volSldrCtr.addEventListener('mouseenter', () => flags['volSldrCtrHover'] = true);
+    volSldrCtr.addEventListener('mouseenter', () => flags['isVolSldrCtrHover'] = true);
 
     // on wheel, increase or decrease the volume
-    volSldrCtr.addEventListener('wheel', (pointer) => {
+    volSldrCtr.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // if scrolling 'up', increase the volume
-        if (pointer.deltaY < 0) {
+        if (ptr.deltaY < 0) {
             videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
             videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
 
@@ -523,14 +505,14 @@ function initVideoCtrEL() {
     });
 
     // on mouseleave, disable the hover flag
-    volSldrCtr.addEventListener('mouseleave', () => flags['volSldrCtrHover'] = false);
+    volSldrCtr.addEventListener('mouseleave', () => flags['isVolSldrCtrHover'] = false);
 
     // on mousedown, enable the dragging flag
-    volSldr.addEventListener('mousedown', () => flags['volSldrDrag'] = true);
+    volSldr.addEventListener('mousedown', () => flags['isVolSldrDrag'] = true);
 
     // on click, set the volume based on the pointer location
-    volSldr.addEventListener('click', (pointer) => {
-        videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['volSldrBox']), VOLUME_MAX));
+    volSldr.addEventListener('click', (ptr) => {
+        videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['volSldrBox']), VOLUME_MAX));
         videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
 
         // set the volume slider
@@ -538,15 +520,15 @@ function initVideoCtrEL() {
     });
 
     // on mouseenter, enable the hover flag
-    plbkRateSldrCtr.addEventListener('mouseenter', () => flags['plbkRateSldrCtrHover'] = true);
+    plbkRateSldrCtr.addEventListener('mouseenter', () => flags['isPlbkRateSldrCtrHover'] = true);
 
     // on wheel, increase or decrease the playback rate
-    plbkRateSldrCtr.addEventListener('wheel', (pointer) => {
+    plbkRateSldrCtr.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // if scrolling 'up', increase the playback rate
-        if (pointer.deltaY < 0) {
+        if (ptr.deltaY < 0) {
             videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
             
             // set the playback rate slider
@@ -562,15 +544,15 @@ function initVideoCtrEL() {
     });
 
     // on mouseleave, disable the hover flag
-    plbkRateSldrCtr.addEventListener('mouseleave', () => flags['plbkRateSldrCtrHover'] = false);
+    plbkRateSldrCtr.addEventListener('mouseleave', () => flags['isPlbkRateSldrCtrHover'] = false);
 
     // on mousedown, enable the dragging flag
-    plbkRateSldr.addEventListener('mousedown', () => flags['plbkRateSldrDrag'] = true);
+    plbkRateSldr.addEventListener('mousedown', () => flags['isPlbkRateSldrDrag'] = true);
 
     // on click, set the playback rate
-    plbkRateSldr.addEventListener('click', (pointer) => {
+    plbkRateSldr.addEventListener('click', (ptr) => {
         // update the video playback rate
-        videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(Math.round(getPtrEventLoc(pointer, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / PLAYBACK_RATE_SEGMENTS) - PLAYBACK_RATE_MAPPING_OFFSET), PLAYBACK_RATE_MAX))];
+        videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / PLAYBACK_RATE_SEGMENTS) - PLAYBACK_RATE_MAPPING_OFFSET), PLAYBACK_RATE_MAX))];
 
         // set the playback rate sldr
         setPlbkRateSldr();
@@ -590,25 +572,16 @@ function initVideoCtrEL() {
         // show the playback rate slider
         plbkRateSldr.classList.add('active');
 
-        flags['plbkRateBarBtnHover'] = true
-
-        // wait for the transition to finish, then update the box size
-        if (flags['updatePlbkRateSldr']) {
-            // wait for the transition to finish, then cap the box
-            setTimeout(() => {
-                boxes['plbkRateSldrBox'] = plbkRateSldr.getBoundingClientRect();
-                flags['updatePlbkRateSldr'] = false;
-            }, 200);
-        }
+        flags['isPlbkRateBarBtnHover'] = true
     });
 
     // on wheel, increase or decrease the playback rate
-    plbkRateBarBtn.addEventListener('wheel', (pointer) => {
+    plbkRateBarBtn.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // if scrolling 'up', increase the playback rate
-        if (pointer.deltaY < 0) {
+        if (ptr.deltaY < 0) {
             videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
             
             // set the playback rate slider
@@ -624,7 +597,7 @@ function initVideoCtrEL() {
     });
 
     // on mouseleave, disable the hover flag
-    plbkRateBarBtn.addEventListener('mouseleave', () => flags['plbkRateBarBtnHover'] = false);
+    plbkRateBarBtn.addEventListener('mouseleave', () => flags['isPlbkRateBarBtnHover'] = false);
 
     // on click, toggle the video player fullscreen
     fscBarBtn.addEventListener('click', () => document.fullscreenElement !== null ? document.exitFullscreen() : videoCtr.requestFullscreen());
@@ -650,14 +623,14 @@ function initVideoCtr() {
  */
 function initTmlnSldrEL() {
     // on mousemove, match seek slider and timeline slider position and set video time
-    document.addEventListener('mousemove', (pointer) => {
+    document.addEventListener('mousemove', (ptr) => {
         // check if the seek slider is dragging
-        if (flags['seekSldrDrag']) {
+        if (flags['isSeekSldrDrag']) {
             // pause the video and change the icon
             setVideoPlayerState('pause');
 
             // get the time based on pointer location on the seek slider
-            videoPlr.currentTime = Math.max(0, Math.min(getPtrEventPct(pointer, boxes['seekSldrBox']), 1)) * videoPlr.duration;
+            videoPlr.currentTime = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['seekSldrBox']), 1)) * videoPlr.duration;
 
             // set the playback sliders
             setSeekSldr();
@@ -668,9 +641,9 @@ function initTmlnSldrEL() {
         }
         else {
             // check if the volume slider is dragging
-            if (flags['volSldrDrag']) {
+            if (flags['isVolSldrDrag']) {
                 // update the video volume and settings cache
-                videoPlr.volume = data['stgs']['volume'] = Math.max(0, Math.min(getPtrEventPct(pointer, boxes['volSldrBox']), 1));
+                videoPlr.volume = data['stgs']['volume'] = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['volSldrBox']), 1));
                 videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === 0;
 
                 // set the vol slider
@@ -678,21 +651,21 @@ function initTmlnSldrEL() {
             }
             else {
                 // check if the playback rate slider is dragging
-                if (flags['plbkRateSldrDrag']) {
+                if (flags['isPlbkRateSldrDrag']) {
                     // update the video playback rate
-                    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(-2, Math.min(Math.round(getPtrEventLoc(pointer, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / 6) - 2), 4))];
+                    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(-2, Math.min(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / 6) - 2), 4))];
 
                     // set the playback rate slider
                     setPlbkRateSldr();
                 }
                 else {
                     // check if the timeline slider is dragging
-                    if (flags['tmlnSldrDrag']) {
+                    if (flags['isTmlnSldrDrag']) {
                         // pause the video and change the icon
                         setVideoPlayerState('pause');
 
                         // get the time based on pointer location on the timeline slider
-                        videoPlr.currentTime = Math.max(0, Math.min(getPtrEventPct(pointer, boxes['tmlnSldrBox']), 1)) * state['tmln'].getDuration() + state['tmln'].getStartTime();
+                        videoPlr.currentTime = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['tmlnSldrBox']), 1)) * states['tmln'].getDuration() + states['tmln'].getStartTime();
 
                         // set the playback sliders
                         setSeekSldr();
@@ -703,19 +676,19 @@ function initTmlnSldrEL() {
                     }
                     else {
                         // check if the left clip thumb is dragging
-                        if (flags['clipLeftThumbDrag']) {
+                        if (flags['isClipLeftThumbDrag']) {
                             // get the new clip start time
-                            const newClipStartTime = Math.max(0, Math.min(getPtrEventPct(pointer, boxes['tmlnSldrBox']), 1)) * state['tmln'].getDuration() + state['tmln'].getStartTime();
+                            const newClipStartTime = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['tmlnSldrBox']), 1)) * states['tmln'].getDuration() + states['tmln'].getStartTime();
 
                             // update the clip start time to be at minimum 5s before the clip end time
-                            state['tmln'].updateClipStartTime(getTruncDec(newClipStartTime < state['tmln'].getClipEndTime() - 5 ? newClipStartTime : Math.max(state['tmln'].getStartTime(), state['tmln'].getClipEndTime() - 5), 6));
+                            states['tmln'].updateClipStartTime(getTruncDec(newClipStartTime < states['tmln'].getClipEndTime() - 5 ? newClipStartTime : Math.max(states['tmln'].getStartTime(), states['tmln'].getClipEndTime() - 5), 6));
 
                             // set the left clip thumb
-                            setClipLeftThumb((state['tmln'].getClipStartTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                            setClipLeftThumb((states['tmln'].getClipStartTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
 
                             // update the current time to be within the clip bounds
-                            if (videoPlr.currentTime < state['tmln'].getClipStartTime()) {
-                                videoPlr.currentTime = state['tmln'].getClipStartTime();
+                            if (videoPlr.currentTime < states['tmln'].getClipStartTime()) {
+                                videoPlr.currentTime = states['tmln'].getClipStartTime();
 
                                 // set the playback sliders
                                 setSeekSldr();
@@ -726,19 +699,19 @@ function initTmlnSldrEL() {
                             }
                         }
                         else {
-                            if (flags['clipRightThumbDrag']) {
+                            if (flags['isClipRightThumbDrag']) {
                                 // get the new clip end time
-                                let newClipEndTime = Math.max(0, Math.min(getPtrEventPct(pointer, boxes['tmlnSldrBox']), 1)) * state['tmln'].getDuration() + state['tmln'].getStartTime();
+                                let newClipEndTime = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['tmlnSldrBox']), 1)) * states['tmln'].getDuration() + states['tmln'].getStartTime();
 
                                 // update the clip end time to be at minimum 5s after the clip start time
-                                state['tmln'].updateClipEndTime(getTruncDec(newClipEndTime > state['tmln'].getClipStartTime() + 5 ? newClipEndTime : Math.min(state['tmln'].getEndTime(), state['tmln'].getClipStartTime() + 5), 6));
+                                states['tmln'].updateClipEndTime(getTruncDec(newClipEndTime > states['tmln'].getClipStartTime() + 5 ? newClipEndTime : Math.min(states['tmln'].getEndTime(), states['tmln'].getClipStartTime() + 5), 6));
 
                                 // set the right clip thumb
-                                setClipRightThumb((state['tmln'].getClipEndTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                                setClipRightThumb((states['tmln'].getClipEndTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
 
                                 // update the current time to be within the clip bounds
-                                if (videoPlr.currentTime >= state['tmln'].getClipEndTime()) {
-                                    videoPlr.currentTime = state['tmln'].getClipStartTime();
+                                if (videoPlr.currentTime >= states['tmln'].getClipEndTime()) {
+                                    videoPlr.currentTime = states['tmln'].getClipStartTime();
 
                                     // set the playback sliders
                                     setSeekSldr();
@@ -749,15 +722,15 @@ function initTmlnSldrEL() {
                                 }
                             }
                             else {
-                                if (flags['spkVolSldrDrag']) {
-                                    data['stgs']['speakerVolume'] = Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX));
+                                if (flags['isSpkVolSldrDrag']) {
+                                    data['stgs']['speakerVolume'] = Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX));
 
                                     // set the speaker volume slider
                                     setSpkVolSldr();
                                 }
                                 else {
-                                    if (flags['micVolSldrDrag']) {
-                                        data['stgs']['microphoneVolume'] = Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX));
+                                    if (flags['isMicVolSldrDrag']) {
+                                        data['stgs']['microphoneVolume'] = Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX));
 
                                         // set the microphone volume slider
                                         setMicVolSldr();
@@ -774,26 +747,23 @@ function initTmlnSldrEL() {
     // on mouseup, validate the sldr input and change the video time
     document.addEventListener('mouseup', async () => { 
         // if either playback slider is dragging
-        if (flags['tmlnSldrDrag'] === true || flags['seekSldrDrag'] === true) {
-            flags['tmlnSldrDrag'] = false; 
-            flags['seekSldrDrag'] = false;
+        if (flags['isTmlnSldrDrag'] === true || flags['isSeekSldrDrag'] === true) {
+            flags['isTmlnSldrDrag'] = flags['isSeekSldrDrag'] = false;
 
             // hide the playback container if neither the video player or playback container are hovered
-            if (!flags['videoPlrHover'] && !flags['plbkCtrHover']) {
+            if (!flags['isVideoPlrHover'] && !flags['isPlbkCtrHover'])
                 plbkCtr.classList.remove('active');
-            }
             else {
                 // if only the video player is hovered, reset the timeout
-                if (flags['videoPlrHover']) {
+                if (flags['isVideoPlrHover']) {
                     // remove the old timeout
-                    clearTimeout(state['plbkCtrTmo']);
+                    clearTimeout(states['plbkCtrTmo']);
 
                     // restart the timeout for hiding the playback container
-                    state['plbkCtrTmo'] = setTimeout(() => {
+                    states['plbkCtrTmo'] = setTimeout(() => {
                         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-                        if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+                        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                             plbkCtr.classList.remove('active');
-                        }
                     }, PLAYBACK_CONTAINER_TIMEOUT);
                 }
             }
@@ -801,8 +771,8 @@ function initTmlnSldrEL() {
             // check if clipping is active
             if (clipBar.classList.contains('active')) {
                 // reset the video, change the icon, and pause the video, depending on if the video is outside of the clip bounds
-                if (videoPlr.currentTime < state['tmln'].getClipStartTime() || videoPlr.currentTime >= state['tmln'].getClipEndTime()) {
-                    videoPlr.currentTime = state['tmln'].getClipStartTime();
+                if (videoPlr.currentTime < states['tmln'].getClipStartTime() || videoPlr.currentTime >= states['tmln'].getClipEndTime()) {
+                    videoPlr.currentTime = states['tmln'].getClipStartTime();
         
                     // pause the video and change the icon
                     setVideoPlayerState('pause');
@@ -813,10 +783,9 @@ function initTmlnSldrEL() {
                 }
                 else {
                     // check if the video was not previously paused
-                    if (!flags['prevPaused']) {
+                    if (!flags['isPrevPaused'])
                         // play the video and change the icon
                         setVideoPlayerState('play');
-                    }
                 }
         
                 // set the video current time label
@@ -824,8 +793,8 @@ function initTmlnSldrEL() {
             }
             else {
                 // check if the video is out of the timeline bounds, set it back the start
-                if (videoPlr.currentTime < state['tmln'].getStartTime() || videoPlr.currentTime >= state['tmln'].getEndTime()) {
-                    videoPlr.currentTime = state['tmln'].getStartTime();
+                if (videoPlr.currentTime < states['tmln'].getStartTime() || videoPlr.currentTime >= states['tmln'].getEndTime()) {
+                    videoPlr.currentTime = states['tmln'].getStartTime();
 
                     // pause the video and change the icon
                     setVideoPlayerState('pause');
@@ -836,10 +805,9 @@ function initTmlnSldrEL() {
                 }
                 else {
                     // check if the video was not previously paused
-                    if (!flags['prevPaused']) {
+                    if (!flags['isPrevPaused'])
                         // play the video and change the icon
                         setVideoPlayerState('play');
-                    }
                 }
 
                 // set the video current time label
@@ -848,62 +816,54 @@ function initTmlnSldrEL() {
         }
         else {
             // if the volume or playback rate sliders are dragging
-            if (flags['volSldrDrag'] || flags['plbkRateSldrDrag']) {
-                flags['volSldrDrag'] = false;
-                flags['plbkRateSldrDrag'] = false;
+            if (flags['isVolSldrDrag'] || flags['isPlbkRateSldrDrag']) {
+                flags['isVolSldrDrag'] = flags['isPlbkRateSldrDrag'] = false;
 
                 // hide the playback container if neither the video player or playback container are hovered
-                if (!flags['videoPlrHover'] && !flags['plbkCtrHover']) {
+                if (!flags['isVideoPlrHover'] && !flags['isPlbkCtrHover'])
                     plbkCtr.classList.remove('active');
-                }
                 else {
                     // if only the video player is hovered, reset the timeout
-                    if (flags['videoPlrHover']) {
+                    if (flags['isVideoPlrHover']) {
                         // remove the old timeout
-                        clearTimeout(state['plbkCtrTmo']);
+                        clearTimeout(states['plbkCtrTmo']);
 
                         // restart the timeout for hiding the playback container
-                        state['plbkCtrTmo'] = setTimeout(() => {
+                        states['plbkCtrTmo'] = setTimeout(() => {
                             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-                            if (!videoPlr.paused && !flags['seekSldrDrag'] && !flags['volSldrDrag'] && !flags['plbkRateSldrDrag']) {
+                            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                                 plbkCtr.classList.remove('active');
-                            }
                         }, PLAYBACK_CONTAINER_TIMEOUT);
                     }
                 }
 
-                if (!flags['volBarBtnHover'] && !flags['volSldrCtrHover'] && !flags['plbkCtrHover']) {
+                if (!flags['isVolBarBtnHover'] && !flags['isVolSldrCtrHover'] && !flags['isPlbkCtrHover'])
                     volSldr.classList.remove('active');
-                }
 
-                if (!flags['plbkRateBarBtnHover'] && !flags['plbkRateSldrCtrHover'] && !flags['plbkCtrHover']) {
+                if (!flags['isPlbkRateBarBtnHover'] && !flags['isPlbkRateSldrCtrHover'] && !flags['isPlbkCtrHover'])
                     plbkRateSldr.classList.remove('active');
-                }
             }
             else {
                 // set the clip left thumb dragging flag to false
-                if (flags['clipLeftThumbDrag']) {
-                    flags['clipLeftThumbDrag'] = false; 
-                }
+                if (flags['isClipLeftThumbDrag'])
+                    flags['isClipLeftThumbDrag'] = false; 
                 else {
                     // set the clip right thumb dragging flag to false
-                    if (flags['clipRightThumbDrag']) {
-                        flags['clipRightThumbDrag'] = false; 
-                    }
+                    if (flags['isClipRightThumbDrag'])
+                        flags['isClipRightThumbDrag'] = false; 
                     else {
                         // if the speaker volume slider is dragging, set the speaker volume setting
-                        if (flags['spkVolSldrDrag']) {
-                            flags['spkVolSldrDrag'] = false;
+                        if (flags['isSpkVolSldrDrag']) {
+                            flags['isSpkVolSldrDrag'] = false;
 
-                            await atmpAsyncFunc(() => window.stgsAPI.setStg('speakerVolume', data['stgs']['speakerVolume']));
-
+                            await atmpAsyncFunc(() => window['stgsAPI'].setStg('speakerVolume', data['stgs']['speakerVolume']));
                         }
                         else {
                             // if the microphone volume slider is dragging, set the microphone volume setting
-                            if (flags['micVolSldrDrag']) {
-                                flags['micVolSldrDrag'] = false;
+                            if (flags['isMicVolSldrDrag']) {
+                                flags['isMicVolSldrDrag'] = false;
 
-                                await atmpAsyncFunc(() => window.stgsAPI.setStg('microphoneVolume', data['stgs']['microphoneVolume']))
+                                await atmpAsyncFunc(() => window['stgsAPI'].setStg('microphoneVolume', data['stgs']['microphoneVolume']))
                             } 
                         }
                     }
@@ -912,42 +872,40 @@ function initTmlnSldrEL() {
         }
     });
 
-    // on wheel, "zoom" in/out of the timeline
-    tmlnSldr.addEventListener('wheel', (pointer) => {
+    // on wheel, zoom in/out of the timeline
+    tmlnSldr.addEventListener('wheel', (ptr) => {
         // prevent the scrolling of the container
-        pointer.preventDefault();
+        ptr.preventDefault();
 
         // the new start/end times, duration, and percentage
         let newStartTime, newEndTime, newDur, percentage;
 
         // check if the scroll is within the timeline slider
-            if (pointer.clientX >= boxes['tmlnSldrBox'].left && pointer.clientX <= boxes['tmlnSldrBox'].right) {
+            if (ptr.clientX >= boxes['tmlnSldrBox']['left'] && ptr.clientX <= boxes['tmlnSldrBox']['right']) {
             // get the click percentage on the timeline slider
-            percentage = getPtrEventPct(pointer, boxes['tmlnSldrBox']);
+            percentage = getPtrEventPct(ptr, boxes['tmlnSldrBox']);
             
-            // check if the pointer scrolled up ("zoom in")
-            if (pointer.deltaY < 0) {
+            // check if the pointer scrolled up (zoom in)
+            if (ptr.deltaY < 0) {
                 // check if the timeline is not at minimum zoom
-                if (state['tmln'].getDuration() > TIMELINE_MIN_ZOOM) {
+                if (states['tmln'].getDuration() > TIMELINE_ZOOM_MIN) {
                     // calculate the new start/end times and duration
-                    newStartTime = state['tmln'].getStartTime() + (TIMELINE_REDUCE_FACTOR * state['tmln'].getDuration() * percentage);
-                    newEndTime = state['tmln'].getEndTime() - (TIMELINE_REDUCE_FACTOR * state['tmln'].getDuration() * (1 - percentage));
+                    newStartTime = states['tmln'].getStartTime() + (TIMELINE_REDUCE_FACTOR * states['tmln'].getDuration() * percentage);
+                    newEndTime = states['tmln'].getEndTime() - (TIMELINE_REDUCE_FACTOR * states['tmln'].getDuration() * (1 - percentage));
                     newDur = newEndTime - newStartTime;
                     
                     // check if the new duration is less than the minimum zoom, set it to the minimum
-                    state['tmln'].updateTime(
-                        getTruncDec((newDur < TIMELINE_MIN_ZOOM) ? newStartTime - (TIMELINE_MIN_ZOOM - newDur) * percentage : newStartTime, 6),
-                        getTruncDec((newDur < TIMELINE_MIN_ZOOM) ? newStartTime - (TIMELINE_MIN_ZOOM - newDur) * percentage + TIMELINE_MIN_ZOOM : newEndTime, 6)
+                    states['tmln'].updateTime(
+                        getTruncDec((newDur < TIMELINE_ZOOM_MIN) ? newStartTime - (TIMELINE_ZOOM_MIN - newDur) * percentage : newStartTime, 6),
+                        getTruncDec((newDur < TIMELINE_ZOOM_MIN) ? newStartTime - (TIMELINE_ZOOM_MIN - newDur) * percentage + TIMELINE_ZOOM_MIN : newEndTime, 6)
                     );
                     
                     // check if the video time is out of the timeline, put it back in bounds
-                    if (videoPlr.currentTime < state['tmln'].getStartTime()) {
-                        videoPlr.currentTime = state['tmln'].getStartTime();
-                    } 
+                    if (videoPlr.currentTime < states['tmln'].getStartTime())
+                        videoPlr.currentTime = states['tmln'].getStartTime();
                     else {
-                        if (videoPlr.currentTime > state['tmln'].getEndTime()) {
-                            videoPlr.currentTime = state['tmln'].getEndTime();
-                        }
+                        if (videoPlr.currentTime > states['tmln'].getEndTime())
+                            videoPlr.currentTime = states['tmln'].getEndTime();
                     }
 
                     // set the playback sliders
@@ -958,30 +916,28 @@ function initTmlnSldrEL() {
                     // check if clipping is active
                     if (clipBar.classList.contains('active')) {
                         // check if the clip start time is within the timeline start time
-                        if (state['tmln'].getClipStartTime() < state['tmln'].getStartTime())
+                        if (states['tmln'].getClipStartTime() < states['tmln'].getStartTime())
                         {
-                            state['tmln'].updateClipStartTime(state['tmln'].getStartTime());
+                            states['tmln'].updateClipStartTime(states['tmln'].getStartTime());
 
                             // make sure the clip end time is at minimum 5s after the clip start time
-                            if (state['tmln'].getClipEndTime() < state['tmln'].getClipStartTime() + CLIP_MIN_LENGTH) {
-                                state['tmln'].updateClipEndTime(state['tmln'].getClipStartTime() + CLIP_MIN_LENGTH);
-                            }
+                            if (states['tmln'].getClipEndTime() < states['tmln'].getClipStartTime() + CLIP_LENGTH_MIN)
+                                states['tmln'].updateClipEndTime(states['tmln'].getClipStartTime() + CLIP_LENGTH_MIN);
                         }
 
                         // check if the clip end time is within the timeline end time
-                        if (state['tmln'].getClipEndTime() >= state['tmln'].getEndTime()) {
-                            state['tmln'].updateClipEndTime(state['tmln'].getEndTime());
+                        if (states['tmln'].getClipEndTime() >= states['tmln'].getEndTime()) {
+                            states['tmln'].updateClipEndTime(states['tmln'].getEndTime());
 
                             // make sure the clip start time is at minimum 5s before the clip end time
-                            if (state['tmln'].getClipStartTime() > state['tmln'].getClipEndTime() - CLIP_MIN_LENGTH) {
-                                state['tmln'].updateClipStartTime(state['tmln'].getClipEndTime() - CLIP_MIN_LENGTH);
-                            }
+                            if (states['tmln'].getClipStartTime() > states['tmln'].getClipEndTime() - CLIP_LENGTH_MIN)
+                                states['tmln'].updateClipStartTime(states['tmln'].getClipEndTime() - CLIP_LENGTH_MIN);
                         }
                     }
 
                     // set the clip thumbs
-                    setClipLeftThumb((state['tmln'].getClipStartTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
-                    setClipRightThumb((state['tmln'].getClipEndTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                    setClipLeftThumb((states['tmln'].getClipStartTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                    setClipRightThumb((states['tmln'].getClipEndTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
 
                     // set the video current time label
                     curVideoTimeLabel.textContent = getRdblDur(videoPlr.currentTime);
@@ -989,35 +945,31 @@ function initTmlnSldrEL() {
             } 
             else {
                 // check if the tmln is not at maximum zoom
-                if (state['tmln'].getDuration() < videoPlr.duration) {
+                if (states['tmln'].getDuration() < videoPlr.duration) {
                     // calculate the new start and end times
-                    newStartTime = state['tmln'].getStartTime() - (TIMELINE_GROW_FACTOR * state['tmln'].getDuration() * percentage);
-                    newEndTime = state['tmln'].getEndTime() + (TIMELINE_GROW_FACTOR * state['tmln'].getDuration() * (1 - percentage));
+                    newStartTime = states['tmln'].getStartTime() - (TIMELINE_GROW_FACTOR * states['tmln'].getDuration() * percentage);
+                    newEndTime = states['tmln'].getEndTime() + (TIMELINE_GROW_FACTOR * states['tmln'].getDuration() * (1 - percentage));
                     
-                    // check if "zoom out" would bring the timeline out of bounds
-                    if (newStartTime < 0) {
+                    // check if zoom out would bring the timeline out of bounds
+                    if (newStartTime < 0)
                         // reallocate grow factor to the end time if needed
-                        state['tmln'].updateTime(
+                        states['tmln'].updateTime(
                             0, 
                             getTruncDec(Math.min(videoPlr.duration, Math.abs(newStartTime) + newEndTime), 6)
                         );
-                    } 
-                    else {
+                    else
                         // reallocate grow factor to the start time if needed
-                        state['tmln'].updateTime(
+                        states['tmln'].updateTime(
                             getTruncDec(newEndTime > videoPlr.duration ? Math.max(0, newStartTime - (newEndTime - videoPlr.duration)) : newStartTime, 6),
                             getTruncDec(Math.min(videoPlr.duration, newEndTime), 6)
                         );
-                    }
                              
                     // check if the video time is out of the timeline, put it back in bounds
-                    if (videoPlr.currentTime < state['tmln'].getStartTime()) {
-                        videoPlr.currentTime = state['tmln'].getStartTime();
-                    } 
+                    if (videoPlr.currentTime < states['tmln'].getStartTime())
+                        videoPlr.currentTime = states['tmln'].getStartTime();
                     else {
-                        if (videoPlr.currentTime > state['tmln'].getEndTime()) {
-                            videoPlr.currentTime = state['tmln'].getEndTime();
-                        }
+                        if (videoPlr.currentTime > states['tmln'].getEndTime())
+                            videoPlr.currentTime = states['tmln'].getEndTime();
                     }
 
                     // set the playback sliders
@@ -1028,30 +980,28 @@ function initTmlnSldrEL() {
                     // check if clipping is active
                     if (clipBar.classList.contains('active')) {
                         // check if the clip start time is within the timeline start time
-                        if (state['tmln'].getClipStartTime() < state['tmln'].getStartTime())
+                        if (states['tmln'].getClipStartTime() < states['tmln'].getStartTime())
                         {
-                            state['tmln'].updateClipStartTime(state['tmln'].getStartTime());
+                            states['tmln'].updateClipStartTime(states['tmln'].getStartTime());
 
                             // make sure the clip end time is at minimum 5s after the clip start time
-                            if (state['tmln'].getClipEndTime() < state['tmln'].getClipStartTime() + 5) {
-                                state['tmln'].updateClipEndTime(state['tmln'].getClipStartTime() + 5);
-                            }
+                            if (states['tmln'].getClipEndTime() < states['tmln'].getClipStartTime() + 5)
+                                states['tmln'].updateClipEndTime(states['tmln'].getClipStartTime() + 5);
                         }
 
                         // check if the clip end time is within the timeline end time
-                        if (state['tmln'].getClipEndTime() >= state['tmln'].getEndTime()) {
-                            state['tmln'].updateClipEndTime(state['tmln'].getEndTime());
+                        if (states['tmln'].getClipEndTime() >= states['tmln'].getEndTime()) {
+                            states['tmln'].updateClipEndTime(states['tmln'].getEndTime());
 
                             // make sure the clip start time is at minimum 5s before the clip end time
-                            if (state['tmln'].getClipStartTime() > state['tmln'].getClipEndTime() - 5) {
-                                state['tmln'].updateClipStartTime(state['tmln'].getClipEndTime() - 5);
-                            }
+                            if (states['tmln'].getClipStartTime() > states['tmln'].getClipEndTime() - 5)
+                                states['tmln'].updateClipStartTime(states['tmln'].getClipEndTime() - 5);
                         }
                     }
 
                     // set the clip thumbs
-                    setClipLeftThumb((state['tmln'].getClipStartTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
-                    setClipRightThumb((state['tmln'].getClipEndTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                    setClipLeftThumb((states['tmln'].getClipStartTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+                    setClipRightThumb((states['tmln'].getClipEndTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
 
                     // set the video current time label
                     curVideoTimeLabel.textContent = getRdblDur(videoPlr.currentTime);
@@ -1061,16 +1011,16 @@ function initTmlnSldrEL() {
     });
 
     // on mousedown, set the timeline slider dragging / previously paused flags, and the current time
-    tmlnSldr.addEventListener('mousedown', (pointer) => { 
+    tmlnSldr.addEventListener('mousedown', (ptr) => { 
         // get the time based on click location on the timeline slider
-        videoPlr.currentTime = state['tmln'].getDuration() * getPtrEventPct(pointer, boxes['tmlnSldrBox']) + state['tmln'].getStartTime();
+        videoPlr.currentTime = states['tmln'].getDuration() * getPtrEventPct(ptr, boxes['tmlnSldrBox']) + states['tmln'].getStartTime();
 
         // set the playback sliders
         setSeekSldr();
         setTmlnSldr();
 
-        flags['tmlnSldrDrag'] = true; 
-        flags['prevPaused'] = videoPlr.paused;
+        flags['isTmlnSldrDrag'] = true; 
+        flags['isPrevPaused'] = videoPlr.paused;
     });
 
     // on mousedown, set the clip left thumb drag and previously paused flags
@@ -1078,7 +1028,7 @@ function initTmlnSldrEL() {
         // prevent mousedown event on timeline slider from firing
         event.stopPropagation();
 
-        flags['clipLeftThumbDrag'] = true; 
+        flags['isClipLeftThumbDrag'] = true; 
     });
 
     // on mousedown, set the clip left thumb drag and previously paused flags
@@ -1086,7 +1036,7 @@ function initTmlnSldrEL() {
         // prevent mousedown event on tmln sldr from firing
         event.stopPropagation();
 
-        flags['clipRightThumbDrag'] = true; 
+        flags['isClipRightThumbDrag'] = true; 
     });
 }
 
@@ -1097,15 +1047,15 @@ function initClipCtrEL() {
     // on click, preview the clip
     viewBarBtn.addEventListener('click', () => {
         // set the video time to the clip start time
-        videoPlr.currentTime = state['tmln'].getClipStartTime();
+        videoPlr.currentTime = states['tmln'].getClipStartTime();
 
         // play the video and change the icon
         setVideoPlayerState('play');
     });
 
     // on click, create the clip and reload the clip gallery
-    crtBarBtn.addEventListener('click', async () => {
-        await atmpAsyncFunc(() => window.clipAPI.createClip(videoPlr.getAttribute('src'), state['tmln'].getClipStartTime(), state['tmln'].getClipEndTime()));
+    createBarBtn.addEventListener('click', async () => {
+        await atmpAsyncFunc(() => window['genAPI'].createClip(videoPlr.getAttribute('src'), states['tmln'].getClipStartTime(), states['tmln'].getClipEndTime()));
 
         await atmpAsyncFunc(() => loadGall(false, false));
     });
@@ -1126,21 +1076,21 @@ function initClipCtrEL() {
             clipRightThumb.classList.add('active');
 
             // ensure the clip bounds are centered around the current time and within the timeline bounds
-            if (state['tmln'].getClipLength() < state['tmln'].getDuration()) {
-                newClipStartTime = videoPlr.currentTime - state['tmln'].getClipLength() / 2;
-                newClipEndTime = videoPlr.currentTime + state['tmln'].getClipLength() / 2;
+            if (states['tmln'].getClipLength() < states['tmln'].getDuration()) {
+                newClipStartTime = videoPlr.currentTime - states['tmln'].getClipLength() / 2;
+                newClipEndTime = videoPlr.currentTime + states['tmln'].getClipLength() / 2;
     
-                state['tmln'].updateClipStartTime(getTruncDec(newClipStartTime < state['tmln'].getStartTime() ? state['tmln'].getStartTime() : (newClipEndTime > state['tmln'].getEndTime() ? state['tmln'].getEndTime() - state['tmln'].getClipLength() : newClipStartTime), 6));
-                state['tmln'].updateClipEndTime(getTruncDec(newClipStartTime < state['tmln'].getStartTime() ? state['tmln'].getStartTime() + state['tmln'].getClipLength() : (newClipEndTime > state['tmln'].getEndTime() ? state['tmln'].getEndTime() : newClipEndTime), 6));
+                states['tmln'].updateClipStartTime(getTruncDec(newClipStartTime < states['tmln'].getStartTime() ? states['tmln'].getStartTime() : (newClipEndTime > states['tmln'].getEndTime() ? states['tmln'].getEndTime() - states['tmln'].getClipLength() : newClipStartTime), 6));
+                states['tmln'].updateClipEndTime(getTruncDec(newClipStartTime < states['tmln'].getStartTime() ? states['tmln'].getStartTime() + states['tmln'].getClipLength() : (newClipEndTime > states['tmln'].getEndTime() ? states['tmln'].getEndTime() : newClipEndTime), 6));
             }
             else {
-                state['tmln'].updateClipStartTime(state['tmln'].getStartTime());
-                state['tmln'].updateClipEndTime(state['tmln'].getEndTime());
+                states['tmln'].updateClipStartTime(states['tmln'].getStartTime());
+                states['tmln'].updateClipEndTime(states['tmln'].getEndTime());
             }
     
             // set the clip thumbs
-            setClipLeftThumb((state['tmln'].getClipStartTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
-            setClipRightThumb((state['tmln'].getClipEndTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+            setClipLeftThumb((states['tmln'].getClipStartTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
+            setClipRightThumb((states['tmln'].getClipEndTime() - states['tmln'].getStartTime()) / states['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
         }
         else {
             setIcon(clipTglIcon, 'arrow-forward-ios');
@@ -1202,7 +1152,7 @@ function setVideoPlayerState(action) {
  * Sets the seek slider thumb and overlay
  */
 function setSeekSldr() {
-    setSeekThumb(videoPlr.currentTime / videoPlr.duration * boxes['seekSldrBox'].width);
+    setSeekThumb(videoPlr.currentTime / videoPlr.duration * boxes['seekSldrBox']['width']);
     setSeekOvrl(videoPlr.currentTime / videoPlr.duration * 100);
 }
 
@@ -1238,12 +1188,7 @@ function setSeekThumb(thumbLocation) {
  */
 function updateSeekSldr() {
     // get the new seek slider bounding box
-    boxes['seekSldrBox'] = seekSldr.getBoundingClientRect();
-
-    // if the video is loaded, set the seek slider
-    if (flags['videoLoaded']) {
-        setSeekSldr();
-    }
+    boxes['seekSldrBox'] = getModBox(seekSldr.getBoundingClientRect());
 }
 
 /**
@@ -1259,16 +1204,13 @@ function setVolSldr() {
     }
     else {
         // else, set the correct volume icon
-        if (videoPlr.volume > 0.6) {
+        if (videoPlr.volume > 0.6)
             setIcon(volBarIcon, 'volume-up-solid');
-        }
         else {
-            if (videoPlr.volume > 0.1) {
+            if (videoPlr.volume > 0.1)
                 setIcon(volBarIcon, 'volume-down-solid');
-            }
-            else {
+            else
                 setIcon(volBarIcon, 'volume-mute-solid');
-            }
         }
 
         // set the volume thumb and overlay (trailing bar)
@@ -1299,7 +1241,10 @@ function setVolThumb(thumbLocation) {
  * Updates the volume slider
  */
 function updateVolSldr() {
-    flags['updateVolSldr'] = true;
+    // get the new volume slider bounding box
+    boxes['volSldrBox'] = getModBox(volSldr.getBoundingClientRect());
+    boxes['volSldrBox']['right'] += volSldrWidth;
+    boxes['volSldrBox']['width'] = volSldrWidth;
 }
 
 /**
@@ -1323,30 +1268,32 @@ function setPlbkRateThumb(thumbLocation) {
  * Updates the playback rate slider
  */
 function updatePlbkRateSldr() {
-    flags['updatePlbkRateSldr'] = true;
+    boxes['plbkRateSldrBox'] = getModBox(plbkRateSldr.getBoundingClientRect());
+    boxes['plbkRateSldrBox']['left'] -= plbkRateSldrWidth;
+    boxes['plbkRateSldrBox']['width'] = plbkRateSldrWidth;
 }
 
 /**
  * Sets the timeline slider thumb
  */
 function setTmlnSldr() {
-    setTmlnThumb(Math.max(0, Math.min((videoPlr.currentTime - state['tmln'].getStartTime()) / state['tmln'].getDuration(), 1) * boxes['tmlnSldrBox'].width));
+    setTmlnThumb(Math.max(0, Math.min((videoPlr.currentTime - states['tmln'].getStartTime()) / states['tmln'].getDuration(), 1) * boxes['tmlnSldrBox'].width));
 }
 
 /**
  * Sets the timeline overlay
  */
 function setTmlnOvrl() {
-    // the tick line clone, tick text clone, tick location, and tick percentage
-    let tickLineClone, tickTextClone, tickLocation, tickPercentage;
-
     // get the location of the first tick in seconds and the number of ticks based on the duration
-    const firstTick = Math.ceil(state['tmln'].getStartTime() / state['tmln'].getSubInterval()) * state['tmln'].getSubInterval();
-    const numTicks = ((Math.floor(state['tmln'].getEndTime() / state['tmln'].getSubInterval()) * state['tmln'].getSubInterval()) - firstTick) / state['tmln'].getSubInterval() + 1;
+    const firstTick = Math.ceil(states['tmln'].getStartTime() / states['tmln'].getSubInterval()) * states['tmln'].getSubInterval();
+    const numTicks = ((Math.floor(states['tmln'].getEndTime() / states['tmln'].getSubInterval()) * states['tmln'].getSubInterval()) - firstTick) / states['tmln'].getSubInterval() + 1;
 
     // get the tick line template and the tick text template
     const tickLineTemplate = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     const tickTextTemplate = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+    // the tick line clone, tick text clone, tick location, and tick percentage
+    let tickLineClone, tickTextClone, tickLocation, tickPercentage;
 
     // set the default tick line height
     tickLineTemplate.setAttribute('y1', 15);
@@ -1366,9 +1313,9 @@ function setTmlnOvrl() {
     for (let i = 0; i < numTicks; i++)
     {
         // get the location of the tick in seconds
-        tickLocation = firstTick + (i * state['tmln'].getSubInterval());
+        tickLocation = firstTick + (i * states['tmln'].getSubInterval());
         // get the percentage location of the tick within the timeline overlay
-        tickPercentage = (tickLocation - state['tmln'].getStartTime()) / state['tmln'].getDuration();
+        tickPercentage = (tickLocation - states['tmln'].getStartTime()) / states['tmln'].getDuration();
 
         // get the tick line clone
         tickLineClone = tickLineTemplate.cloneNode(true);
@@ -1378,7 +1325,7 @@ function setTmlnOvrl() {
         tickLineClone.setAttribute('x2', tickPercentage * boxes['tmlnSldrBox'].width);
 
         // check if the tick is an interval (larger) tick
-        if (tickLocation % state['tmln'].getInterval() === 0) {
+        if (tickLocation % states['tmln'].getInterval() === 0) {
             // set the tick line height to be larger
             tickLineClone.setAttribute('y1', 10);
             tickLineClone.setAttribute('y2', 50);
@@ -1414,23 +1361,7 @@ function setTmlnThumb(thumbLocation) {
  */
 function updateTmlnSldr() {
     // get the new timeline slider bounding box
-    boxes['tmlnSldrBox'] = tmlnSldr.getBoundingClientRect();
-
-    // set the timeline marker viewbox
-    tmlnOvrl.setAttribute('viewbox', `0 0 ${boxes['tmlnSldrBox'].width} 60`);
-
-    // if the video is loaded, set the new timeline overlay and thumb position
-    if (flags['videoLoaded']) {
-        setTmlnOvrl();
-        setTmlnSldr();
-
-        // check if clipping is active
-        if (clipBar.classList.contains('active')) {
-            // set the clip thumbs
-            setClipLeftThumb((state['tmln'].getClipStartTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
-            setClipRightThumb((state['tmln'].getClipEndTime() - state['tmln'].getStartTime()) / state['tmln'].getDuration() * boxes['tmlnSldrBox'].width);
-        }
-    }
+    boxes['tmlnSldrBox'] = getModBox(tmlnSldr.getBoundingClientRect());
 }
 
 /**
@@ -1460,7 +1391,6 @@ function syncSeekTmlnSldrs() {
     setTmlnSldr();
 
     // request the next animation frame if the video is playing
-    if (!videoPlr.paused && !videoPlr.ended) {
-        state['animID'] = requestAnimationFrame(syncSeekTmlnSldrs);
-    }
+    if (!videoPlr.paused && !videoPlr.ended)
+        states['animID'] = requestAnimationFrame(syncSeekTmlnSldrs);
 }

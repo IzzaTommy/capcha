@@ -28,9 +28,7 @@ function initRend() {
     init();
 
     // on request, finish initialization
-    window.processAPI.reqFinishInit(() => {
-        finishInit();
-    });
+    window['procAPI'].reqFinishInit(finishInit);
 }
 
 /**
@@ -59,7 +57,7 @@ async function finishInit() {
     initRendEditSect();
 
     // toggle the auto recording, allow window dragging, and remove the initialization overlay
-    window.windowAPI.reqTogAutoRec();
+    window['stgsAPI'].reqTogAutoRec();
     titleBar.style.webkitAppRegion = 'drag';
     initOvrl.classList.remove('active');
 }

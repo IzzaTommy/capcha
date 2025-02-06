@@ -3,26 +3,23 @@
  * 
  * @module mainWebSocket
  * @requires electron
- * @requires fluent-ffmpeg
- * @requires path
  * @requires ws
  * @requires mainVariables
  * @requires mainGeneral
  */
 import { ipcMain } from 'electron';
-import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
 import { WebSocket } from 'ws';
 import { 
-    MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    CAPTURES_DATE_FORMAT, 
+    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+    OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+    CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
+    SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    data, flags, inst, progs, state, uuid 
+    data, flags, insts, progs, states, uuids 
 } from './mainVariables.js';
-import { initMainGeneral, togAutoRec, checkProgs, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
+import { initMainGen, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
 
 /**
  * @exports initMainWebSocket, webSocketReq, webSocketBatchReq
@@ -45,26 +42,22 @@ async function initMainWebSocket() {
 function initWebSocket() {
     return new Promise((resolve, reject) => {
         // clear an existing attempt
-        if (inst['webSocket']) {
-            inst['webSocket'].removeAllListeners();
-            inst['webSocket'].terminate();
+        if (insts['webSocket']) {
+            insts['webSocket'].removeAllListeners();
+            insts['webSocket'].terminate();
         }
 
         // start a new attempt to connect to WebSocket
-        inst['webSocket'] = new WebSocket('ws://localhost:4444');
+        insts['webSocket'] = new WebSocket('ws://localhost:4444');
 
         // on open, log that WebSocket is open
-        inst['webSocket'].on('open', () => { 
-            logProc('WebSocket', 'OPEN', 'Connected to OBS WebSocket');
-        });
+        insts['webSocket'].on('open', () => logProc('WebSocket', 'OPEN', 'Connected to OBS WebSocket'));
     
         // on error, log that WebSocket had an error
-        inst['webSocket'].on('error', () => { 
-            logProc('WebSocket', 'ERROR', 'Couldn\'t connect to OBS WebSocket');
-        });
+        insts['webSocket'].on('error', () => logProc('WebSocket', 'ERROR', 'Couldn\'t connect to OBS WebSocket'));
     
         // on close, log that the WebSocket connection closed and reject the promise
-        inst['webSocket'].on('close', (code, reason) => {
+        insts['webSocket'].on('close', (code, reason) => {
             logProc('WebSocket', 'CLOSE', 'Connection to OBS WebSocket closed', false);  // boolean1 isFinalMsg
             logProc('WebSocket', 'CLOSE', `Code: ${code}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
             logProc('WebSocket', 'CLOSE', `Reason: ${reason.length === 0 ? 'N/A' : reason}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
@@ -73,7 +66,7 @@ function initWebSocket() {
         });
 
         // on message log the operation
-        inst['webSocket'].on('message', (data) => {
+        insts['webSocket'].on('message', (data) => {
             // parse the data
             const msg = JSON.parse(data);
         
@@ -88,7 +81,7 @@ function initWebSocket() {
                     logProc('WebSocket', 'MSG', `RPC Version: ${msg['d']['rpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // send op 1 to OBS WebSocket to initiate connection
-                    inst['webSocket'].send(JSON.stringify({ 'op': 1, 'd': { rpcVersion: 1 } }));
+                    insts['webSocket'].send(JSON.stringify({ 'op': 1, 'd': { rpcVersion: 1 } }));
 
                     break;
 
@@ -120,8 +113,8 @@ function initWebSocket() {
                     logProc('WebSocket', 'MSG', `Response Data: ${msg['d']['responseData'] ? JSON.stringify(msg['d']['responseData']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // resolve/reject any pending requests
-                    if (state['pendReqs'].has(msg['d']['requestId'])) {
-                        const { resolve, reject } = state['pendReqs'].get(msg['d']['requestId']);
+                    if (states['pendReqs'].has(msg['d']['requestId'])) {
+                        const { resolve, reject } = states['pendReqs'].get(msg['d']['requestId']);
             
                         if (msg['d']['requestStatus']['result']) {
                             logProc('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
@@ -134,7 +127,7 @@ function initWebSocket() {
                             reject(msg['d']);
                         }
             
-                        state['pendReqs'].delete(msg['d']['requestId']);
+                        states['pendReqs'].delete(msg['d']['requestId']);
                     }
 
                     break;
@@ -146,8 +139,8 @@ function initWebSocket() {
                     logProc('WebSocket', 'MSG', `Results: ${msg['d']['results'] ? JSON.stringify(msg['d']['results']) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // handle mapping...
-                    if (state['pendReqs'].has(msg['d']['requestId'])) {
-                        const { resolve, reject } = state['pendReqs'].get(msg['d']['requestId']);
+                    if (states['pendReqs'].has(msg['d']['requestId'])) {
+                        const { resolve, reject } = states['pendReqs'].get(msg['d']['requestId']);
             
                         if (msg['d']['results'][0]['requestStatus']['result']) {
                             logProc('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
@@ -160,8 +153,9 @@ function initWebSocket() {
                             reject(msg['d']);
                         }
             
-                        state['pendReqs'].delete(msg['d']['requestId']);
+                        states['pendReqs'].delete(msg['d']['requestId']);
                     }
+
                     break;
             }
         });
@@ -175,7 +169,7 @@ function initWebSocketL() {
     // on startRecord, set the video file name and start recording
     ipcMain.handle('webSocket:startRecord', async (_, recGame) => {
         await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recGame}-${CAPTURES_DATE_FORMAT}` }));
-        flags['isRec'] = (await atmpAsyncFunc(() => webSocketReq('StartRecord', {})))['requestStatus']['result'];
+        flags['isRec'] = (await atmpAsyncFunc(() => webSocketReq('StartRecord', { })))['requestStatus']['result'];
 
         // return if recording is enabled or not
         return flags['isRec'];
@@ -183,45 +177,10 @@ function initWebSocketL() {
 
     // on stopRecord, stop recording
     ipcMain.handle('webSocket:stopRecord', async (_) => {
-        flags['isRec'] = !(await atmpAsyncFunc(() => webSocketReq('StopRecord', {})))['requestStatus']['result'];
+        flags['isRec'] = !(await atmpAsyncFunc(() => webSocketReq('StopRecord', { })))['requestStatus']['result'];
 
         // return if recording is disabled or not
         return !flags['isRec'];
-    });
-
-    //
-    ipcMain.handle('clip:createClip', async (_, videoDataPath, clipStartTime, clipEndTime) => {
-        try {
-            const result = await new Promise((resolve, reject) => {
-                const command = ffmpeg(videoDataPath);
-    
-                command.setStartTime(clipStartTime);
-                command.duration(clipEndTime - clipStartTime);
-                // command.videoFilters(`scale=${data['stgs'].get('clipsWidth')}:${data['stgs'].get('clipsHeight')}`);
-
-                command.videoCodec('h264_nvenc');
-                command.audioCodec('aac');
-
-                // command.outputOptions('-threads 2');
-                // command.outputOptions('-preset fast');
-                command.outputOptions('-c copy');
-                command.output(path.join(data['stgs'].get('clipsPath'), `CLIP-${getVideoDate()}.${data['stgs'].get('clipsFormat')}`));
-    
-                command.on('end', () => {
-                    resolve(path.join(data['stgs'].get('clipsPath'), 'testoutput.mp4'))
-                });
-                command.on('error', reject);
-                command.run();
-            });
-    
-            console.log('Processed video saved to:', result);
-            
-        } 
-        catch (error) {
-            console.error('Processing failed:', error);
-        }
-
-        console.log('done?');
     });
 }
 
@@ -246,14 +205,20 @@ function webSocketReq(reqType, reqData) {
 
     // return a promise with the request in the pending requests map, then initiate the request
     return new Promise((resolve, reject) => {
-        state['pendReqs'].set(reqId, { resolve, reject });
+        states['pendReqs'].set(reqId, { resolve, reject });
 
-        inst['webSocket'].send(JSON.stringify({ 'op': 6, 'd': { 'requestType': reqType, 'requestId': reqId, 'requestData': reqData } }));
+        insts['webSocket'].send(JSON.stringify({ 'op': 6, 'd': { 'requestType': reqType, 'requestId': reqId, 'requestData': reqData } }));
     });
 }
 
-
-
+/**
+ * Sends a batch request to OBS WebSocket
+ * 
+ * @param {boolean} haltOnFail - Whether the request should halt if any request fails
+ * @param {number} execType - -1, 0, 1, 2 for None, SerialRealtime, SerialFrame, or Parallel respectively
+ * @param {Object[]} reqs - The array of request objects
+ * @returns {Promise} The result of the batch request
+ */
 function webSocketBatchReq(haltOnFail, execType, reqs) {
     // generate a new request ID
     const reqId = Math.random().toString(36).substring(2, 15);
@@ -269,8 +234,8 @@ function webSocketBatchReq(haltOnFail, execType, reqs) {
 
     // return a promise with the request in the pending requests map, then initiate the request
     return new Promise((resolve, reject) => {
-        state['pendReqs'].set(reqId, { resolve, reject });
+        states['pendReqs'].set(reqId, { resolve, reject });
 
-        inst['webSocket'].send(JSON.stringify({ 'op': 8, 'd': { 'requestId': reqId, 'haltOnFailure': haltOnFail, 'executionType': execType, 'requests': reqs } }));
+        insts['webSocket'].send(JSON.stringify({ 'op': 8, 'd': { 'requestId': reqId, 'haltOnFailure': haltOnFail, 'executionType': execType, 'requests': reqs } }));
     });
 }

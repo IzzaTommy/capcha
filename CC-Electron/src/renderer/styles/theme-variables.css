@@ -117,7 +117,7 @@ html {
 }
 
 /* Dark Mode Variables */
-html[data-theme='dark'] {
+html[data-theme="dark"] {
     /* ==== scbar -> Scroll Bar ==== */
     --scbar-thumb-bgcolor: #dddddd;
     --scbar-thumb-alt-bgcolor: #ffffff;
@@ -429,7 +429,7 @@ html[data-theme='dark'] {
 }
 
 /* Light Mode Variables */
-html[data-theme='light'] {
+html[data-theme="light"] {
     /* ==== scbar -> Scroll Bar ==== */
     --scbar-thumb-bgcolor: #cccccc;
     --scbar-thumb-alt-bgcolor: #aaaaaa;

@@ -4,34 +4,36 @@
  * @module mainGeneral
  * @requires electron
  * @requires path
- * @requires ps-list
+ * @requires fluent-ffmpeg
  * @requires mainVariables
  */
 import { BrowserWindow, ipcMain } from 'electron';
-import { promises as fs } from 'fs';
 import path from 'path';
-import psList from 'ps-list';
+import ffmpeg from 'fluent-ffmpeg';
+import { promises as fs } from 'fs';
 import { 
-    MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    CAPTURES_DATE_FORMAT, 
+    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+    OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+    CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
+    SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    data, flags, inst, progs, state, uuid 
+    data, flags, insts, progs, states, uuids 
 } from './mainVariables.js';
 
 /**
- * @exports initMainGeneral, togAutoRec, checkProgs, logProc, atmpAsyncFunc
+ * @exports initMainGen, getVideoDate, getLogDate, logProc, atmpAsyncFunc
  */
-export { initMainGeneral, togAutoRec, checkProgs, getVideoDate, getLogDate, logProc, atmpAsyncFunc };
+export { initMainGen, getVideoDate, getLogDate, logProc, atmpAsyncFunc };
 
 /**
  * Initializes general components
  */
-function initMainGeneral() {
+function initMainGen() {
     initWindow();
-    initWindowL();
+
+    initGenL();
 }
 
 /**
@@ -39,76 +41,71 @@ function initMainGeneral() {
  */
 function initWindow() {
     // initialize the browser window
-    inst['mainWindow'] = new BrowserWindow({
+    insts['mainWindow'] = new BrowserWindow({
         minWidth: MAIN_WINDOW_WIDTH_MIN,
         minHeight: MAIN_WINDOW_HEIGHT_MIN,
         show: false,
-        icon: path.join(ACTIVE_DIRECTORY, '..', 'assets', 'app-icon', 'capcha-app-icon.png'),
+        icon: MAIN_WINDOW_ICON_PATH,
         frame: false,
         webPreferences: {
-            preload: path.join(ACTIVE_DIRECTORY, 'preload.js'),
+            preload: PRELOAD_PATH,
             contextIsolation: true 
         } 
     });
 
     // start the main window maximized and load the HTML file
-    inst['mainWindow'].maximize();
-    inst['mainWindow'].loadFile('src/renderer/index.html');
+    insts['mainWindow'].maximize();
+    insts['mainWindow'].loadFile(INDEX_PATH);
 }
 
 /**
- * Initializes the window listeners
+ * Initializes the general listeners
  */
-function initWindowL() {
+function initGenL() {
     // on minWindow, minimize the main window
-    ipcMain.on('window:minWindow', (_) => inst['mainWindow'].minimize());
+    ipcMain.on('gen:minWindow', (_) => insts['mainWindow'].minimize());
 
     // on maxWindow, maximize the main window
-    ipcMain.on('window:maxWindow', (_) => inst['mainWindow'].isMaximized() ? inst['mainWindow'].unmaximize() : inst['mainWindow'].maximize());
+    ipcMain.on('gen:maxWindow', (_) => insts['mainWindow'].isMaximized() ? insts['mainWindow'].unmaximize() : insts['mainWindow'].maximize());
 
     // on closeWindow, close the main window
-    ipcMain.on('window:closeWindow', (_) => inst['mainWindow'].close());
+    ipcMain.on('gen:closeWindow', (_) => insts['mainWindow'].close());
 
-    // on reqTogAutoRec, call togAutoRec
-    ipcMain.on('window:reqTogAutoRec', (_) => {
-        togAutoRec();
-    }); 
-}
+    // on createClip, create a clip of the video with the given start and end times
+    ipcMain.handle('gen:createClip', async (_, videoDataPath, clipStartTime, clipEndTime) => {
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const cmd = ffmpeg(videoDataPath);
+    
+                cmd.setStartTime(clipStartTime);
+                cmd.duration(clipEndTime - clipStartTime);
+                // cmd.videoFilters(`scale=${data['stgs'].get('clipsWidth')}:${data['stgs'].get('clipsHeight')}`);
 
-/**
- * Toggles the auto recording
- */
-function togAutoRec() {
-    // if auto recording is on, start checking the programs list periodically; else, cancel the auto recording
-    data['stgs'].get('autoRecord') ? state['autoRecIntv'] = setInterval(async () => await checkProgs(), CHECK_PROGRAMS_DELAY_IN_MSECONDS) : clearInterval(state['autoRecIntv']);
-}
+                // cmd.inputOptions('-hwaccel cuda');
+                cmd.videoCodec('h264_nvenc');
+                cmd.audioCodec('aac');
 
-/**
- * Checks if certain programs are running and toggle auto recording
- */
-async function checkProgs() {
-    // get the process list
-    const procs = await atmpAsyncFunc(() => psList());
-
-    // check if recording is enabled
-    if (flags['isRec']) {
-        // check if the recording game is not running and stop the recording
-        if (state['recGame'] && !procs.some(process => process['name'].toLowerCase() === progs[state['recGame']].toLowerCase())) {
-            inst['mainWindow'].webContents.send('webSocket:reqTogRecBarBtn');
+                // cmd.outputOptions('-threads 1');
+                cmd.outputOptions('-preset veryfast');
+                cmd.outputOptions('-c copy');
+                cmd.output(path.join(data['stgs'].get('clipsDirectory'), `CLIP-${getVideoDate()}.${data['stgs'].get('clipsFormat')}`));
+    
+                cmd.on('end', () => {
+                    resolve();
+                });
+                cmd.on('error', reject);
+                cmd.run();
+            });
+    
+            console.log('Processed video saved to:', result);
+            
+        } 
+        catch (error) {
+            console.error('Processing failed:', error);
         }
-    }
-    // else, check the program list and enable recording if a match is found
-    else {
-        for (const [key, value] of Object.entries(progs)) {
-            if (procs.some(process => process['name'].toLowerCase() === value.toLowerCase())) {
-                state['recGame'] = key;
 
-                inst['mainWindow'].webContents.send('webSocket:reqTogRecBarBtn', state['recGame']);
-
-                break;
-            }
-        }
-    }
+        console.log('done?');
+    });
 }
 
 /**
@@ -119,7 +116,7 @@ async function checkProgs() {
 function getVideoDate() {
     const curDate = new Date();
 
-    return `${PAD(curDate.getMonth())}${PAD(curDate.getDate())}${curDate.getFullYear().toString().slice(-2)}${PAD(curDate.getHours())}${PAD(curDate.getMinutes())}${PAD(curDate.getSeconds())}`;
+    return `${TIME_PAD(curDate.getMonth())}${TIME_PAD(curDate.getDate())}${curDate.getFullYear().toString().slice(-2)}${TIME_PAD(curDate.getHours())}${TIME_PAD(curDate.getMinutes())}${TIME_PAD(curDate.getSeconds())}`;
 }
 
 /**
@@ -130,7 +127,7 @@ function getVideoDate() {
 function getLogDate() {
     const curDate = new Date();
 
-    return `${PAD(curDate.getHours())}:${PAD(curDate.getMinutes())}:${PAD(curDate.getSeconds())}`;
+    return `${TIME_PAD(curDate.getHours())}:${TIME_PAD(curDate.getMinutes())}:${TIME_PAD(curDate.getSeconds())}`;
 }
 
 /**
@@ -145,16 +142,14 @@ function getLogDate() {
  */
 async function logProc(proc, event, logMsg, isFinalMsg = true, isSubMsg = false, isCons = true) {
     // get the log entry with the time
-    const logEntry = `[${getLogDate()}][${proc}][${event.toUpperCase().padEnd(5, '-')}]: ${isSubMsg ? '  ' : ''}` + `${logMsg}${isFinalMsg ? `\n${LOGS_DIVIDER}` : ''}`;
+    const logEntry = `[${getLogDate()}][${proc}][${EVENT_PAD(event.toUpperCase())}]: ${isSubMsg ? '  ' : ''}` + `${logMsg}${isFinalMsg ? `\n${LOGS_DIV}` : ''}`;
     
     // if the log is for console, log to console
-    if (isCons) {
+    if (isCons)
         console.log(logEntry);
-    }
     // otherwise, log to the log file
-    else {
-        await atmpAsyncFunc(() => fs.appendFile(LOGS_PATH, logEntry + '\n', 'utf-8'));
-    }
+    else
+        await atmpAsyncFunc(() => fs.appendFile(LOGS_PATH, logEntry + '\n'));
 }
 
 /**
@@ -163,7 +158,6 @@ async function logProc(proc, event, logMsg, isFinalMsg = true, isSubMsg = false,
  * @param {Function} asyncFunc - The asynchronous function
  * @param {number} atmps - The number of attempts
  * @param {number} delay - The delay between attempts in milliseconds
- * @param {boolean} init - If the asynchronous function is run during initialization
  * @returns {Promise} The result of the attempts
  */
 async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS) {
@@ -175,14 +169,12 @@ async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DE
         } 
         catch (error) {
             // do another attempt after the delay
-            if (i < atmps) {
+            if (i < atmps)
                 await new Promise(resolve => setTimeout(resolve, delay));
-            }
-            else {
+            else
                 logProc('WebSocket', 'GEN', error);
                 // throw new Error(`Function failed after ${atmps} atmps: `, error);
                 // error code...
-            }
         }
     }
 }

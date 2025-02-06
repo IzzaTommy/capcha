@@ -82,6 +82,10 @@
     width: var(--gstfield-alt-width);
 }
 
+.general-setting-field[name="capturesWidth"], .general-setting-field[name="clipsHeight"], .general-setting-field[name="clipsWidth"], .general-setting-field[name="clipsHeight"] {
+    cursor: text;
+}
+
 .general-setting-field[name="capturesDisplay"], .general-setting-field[name="speaker"], .general-setting-field[name="microphone"], .general-setting-field[name="webcam"] {
     width: var(--gstfield-alt2-width);
 }

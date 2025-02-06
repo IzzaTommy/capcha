@@ -7,16 +7,18 @@
  * @requires rendererDirectoriesSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, NAV_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, PLAYBACK_CONTAINER_TIMEOUT, PLAYBACK_GROW_VALUE, PLAYBACK_REDUCE_VALUE, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
     VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
-    PLAYBACK_RATE_DEF, PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_MIN_ZOOM, CLIP_MIN_LENGTH, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
     initOvrl, initStatLabel, 
     titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, dirsBarIcon, stgsBarBtn, stgsBarIcon, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, recBarIcon, autoRecResLabel, 
+    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
@@ -30,14 +32,14 @@ import {
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, viewBarIcon, crtBarBtn, crtBarIcon, clipTglBtn, clipTglIcon, 
+    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
     spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
-    boxes, data, flags, state, 
+    boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
 
 /**
@@ -65,7 +67,7 @@ function initStgCtrEL() {
 
         // on change, set the setting, update the setting cache, and update the setting field value
         stgTglFld.addEventListener('change', async () => {
-            stgTglFld.checked = data['stgs'][stgTglFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(stgTglFld.name, stgTglFld.checked));
+            stgTglFld.checked = data['stgs'][stgTglFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgTglFld.name, stgTglFld.checked));
 
             // set the icon based on if the setting toggle field is checked
             stgTglFld.checked ? setIcon(stgTglIcon, 'check') : setIcon(stgTglIcon, 'close');
@@ -74,7 +76,7 @@ function initStgCtrEL() {
 
     // on change, set the setting, update the setting cache, and update the setting field value
     darkModeStgTglFld.addEventListener('change', async () => {
-        darkModeStgTglFld.checked = data['stgs']['darkMode'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('darkMode', darkModeStgTglFld.checked));
+        darkModeStgTglFld.checked = data['stgs']['darkMode'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('darkMode', darkModeStgTglFld.checked));
 
         // change the theme attribute, depending on if dark mode is enabled
         if (darkModeStgTglFld.checked) {
@@ -90,9 +92,7 @@ function initStgCtrEL() {
     // iterate through each setting field
     for (const stgFld of [...mostStgFlds, capsDispStgFld, spkStgFld, micStgFld]) {
         // on change, set the setting, update the setting cache, and update the setting field value
-        stgFld.addEventListener('change', async () => {
-            stgFld.value = data['stgs'][stgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(stgFld.name, stgFld.value));
-        });
+        stgFld.addEventListener('change', async () => stgFld.value = data['stgs'][stgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgFld.name, stgFld.value)));
     }
 
     // iterate through each directory setting field
@@ -102,7 +102,7 @@ function initStgCtrEL() {
 
         // on click, set the setting, update the setting cache, update the setting field value, and reload the gallery
         dirStgFld.addEventListener('click', async () => {
-            data['stgs'][dirStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(dirStgFld.name, dirStgFld.value));
+            data['stgs'][dirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(dirStgFld.name, dirStgFld.value));
 
             if (dirStgFld.value !== data['stgs'][dirStgFld.name]) {
                 dirStgFld.value = data['stgs'][dirStgFld.name];
@@ -119,7 +119,7 @@ function initStgCtrEL() {
 
         // on change, set the setting, update the setting cache, update the setting field value, and update the total label
         limitStgFld.addEventListener('change', async () => {
-            limitStgFld.value = data['stgs'][limitStgFld.name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(limitStgFld.name, limitStgFld.value));
+            limitStgFld.value = data['stgs'][limitStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(limitStgFld.name, limitStgFld.value));
 
             totalLabel3.textContent = `/${data['stgs'][limitStgFld.name]} GB`;
         });
@@ -128,35 +128,31 @@ function initStgCtrEL() {
     // iterate through each clips setting field (for settings present in the settings section and clip bar)
     for (const stgFlds of [clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds]) {
         // on change, set the setting, update the setting cache, and update the setting field value
-        stgFlds[0].addEventListener('change', async () => {
-            stgFlds[0].value = stgFlds[1].value = data['stgs'][stgFlds[0].name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(stgFlds[0].name, stgFlds[0].value));
-        });
+        stgFlds[0].addEventListener('change', async () => stgFlds[0].value = stgFlds[1].value = data['stgs'][stgFlds[0].name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgFlds[0].name, stgFlds[0].value)));
 
         // on change, set the setting, update the setting cache, and update the setting field value
-        stgFlds[1].addEventListener('change', async () => {
-            stgFlds[1].value = stgFlds[0].value = data['stgs'][stgFlds[1].name] = await atmpAsyncFunc(() => window.stgsAPI.setStg(stgFlds[1].name, stgFlds[1].value));
-        });
+        stgFlds[1].addEventListener('change', async () => stgFlds[1].value = stgFlds[0].value = data['stgs'][stgFlds[1].name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgFlds[1].name, stgFlds[1].value)));
     }
 
     // on mouse down, enable the dragging flag
-    spkVolSldr.addEventListener('mousedown', () => flags['spkVolSldrDrag'] = true);
+    spkVolSldr.addEventListener('mousedown', () => flags['isSpkVolSldrDrag'] = true);
 
     // on click, set the speaker volume
-    spkVolSldr.addEventListener('click', async (pointer) => {
+    spkVolSldr.addEventListener('click', async (ptr) => {
         // update the speaker volume and settings cache
-        data['stgs']['speakerVolume'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('speakerVolume', Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX))));
+        data['stgs']['speakerVolume'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('speakerVolume', Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX))));
 
         // set the speaker volume slider
         setSpkVolSldr();
     });
 
     // on mouse down, enable the dragging flag
-    micVolSldr.addEventListener('mousedown', () => flags['micVolSldrDrag'] = true);
+    micVolSldr.addEventListener('mousedown', () => flags['isMicVolSldrDrag'] = true);
 
     // on click, set the microphone volume
-    micVolSldr.addEventListener('click', async (pointer) => {
+    micVolSldr.addEventListener('click', async (ptr) => {
         // update the microphone volume and settings cache
-        data['stgs']['microphoneVolume'] = await atmpAsyncFunc(() => window.stgsAPI.setStg('microphoneVolume', Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(pointer, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX))));
+        data['stgs']['microphoneVolume'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('microphoneVolume', Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX))));
 
         // set the microphone volume slider
         setMicVolSldr();
@@ -170,9 +166,9 @@ async function initStgCtr() {
     let stgFldOption;
 
     // get the settings, devices (speakers, microphones, webcams), and displays
-    data['stgs'] = await atmpAsyncFunc(() => window.stgsAPI.getAllStgsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
-    data['devs'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDevsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
-    data['disps'] = await atmpAsyncFunc(() => window.stgsAPI.getAllDispsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 init
+    data['stgs'] = await atmpAsyncFunc(() => window['stgsAPI'].getAllStgsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    data['devs'] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDevsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    data['disps'] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDispsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
 
     // iterate through each stg tglgle swt
     for (const stgTglSwt of mostStgTglSwtes) {
@@ -184,12 +180,7 @@ async function initStgCtr() {
         stgTglFld.checked = data['stgs'][stgTglFld.name];
 
         // set the icon based on if the stg tglgle fld is checked
-        if (stgTglFld.checked) {
-            setIcon(stgTglIcon, 'check');
-        }
-        else {
-            setIcon(stgTglIcon, 'close');
-        }
+        stgTglFld.checked ? setIcon(stgTglIcon, 'check') : setIcon(stgTglIcon, 'close');
     }
 
     // load the initial value from stored stg
@@ -206,10 +197,9 @@ async function initStgCtr() {
     }
 
     // iterate through each setting field
-    for (const stgFld of [...mostStgFlds, capsDirStgFld, clipsDirStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds]) {
+    for (const stgFld of [...mostStgFlds, capsDirStgFld, clipsDirStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds])
         // load each initial setting value from the stored settings
         stgFld.value = data['stgs'][stgFld.name];
-    }
 
     // iterate through each limit setting field
     for (const [index, limitStgFld] of [capsLimitStgFld, clipsLimitStgFld].entries()) {
@@ -228,7 +218,7 @@ async function initStgCtr() {
 
         // assign the name of the display to the value, set the text to the name and size
         stgFldOption.value = key;
-        stgFldOption.text = key + ` (${value['sizeX']} x ${value['sizeY']}) @ (${value['posX']}, ${value['posY']})`;
+        stgFldOption.text = `${key} (${value['sizeX']} x ${value['sizeY']}) @ (${value['posX']}, ${value['posY']})`;
 
         // append the child to the captures display setting field
         capsDispStgFld.appendChild(stgFldOption);
@@ -238,7 +228,7 @@ async function initStgCtr() {
     capsDispStgFld.value = data['stgs'][capsDispStgFld.name];
 
     // iterate through each speaker
-    for (const [key, _] of Object.entries(data['devs']['outputs'])) {
+    for (const [key, _] of Object.entries(data['devs']['outs'])) {
         // create a new setting field option
         stgFldOption = document.createElement('option');
 
@@ -257,7 +247,7 @@ async function initStgCtr() {
     setSpkVolSldr();
 
     // iterate through each microphone
-    for (const [key, _] of Object.entries(data['devs']['inputs'])) {
+    for (const [key, _] of Object.entries(data['devs']['inps'])) {
         // create a new setting field option
         stgFldOption = document.createElement('option');
 
@@ -308,7 +298,7 @@ function setSpkVolThumb(thumbLocation) {
  */
 function updateSpkVolSldr() {
     // get the new speaker volume slider bounding box
-    boxes['spkVolSldrBox'] = spkVolSldr.getBoundingClientRect();
+    boxes['spkVolSldrBox'] = getModBox(spkVolSldr.getBoundingClientRect());
 }
 
 /**
@@ -343,5 +333,5 @@ function setMicVolThumb(thumbLocation) {
  */
 function updateMicVolSldr() {
     // get the new microphone volume slider bounding box
-    boxes['micVolSldrBox'] = micVolSldr.getBoundingClientRect();
+    boxes['micVolSldrBox'] = getModBox(micVolSldr.getBoundingClientRect());
 }

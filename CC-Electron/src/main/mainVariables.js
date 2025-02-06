@@ -9,56 +9,64 @@ import { app } from 'electron';
 import path from 'path';
 
 /**
- * @exports MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
- *  ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
- *  CAPTURES_DATE_FORMAT, 
+ * @exports ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+ *  CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+ *  OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
  *  SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
- *  SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+ *  CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
+ *  SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
  *  ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
- *  data, flags, inst, progs, state, uuid 
+ *  data, flags, insts, progs, states, uuids 
  */
 export { 
-    MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, CHECK_PROGRAMS_DELAY_IN_MSECONDS, PAD, LOGS_PATH, LOGS_DIVIDER, THUMBNAIL_SIZE, 
-    ACTIVE_DIRECTORY, CAPTURES_DIRECTORY_DEF, CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_DIRECTORY_DEF, CLIPS_THUMBNAIL_DIRECTORY, OBS_EXECUTABLE_PATH, 
-    CAPTURES_DATE_FORMAT, 
+    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+    OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
-    SETTINGS_PATH_DEF, STGS_DATA_SCHEMA, STGS_DATA_DEFAULTS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
+    CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
+    SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    data, flags, inst, progs, state, uuid 
+    data, flags, insts, progs, states, uuids 
 };
 
 // unexported
 const INITIALIZATION_DATE = new Date();
+const CAPTURES_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Captures');
+const CLIPS_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Clips');
 
-// minimum window size, delays, logs path
+// active directory
+const ACTIVE_DIRECTORY = import.meta.dirname;  // CC-Electron/src/main
+
+// minimum window size, paths
 const MAIN_WINDOW_WIDTH_MIN = 1280;
 const MAIN_WINDOW_HEIGHT_MIN = 900;
+const MAIN_WINDOW_ICON_PATH = path.join(ACTIVE_DIRECTORY, '..', 'assets', 'app-icon', 'capcha-app-icon.png');
+const PRELOAD_PATH = path.join(ACTIVE_DIRECTORY, 'preload.js');
+const INDEX_PATH = 'src/renderer/index.html';
+
+// delay, padding functions, log paths, log divider
 const CHECK_PROGRAMS_DELAY_IN_MSECONDS = 5000;
-const PAD = (num) => num.toString().padStart(2, '0');
-const LOGS_PATH = path.join(app.getPath('logs'), `${INITIALIZATION_DATE.getFullYear()}-${PAD(INITIALIZATION_DATE.getMonth() + 1)}-${PAD(INITIALIZATION_DATE.getDate())}_${PAD(INITIALIZATION_DATE.getHours())}-${PAD(INITIALIZATION_DATE.getMinutes())}-${PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
-const LOGS_DIVIDER = '------------------------------------------------------------';
+const TIME_PAD = (time) => time.toString().padStart(2, '0');
+const EVENT_PAD = (event) => event.toString().padEnd(5, '-');
+const LOGS_PATH = path.join(app.getPath('logs'), `${INITIALIZATION_DATE.getFullYear()}-${TIME_PAD(INITIALIZATION_DATE.getMonth() + 1)}-${TIME_PAD(INITIALIZATION_DATE.getDate())}_${TIME_PAD(INITIALIZATION_DATE.getHours())}-${TIME_PAD(INITIALIZATION_DATE.getMinutes())}-${TIME_PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
+const LOGS_DIV = '------------------------------------------------------------';
 
-// thumbnail size
-const THUMBNAIL_SIZE = '320x180';
-
-// directories and paths
-const ACTIVE_DIRECTORY = import.meta.dirname;  // CC-Electron/src/main
-const CAPTURES_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Captures');  // not used?
-const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');  // not used?
-const CLIPS_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Clips');  // not used?
-const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');  // not used?
+// obs executable path, date format
 const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
-
 const CAPTURES_DATE_FORMAT = '%MM%DD%YY%hh%mm%ss';
 
-// OBS input names
+// obs input names, thumbnail directories, thumbnail size
 const SCENE_NAME = 'CapCha';
 const SPEAKER_INPUT_NAME = 'CapCha Input';
 const MICROPHONE_INPUT_NAME = 'CapCha Output';
 
-// settings
-const SETTINGS_PATH_DEF = path.join(app.getPath('userData'), 'config.json');
-const STGS_DATA_SCHEMA = { 
+const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
+const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
+const THUMBNAIL_SIZE = '320x180';
+
+// settings config file path, settings schema and defaults, encoder path, shell devices command
+const SETTINGS_CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
+const SETTINGS_DATA_SCHEMA = { 
     navigationBarActive: {
         type: 'boolean'
     },
@@ -180,7 +188,7 @@ const STGS_DATA_SCHEMA = {
         type: 'string'
     }
 };
-const STGS_DATA_DEFAULTS = { 
+const SETTINGS_DATA_DEFS = { 
     navigationBarActive: true,
     
     capturesGameFilter: 'all',
@@ -230,7 +238,7 @@ const ASYNC_DELAY_IN_MSECONDS = 3000;
 const data = { 
     devs: null, 
     disps: null, 
-    inputs: null, 
+    inps: null, 
     scenes: null, 
     stgs: null, 
     videos: null 
@@ -242,7 +250,7 @@ const flags = {
 };
 
 // instances
-const inst = { 
+const insts = { 
     mainWindow: null, 
     obsProcess: null, 
     webSocket: null 
@@ -251,16 +259,16 @@ const inst = {
 // auto record programs
 const progs = {};
 
-// state data
-const state = { 
+// states data
+const states = { 
     autoRecIntv: null, 
     recGame: null, 
     pendReqs: new Map() 
 };
 
 // device uuids
-const uuid = {
-    micInput: null, 
+const uuids = {
+    micInp: null, 
     scene: null, 
-    spkInput: null 
+    spkInp: null 
 };
