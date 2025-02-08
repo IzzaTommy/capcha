@@ -164,8 +164,6 @@
 }
 
 .directory-gallery {
-    align-items: start;
-
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
@@ -174,6 +172,8 @@
     overflow-x: auto;
     padding-top: var(--dgallery-vpadding);
     padding-bottom: var(--dgallery-vpadding);
+
+    transition: var(--dgallery-transition);
 
     scroll-snap-type: x mandatory;
 }

@@ -88,7 +88,7 @@ function initGenL() {
                 // cmd.outputOptions('-threads 1');
                 cmd.outputOptions('-preset veryfast');
                 cmd.outputOptions('-c copy');
-                cmd.output(path.join(data['stgs'].get('clipsDirectory'), `CLIP-${getVideoDate()}.${data['stgs'].get('clipsFormat')}`));
+                cmd.output(path.join(data['stgs'].get('clipsDirectory'), `Clip-${getVideoDate()}.${data['stgs'].get('clipsFormat')}`));
     
                 cmd.on('end', () => {
                     resolve();

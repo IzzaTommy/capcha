@@ -271,7 +271,7 @@ function initStgsL() {
         // return all the data on the videos
         return videosData.filter(videoData => videoData !== null);
     });
-    
+
     // gets the settings object
     ipcMain.handle('stgs:getAllStgsData', (_) => data['stgs'].store);
     
@@ -479,7 +479,7 @@ async function getVideoData(video, dir, isCaps) {
     return {
         'created': videoMetaData.birthtime, 
         'duration': videoDuration, 
-        'game': video.split('-')[1] ? video.split('-')[0] : 'EXTERNAL',
+        'game': video.split('-')[1] ? video.split('-')[0] : 'External',
         'fullName': video,
         'path': videoPath,
         'size': videoMetaData.size,

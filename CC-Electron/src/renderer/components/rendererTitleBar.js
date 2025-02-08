@@ -3,13 +3,13 @@
  * 
  * @module rendererTitleBar
  * @requires rendererVariables
- * @requires rendererGeneral
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
+    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
     PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
     PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
     TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
@@ -23,10 +23,10 @@ import {
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
-    videoCtr, videoPlr, playPauseStatIcon, 
+    editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
-    volBarBtn, volBarIcon, volSldrCtr, volSldr, volSldrWidth, volOvrl, volThumb, 
+    videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
     curVideoTimeLabel, curVideoDurLabel, 
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
@@ -34,11 +34,10 @@ import {
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
+    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
     boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 
 /**
  * @exports initRendTitleBar
@@ -62,10 +61,6 @@ function initTitleBarBtnEL() {
     // on click, maximize the window
     maxBarBtn.addEventListener('click', window['genAPI'].maxWindow);
 
-    // on click, save the cached volume data and close the window
-    closeBarBtn.addEventListener('click', async () => {
-        await Promise.all([atmpAsyncFunc(() => window['stgsAPI'].setStg('volume', data['stgs']['volume'])), atmpAsyncFunc(() => window.stgsAPI.setStg('volumeMuted', data['stgs']['volumeMuted']))]);
-
-        window['genAPI'].closeWindow();
-    });
+    // on click, save the cached video volume data and close the window
+    closeBarBtn.addEventListener('click', window['genAPI'].closeWindow);
 }

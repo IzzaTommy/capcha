@@ -7,10 +7,11 @@
  * @requires rendererDirectoriesSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
+    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
     PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
     PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
     TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
@@ -24,10 +25,10 @@ import {
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
-    videoCtr, videoPlr, playPauseStatIcon, 
+    editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
-    volBarBtn, volBarIcon, volSldrCtr, volSldr, volSldrWidth, volOvrl, volThumb, 
+    videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
     curVideoTimeLabel, curVideoDurLabel, 
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
@@ -35,7 +36,7 @@ import {
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
+    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
     boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
@@ -43,9 +44,9 @@ import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSe
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
 
 /**
- * @exports initRendStgsSect, setSpkVolSldr, setSpkVolOvrl, setSpkVolThumb, updateSpkVolSldr, setMicVolSldr, setMicVolOvrl, setMicVolThumb, updateMicVolSldr
+ * @exports initRendStgsSect, pseudoSetVol, setVol, setVolStgSldr, setVolStgOvrl, setVolStgThumb, updateVolStgSldr
  */
-export { initRendStgsSect, setSpkVolSldr, setSpkVolOvrl, setSpkVolThumb, updateSpkVolSldr, setMicVolSldr, setMicVolOvrl, setMicVolThumb, updateMicVolSldr }
+export { initRendStgsSect, pseudoSetVol, setVol, setVolStgSldr, setVolStgOvrl, setVolStgThumb, updateVolStgSldr }
 
 /**
  * Initializes the settings section
@@ -98,7 +99,7 @@ function initStgCtrEL() {
     // iterate through each directory setting field
     for (const [index, dirStgFld] of [capsDirStgFld, clipsDirStgFld].entries()) {
         // get the captures or clips variable
-        const isCaps = index === 0 ? true : false;
+        const isCaps = index === 0;
 
         // on click, set the setting, update the setting cache, update the setting field value, and reload the gallery
         dirStgFld.addEventListener('click', async () => {
@@ -134,29 +135,65 @@ function initStgCtrEL() {
         stgFlds[1].addEventListener('change', async () => stgFlds[1].value = stgFlds[0].value = data['stgs'][stgFlds[1].name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgFlds[1].name, stgFlds[1].value)));
     }
 
-    // on mouse down, enable the dragging flag
-    spkVolSldr.addEventListener('mousedown', () => flags['isSpkVolSldrDrag'] = true);
+    // iterate through each setting slider container
+    for (const [index, volStgSldrCtr] of [spkVolStgSldrCtr, micVolStgSldrCtr].entries()) {
+        // get the speaker or microphone variables
+        const isSpk = index === 0;
+        const growValue = isSpk ? SPEAKER_VOLUME_GROW_VALUE : MICROPHONE_VOLUME_GROW_VALUE;
+        const redValue = isSpk ? SPEAKER_VOLUME_REDUCE_VALUE : MICROPHONE_VOLUME_REDUCE_VALUE;
+        const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
+        const hoverStr = isSpk ? 'isSpkVolStgSldrCtrHover' : 'isMicVolStgSldrCtrHover';
 
-    // on click, set the speaker volume
-    spkVolSldr.addEventListener('click', async (ptr) => {
-        // update the speaker volume and settings cache
-        data['stgs']['speakerVolume'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('speakerVolume', Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX))));
+        // on mouseenter, enable the hover flag
+        volStgSldrCtr.addEventListener('mouseenter', () => flags[hoverStr] = true);
 
-        // set the speaker volume slider
-        setSpkVolSldr();
-    });
+        // on wheel, increase or decrease the volume
+        volStgSldrCtr.addEventListener('wheel', (ptr) => {
+            // prevent the default scrolling on the container
+            ptr.preventDefault();
 
-    // on mouse down, enable the dragging flag
-    micVolSldr.addEventListener('mousedown', () => flags['isMicVolSldrDrag'] = true);
+            // if scrolling 'up', increase the volume
+            if (ptr.deltaY < 0) {
+                // set the volume
+                pseudoSetVol(data['stgs'][stgStr] + growValue, isSpk);
+                setVol(isSpk);
 
-    // on click, set the microphone volume
-    micVolSldr.addEventListener('click', async (ptr) => {
-        // update the microphone volume and settings cache
-        data['stgs']['microphoneVolume'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('microphoneVolume', Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX))));
+                // set the volume slider
+                setVolStgSldr(isSpk);
+            }
+            // else, decrease the speaker volume
+            else {
+                // set the volume
+                pseudoSetVol(data['stgs'][stgStr] - redValue, isSpk);
+                setVol(isSpk);
 
-        // set the microphone volume slider
-        setMicVolSldr();
-    });
+                // set the volume slider
+                setVolStgSldr(isSpk);
+            }
+        });
+
+        // on mouseleave, disable the hover flag
+        volStgSldrCtr.addEventListener('mouseleave', () => flags[hoverStr] = false);
+    }
+
+    // iterate through each setting slider
+    for (const [index, volStgSldr] of [spkVolStgSldr, micVolStgSldr].entries()) {
+        // get the speaker or microphone variables
+        const isSpk = index === 0;
+        const boxStr = isSpk ? 'spkVolStgSldrBox' : 'micVolStgSldrBox';
+        const dragStr = isSpk ? 'isSpkVolStgSldrDrag' : 'isMicVolStgSldrDrag';
+
+        // on mousedown, enable the dragging flag and set the volume based on the pointer location
+        volStgSldr.addEventListener('mousedown', (ptr) => {
+            // set the volume
+            pseudoSetVol(getPtrEventPct(ptr, boxes[boxStr]), isSpk);
+
+            // set the volume slider
+            setVolStgSldr(isSpk);
+
+            flags[dragStr] = true;
+        });
+    }
 }
 
 /**
@@ -225,113 +262,114 @@ async function initStgCtr() {
     }
 
     // load the initial setting value from the stored setting
-    capsDispStgFld.value = data['stgs'][capsDispStgFld.name];
+    capsDispStgFld.value = data['stgs']['capturesDisplay'];
 
-    // iterate through each speaker
-    for (const [key, _] of Object.entries(data['devs']['outs'])) {
-        // create a new setting field option
-        stgFldOption = document.createElement('option');
+    // iterate through each device setting field
+    for (const [index, stgFld] of [spkStgFld, micStgFld].entries()) {
+        // get the speaker or microphone variables
+        const isSpk = index === 0;
+        const devStr = isSpk ? 'outs' : 'inps';
+        const stgStr = isSpk ? 'speaker' : 'microphone';
 
-        // assign the name of the speaker to the value and text
-        stgFldOption.value = key;
-        stgFldOption.text = key;
+        // iterate through each device
+        for (const [key, _] of Object.entries(data['devs'][devStr])) {
+            // create a new setting field option
+            stgFldOption = document.createElement('option');
 
-        // append the child to the speaker setting field
-        spkStgFld.appendChild(stgFldOption);
+            // assign the name of the device to the value and text
+            stgFldOption.value = key;
+            stgFldOption.text = key;
+
+            // append the child to the device setting field
+            stgFld.appendChild(stgFldOption);
+        }
+        
+        // load the initial setting value from the stored setting
+        stgFld.value = data['stgs'][stgStr];
+
+        // set the volume slider
+        setVolStgSldr(isSpk);
     }
-    
-    // load the initial setting value from the stored setting
-    spkStgFld.value = data['stgs'][spkStgFld.name];
-
-    // set the speaker volume slider
-    setSpkVolSldr();
-
-    // iterate through each microphone
-    for (const [key, _] of Object.entries(data['devs']['inps'])) {
-        // create a new setting field option
-        stgFldOption = document.createElement('option');
-
-        // assign the name of the microphone to the value and text
-        stgFldOption.value = key;
-        stgFldOption.text = key;
-
-        // append the child to the microphone setting field
-        micStgFld.appendChild(stgFldOption);
-    }
-    
-    // load the initial setting value from the stored setting
-    micStgFld.value = data['stgs'][micStgFld.name];
-
-    // set the microphone volume slider
-    setMicVolSldr();
 }
 
 /**
- * Sets the speaker volume slider thumb and overlay
+ * Sets the speaker or microphone volume in the setting cache ONLY
+ * 
+ * @param {number} value - The new volume
+ * @param {boolean} isSpk - If the call is for speaker or microphone
  */
-function setSpkVolSldr() { 
+function pseudoSetVol(value, isSpk) {
+    // get the speaker or microphone variables
+    const volMin = isSpk ? SPEAKER_VOLUME_MIN : MICROPHONE_VOLUME_MIN;
+    const volMax = isSpk ? SPEAKER_VOLUME_MAX : MICROPHONE_VOLUME_MAX;
+    const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
+
+    data['stgs'][stgStr] = Math.max(volMin, Math.min(value, volMax));
+}
+
+/**
+ * Sets the speaker or microphone volume in the main process setting
+ * 
+ * @param {boolean} isSpk - If the call is for speaker or microphone 
+ */
+async function setVol(isSpk) {
+    // get the speaker or microphone variables
+    const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
+
+    await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgStr, data['stgs'][stgStr]));
+}
+
+/**
+ * Sets the speaker or microphone volume slider thumb and overlay
+ * 
+ * @param {boolean} isSpk - If the call is for speaker or microphone 
+ */
+function setVolStgSldr(isSpk) {
+    // get the speaker or microphone variables
+    const boxStr = isSpk ? 'spkVolStgSldrBox' : 'micVolStgSldrBox';
+    const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
+
     // set the speaker volume thumb and overlay (trailing bar)
-    setSpkVolThumb(data['stgs']['speakerVolume'] * spkVolSldrWidth);
-    setSpkVolOvrl(data['stgs']['speakerVolume'] * 100);
+    setVolStgThumb(data['stgs'][stgStr] * boxes[boxStr]['width'], isSpk);
+    setVolStgOvrl(data['stgs'][stgStr] * 100, isSpk);
 }
 
 /**
- * Sets the speaker volume slider overlay
+ * Sets the speaker or microphone volume slider overlay
  * 
- * @param {number} thumbLocation - The location of the speaker volume thumb
+ * @param {number} thumbLoc - The location of the slider thumb
+ * @param {boolean} isSpk - If the call is for speaker or microphone
  */
-function setSpkVolOvrl(thumbLocation) {
-    spkVolOvrl.style.background = `linear-gradient(to right, var(--gstoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+function setVolStgOvrl(thumbLoc, isSpk) {
+    // get the speaker or microphone variables
+    const volStgOvrl = isSpk ? spkVolStgOvrl : micVolStgOvrl;
+
+    volStgOvrl.style.background = `linear-gradient(to right, var(--gstoverlay-lgradientcolor) ${thumbLoc}%, transparent ${thumbLoc}%`;
 }
 
 /**
- * Sets the speaker volume slider thumb
+ * Sets the speaker or microphone volume slider thumb
  * 
- * @param {number} thumbLocation - The location of the speaker volume thumb
+ * @param {number} thumbLoc - The location of the slider thumb
+ * @param {boolean} isSpk - If the call is for speaker or microphone
  */
-function setSpkVolThumb(thumbLocation) {
-    spkVolThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setVolStgThumb(thumbLoc, isSpk) {
+    // get the speaker or microphone variables
+    const volStgThumb = isSpk ? spkVolStgThumb : micVolStgThumb;
+
+    volStgThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
- * Updates the speaker volume slider
+ * Updates the speaker or microphone volume slider
+ * 
+ * @param {boolean} isSpk - If the call is for speaker or microphone
  */
-function updateSpkVolSldr() {
+function updateVolStgSldr(isSpk) {
+    // get the speaker or microphone variables
+    const volStgSldr = isSpk ? spkVolStgSldr : micVolStgSldr;
+    const boxStr = isSpk ? 'spkVolStgSldrBox' : 'micVolStgSldrBox';
+
     // get the new speaker volume slider bounding box
-    boxes['spkVolSldrBox'] = getModBox(spkVolSldr.getBoundingClientRect());
-}
-
-/**
- * Sets the microphone volume slider thumb and overlay
- */
-function setMicVolSldr() { 
-    // set the microphone volume thumb and overlay (trailing bar)
-    setMicVolThumb(data['stgs']['microphoneVolume'] * micVolSldrWidth);
-    setMicVolOvrl(data['stgs']['microphoneVolume'] * 100);
-}
-
-/**
- * Sets the microphone volume slider overlay
- * 
- * @param {number} thumbLocation - The location of the microphone volume thumb
- */
-function setMicVolOvrl(thumbLocation) {
-    micVolOvrl.style.background = `linear-gradient(to right, var(--gstoverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
-}
-
-/**
- * Sets the microphone volume slider thumb
- * 
- * @param {number} thumbLocation - The location of the microphone volume thumb
- */
-function setMicVolThumb(thumbLocation) {
-    micVolThumb.style.transform = `translateX(${thumbLocation}px)`;
-}
-
-/**
- * Updates the microphone volume slider
- */
-function updateMicVolSldr() {
-    // get the new microphone volume slider bounding box
-    boxes['micVolSldrBox'] = getModBox(micVolSldr.getBoundingClientRect());
+    boxes[boxStr] = getModBox(volStgSldr.getBoundingClientRect());
 }

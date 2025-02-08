@@ -77,8 +77,8 @@ html {
     --mbaricon-fill: #dddddd;
     --mbaricon-alt-fill: #ffffff;
 
-    /* ==== vobaricon -> Volume Bar Icon ==== */
-    --vobaricon-fill: #ffffff;
+    /* ==== vvobaricon -> Video Volume Bar Icon ==== */
+    --vvobaricon-fill: #ffffff;
 
     /* ==== pbrtlabel -> Playback Rate Label ==== */
     --pbrtlabel-color: #dddddd;
@@ -88,8 +88,8 @@ html {
     --mtrack-bgcolor: #dddddd;
     --mtrack-alt-bgcolor: #ffffff;
 
-    /* ==== vooverlay -> Volume Overlay ==== */
-    --vooverlay-lgradientcolor: #00a9ff;
+    /* ==== vvooverlay -> Video Volume Overlay ==== */
+    --vvooverlay-lgradientcolor: #00a9ff;
 
     /* ==== mthumb -> Media Thumb ==== */
     --mthumb-bgcolor: #00a9ff;
@@ -303,8 +303,8 @@ html[data-theme="dark"] {
     --vpdeletepath-fill: #dddddd;
     --vpdeletepath-alt-fill: #ea2d2d;
 
-    /* ==== votrack -> Volume Track ==== */
-    --votrack-bgcolor: #ffffff;
+    /* ==== vvotrack -> Video Volume Track ==== */
+    --vvotrack-bgcolor: #ffffff;
 
     /* ==== pbrttrack -> Playback Rate Track ==== */
     --pbrttrack-bgcolor: #ffffff;
@@ -619,8 +619,8 @@ html[data-theme="light"] {
     --vpdeletepath-fill: #dddddd;
     --vpdeletepath-alt-fill: #ea2d2d;
 
-    /* ==== votrack -> Volume Track ==== */
-    --votrack-bgcolor: #ffffff;
+    /* ==== vvotrack -> Video Volume Track ==== */
+    --vvotrack-bgcolor: #ffffff;
 
     /* ==== pbrttrack -> Playback Rate Track ==== */
     --pbrttrack-bgcolor: #ffffff;
@@ -807,6 +807,9 @@ html {
 
     /* ==== dicon -> Directory Icon ==== */
     --dicon-transition: fill 0.3s ease 0s;
+
+    /* ==== dgallery -> Directory Gallery ==== */
+    --dgallery-transition: gap 0.3s ease 0s;
 
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-transition: background-color 0.3s ease 0s;

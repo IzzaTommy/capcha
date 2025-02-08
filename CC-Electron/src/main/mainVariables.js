@@ -93,12 +93,12 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'boolean'
     }, 
 
-    volume: {
+    videoVolume: {
         type: 'number',
         minimum: 0,
         maximum: 1,
     },
-    volumeMuted: {
+    videoVolumeMuted: {
         type: 'boolean'
     },
 
@@ -199,8 +199,8 @@ const SETTINGS_DATA_DEFS = {
     clipsMetaFilter: 'date',
     clipsAscending: false,
 
-    volume: 0.1,
-    volumeMuted: true,
+    videoVolume: 0.1,
+    videoVolumeMuted: true,
 
     darkMode: true,
 

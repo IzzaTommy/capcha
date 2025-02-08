@@ -282,8 +282,8 @@ html {
     /* ==== pbrtvaluelabel -> Playback Rate Value Label ==== */
     --pbrtvaluelabel-width: 2.5ch;
 
-    /* ==== vosliderctr -> Volume Slider Container ==== */
-    --vosliderctr-hpadding: 2px;
+    /* ==== vvosliderctr -> Video Volume Slider Container ==== */
+    --vvosliderctr-hpadding: 2px;
 
     /* ==== pbrtsliderctr -> Playback Rate Slider Container ==== */
     --pbrtsliderctr-rpadding: 3px;
@@ -293,8 +293,8 @@ html {
     --mslider-height: 4px;
     --mslider-vpadding: 18px;
 
-    /* ==== voslider -> Volume Slider ==== */
-    --voslider-width: 100px;
+    /* ==== vvoslider -> Video Volume Slider ==== */
+    --vvoslider-width: 100px;
 
     /* ==== pbrtslider -> Playback Rate Slider ==== */
     --pbrtslider-width: 150px;
@@ -302,8 +302,8 @@ html {
     /* ==== mtrack-> Media Track ==== */
     --mtrack-bradius: 2px;
 
-    /* ==== vooverlay -> Volume Overlay ==== */
-    --vooverlay-width: 100px;
+    /* ==== vvooverlay -> Video Volume Overlay ==== */
+    --vvooverlay-width: 100px;
 
     /* ==== pbrtoverlay -> Playback Rate Overlay ==== */
     --pbrtoverlay-linset: -7px;

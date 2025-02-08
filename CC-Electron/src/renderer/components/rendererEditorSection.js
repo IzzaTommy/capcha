@@ -8,10 +8,11 @@
  * @requires rendererSettingsSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
+    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
     PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VOLUME_MIN, VOLUME_MAX, VOLUME_GROW_VALUE, VOLUME_REDUCE_VALUE, VOLUME_MUTED, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
     PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
     TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
@@ -25,10 +26,10 @@ import {
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
     videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
-    videoCtr, videoPlr, playPauseStatIcon, 
+    editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
-    volBarBtn, volBarIcon, volSldrCtr, volSldr, volSldrWidth, volOvrl, volThumb, 
+    videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
     curVideoTimeLabel, curVideoDurLabel, 
     plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
     fscBarBtn, fscBarIcon, 
@@ -36,18 +37,18 @@ import {
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
     mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
     mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolSldr, spkVolSldrWidth, spkVolOvrl, spkVolThumb, micStgFld, micVolSldr, micVolSldrWidth, micVolOvrl, micVolThumb, 
+    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
     boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
 import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
-import { initRendStgsSect, setSpkVolSldr, setSpkVolOvrl, setSpkVolThumb, updateSpkVolSldr, setMicVolSldr, setMicVolOvrl, setMicVolThumb, updateMicVolSldr } from './rendererSettingsSection.js';
+import { initRendStgsSect, pseudoSetVol, setVol, setVolStgSldr, setVolStgOvrl, setVolStgThumb, updateVolStgSldr } from './rendererSettingsSection.js';
 
 /**
- * @exports initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr, setPlbkRateSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs
+ * @exports initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs
  */
-export { initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr, setPlbkRateSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs }
+export { initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs }
 
 /**
  * Initializes the editor section
@@ -78,19 +79,21 @@ function initVideoCtrEL() {
                 
                 // left arrow - decrease the volume, playback rate, or current time
                 case 'ArrowLeft':
-                    if (flags['isVolBarBtnHover'] || flags['isVolSldrCtrHover']) {
-                        videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume - VOLUME_REDUCE_VALUE, VOLUME_MAX));
-                        videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+                    if (flags['isVideoVolBarBtnHover'] || flags['isVideoVolSldrCtrHover']) {
+                        // set the volume
+                        pseudoSetVideoVol(videoPlr.volume - VIDEO_VOLUME_REDUCE_VALUE);
+                        setVideoVol();
 
                         // set the volume slider
-                        setVolSldr();
+                        setVideoVolBtnSldr();
                     }
                     else {
                         if (flags['isPlbkRateBarBtnHover'] || flags['isPlbkRateSldrCtrHover']) {
-                            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_MAX))];
+                            // set the playback rate
+                            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE);
                 
                             // set the playback rate slider
-                            setPlbkRateSldr();
+                            setPlbkRateBtnSldr();
                         }
                         else {
                             videoPlr.currentTime -= PLAYBACK_CONTAINER_REDUCE_VALUE;
@@ -139,19 +142,21 @@ function initVideoCtrEL() {
 
                 // right arrow - increase the volume, playback rate, or current time
                 case 'ArrowRight':
-                    if (flags['isVolBarBtnHover'] || flags['isVolSldrCtrHover']) {
-                        videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
-                        videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+                    if (flags['isVideoVolBarBtnHover'] || flags['isVideoVolSldrCtrHover']) {
+                        // set the volume
+                        pseudoSetVideoVol(videoPlr.volume + VIDEO_VOLUME_GROW_VALUE);
+                        setVideoVol();
 
                         // set the volume slider
-                        setVolSldr();
+                        setVideoVolBtnSldr();
                     }
                     else {
                         if (flags['isPlbkRateBarBtnHover'] || flags['isPlbkRateSldrCtrHover']) {
-                            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_REDUCE_VALUE, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
-                    
+                            // set the playback rate
+                            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE);
+   
                             // set the playback rate slider
-                            setPlbkRateSldr();
+                            setPlbkRateBtnSldr();
                         }
                         else {
                             videoPlr.currentTime += PLAYBACK_CONTAINER_GROW_VALUE;
@@ -200,33 +205,32 @@ function initVideoCtrEL() {
 
                 // minus - decrease the playback rate
                 case '-':
-                    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_MAX))];
+                    // set the playback rate
+                    setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE);
 
                     // set the playback rate slider
-                    setPlbkRateSldr();
+                    setPlbkRateBtnSldr();
 
                     break;
 
                 // equals - increase the playback rate
                 case '=':
-                    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
-
+                    // set the playback rate
+                    setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE);
+                            
                     // set the playback rate slider
-                    setPlbkRateSldr();
+                    setPlbkRateBtnSldr();
 
                     break;
 
                 // m - mute the volume
                 case 'm':
-                    // set the vol to 0.1 in case the video gets unmuted
-                    if (videoPlr.volume === VOLUME_MIN)
-                        videoPlr.volume = data['stgs']['volume'] = VOLUME_MUTED;
-
-                    // toggle the muted state
-                    videoPlr.muted = data['stgs']['volumeMuted'] = !videoPlr.muted;
+                    // toggle the volume muted state
+                    pseudoTogVideoVolMute();
+                    setVideoVol();
 
                     // set the volume slider
-                    setVolSldr();
+                    setVideoVolBtnSldr();
 
                     break;
 
@@ -238,6 +242,55 @@ function initVideoCtrEL() {
                     break;
             }
         }
+        else {
+            switch (event.key) {
+                // left arrow - decrease the speaker or microphone volume
+                case 'ArrowLeft':
+                    if (flags['isSpkVolStgSldrCtrHover']) {
+                        // set the speaker volume
+                        pseudoSetVol(data['stgs']['speakerVolume'] - SPEAKER_VOLUME_REDUCE_VALUE, true);  // boolean1 isSpk
+                        setVol(true);  // boolean1 isSpk
+
+                        // set the speaker volume slider
+                        setVolStgSldr(true);  // boolean1 isSpk
+                    }
+                    else {
+                        if (flags['isMicVolStgSldrCtrHover']) {
+                            // set the microphone volume
+                            pseudoSetVol(data['stgs']['microphoneVolume'] - MICROPHONE_VOLUME_REDUCE_VALUE, false);  // boolean1 isSpk
+                            setVol(false);  // boolean1 isSpk
+
+                            // set the microphone volume slider
+                            setVolStgSldr(false);  // boolean1 isSpk
+                        }
+                    }
+
+                    break;
+
+                // right arrow - increase the speaker or microphone volume
+                case 'ArrowRight':
+                    if (flags['isSpkVolStgSldrCtrHover']) {
+                        // set the speaker volume
+                        pseudoSetVol(data['stgs']['speakerVolume'] + SPEAKER_VOLUME_GROW_VALUE, true);  // boolean1 isSpk
+                        setVol(true);  // boolean1 isSpk
+
+                        // set the speaker volume slider
+                        setVolStgSldr(true);  // boolean1 isSpk
+                    }
+                    else {
+                        if (flags['isMicVolStgSldrCtrHover']) {
+                            // set the microphone volume
+                            pseudoSetVol(data['stgs']['microphoneVolume'] + MICROPHONE_VOLUME_GROW_VALUE, false);  // boolean1 isSpk
+                            setVol(false);  // boolean1 isSpk
+
+                            // set the microphone volume slider
+                            setVolStgSldr(false);  // boolean1 isSpk
+                        }
+                    }
+            
+                    break;
+            }
+        }
     });
 
     // on fullscreen change, change the icon and resize the seek, volume, and playback rate sliders
@@ -246,14 +299,14 @@ function initVideoCtrEL() {
             setIcon(fscBarIcon, 'fullscreen-exit');
 
             updateSeekSldr();
-            updateVolSldr();
+            updateVideoVolSldr();
             updatePlbkRateSldr();
         }
         else {
             setIcon(fscBarIcon, 'fullscreen');
 
             updateSeekSldr();
-            updateVolSldr();
+            updateVideoVolSldr();
             updatePlbkRateSldr();
         }
     });
@@ -265,7 +318,7 @@ function initVideoCtrEL() {
 
         // update the playback and playback rate sliders
         setSeekSldr();
-        setPlbkRateSldr();
+        setPlbkRateBtnSldr();
         setTmlnSldr();
         setTmlnOvrl();
 
@@ -330,7 +383,7 @@ function initVideoCtrEL() {
         // restart the timeout for hiding the playback container
         states['plbkCtrTmo'] = setTimeout(() => {
             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                 plbkCtr.classList.remove('active');
         }, PLAYBACK_CONTAINER_TIMEOUT);
     });
@@ -346,7 +399,7 @@ function initVideoCtrEL() {
         // reset the timeout for hiding
         states['plbkCtrTmo'] = setTimeout(() => {
             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                 plbkCtr.classList.remove('active');
         }, PLAYBACK_CONTAINER_TIMEOUT);
     });
@@ -374,7 +427,7 @@ function initVideoCtrEL() {
         clearTimeout(states['plbkCtrTmo']);
 
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
             plbkCtr.classList.remove('active');
     })
 
@@ -391,7 +444,7 @@ function initVideoCtrEL() {
         flags['isPlbkCtrHover'] = false;
 
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
             plbkCtr.classList.remove('active');
     });
 
@@ -420,8 +473,8 @@ function initVideoCtrEL() {
 
     // on mouseleave, hide the volume and playback rate sliders if they are not dragging
     mediaBar.addEventListener('mouseleave', () => {
-        if (!flags['isVolSldrDrag'])
-            volSldr.classList.remove('active');
+        if (!flags['isVideoVolSldrDrag'])
+            videoVolSldr.classList.remove('active');
 
         if (!flags['isPlbkRateSldrDrag'])
             plbkRateSldr.classList.remove('active');
@@ -431,92 +484,91 @@ function initVideoCtrEL() {
     playPauseBarBtn.addEventListener('click', () => setVideoPlayerState('toggle'));
 
     // on mouseenter, show the volume slider and update it if needed
-    volBarBtn.addEventListener('mouseenter', () => {
+    videoVolBarBtn.addEventListener('mouseenter', () => {
         // show the volume slider
-        volSldr.classList.add('active');
+        videoVolSldr.classList.add('active');
 
-        flags['isVolBarBtnHover'] = true
+        flags['isVideoVolBarBtnHover'] = true
     });
 
     // on click, mute/unmute the volume and change the icon
-    volBarBtn.addEventListener('click', () => {
-        // set the volume to 0.1 in case the video gets unmuted
-        if (videoPlr.volume === VOLUME_MIN) {
-            videoPlr.volume = data['stgs']['volume'] = VOLUME_MUTED;
-        }
-
-        // toggle the muted state
-        videoPlr.muted = data['stgs']['volumeMuted'] = !videoPlr.muted;
+    videoVolBarBtn.addEventListener('click', async () => {
+        // toggles the volume muted state
+        pseudoTogVideoVolMute();
+        setVideoVol();
 
         // set the volume slider
-        setVolSldr();
+        setVideoVolBtnSldr();
     });
 
     // on wheel, increase or decrease the volume
-    volBarBtn.addEventListener('wheel', (ptr) => {
+    videoVolBarBtn.addEventListener('wheel', async (ptr) => {
         // prevent the default scrolling on the container
         ptr.preventDefault();
 
         // if scrolling 'up', increase the volume
         if (ptr.deltaY < 0) {
-            videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
-            videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+            // set the volume
+            pseudoSetVideoVol(videoPlr.volume + VIDEO_VOLUME_GROW_VALUE);
+            setVideoVol();
 
             // set the volume slider
-            setVolSldr();
+            setVideoVolBtnSldr();
         }
         // else, decrease the volume
         else {
-            videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume - VOLUME_REDUCE_VALUE, VOLUME_MAX));
-            videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+            // set the volume
+            pseudoSetVideoVol(videoPlr.volume - VIDEO_VOLUME_REDUCE_VALUE);
+            setVideoVol();
 
             // set the volume slider
-            setVolSldr();
+            setVideoVolBtnSldr();
         }
     });
 
     // on mouseleave, disable the hover flag
-    volBarBtn.addEventListener('mouseleave', () => flags['isVolBarBtnHover'] = false);
+    videoVolBarBtn.addEventListener('mouseleave', () => flags['isVideoVolBarBtnHover'] = false);
 
     // on mouseenter, enable the hover flag
-    volSldrCtr.addEventListener('mouseenter', () => flags['isVolSldrCtrHover'] = true);
+    videoVolSldrCtr.addEventListener('mouseenter', () => flags['isVideoVolSldrCtrHover'] = true);
 
     // on wheel, increase or decrease the volume
-    volSldrCtr.addEventListener('wheel', (ptr) => {
+    videoVolSldrCtr.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
         ptr.preventDefault();
 
         // if scrolling 'up', increase the volume
         if (ptr.deltaY < 0) {
-            videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume + VOLUME_GROW_VALUE, VOLUME_MAX));
-            videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+            // set the volume
+            pseudoSetVideoVol(videoPlr.volume + VIDEO_VOLUME_GROW_VALUE);
+            setVideoVol();
 
             // set the volume slider
-            setVolSldr();
+            setVideoVolBtnSldr();
         }
         // else, decrease the volume
         else {
-            videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(videoPlr.volume - VOLUME_REDUCE_VALUE, VOLUME_MAX));
-            videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+            // set the volume
+            pseudoSetVideoVol(videoPlr.volume - VIDEO_VOLUME_REDUCE_VALUE);
+            setVideoVol();
 
             // set the volume slider
-            setVolSldr();
+            setVideoVolBtnSldr();
         }
     });
 
     // on mouseleave, disable the hover flag
-    volSldrCtr.addEventListener('mouseleave', () => flags['isVolSldrCtrHover'] = false);
+    videoVolSldrCtr.addEventListener('mouseleave', () => flags['isVideoVolSldrCtrHover'] = false);
 
-    // on mousedown, enable the dragging flag
-    volSldr.addEventListener('mousedown', () => flags['isVolSldrDrag'] = true);
-
-    // on click, set the volume based on the pointer location
-    volSldr.addEventListener('click', (ptr) => {
-        videoPlr.volume = data['stgs']['volume'] = Math.max(VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['volSldrBox']), VOLUME_MAX));
-        videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === VOLUME_MIN;
+    // on mousedown, enable the dragging flag and set the volume based on the pointer location
+    videoVolSldr.addEventListener('mousedown', (ptr) => {
+        // set the volume
+        pseudoSetVideoVol(getPtrEventPct(ptr, boxes['videoVolSldrBox']));
 
         // set the volume slider
-        setVolSldr();
+        setVideoVolBtnSldr();
+
+        flags['isVideoVolSldrDrag'] = true;
     });
 
     // on mouseenter, enable the hover flag
@@ -529,42 +581,34 @@ function initVideoCtrEL() {
 
         // if scrolling 'up', increase the playback rate
         if (ptr.deltaY < 0) {
-            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
+            // set the playback rate
+            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE);
             
             // set the playback rate slider
-            setPlbkRateSldr();
+            setPlbkRateBtnSldr();
         }
         // else, decrease the playback rate
         else {
-            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_MAX))];
+            // set the playback rate
+            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE);
             
             // set the playback rate slider
-            setPlbkRateSldr();
+            setPlbkRateBtnSldr();
         }
     });
 
     // on mouseleave, disable the hover flag
     plbkRateSldrCtr.addEventListener('mouseleave', () => flags['isPlbkRateSldrCtrHover'] = false);
 
-    // on mousedown, enable the dragging flag
-    plbkRateSldr.addEventListener('mousedown', () => flags['isPlbkRateSldrDrag'] = true);
-
-    // on click, set the playback rate
-    plbkRateSldr.addEventListener('click', (ptr) => {
-        // update the video playback rate
-        videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / PLAYBACK_RATE_SEGMENTS) - PLAYBACK_RATE_MAPPING_OFFSET), PLAYBACK_RATE_MAX))];
-
-        // set the playback rate sldr
-        setPlbkRateSldr();
-    });
-
-    // on click, revert to the default playback speed
-    plbkRateBarBtn.addEventListener('click', () => {
-        // set the default playback rate
-        videoPlr.playbackRate = PLAYBACK_RATE_DEF;
+    // on mousedown, enable the dragging flag and set the playback rate based on the pointer location
+    plbkRateSldr.addEventListener('mousedown', (ptr) => { 
+        // set the playback rate
+        setPlbkRate(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / PLAYBACK_RATE_SEGMENTS) - PLAYBACK_RATE_MAPPING_OFFSET));
 
         // set the playback rate slider
-        setPlbkRateSldr();
+        setPlbkRateBtnSldr();
+
+        flags['isPlbkRateSldrDrag'] = true;
     });
 
     // on mouseenter, show the playback rate slider
@@ -575,6 +619,15 @@ function initVideoCtrEL() {
         flags['isPlbkRateBarBtnHover'] = true
     });
 
+    // on click, revert to the default playback speed
+    plbkRateBarBtn.addEventListener('click', () => {
+        // set the default playback rate
+        videoPlr.playbackRate = PLAYBACK_RATE_DEF;
+
+        // set the playback rate slider
+        setPlbkRateBtnSldr();
+    });
+
     // on wheel, increase or decrease the playback rate
     plbkRateBarBtn.addEventListener('wheel', (ptr) => {
         // prevent the default scrolling on the container
@@ -582,17 +635,19 @@ function initVideoCtrEL() {
 
         // if scrolling 'up', increase the playback rate
         if (ptr.deltaY < 0) {
-            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_MAX))];
+            // set the playback rate
+            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + PLAYBACK_RATE_GROW_VALUE);
             
             // set the playback rate slider
-            setPlbkRateSldr();
+            setPlbkRateBtnSldr();
         }
         // else, decrease the playback rate
         else {
-            videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_MAX))];
+            // set the playback rate
+            setPlbkRate(PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] - PLAYBACK_RATE_REDUCE_VALUE);
             
             // set the playback rate slider
-            setPlbkRateSldr();
+            setPlbkRateBtnSldr();
         }
     });
 
@@ -608,11 +663,11 @@ function initVideoCtrEL() {
  */
 function initVideoCtr() {
     // set the initial volume and muted state
-    videoPlr.volume = data['stgs']['volume'];
-    videoPlr.muted = data['stgs']['volumeMuted'];
+    videoPlr.volume = data['stgs']['videoVolume'];
+    videoPlr.muted = data['stgs']['videoVolumeMuted'];
 
     // set the volume slider
-    setVolSldr();
+    setVideoVolBtnSldr();
 
     // standby will pause the video but hide the play pause icon overlay
     setVideoPlayerState('standby');
@@ -641,22 +696,21 @@ function initTmlnSldrEL() {
         }
         else {
             // check if the volume slider is dragging
-            if (flags['isVolSldrDrag']) {
-                // update the video volume and settings cache
-                videoPlr.volume = data['stgs']['volume'] = Math.max(0, Math.min(getPtrEventPct(ptr, boxes['volSldrBox']), 1));
-                videoPlr.muted = data['stgs']['volumeMuted'] = videoPlr.volume === 0;
+            if (flags['isVideoVolSldrDrag']) {
+                // set the volume
+                pseudoSetVideoVol(getPtrEventPct(ptr, boxes['videoVolSldrBox']));
 
                 // set the vol slider
-                setVolSldr();
+                setVideoVolBtnSldr();
             }
             else {
                 // check if the playback rate slider is dragging
                 if (flags['isPlbkRateSldrDrag']) {
-                    // update the video playback rate
-                    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(-2, Math.min(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / 6) - 2), 4))];
+                    // set the playback rate
+                    setPlbkRate(Math.round(getPtrEventLoc(ptr, boxes['plbkRateSldrBox']) / (boxes['plbkRateSldrBox'].width / 6) - 2));
 
                     // set the playback rate slider
-                    setPlbkRateSldr();
+                    setPlbkRateBtnSldr();
                 }
                 else {
                     // check if the timeline slider is dragging
@@ -722,18 +776,20 @@ function initTmlnSldrEL() {
                                 }
                             }
                             else {
-                                if (flags['isSpkVolSldrDrag']) {
-                                    data['stgs']['speakerVolume'] = Math.max(SPEAKER_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['spkVolSldrBox']), SPEAKER_VOLUME_MAX));
+                                if (flags['isSpkVolStgSldrDrag']) {
+                                    // set the speaker volume
+                                    pseudoSetVol(getPtrEventPct(ptr, boxes['spkVolStgSldrBox']), true);  // boolean1 isSpk
 
                                     // set the speaker volume slider
-                                    setSpkVolSldr();
+                                    setVolStgSldr(true);  // boolean1 isSpk
                                 }
                                 else {
-                                    if (flags['isMicVolSldrDrag']) {
-                                        data['stgs']['microphoneVolume'] = Math.max(MICROPHONE_VOLUME_MIN, Math.min(getPtrEventPct(ptr, boxes['micVolSldrBox']), MICROPHONE_VOLUME_MAX));
+                                    if (flags['isMicVolStgSldrDrag']) {
+                                        // set the microphone volume
+                                        pseudoSetVol(getPtrEventPct(ptr, boxes['micVolStgSldrBox']), false);  // boolean1 isSpk
 
                                         // set the microphone volume slider
-                                        setMicVolSldr();
+                                        setVolStgSldr(false);  // boolean1 isSpk
                                     } 
                                 }
                             }
@@ -762,7 +818,7 @@ function initTmlnSldrEL() {
                     // restart the timeout for hiding the playback container
                     states['plbkCtrTmo'] = setTimeout(() => {
                         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-                        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+                        if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                             plbkCtr.classList.remove('active');
                     }, PLAYBACK_CONTAINER_TIMEOUT);
                 }
@@ -816,8 +872,10 @@ function initTmlnSldrEL() {
         }
         else {
             // if the volume or playback rate sliders are dragging
-            if (flags['isVolSldrDrag'] || flags['isPlbkRateSldrDrag']) {
-                flags['isVolSldrDrag'] = flags['isPlbkRateSldrDrag'] = false;
+            if (flags['isVideoVolSldrDrag']) {
+                flags['isVideoVolSldrDrag'] = false;
+
+                setVideoVol();
 
                 // hide the playback container if neither the video player or playback container are hovered
                 if (!flags['isVideoPlrHover'] && !flags['isPlbkCtrHover'])
@@ -831,40 +889,74 @@ function initTmlnSldrEL() {
                         // restart the timeout for hiding the playback container
                         states['plbkCtrTmo'] = setTimeout(() => {
                             // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
-                            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+                            if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
                                 plbkCtr.classList.remove('active');
                         }, PLAYBACK_CONTAINER_TIMEOUT);
                     }
                 }
 
-                if (!flags['isVolBarBtnHover'] && !flags['isVolSldrCtrHover'] && !flags['isPlbkCtrHover'])
-                    volSldr.classList.remove('active');
+
+                if (!flags['isVideoVolBarBtnHover'] && !flags['isVideoVolSldrCtrHover'] && !flags['isPlbkCtrHover'])
+                    videoVolSldr.classList.remove('active');
 
                 if (!flags['isPlbkRateBarBtnHover'] && !flags['isPlbkRateSldrCtrHover'] && !flags['isPlbkCtrHover'])
                     plbkRateSldr.classList.remove('active');
             }
             else {
-                // set the clip left thumb dragging flag to false
-                if (flags['isClipLeftThumbDrag'])
-                    flags['isClipLeftThumbDrag'] = false; 
-                else {
-                    // set the clip right thumb dragging flag to false
-                    if (flags['isClipRightThumbDrag'])
-                        flags['isClipRightThumbDrag'] = false; 
+                if (flags['isPlbkRateSldrDrag']) {
+                    flags['isPlbkRateSldrDrag'] = false;
+
+                    // hide the playback container if neither the video player or playback container are hovered
+                    if (!flags['isVideoPlrHover'] && !flags['isPlbkCtrHover'])
+                        plbkCtr.classList.remove('active');
                     else {
-                        // if the speaker volume slider is dragging, set the speaker volume setting
-                        if (flags['isSpkVolSldrDrag']) {
-                            flags['isSpkVolSldrDrag'] = false;
-
-                            await atmpAsyncFunc(() => window['stgsAPI'].setStg('speakerVolume', data['stgs']['speakerVolume']));
+                        // if only the video player is hovered, reset the timeout
+                        if (flags['isVideoPlrHover']) {
+                            // remove the old timeout
+                            clearTimeout(states['plbkCtrTmo']);
+    
+                            // restart the timeout for hiding the playback container
+                            states['plbkCtrTmo'] = setTimeout(() => {
+                                // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
+                                if (!videoPlr.paused && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag'])
+                                    plbkCtr.classList.remove('active');
+                            }, PLAYBACK_CONTAINER_TIMEOUT);
                         }
+                    }
+    
+                    if (!flags['isVideoVolBarBtnHover'] && !flags['isVideoVolSldrCtrHover'] && !flags['isPlbkCtrHover'])
+                        videoVolSldr.classList.remove('active');
+    
+                    if (!flags['isPlbkRateBarBtnHover'] && !flags['isPlbkRateSldrCtrHover'] && !flags['isPlbkCtrHover'])
+                        plbkRateSldr.classList.remove('active');
+                }
+                else {
+                    // set the clip left thumb dragging flag to false
+                    if (flags['isClipLeftThumbDrag'])
+                        flags['isClipLeftThumbDrag'] = false; 
+                    else {
+                        // set the clip right thumb dragging flag to false
+                        if (flags['isClipRightThumbDrag'])
+                            flags['isClipRightThumbDrag'] = false; 
                         else {
-                            // if the microphone volume slider is dragging, set the microphone volume setting
-                            if (flags['isMicVolSldrDrag']) {
-                                flags['isMicVolSldrDrag'] = false;
+                            // if the speaker volume slider is dragging, set the speaker volume setting
+                            if (flags['isSpkVolStgSldrDrag']) {
+                                flags['isSpkVolStgSldrDrag'] = false;
 
-                                await atmpAsyncFunc(() => window['stgsAPI'].setStg('microphoneVolume', data['stgs']['microphoneVolume']))
-                            } 
+                                setVol(true);  // boolean1 isSpk
+
+                                await atmpAsyncFunc(() => window['stgsAPI'].setStg('speakerVolume', data['stgs']['speakerVolume']));
+                            }
+                            else {
+                                // if the microphone volume slider is dragging, set the microphone volume setting
+                                if (flags['isMicVolStgSldrDrag']) {
+                                    flags['isMicVolStgSldrDrag'] = false;
+
+                                    setVol(false);  // boolean1 isSpk
+
+                                    await atmpAsyncFunc(() => window['stgsAPI'].setStg('microphoneVolume', data['stgs']['microphoneVolume']))
+                                } 
+                            }
                         }
                     }
                 }
@@ -1159,28 +1251,28 @@ function setSeekSldr() {
 /**
  * Sets the seek slider track
  * 
- * @param {number} thumbLocation - The location of the seek thumb
+ * @param {number} thumbLoc - The location of the seek thumb
  */
-function setSeekTrack(thumbLocation) {
-    seekTrack.style.background = `linear-gradient(to right, var(--strack-lgradientcolor) ${thumbLocation}%, var(--strack-bgcolor) ${thumbLocation}%`;
+function setSeekTrack(thumbLoc) {
+    seekTrack.style.background = `linear-gradient(to right, var(--strack-lgradientcolor) ${thumbLoc}%, var(--strack-bgcolor) ${thumbLoc}%`;
 }
 
 /**
  * Sets the seek slider overlay
  * 
- * @param {number} thumbLocation - The location of the seek thumb
+ * @param {number} thumbLoc - The location of the seek thumb
  */
-function setSeekOvrl(thumbLocation) {
-    seekOvrl.style.background = `linear-gradient(to right, var(--soverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+function setSeekOvrl(thumbLoc) {
+    seekOvrl.style.background = `linear-gradient(to right, var(--soverlay-lgradientcolor) ${thumbLoc}%, transparent ${thumbLoc}%`;
 }
 
 /**
  * Sets the seek slider thumb
  * 
- * @param {number} thumbLocation - The location of the seek thumb
+ * @param {number} thumbLoc - The location of the seek thumb
  */
-function setSeekThumb(thumbLocation) {
-    seekThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setSeekThumb(thumbLoc) {
+    seekThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
@@ -1192,65 +1284,103 @@ function updateSeekSldr() {
 }
 
 /**
- * Sets the volume slider thumb and overlay
+ * Sets the volume of the video in the settings cache ONLY
+ * 
+ * @param {number} value - The new volume of the video
  */
-function setVolSldr() { 
+function pseudoSetVideoVol(value) {
+    videoPlr.volume = data['stgs']['videoVolume'] = Math.max(VIDEO_VOLUME_MIN, Math.min(value, VIDEO_VOLUME_MAX));
+    videoPlr.muted = data['stgs']['videoVolumeMuted'] = videoPlr.volume === VIDEO_VOLUME_MIN;
+}
+
+/**
+ * Sets the volume of the video in the main process settings
+ */
+async function setVideoVol() {
+    await Promise.all([atmpAsyncFunc(() => window['stgsAPI'].setStg('videoVolume', data['stgs']['videoVolume'])), atmpAsyncFunc(() => window.stgsAPI.setStg('videoVolumeMuted', data['stgs']['videoVolumeMuted']))]);
+}
+
+/**
+ * Toggles the volume muted state and saves the state in the settings cache ONLY
+ */
+function pseudoTogVideoVolMute() {
+    // set the vol to 0.1 in case the video gets unmuted
+    if (videoPlr.volume === VIDEO_VOLUME_MIN)
+        videoPlr.volume = data['stgs']['videoVolume'] = VIDEO_VOLUME_MUTED;
+
+    // toggle the muted state
+    videoPlr.muted = data['stgs']['videoVolumeMuted'] = !videoPlr.muted;
+}
+
+/**
+ * Sets the volume button and slider thumb and overlay
+ */
+function setVideoVolBtnSldr() { 
     // if the video is muted, move the slider to the left and set the muted icon
     if (videoPlr.muted) {
-        setIcon(volBarIcon, 'volume-off-solid');
+        setIcon(videoVolBarIcon, 'volume-off-solid');
 
-        setVolThumb(0);
-        setVolOvrl(0);
+        setVideoVolThumb(0);
+        setVideoVolOvrl(0);
     }
     else {
         // else, set the correct volume icon
         if (videoPlr.volume > 0.6)
-            setIcon(volBarIcon, 'volume-up-solid');
+            setIcon(videoVolBarIcon, 'volume-up-solid');
         else {
             if (videoPlr.volume > 0.1)
-                setIcon(volBarIcon, 'volume-down-solid');
+                setIcon(videoVolBarIcon, 'volume-down-solid');
             else
-                setIcon(volBarIcon, 'volume-mute-solid');
+                setIcon(videoVolBarIcon, 'volume-mute-solid');
         }
 
         // set the volume thumb and overlay (trailing bar)
-        setVolThumb(videoPlr.volume * volSldrWidth);
-        setVolOvrl(videoPlr.volume * 100);
+        setVideoVolThumb(videoPlr.volume * videoVolSldrWidth);
+        setVideoVolOvrl(videoPlr.volume * 100);
     }
 }
 
 /**
  * Sets the volume slider overlay
  * 
- * @param {number} thumbLocation - The location of the vol thumb
+ * @param {number} thumbLoc - The location of the vol thumb
  */
-function setVolOvrl(thumbLocation) {
-    volOvrl.style.background = `linear-gradient(to right, var(--vooverlay-lgradientcolor) ${thumbLocation}%, transparent ${thumbLocation}%`;
+function setVideoVolOvrl(thumbLoc) {
+    videoVolOvrl.style.background = `linear-gradient(to right, var(--vvooverlay-lgradientcolor) ${thumbLoc}%, transparent ${thumbLoc}%`;
 }
 
 /**
  * Sets the volume slider thumb
  * 
- * @param {number} thumbLocation - The location of the vol thumb
+ * @param {number} thumbLoc - The location of the vol thumb
  */
-function setVolThumb(thumbLocation) {
-    volThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setVideoVolThumb(thumbLoc) {
+    videoVolThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
  * Updates the volume slider
  */
-function updateVolSldr() {
+function updateVideoVolSldr() {
     // get the new volume slider bounding box
-    boxes['volSldrBox'] = getModBox(volSldr.getBoundingClientRect());
-    boxes['volSldrBox']['right'] += volSldrWidth;
-    boxes['volSldrBox']['width'] = volSldrWidth;
+    boxes['videoVolSldrBox'] = getModBox(videoVolSldr.getBoundingClientRect());
+    boxes['videoVolSldrBox']['right'] += videoVolSldrWidth;
+    boxes['videoVolSldrBox']['width'] = videoVolSldrWidth;
+}
+
+/**
+ * Sets the playback rate of the video
+ * 
+ * @param {number} value - The playback rate of the video
+ */
+function setPlbkRate(value) {
+    videoPlr.playbackRate = PLAYBACK_RATE_MAPPING[Math.max(PLAYBACK_RATE_MIN, Math.min(value, PLAYBACK_RATE_MAX))];
 }
 
 /**
  * Sets the playback rate slider text and thumb
  */
-function setPlbkRateSldr() {
+function setPlbkRateBtnSldr() {
     plbkRateValueLabel.textContent = videoPlr.playbackRate;
     setPlbkRateThumb(plbkRateSldrWidth / 6 * (PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + 2));
 }
@@ -1258,10 +1388,10 @@ function setPlbkRateSldr() {
 /**
  * Sets the playback rate slider thumb
  * 
- * @param {number} thumbLocation - The location of the playback rate thumb
+ * @param {number} thumbLoc - The location of the playback rate thumb
  */
-function setPlbkRateThumb(thumbLocation) {
-    plbkRateThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setPlbkRateThumb(thumbLoc) {
+    plbkRateThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
@@ -1350,10 +1480,10 @@ function setTmlnOvrl() {
 /**
  * Sets the timeline slider thumb
  * 
- * @param {number} thumbLocation - The location of the tmln thumb
+ * @param {number} thumbLoc - The location of the tmln thumb
  */
-function setTmlnThumb(thumbLocation) {
-    tmlnThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setTmlnThumb(thumbLoc) {
+    tmlnThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
@@ -1367,19 +1497,19 @@ function updateTmlnSldr() {
 /**
  * Sets the left clip thumb
  * 
- * @param {number} thumbLocation - The location of the left clip thumb
+ * @param {number} thumbLoc - The location of the left clip thumb
  */
-function setClipLeftThumb(thumbLocation) {
-    clipLeftThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setClipLeftThumb(thumbLoc) {
+    clipLeftThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**
  * Sets the right clip thumb
  * 
- * @param {number} thumbLocation - The location of the right clip thumb
+ * @param {number} thumbLoc - The location of the right clip thumb
  */
-function setClipRightThumb(thumbLocation) {
-    clipRightThumb.style.transform = `translateX(${thumbLocation}px)`;
+function setClipRightThumb(thumbLoc) {
+    clipRightThumb.style.transform = `translateX(${thumbLoc}px)`;
 }
 
 /**

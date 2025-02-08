@@ -118,7 +118,7 @@
     cursor: pointer;
 }
 
-#bar-btn-volume {
+#bar-btn-video-volume {
     margin-right: 0;
 }
 
@@ -146,8 +146,8 @@
     fill: var(--mbaricon-alt-fill);
 }
 
-#bar-btn-volume:has(+ #slider-ctr-volume:hover) > #bar-icon-volume {
-    fill: var(--vobaricon-fill);
+#bar-btn-video-volume:has(+ #slider-ctr-video-volume:hover) > #bar-icon-video-volume {
+    fill: var(--vvobaricon-fill);
 }
 
 .playback-rate-label {
@@ -180,9 +180,9 @@
     cursor: pointer;
 }
 
-#slider-ctr-volume {
-    padding-right: var(--vosliderctr-hpadding);
-    padding-left: var(--vosliderctr-hpadding);
+#slider-ctr-video-volume {
+    padding-right: var(--vvosliderctr-hpadding);
+    padding-left: var(--vvosliderctr-hpadding);
 }
 
 #slider-ctr-playback-rate {
@@ -200,8 +200,8 @@
     transition: var(--mslider-transition);
 }
 
-#slider-volume.active {
-    width: var(--voslider-width);
+#slider-video-volume.active {
+    width: var(--vvoslider-width);
 }
 
 #slider-playback-rate.active {
@@ -222,8 +222,8 @@
     background-color: var(--mtrack-alt-bgcolor);
 }
 
-#bar-btn-volume:hover + #slider-ctr-volume > #slider-volume > #track-volume {
-    background-color: var(--votrack-bgcolor);
+#bar-btn-video-volume:hover + #slider-ctr-video-volume > #slider-video-volume > #track-video-volume {
+    background-color: var(--vvotrack-bgcolor);
 }
 
 #slider-ctr-playback-rate:has(+ #bar-btn-playback-rate:hover) > #slider-playback-rate > #track-playback-rate {
@@ -244,9 +244,9 @@
     visibility: inherit;  /* Could be visible, but might show if you quickly show the slider then switch sections */
 }
 
-#overlay-volume {
+#overlay-video-volume {
     height: 100%;
-    width: var(--vooverlay-width);
+    width: var(--vvooverlay-width);
 }
 
 #overlay-playback-rate {
