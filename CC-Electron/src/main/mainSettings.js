@@ -24,6 +24,7 @@ import psList from 'ps-list';
 import { promisify } from 'util'
 import { 
     ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
     CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
@@ -32,7 +33,7 @@ import {
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     data, flags, insts, progs, states, uuids 
 } from './mainVariables.js';
-import { initMainGen, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
+import { initMainGen, createClip, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
 import { initMainWebSocket, webSocketReq, webSocketBatchReq } from './mainWebSocket.js';
 
 /**
@@ -80,8 +81,7 @@ async function initStgs() {
     }
 
     // create the CapCha profile if it does not exist
-    if (!(await atmpAsyncFunc(() => webSocketReq('GetProfileList')))['responseData']['profiles'].includes('CapCha'))
-    {
+    if (!(await atmpAsyncFunc(() => webSocketReq('GetProfileList')))['responseData']['profiles'].includes('CapCha')) {
         // set OBS to the CapCha profile
         await atmpAsyncFunc(() => webSocketReq('CreateProfile', { 'profileName': 'CapCha' }));
     }
@@ -161,14 +161,12 @@ async function initStgs() {
     await atmpAsyncFunc(async () => webSocketReq('SetCurrentProgramScene', { sceneName: 'CapCha', sceneUuid: uuids['scene'] }));
     
     // mute the desktop audio (they appear by default and will be redundant)
-    if (data['inps'].some(input => input['inputName'] === 'Desktop Audio'))
-    {
+    if (data['inps'].some(input => input['inputName'] === 'Desktop Audio')) {
         await atmpAsyncFunc(async () => webSocketReq('SetInputMute', { inputName: 'Desktop Audio', inputUuid: data['inps'][data['inps'].findIndex(input => input['inputName'] === 'Desktop Audio')]['inputUuid'], inputMuted: true }));
     }
 
     // mute the mic/aux (they appear by default and will be redundant)
-    if (data['inps'].some(input => input['inputName'] === 'Mic/Aux'))
-    {
+    if (data['inps'].some(input => input['inputName'] === 'Mic/Aux')) {
         await atmpAsyncFunc(async () => webSocketReq('SetInputMute', { inputName: 'Mic/Aux', inputUuid: data['inps'][data['inps'].findIndex(input => input['inputName'] === 'Mic/Aux')]['inputUuid'], inputMuted: true }));
     }
 
@@ -249,24 +247,25 @@ function initStgsL() {
         const frmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
         const dir = data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
         const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
-        let files, videos, videosData;
 
         // ensures the thumbnail directory exists
-        if (await atmpAsyncFunc(() => fs.access(tbnlDir)))
+        if (await atmpAsyncFunc(() => fs.access(tbnlDir))) {
             await atmpAsyncFunc(() => fs.mkdir(tbnlDir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        }
         
         // ensures the video directory exists
-        if (await atmpAsyncFunc(() => fs.access(dir)))
+        if (await atmpAsyncFunc(() => fs.access(dir))) {
             await atmpAsyncFunc(() => fs.mkdir(dir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        }
     
         // read the video directory for files
-        files = await atmpAsyncFunc(() => fs.readdir(dir));
+        const files = await atmpAsyncFunc(() => fs.readdir(dir));
 
         // filter the files by video extension
-        videos = files.filter(file => SETTINGS_DATA_SCHEMA[frmtStr]['enum'].includes(path.extname(file).toLowerCase().replace('.', '')));
+        const videos = files.filter(file => SETTINGS_DATA_SCHEMA[frmtStr]['enum'].includes(path.extname(file).toLowerCase().replace('.', '')));
 
         // get the data and thumbnail for each video
-        videosData = await Promise.all(videos.map(video => getVideoData(video, dir, isCaps)));
+        const videosData = await Promise.all(videos.map(video => getVideoData(video, dir, isCaps)));
     
         // return all the data on the videos
         return videosData.filter(videoData => videoData !== null);
@@ -285,6 +284,7 @@ function initStgsL() {
     ipcMain.handle('stgs:setStg', async (_, key, value) => {
         // variables for the dialog
         let canceled, filePaths;
+
         // log basic information about the setting
         logProc('Settings', 'SET', 'Setting a setting', false);  // boolean1 isFinalMsg
         logProc('Settings', 'SET', `Key: ${key}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
@@ -316,9 +316,10 @@ function initStgsL() {
                 }
 
                 // should realistically never fail, but checks if the new directory exists
-                if (await atmpAsyncFunc(() => fs.access(value)))
+                if (await atmpAsyncFunc(() => fs.access(value))) {
                     // reverts to the default setting if needed
                     value = SETTINGS_DATA_DEFS[key];
+                }
 
                 // sets the new captures directory
                 await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': value }));
@@ -397,18 +398,21 @@ function initStgsL() {
                 }
 
                 // should realistically never fail, but checks if the new directory exists
-                if (await atmpAsyncFunc(() => fs.access(value)))
+                if (await atmpAsyncFunc(() => fs.access(value))) {
                     // reverts to the default setting if needed
                     value = SETTINGS_DATA_DEFS[key];
+                }
 
                 break;
 
             case 'speaker':
                 // set the new speaker, or set to default
-                if (value !== 'default')
+                if (value !== 'default') {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Speaker Input', 'inputUuid': uuids['spkInp'], 'inputSettings': { 'device_id': data['devs']['outs'][value] }, 'overlay': true }));
-                else
+                }
+                else {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Speaker Input', 'inputUuid': uuids['spkInp'], 'inputSettings': { }, 'overlay': false }));
+                }
 
                 break;
 
@@ -420,10 +424,12 @@ function initStgsL() {
 
             case 'microphone':
                 // set the new microphone, or set to default
-                if (data['stgs'].get('microphone') !== 'default')
+                if (data['stgs'].get('microphone') !== 'default') {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Microphone Input', 'inputUuid': uuids['micInp'], 'inputSettings': { 'device_id': data['devs']['inps'][value] }, 'overlay': true }));
-                else
+                }
+                else {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Microphone Input', 'inputUuid': uuids['micInp'], 'inputSettings': { }, 'overlay': false }));
+                }
 
                 break;
 
@@ -504,12 +510,14 @@ async function getDirSize(dir) {
         const stats = await atmpAsyncFunc(() => fs.stat(filePath));
         
         // if the 'file' is a directory, do a recursive call into it
-        if (stats.isDirectory())
+        if (stats.isDirectory()) {
             size += await getDirSize(filePath);
+        }
         else {
             // if it's a file, add its size
-            if (stats.isFile())
+            if (stats.isFile()) {
                 size += stats.size;
+            }
         }
     }
 
@@ -528,28 +536,34 @@ function validateStg(key, value) {
     switch(SETTINGS_DATA_SCHEMA[key]['type']) {
         case 'boolean':
             // if the type is not boolean, revert to the default value
-            if (typeof(value) !== 'boolean')
+            if (typeof(value) !== 'boolean') {
                 value = SETTINGS_DATA_DEFS[key];
+            }
 
             break;
 
         case 'number':
             // if the value is not a number, revert to the default value
-            if (isNaN(value))
+            if (isNaN(value)) {
                 value = SETTINGS_DATA_DEFS[key];
+            }
             else {
                 // if the key has an enumeration, ensure the value is in it, or revert to the default value
-                if (SETTINGS_DATA_SCHEMA[key]['enum'])
+                if (SETTINGS_DATA_SCHEMA[key]['enum']) {
                     value = !SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value)) ? SETTINGS_DATA_DEFS[key] : Number(value);
+                }
                 else {
                     // set it to the closest bound, or keep the value
-                    if (value > SETTINGS_DATA_SCHEMA[key]['maximum'])
+                    if (value > SETTINGS_DATA_SCHEMA[key]['maximum']) {
                         value = SETTINGS_DATA_SCHEMA[key]['maximum'];
+                    }
                     else {
-                        if (value < SETTINGS_DATA_SCHEMA[key]['minimum'])
+                        if (value < SETTINGS_DATA_SCHEMA[key]['minimum']) {
                             value = SETTINGS_DATA_SCHEMA[key]['minimum'];
-                        else
+                        }
+                        else {
                             value = Number(value);
+                        }
                     }
                 }
             }
@@ -558,8 +572,9 @@ function validateStg(key, value) {
 
         case 'string':
             // if the type is not string or the value is not un the enumeration, revert to the default value
-            if (typeof(value) !== 'string' || (SETTINGS_DATA_SCHEMA[key]['enum'] && !SETTINGS_DATA_SCHEMA[key]['enum'].includes(value)))
+            if (typeof(value) !== 'string' || (SETTINGS_DATA_SCHEMA[key]['enum'] && !SETTINGS_DATA_SCHEMA[key]['enum'].includes(value))) {
                 value = SETTINGS_DATA_DEFS[key];
+            }
         
             break;
     }    
@@ -579,10 +594,12 @@ async function getDevs() {
     const inps = {}, outs = {};
 
     JSON.parse(stdout).forEach(dev => {
-        if (/microphone|line in/i.test(dev.Name))
+        if (/microphone|line in/i.test(dev.Name)) {
             inps[dev.Name] = dev.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
-        else
+        }
+        else {
             outs[dev.Name] = dev.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
+        }
     });
 
     return { 'inps': inps, 'outs': outs };

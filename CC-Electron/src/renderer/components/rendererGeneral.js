@@ -9,13 +9,14 @@
  * @requires rendererSettingsSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
-    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
-    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
+    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
+    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -26,7 +27,7 @@ import {
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -44,7 +45,7 @@ import {
 } from './rendererVariables.js';
 import { initRendNavBlock, togRecBarBtn } from './rendererNavigationBlock.js';
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
-import { initRendEditSect, setVideoPlayerState, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs } from './rendererEditorSection.js';
+import { initRendEditSect, setVideoPlayerState, setVideoTime, setPlbkCtrTmo, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs } from './rendererEditorSection.js';
 import { initRendStgsSect, pseudoSetVol, setVol, setVolStgSldr, setVolStgOvrl, setVolStgThumb, updateVolStgSldr } from './rendererSettingsSection.js';
 
 /**
@@ -103,8 +104,9 @@ function setInitStatLabel(msg) {
  */
 function setContStatLabel(msg) {
     // clear any existing timeout
-    if (states['contStatLabelTmo'])
+    if (states['contStatLabelTmo']) {
         clearTimeout(states['contStatLabelTmo']);
+    }
 
     // set the label text and show the label
     contStatLabel.textContent = msg;
@@ -228,19 +230,24 @@ function getRdblAge(time) {
     const parsedTime = getParsedTime(time);
 
     // return the age based on the largest non-zero time segment (days, hours, minutes)
-    if (parsedTime[0] > 999)
+    if (parsedTime[0] > 999) {
         return '999d+ ago';
+    }
     else {
-        if (parsedTime[0] > 0)
+        if (parsedTime[0] > 0) {
             return `${parsedTime[0]}d ago`;
+        }
         else {
-            if (parsedTime[1] > 0)
+            if (parsedTime[1] > 0) {
                 return `${parsedTime[1]}h ago`;
+            }
             else {
-                if (parsedTime[2] > 0)
+                if (parsedTime[2] > 0) {
                     return `${parsedTime[2]}m ago`;
-                else
+                }
+                else {
                     return `Just Now`;
+                }
             }
         }
     }
@@ -258,34 +265,42 @@ function getRdblDur(time) {
     let rdblDur = '';
 
     // if the number of days exceeds 99, return a string indicating max time
-    if (parsedTime[0] > 99)
+    if (parsedTime[0] > 99) {
         rdblDur += '99:23:59:59+';
+    }
     else {
         // append the days if it exceeds 0
-        if (parsedTime[0] > 0)
+        if (parsedTime[0] > 0) {
             rdblDur += `${parsedTime[0]}:`;
+        }
 
         // append the hours if it exceeds 0, and pad with a 0 if it is less than 10 or if there are non-zero days
         if (parsedTime[1] > 0) {
-            if (parsedTime[0] > 0)
+            if (parsedTime[0] > 0) {
                 rdblDur += `${TIME_PAD(parsedTime[1])}:`;
-            else
+            }
+            else {
                 rdblDur += `${parsedTime[1]}:`;
+            }
         }
         else {
-            if (parsedTime[0] > 0)
+            if (parsedTime[0] > 0) {
                 rdblDur += `${TIME_PAD(parsedTime[1])}:`;
+            }
         }
 
         // append the minutes, and pad with a 0 if it is less than 10 or if there are non-zero hours or days
         if (parsedTime[2] < 10) {
-            if (parsedTime[0] > 0 || parsedTime[1] > 0)
+            if (parsedTime[0] > 0 || parsedTime[1] > 0) {
                 rdblDur += `${TIME_PAD(parsedTime[2])}:`;
-            else
+            }
+            else {
                 rdblDur += `${parsedTime[2]}:`;
+            }
         }
-        else
+        else {
             rdblDur += `${parsedTime[2]}:`;
+        }
 
         // append the seconds, and pad with a 0 if it is less than 10
         rdblDur += TIME_PAD(parsedTime[3]);
@@ -306,22 +321,27 @@ function getRdblRecDur(time) {
     let rdblRecDur = '';
 
     // if the time exceeds 9 hours, return a string indicating max time
-    if (parsedTime[0] > 0 || parsedTime[1] > 9)
+    if (parsedTime[0] > 0 || parsedTime[1] > 9) {
         rdblRecDur += '9:59:59+';
+    }
     else {
         // append the hours if it exceeds 0
-        if (parsedTime[1] > 0)
+        if (parsedTime[1] > 0) {
             rdblRecDur += `${parsedTime[1]}:`;
+        }
 
         // append the minutes, and pad with a 0 if it is less than 10 or if there are non-zero hours or days
         if (parsedTime[2] < 10) {
-            if (parsedTime[0] > 0 || parsedTime[1] > 0)
+            if (parsedTime[0] > 0 || parsedTime[1] > 0) {
                 rdblRecDur += `${TIME_PAD(parsedTime[2])}:`;
-            else
+            }
+            else {
                 rdblRecDur += `${parsedTime[2]}:`;
+            }
         }
-        else
+        else {
             rdblRecDur += `${parsedTime[2]}:`;
+        }
 
         // append the seconds, and pad with a 0 if it is less than 10
         rdblRecDur += TIME_PAD(parsedTime[3]);
@@ -359,7 +379,7 @@ function getPtrEventPct(ptr, box) {
  * @param {number} places - The number of decimal digits to truncate to
  * @returns 
  */
-function getTruncDec(value, places) {
+function getTruncDec(value, places = DECIMAL_TRUNC) {
     return Math.trunc(value * Math.pow(10, places)) / Math.pow(10, places);
 }
 
@@ -387,9 +407,10 @@ async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DE
 
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
-            else
+            else {
                 // set the right text label depending on if this is an initialization or runtime error
                 isInit ? setInitStatLabel(`Program Failure: ${error.message}`) : setContStatLabel(`Program Failure: ${error.message}`);
+            }
         }
     }
 }

@@ -522,6 +522,10 @@
     cursor: pointer;
 }
 
+.clip-setting-field[name="clipsWidth"], .clip-setting-field[name="clipsHeight"] {
+    cursor: text;
+}
+
 .clip-setting-ctr:hover > .clip-setting-pill > .clip-setting-field {
     color: var(--cpstfield-alt-color);
 }

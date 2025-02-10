@@ -6,13 +6,14 @@
  * @requires rendererGeneral
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
-    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
-    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
+    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
+    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -23,7 +24,7 @@ import {
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -84,16 +85,16 @@ async function initContCtr3EL(isCaps) {
     gameFltDirStgFld.addEventListener('change', async () => {
         gameFltDirStgFld.value = data['stgs'][gameFltDirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(gameFltDirStgFld.name, gameFltDirStgFld.value));
     
-        removeAllVideoPrvw(isCaps);
-        insertVideoPrvw(isCaps);
+        removeAllVideoPrvws(isCaps);
+        insertVideoPrvws(isCaps);
     });
 
     // on change, set the meta filter setting, then remove and re-insert the video previews in the new order
     metaFltDirStgFld.addEventListener('change', async () => {
         metaFltDirStgFld.value = data['stgs'][metaFltDirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltDirStgFld.name, metaFltDirStgFld.value));
     
-        removeAllVideoPrvw(isCaps);
-        insertVideoPrvw(isCaps);
+        removeAllVideoPrvws(isCaps);
+        insertVideoPrvws(isCaps);
     });
 
     // on click, change the sort order
@@ -105,15 +106,15 @@ async function initContCtr3EL(isCaps) {
             setIcon(barIcon, 'arrow-upward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true));
 
-            removeAllVideoPrvw(isCaps);
-            insertVideoPrvw(isCaps);
+            removeAllVideoPrvws(isCaps);
+            insertVideoPrvws(isCaps);
         }
         else {
             setIcon(barIcon, 'arrow-downward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false));
 
-            removeAllVideoPrvw(isCaps);
-            insertVideoPrvw(isCaps);
+            removeAllVideoPrvws(isCaps);
+            insertVideoPrvws(isCaps);
         }
     });
 }
@@ -192,7 +193,7 @@ async function loadGall(isCaps, isInit) {
     statLabel.textContent = 'Loading...';
     statLabel.classList.add('active');
 
-    removeAllVideoPrvw(isCaps);
+    removeAllVideoPrvws(isCaps);
 
     // get the size of the directory
     usageLabel3.textContent = `${Math.ceil(await atmpAsyncFunc(() => window['stgsAPI'].getDirSize(isCaps)) / BYTES_IN_GIGABYTE)} GB`;
@@ -201,7 +202,7 @@ async function loadGall(isCaps, isInit) {
     data[dataStr] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
 
     // insert the video previews into the gallery
-    insertVideoPrvw(isCaps);
+    insertVideoPrvws(isCaps);
 }
 
 /**
@@ -229,12 +230,11 @@ function updateGall(isCaps) {
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function removeAllVideoPrvw(isCaps) {
+function removeAllVideoPrvws(isCaps) {
     const gall = isCaps ? capsGall : clipsGall;
 
     // remove every existing video preview from the gallery
-    while (gall.children.length > 1)
-    {
+    while (gall.children.length > 1) {
         gall.removeChild(gall.lastElementChild);
     }
 }
@@ -244,7 +244,7 @@ function removeAllVideoPrvw(isCaps) {
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function insertVideoPrvw(isCaps) {
+function insertVideoPrvws(isCaps) {
     // get the captures or clips variables
     const gall = isCaps ? capsGall : clipsGall;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
@@ -278,8 +278,9 @@ function insertVideoPrvw(isCaps) {
     }
 
     // indicate that no videos are found, or hide the label
-    if (data[dataStr]['length'] === 0)
+    if (data[dataStr]['length'] === 0) {
         statLabel.textContent = 'No Videos Found';
+    }
     else {
         statLabel.classList.remove('active');
 
@@ -287,7 +288,7 @@ function insertVideoPrvw(isCaps) {
             // insert video preview depending on the game filter
             if (data['stgs'][gameFltStr] === 'all' || videoData['game'].toLowerCase() === data['stgs'][gameFltStr].toLowerCase()) {
                 // get a clone of the video preview template
-                const videoPrvwClone = videoPrvwTemplate.content.cloneNode(true);
+                const videoPrvwClone = videoPrvwTmpl.content.cloneNode(true);
                 const videoPrvwCtr = videoPrvwClone.querySelector('.video-preview-ctr');
                 const videoRenameBtn = videoPrvwClone.querySelector('.video-preview-rename-btn');
                 const videoRenameIcon = videoPrvwClone.querySelector('.video-preview-rename-icon > use');

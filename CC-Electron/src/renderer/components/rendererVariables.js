@@ -7,13 +7,14 @@
 import { TimelineState } from './timelineState.js';
 
 /**
- * @exports CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
- *  MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+ * @exports CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+ *  MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
  *  NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
- *  PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
- *  VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
- *  PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
- *  TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
+ *  PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
+ *  VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
+ *  PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+ *  TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
+ *  TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
  *  MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
  *  ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
  *  html, 
@@ -24,7 +25,7 @@ import { TimelineState } from './timelineState.js';
  *  contStatLabel, dirsSect, editSect, stgsSect, 
  *  capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
  *  clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
- *  videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+ *  videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
  *  editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
  *  plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
  *  mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -41,13 +42,14 @@ import { TimelineState } from './timelineState.js';
  *  initRendVars 
  */
 export {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
-    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
-    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
+    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
+    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -58,7 +60,7 @@ export {
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -78,19 +80,20 @@ export {
 // unexported
 const STYLE = getComputedStyle(document.documentElement);
 
-// timeout and padding function
+// timeout, padding function, decimal places for truncation
 const CONTENT_STATUS_LABEL_TIMEOUT = 5000;
 const TIME_PAD = (time) => time.toString().padStart(2, '0');
+const DECIMAL_TRUNC = 6;
 
 // speaker and microphone volume min max
 const SPEAKER_VOLUME_MIN = 0;
 const SPEAKER_VOLUME_MAX = 1;
-const SPEAKER_VOLUME_GROW_VALUE = 0.05;
-const SPEAKER_VOLUME_REDUCE_VALUE = 0.05
+const SPEAKER_VOLUME_GROW = 0.05;
+const SPEAKER_VOLUME_REDUCE = 0.05
 const MICROPHONE_VOLUME_MIN = 0;
 const MICROPHONE_VOLUME_MAX = 1;
-const MICROPHONE_VOLUME_GROW_VALUE = 0.05;
-const MICROPHONE_VOLUME_REDUCE_VALUE = 0.05
+const MICROPHONE_VOLUME_GROW = 0.05;
+const MICROPHONE_VOLUME_REDUCE = 0.05
 
 // navigation bar timeout
 const NAVIGATION_BAR_TIMEOUT = 500;
@@ -100,22 +103,22 @@ const BYTES_IN_GIGABYTE = 1073741824;
 const GALLERY_MIN_GAP = 5;
 
 // grow reduce values and timeout
-const PLAYBACK_CONTAINER_GROW_VALUE = 5;
-const PLAYBACK_CONTAINER_REDUCE_VALUE = 5;
+const PLAYBACK_CONTAINER_GROW = 5;
+const PLAYBACK_CONTAINER_REDUCE = 5;
 const PLAYBACK_CONTAINER_TIMEOUT = 3000;
 
 // video volume min max, grow reduce values, and muted value
 const VIDEO_VOLUME_MIN = 0;
 const VIDEO_VOLUME_MAX = 1;
-const VIDEO_VOLUME_GROW_VALUE = 0.05;
-const VIDEO_VOLUME_REDUCE_VALUE = 0.05
+const VIDEO_VOLUME_GROW = 0.05;
+const VIDEO_VOLUME_REDUCE = 0.05
 const VIDEO_VOLUME_MUTED = 0.1;
 
 // playback rate min max, grow reduce values, default, number of segments, mapping, offset in mapping
 const PLAYBACK_RATE_MIN = -2;
 const PLAYBACK_RATE_MAX = 4;
-const PLAYBACK_RATE_GROW_VALUE = 1;
-const PLAYBACK_RATE_REDUCE_VALUE = 1;
+const PLAYBACK_RATE_GROW = 1;
+const PLAYBACK_RATE_REDUCE = 1;
 const PLAYBACK_RATE_DEF = 1;
 const PLAYBACK_RATE_SEGMENTS = 6;
 const PLAYBACK_RATE_MAPPING = {
@@ -136,6 +139,12 @@ const PLAYBACK_RATE_MAPPING_OFFSET = 2;
 const TIMELINE_ZOOM_MIN = 30;
 const TIMELINE_GROW_FACTOR = 0.15;
 const TIMELINE_REDUCE_FACTOR = 0.1;
+const TIMELINE_OVERLAY_SUB_TICK_LINE_TOP = 15;
+const TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM = 30;
+const TIMELINE_OVERLAY_TICK_LINE_TOP = 10;
+const TIMELINE_OVERLAY_TICK_LINE_BOTTOM = 50;
+const TIMELINE_OVERLAY_TICK_TEXT_TOP = 45;
+const TIMELINE_OVERLAY_TICK_TEXT_OFFSET = 5;
 
 // clip length min
 const CLIP_LENGTH_MIN = 5;
@@ -159,7 +168,7 @@ let html,
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -242,7 +251,7 @@ function initRendVars() {
     clipsBarBtn = document.getElementById('bar-btn-clips');
     clipsBarIcon = document.querySelector('#bar-icon-clips > use');
 
-    videoPrvwTemplate = document.getElementById('template-video-preview');
+    videoPrvwTmpl = document.getElementById('template-video-preview');
     videoPrvwCtrWidth = parseInt(STYLE.getPropertyValue('--vtnimage-height')) * 16 / 9 + 2 * parseInt(STYLE.getPropertyValue('--vpctr-padding'));
 
     capsLeftBtn = document.getElementById('left-btn-captures');

@@ -7,13 +7,14 @@
  * @requires rendererDirectoriesSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW_VALUE, SPEAKER_VOLUME_REDUCE_VALUE, 
-    MICROPHONE_VOLUME_GROW_VALUE, MICROPHONE_VOLUME_REDUCE_VALUE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
-    PLAYBACK_CONTAINER_GROW_VALUE, PLAYBACK_CONTAINER_REDUCE_VALUE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW_VALUE, VIDEO_VOLUME_REDUCE_VALUE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW_VALUE, PLAYBACK_RATE_REDUCE_VALUE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, CLIP_LENGTH_MIN, 
+    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
+    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
+    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
+    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
+    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -24,7 +25,7 @@ import {
     contStatLabel, dirsSect, editSect, stgsSect, 
     capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
     clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTemplate, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -105,6 +106,7 @@ function initStgCtrEL() {
         dirStgFld.addEventListener('click', async () => {
             data['stgs'][dirStgFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(dirStgFld.name, dirStgFld.value));
 
+            // if the value actually changed, set the new value and load the new gallery
             if (dirStgFld.value !== data['stgs'][dirStgFld.name]) {
                 dirStgFld.value = data['stgs'][dirStgFld.name];
 
@@ -139,8 +141,8 @@ function initStgCtrEL() {
     for (const [index, volStgSldrCtr] of [spkVolStgSldrCtr, micVolStgSldrCtr].entries()) {
         // get the speaker or microphone variables
         const isSpk = index === 0;
-        const growValue = isSpk ? SPEAKER_VOLUME_GROW_VALUE : MICROPHONE_VOLUME_GROW_VALUE;
-        const redValue = isSpk ? SPEAKER_VOLUME_REDUCE_VALUE : MICROPHONE_VOLUME_REDUCE_VALUE;
+        const growValue = isSpk ? SPEAKER_VOLUME_GROW : MICROPHONE_VOLUME_GROW;
+        const redValue = isSpk ? SPEAKER_VOLUME_REDUCE : MICROPHONE_VOLUME_REDUCE;
         const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
         const hoverStr = isSpk ? 'isSpkVolStgSldrCtrHover' : 'isMicVolStgSldrCtrHover';
 
@@ -200,8 +202,6 @@ function initStgCtrEL() {
  * Initializes the setting container
  */
 async function initStgCtr() {
-    let stgFldOption;
-
     // get the settings, devices (speakers, microphones, webcams), and displays
     data['stgs'] = await atmpAsyncFunc(() => window['stgsAPI'].getAllStgsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
     data['devs'] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDevsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
@@ -210,8 +210,8 @@ async function initStgCtr() {
     // iterate through each stg tglgle swt
     for (const stgTglSwt of mostStgTglSwtes) {
         // get the stg tglgle fld and icon
-        let stgTglFld = stgTglSwt.querySelector('.general-setting-toggle-field');
-        let stgTglIcon = stgTglSwt.querySelector('.general-setting-toggle-icon > use');
+        const stgTglFld = stgTglSwt.querySelector('.general-setting-toggle-field');
+        const stgTglIcon = stgTglSwt.querySelector('.general-setting-toggle-icon > use');
 
         // load each stgs initial value from stored stgs
         stgTglFld.checked = data['stgs'][stgTglFld.name];
@@ -234,9 +234,10 @@ async function initStgCtr() {
     }
 
     // iterate through each setting field
-    for (const stgFld of [...mostStgFlds, capsDirStgFld, clipsDirStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds])
+    for (const stgFld of [...mostStgFlds, capsDirStgFld, clipsDirStgFld, ...clipsFrmStgFlds, ...clipsWidthStgFlds, ...clipsHeightStgFlds]) {
         // load each initial setting value from the stored settings
         stgFld.value = data['stgs'][stgFld.name];
+    }
 
     // iterate through each limit setting field
     for (const [index, limitStgFld] of [capsLimitStgFld, clipsLimitStgFld].entries()) {
@@ -251,7 +252,7 @@ async function initStgCtr() {
     // iterate through each display
     for (const [key, value] of Object.entries(data['disps'])) {
         // create a new setting field option
-        stgFldOption = document.createElement('option');
+        const stgFldOption = document.createElement('option');
 
         // assign the name of the display to the value, set the text to the name and size
         stgFldOption.value = key;
@@ -274,7 +275,7 @@ async function initStgCtr() {
         // iterate through each device
         for (const [key, _] of Object.entries(data['devs'][devStr])) {
             // create a new setting field option
-            stgFldOption = document.createElement('option');
+            const stgFldOption = document.createElement('option');
 
             // assign the name of the device to the value and text
             stgFldOption.value = key;

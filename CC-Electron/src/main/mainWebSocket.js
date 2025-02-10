@@ -11,6 +11,7 @@ import { ipcMain } from 'electron';
 import { WebSocket } from 'ws';
 import { 
     ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
     CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
@@ -19,7 +20,7 @@ import {
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     data, flags, insts, progs, states, uuids 
 } from './mainVariables.js';
-import { initMainGen, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
+import { initMainGen, createClip, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
 
 /**
  * @exports initMainWebSocket, webSocketReq, webSocketBatchReq

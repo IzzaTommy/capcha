@@ -82,7 +82,7 @@
     width: var(--gstfield-alt-width);
 }
 
-.general-setting-field[name="capturesWidth"], .general-setting-field[name="clipsHeight"], .general-setting-field[name="clipsWidth"], .general-setting-field[name="clipsHeight"] {
+.general-setting-field[name="capturesWidth"], .general-setting-field[name="capturesHeight"], .general-setting-field[name="clipsWidth"], .general-setting-field[name="clipsHeight"] {
     cursor: text;
 }
 

@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld('genAPI', {
     closeWindow: () => ipcRenderer.send('gen:closeWindow'),
 
     // R -> M, creates a clip of the video
-    createClip: (videoDataPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:createClip', videoDataPath, clipStartTime, clipEndTime)
+    reqCreateClip: (videoDataPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoDataPath, clipStartTime, clipEndTime)
 });
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
