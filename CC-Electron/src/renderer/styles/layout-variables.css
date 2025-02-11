@@ -1,6 +1,6 @@
 html {
     /* ==== scbar -> Scroll Bar ==== */
-    --scbar-length: 20px;
+    --scbar-length: 20px;  /* width if vertical, height is horizontal of the whole scroll bar */
 
     --scbar-thumb-bwidth: 7px;
     --scbar-thumb-bradius: 10px;
@@ -156,10 +156,10 @@ html {
 
     /* ==== sgctr -> Storage Container ==== */
     --sgctr-vgap: 2px;
-    --sgctr-tmargin: 5.5px;
     --sgctr-width: 400px;
 
     /* ==== dlabel2 -> Directory Label 2==== */
+    --dlabel2-lheight: 19px;
     --dlabel2-fsize: 15px;
     --dlabel2-fweight: 400;
 
@@ -185,7 +185,7 @@ html {
     /* ==== dctr -> Directory Container ==== */
     --dctr-bwidth: 1.5px;
     --dctr-bradius: 10px;
-    --dctr-height: 301px;
+    --dctr-height: 304px;
 
     /* ==== dicon -> Directory Icon ==== */
     --dicon-length: 15px;
@@ -216,6 +216,7 @@ html {
     --vtndurlabel-binset: 5px;
     --vtndurlabel-bradius: 3px;
     --vtndurlabel-padding: 5px;
+    --vtndurlabel-mwidth: 150px;
     --vtndurlabel-fsize: 15px;
     --vtndurlabel-fweight: 400;
 
@@ -230,7 +231,11 @@ html {
     /* ==== vpgamelabel -> Video Preview Game Label ==== */
     --vpgamelabel-rmargin: 15px;
 
+    /* ==== vpagelabel -> Video Preview Age Label ==== */
+    --vpagelabel-mwidth: 200px;
+
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
+    --vpnamelabel-lheight: 14px;
     --vpnamelabel-width: 256px;
     --vpnamelabel-fsize: 11px;
     --vpnamelabel-fweight: 300;

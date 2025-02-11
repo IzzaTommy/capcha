@@ -253,7 +253,7 @@ function insertVideoPrvws(isCaps) {
     const metaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
     const curDate = new Date();
-        
+
     // sort the video data depending on the meta data filter
     switch (data['stgs'][metaFltStr]) {
         case 'name':
@@ -271,8 +271,8 @@ function insertVideoPrvws(isCaps) {
 
             break;
 
-        case 'duration':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['duration'] - b['duration']) : data[dataStr].sort((a, b) => b['duration'] - a['duration']);
+        case 'dur':
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['dur'] - b['dur']) : data[dataStr].sort((a, b) => b['dur'] - a['dur']);
 
             break;
     }
@@ -298,9 +298,9 @@ function insertVideoPrvws(isCaps) {
                 // set the video source
                 videoPrvwCtr.dataset.src = videoData['path'];
                 // set the video thumbnail source
-                videoPrvwClone.querySelector('.video-thumbnail-image').setAttribute('src', videoData['thumbnailPath']);
+                videoPrvwClone.querySelector('.video-thumbnail-image').setAttribute('src', videoData['tbnlPath']);
                 // set the video duration
-                videoPrvwClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(videoData['duration']);
+                videoPrvwClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(videoData['dur']);
                 // set the video game
                 videoPrvwClone.querySelector('.video-preview-game-label').textContent = `${videoData['game']}`;
                 // set the video age
@@ -310,6 +310,9 @@ function insertVideoPrvws(isCaps) {
 
                 // on click, open the video in the editor section
                 videoPrvwCtr.addEventListener('click', () => {
+                    // set the video fps
+                    states['videoFrameLen'] = getTruncDec(1 / videoData['fps']);
+
                     // set the video player source
                     videoPlr.setAttribute('src', videoData['path']);
 

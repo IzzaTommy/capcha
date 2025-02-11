@@ -171,10 +171,46 @@ function initVideoCtrEL() {
                 case 'Escape':
                     // prevent the default behavior on the hotkey
                     event.preventDefault();
+
                     // set the active content section to the directories section
                     setActiveSect('directories');
 
                     break;
+
+                // comma - move back 1 frame if paused
+                case ',':
+                    // prevent the default behavior on the hotkey
+                    event.preventDefault();
+
+                    if (videoPlr.paused) {
+                        // set the video time
+                        setVideoTime(videoPlr.currentTime - states['videoFrameLen'], false, true, false, false, true);  // boolean1 doPauseBeforeSet, boolean2 doBoundsCheck, boolean3 doPauseInCheck, boolean4 doVideoStateCheck, boolean5 doSetSldrsAtEnd
+                    }
+
+                    break;
+
+                // period - move forward 1 frame if paused
+                case '.':
+                    // prevent the default behavior on the hotkey
+                    event.preventDefault();
+
+                    if (videoPlr.paused) {
+                        // set the video time
+                        setVideoTime(videoPlr.currentTime + states['videoFrameLen'], false, true, false, false, true);  // boolean1 doPauseBeforeSet, boolean2 doBoundsCheck, boolean3 doPauseInCheck, boolean4 doVideoStateCheck, boolean5 doSetSldrsAtEnd
+                    }
+
+                    break;
+
+                    // h - hide the playback container and play pause status icon (for screenshotting)
+                case 'h':
+                    // prevent the default behavior on the hotkey
+                    event.preventDefault();
+
+                    // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
+                    if (!flags['isTmlnSldrDrag'] && !flags['isSeekSldrDrag'] && !flags['isVideoVolSldrDrag'] && !flags['isPlbkRateSldrDrag']) {
+                        playPauseStatIcon.classList.remove('active');
+                        plbkCtr.classList.remove('active');
+                    }
             }
         }
         else {
@@ -287,6 +323,11 @@ function initVideoCtrEL() {
 
     // on mouseenter, show the playback container and start the timeout for hiding
     videoPlr.addEventListener('mouseenter', () => {
+        // show the play pause status icon if it is hidden from pressing 'h'
+        if (videoPlr.paused) {
+            playPauseStatIcon.classList.add('active');
+        }
+
         // show the playback container
         plbkCtr.classList.add('active');
 
@@ -298,6 +339,11 @@ function initVideoCtrEL() {
 
     // on mousemove, show the playback container and reset the timeout for hiding
     videoPlr.addEventListener('mousemove', () => {
+        // show the play pause status icon if it is hidden from pressing 'h'
+        if (videoPlr.paused) {
+            playPauseStatIcon.classList.add('active');
+        }
+
         // show the playback container
         plbkCtr.classList.add('active');
 
@@ -309,7 +355,7 @@ function initVideoCtrEL() {
     videoPlr.addEventListener('click', () => setVideoPlayerState('toggle'));
 
     // on play, start animation frames to sync the slider thumbs' movement to each frame of the video
-    videoPlr.addEventListener('play', () => states['animID'] = requestAnimationFrame(syncSeekTmlnSldrs));
+    videoPlr.addEventListener('play', () => states['animId'] = requestAnimationFrame(syncSeekTmlnSldrs));
 
     // on pause, show the playback container and cancel animation frames
     videoPlr.addEventListener('pause', () => {
@@ -317,7 +363,7 @@ function initVideoCtrEL() {
         plbkCtr.classList.add('active');
 
         // cancel the syncing to prevent unnecessary computations while paused
-        cancelAnimationFrame(states['animID']);
+        cancelAnimationFrame(states['animId']);
     });
 
     // on mouseleave, conditionally hide the playback ctr and remove the timeout for disappearing
@@ -334,11 +380,27 @@ function initVideoCtrEL() {
     })
 
     // on mouseenter, show the playback container
-    plbkCtr.addEventListener('mouseenter', () => {   
+    plbkCtr.addEventListener('mouseenter', () => { 
+        // show the play pause status icon if it is hidden from pressing 'h'
+        if (videoPlr.paused) {
+            playPauseStatIcon.classList.add('active');
+        }
+
         // show the playback container
         plbkCtr.classList.add('active');
 
         flags['isPlbkCtrHover'] = true;
+    });
+
+    // on mousemove, show the playback container
+    plbkCtr.addEventListener('mousemove', () => {
+        // show the play pause status icon if it is hidden from pressing 'h'
+        if (videoPlr.paused) {
+            playPauseStatIcon.classList.add('active');
+        }
+
+        // show the playback container
+        plbkCtr.classList.add('active');
     });
 
     // on mouseleave, conditionally hide the playback ctr and remove the timeout for disappearing
@@ -1386,6 +1448,6 @@ function syncSeekTmlnSldrs() {
 
     // request the next animation frame if the video is playing
     if (!videoPlr.paused && !videoPlr.ended) {
-        states['animID'] = requestAnimationFrame(syncSeekTmlnSldrs);
+        states['animId'] = requestAnimationFrame(syncSeekTmlnSldrs);
     }
 }

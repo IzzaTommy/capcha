@@ -405,6 +405,7 @@ function initRendVars() {
     states = {
         recTime: null, 
         contStatLabelTmo: null, 
+        videoFrameLen: null, 
         animID: null, 
         plbkCtrTmo: null, 
         recTimeIntv: null, 

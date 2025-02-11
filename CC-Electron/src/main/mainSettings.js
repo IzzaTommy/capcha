@@ -233,7 +233,7 @@ function initStgsL() {
 
     // gets the size of a directory
     ipcMain.handle('stgs:getDirSize', async (_, isCaps) => {
-        return await getDirSize(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory'));
+        return getDirSize(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory'));
     });
 
     // opens the directory
@@ -301,7 +301,7 @@ function initStgsL() {
         switch (key) {
             case 'capturesDirectory':
                 // open the directory
-                ({ canceled, filePaths } = await atmpAsyncFunc(() => dialog.showOpenDialog(insts['mainWindow'], { 'properties': ['openDirectory'] })));
+                ({ canceled, filePaths } = await atmpAsyncFunc(() => dialog.showOpenDialog(insts['mainWindow'], { 'defaultPath': data['stgs'].get('capturesDirectory'), 'properties': ['openDirectory'] })));
         
                 // check if the operation was not canceled and there is a new value
                 if (!canceled && filePaths[0] !== value) {
@@ -383,7 +383,7 @@ function initStgsL() {
 
             case 'clipsDirectory':
                 // open the directory
-                ({ canceled, filePaths } = await dialog.showOpenDialog(insts['mainWindow'], { 'properties': ['openDirectory'] }));
+                ({ canceled, filePaths } = await dialog.showOpenDialog(insts['mainWindow'], { 'defaultPath': data['stgs'].get('clipsDirectory'), 'properties': ['openDirectory'] }));
         
                 // check if the operation was not cancled and there is a new value
                 if (!canceled && filePaths[0] !== value) {
@@ -464,7 +464,8 @@ async function getVideoData(video, dir, isCaps) {
     const videoMetaData = await atmpAsyncFunc(() => fs.stat(videoPath));
     const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
     const tbnlPath = path.join(tbnlDir, `${videoName}.png`);
-    const videoDuration = (await atmpAsyncFunc(() => ffprobeProm(videoPath))).format.duration;
+    const videoMetaData2 = await atmpAsyncFunc(() => ffprobeProm(videoPath));
+    const videoStream = videoMetaData2.streams.find(stream => stream.codec_type === 'video');
 
     // check if the thumbnail for this video already exists
     if (!(await atmpAsyncFunc(() => fs.access(tbnlPath)))) {
@@ -484,12 +485,13 @@ async function getVideoData(video, dir, isCaps) {
 
     return {
         'created': videoMetaData.birthtime, 
-        'duration': videoDuration, 
-        'game': video.split('-')[1] ? video.split('-')[0] : 'External',
+        'dur': videoMetaData2.format.duration, 
+        'game': video.split('-')[1] ? video.split('-')[0] : 'External', 
+        'fps': videoStream.r_frame_rate.split("/").map(Number).reduce((a, b) => a / b), 
         'fullName': video,
         'path': videoPath,
         'size': videoMetaData.size,
-        'thumbnailPath': tbnlPath 
+        'tbnlPath': tbnlPath 
     };
 }
 

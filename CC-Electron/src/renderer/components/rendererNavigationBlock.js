@@ -119,8 +119,12 @@ function initNavTogBtnEL() {
             updateVolStgSldr(true);  // boolean1 isSpk
             updateVolStgSldr(false);  // boolean1 isSpk
 
-            // not width dependent, but transition dependent, show after the navigation bar finishes transition
-            autoRecResLabel.classList.add('active');
+            // check if auto record is on and the recording was manually stopped
+            if (flags['isManualStop'] && data['stgs']['autoRecord']) {
+                // show to let the user reenable auto recording
+                // not width dependent, but transition dependent, show after the navigation bar finishes transition
+                autoRecResLabel.classList.add('active');
+            }
 
             resolve();
         }, NAVIGATION_BAR_TIMEOUT)));
@@ -173,7 +177,7 @@ async function togRecBarBtn(isAutoStart, isManualStop, recGame) {
                 curRecLabelCtr.classList.remove('active');
 
                 // check if auto record is on and the recording was manually stopped
-                if (isManualStop && data['stgs']['autoRec']) {
+                if (isManualStop && data['stgs']['autoRecord']) {
                     // show to let the user reenable auto recording
                     autoRecResLabel.classList.add('active');
                 }
