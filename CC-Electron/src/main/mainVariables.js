@@ -11,24 +11,24 @@ import path from 'path';
 /**
  * @exports ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
  *  CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
- *  CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+ *  CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
  *  OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
  *  SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
  *  CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
  *  SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
  *  ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
- *  data, flags, insts, progs, states, uuids 
+ *  data, flags, insts, states, uuids 
  */
 export { 
     ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
     CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
-    CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+    CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
     CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
     SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    data, flags, insts, progs, states, uuids 
+    data, flags, insts, states, uuids 
 };
 
 // unexported
@@ -56,7 +56,7 @@ const CLIP_THREADS = '-threads 2';
 const CLIP_VIDEO_CODEC = 'h264_nvenc';
 
 // delay, padding functions, log paths, log divider
-const CHECK_PROGRAMS_DELAY_IN_MSECONDS = 5000;
+const CHECK_PROGRAMS_DELAY = 5000;
 const TIME_PAD = (time) => time.toString().padStart(2, '0');
 const EVENT_PAD = (event) => event.toString().padEnd(5, '-');
 const LOGS_PATH = path.join(app.getPath('logs'), `${INITIALIZATION_DATE.getFullYear()}-${TIME_PAD(INITIALIZATION_DATE.getMonth() + 1)}-${TIME_PAD(INITIALIZATION_DATE.getDate())}_${TIME_PAD(INITIALIZATION_DATE.getHours())}-${TIME_PAD(INITIALIZATION_DATE.getMinutes())}-${TIME_PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
@@ -87,7 +87,7 @@ const SETTINGS_DATA_SCHEMA = {
     },
     capturesMetaFilter: {
         type: 'string',
-        enum: ['name', 'date', 'size', 'duration']
+        enum: ['Name', 'Date', 'Size', 'Duration']
     },
     capturesAscending: {
         type: 'boolean'
@@ -98,7 +98,7 @@ const SETTINGS_DATA_SCHEMA = {
     },
     clipsMetaFilter: {
         type: 'string',
-        enum: ['name', 'date', 'size', 'duration']
+        enum: ['Name', 'Date', 'Size', 'Duration']
     },
     clipsAscending: {
         type: 'boolean'
@@ -156,6 +156,13 @@ const SETTINGS_DATA_SCHEMA = {
     autoRecord: {
         type: 'boolean'
     }, 
+    programs: {
+        type: 'object', 
+        properties: { 
+            'extName': { type: 'string' }, 
+            'iconPath': { type: 'string' }
+        }
+    }, 
 
     clipsDirectory: {
         type: 'string'
@@ -202,12 +209,12 @@ const SETTINGS_DATA_SCHEMA = {
 const SETTINGS_DATA_DEFS = { 
     navigationBarActive: true,
     
-    capturesGameFilter: 'all',
-    capturesMetaFilter: 'date',
+    capturesGameFilter: 'All',
+    capturesMetaFilter: 'Date',
     capturesAscending: false,
 
-    clipsGameFilter: 'all',
-    clipsMetaFilter: 'date',
+    clipsGameFilter: 'All',
+    clipsMetaFilter: 'Date',
     clipsAscending: false,
 
     videoVolume: 0.1,
@@ -225,6 +232,7 @@ const SETTINGS_DATA_DEFS = {
     capturesFramerate: 30,
     capturesBitrate: 3000,
     autoRecord: false,
+    programs: { }, 
 
     clipsDirectory: CLIPS_DIRECTORY_DEF,
     clipsLimit: 50, 
@@ -232,9 +240,9 @@ const SETTINGS_DATA_DEFS = {
     clipsWidth: 1280, 
     clipsHeight: 720, 
 
-    speaker: 'default',
+    speaker: 'Default',
     speakerVolume: 0.5, 
-    microphone: 'default', 
+    microphone: 'Default', 
     microphoneVolume: 0.5
     // webcam: ''
 };
@@ -266,9 +274,6 @@ const insts = {
     obsProcess: null, 
     webSocket: null 
 };
-
-// auto record programs
-const progs = {};
 
 // states data
 const states = { 

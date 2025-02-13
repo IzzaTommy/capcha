@@ -457,6 +457,37 @@ html {
     --gsttoggleicon-width: 31px;
     --gsttoggleicon-translateX: 31px;
 
+    /* ==== prboard -> Programs Board ==== */
+    --prboard-gap: 5px;
+    --prboard-padding: 5px;
+    --prboard-width: 400px;
+
+    /* ==== gsttile -> General Setting Tile ==== */
+    --gsttile-bradius: 8px;
+    --gsttile-vpadding: 5px;
+    --gsttile-rpadding: 10px;
+    --gsttile-lpadding: 5px;
+
+    /* ==== gstdeleteicon -> General Setting Delete Icon ==== */
+    --gstdeleteicon-length: 20px;
+
+    /* ==== gstprogramicon -> General Setting Program Icon ==== */
+    --gstprogramicon-length: 30px;
+    --gstprogramicon-rmargin: 5px;
+    --gstprogramicon-lmargin: 10px;
+
+    /* ==== gstprogramlabel -> General Setting Program Label ==== */
+    --gstprogramlabel-fsize: 15px;
+    --gstprogramlabel-fweight: 400;
+
+    /* ==== praddbtn -> Programs Add Button ==== */
+    --praddbtn-bradius: 8px;
+    --praddbtn-vpadding: 10px;
+    --praddbtn-hpadding: 40px;
+
+    /* ==== praddicon -> Programs Add Icon ==== */
+    --praddicon-length: 20px;
+
     /* ==== gstsliderctr -> General Setting Slider Container ==== */
     --gstsliderctr-hmargin: 11.5px;
 

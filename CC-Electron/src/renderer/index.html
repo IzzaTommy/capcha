@@ -9,7 +9,7 @@
     <title>CapCha</title>
 </head>
 <body>
-    <template id="template-video-preview">
+    <template id="template-video-preview-ctr">
         <div class="video-preview-ctr" data-src="">
             <div class="video-thumbnail-ctr">
                 <img class="video-thumbnail-image" src="" alt="">
@@ -40,6 +40,20 @@
                     </svg>
                 </button>
             </div>
+        </div>
+    </template>
+
+    <template id="template-general-setting-tile">
+        <div class="general-setting-tile">
+            <button class="general-setting-delete-btn">
+                <svg class="general-setting-delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path class="general-setting-path general-setting-primary-path" d="m480.13 -120q-74.67 0-140.41-28.34-65.73-28.34-114.36-76.92-48.63-48.58-76.99-114.26Q120-405.19 120-479.87q0-74.67 28.34-140.41 28.34-65.73 76.92-114.36 48.58-48.63 114.26-76.99Q405.19-840 479.87-840q74.67 0 140.41 28.34 65.73 28.34 114.36 76.92 48.63 48.58 76.99 114.26Q840-554.81 840-480.13q0 74.67-28.34 140.41-28.34 65.73-76.92 114.36-48.58 48.63-114.26 76.99Q554.81-120 480.13-120Z"/>
+                    <path class="general-setting-path general-setting-secondary-path" d="m480-160q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Z"/>                 
+                    <path class="general-setting-path general-setting-tertiary-path" d="m480-451.69 129.85 129.84q5.61 5.62 13.77 6 8.15.39 14.53-6 6.39-6.38 6.39-14.15 0-7.77-6.39-14.15L508.31-480l129.84-129.85q5.62-5.61 6-13.77.39-8.15-6-14.53-6.38-6.39-14.15-6.39-7.77 0-14.15 6.39L480-508.31 350.15-638.15q-5.61-5.62-13.77-6-8.15-.39-14.53 6-6.39 6.38-6.39 14.15 0 7.77 6.39 14.15L451.69-480 321.85-350.15q-5.62 5.61-6 13.77-.39 8.15 6 14.53 6.38 6.39 14.15 6.39 7.77 0 14.15-6.39L480-451.69Z"/>
+                </svg>
+            </button>
+            <img class="general-setting-program-icon" src="" alt="">
+            <span class="general-setting-program-label"></span>
         </div>
     </template>
 
@@ -108,8 +122,8 @@
                 </button>
     
                 <div id="label-ctr-current-recording" class="">
-                    <span id="time-label-current-recording" class="current-recording-label">8:88:88+</span>
-                    <span id="game-label-current-recording" class="current-recording-label">GAME</span>
+                    <span id="time-label-current-recording" class="current-recording-label"></span>
+                    <span id="game-label-current-recording" class="current-recording-label"></span>
                 </div>
                 
                 <button id="bar-btn-record" class="nav-bar-btn">
@@ -146,24 +160,24 @@
                             <h3 id="name-label-captures" class="content-label2 directory-label">Captures</h3>
 
                             <div class="storage-ctr">
-                                <span id="directory-label2-captures" class="directory-label2">C:/Directory/Example</span>
+                                <span id="directory-label2-captures" class="directory-label2"></span>
 
                                 <div class="directory-label-ctr">
-                                    <span id="usage-label3-captures" class="directory-label3">7 Videos - 32GB</span>
-                                    <span id="total-label3-captures" class="directory-label3">/300 GB</span>
+                                    <span id="usage-label3-captures" class="directory-label3"></span>
+                                    <span id="total-label3-captures" class="directory-label3"></span>
                                 </div>
                             </div>
 
                             <div class="directory-bar">
                                 <select class="directory-setting-field" name="capturesGameFilter">
-                                    <option value="all">All</option>
+                                    <option value="All">All</option>
                                 </select>
 
                                 <select class="directory-setting-field" name="capturesMetaFilter">
-                                    <option value="date">Date</option>
-                                    <option value="name">Name</option>
-                                    <option value="size">Size</option>
-                                    <option value="duration">Duration</option>
+                                    <option value="Date">Date</option>
+                                    <option value="Name">Name</option>
+                                    <option value="Size">Size</option>
+                                    <option value="Duration">Duration</option>
                                 </select>
 
                                 <button id="bar-btn-captures" class="directory-bar-btn">
@@ -200,24 +214,24 @@
                             <h3 id="name-label-clips" class="content-label2 directory-label">Clips</h3>
 
                             <div class="storage-ctr">
-                                <span id="directory-label2-clips" class="directory-label2">C:/Directory/Example</span>
+                                <span id="directory-label2-clips" class="directory-label2"></span>
 
                                 <div class="directory-label-ctr">
-                                    <span id="usage-label3-clips" class="directory-label3">7 Videos - 32GB</span>
-                                    <span id="total-label3-clips" class="directory-label3">/300 GB</span>
+                                    <span id="usage-label3-clips" class="directory-label3"></span>
+                                    <span id="total-label3-clips" class="directory-label3"></span>
                                 </div>
                             </div>
 
                             <div class="directory-bar">
                                 <select class="directory-setting-field" name="clipsGameFilter">
-                                    <option value="all">All</option>
+                                    <option value="All">All</option>
                                 </select>
 
                                 <select class="directory-setting-field" name="clipsMetaFilter">
-                                    <option value="date">Date</option>
-                                    <option value="name">Name</option>
-                                    <option value="size">Size</option>
-                                    <option value="duration">Duration</option>
+                                    <option value="Date">Date</option>
+                                    <option value="Name">Name</option>
+                                    <option value="Size">Size</option>
+                                    <option value="Duration">Duration</option>
                                 </select>
 
                                 <button id="bar-btn-clips" class="directory-bar-btn">
@@ -656,11 +670,25 @@
                             <p class="general-setting-description">Automatically record when gameplay is detected.</p>
                         </div>
 
-                        <!-- <div class="general-setting-ctr">
+                        <div class="general-setting-ctr">
                             <h4 class="general-setting-label">Programs</h4>
 
+                            <div class="general-setting-pill">
+                                <svg class="general-setting-icon">
+                                    <use href="../assets/svg/terminal.svg#terminal"></use>
+                                </svg>
+
+                                <div id="board-programs">
+                                    <button id="add-btn-programs">
+                                        <svg id="add-icon-programs">
+                                            <use href="../assets/svg/add.svg#add"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
                             <p class="general-setting-description">Select which programs will be automatically recorded.</p>
-                        </div> -->
+                        </div>
                     </div>
 
                     <div class="content-ctr2">
@@ -763,7 +791,7 @@
                                     </svg>
 
                                     <select class="general-setting-field" name="speaker">
-                                        <option value="default">Default</option>
+                                        <option value="Default">Default</option>
                                     </select>
                                 </div>
                             </div>
@@ -776,11 +804,11 @@
                                         <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
 
-                                    <div id="setting-slider-ctr-speaker-volume" class="general-setting-slider-ctr">
-                                        <div id="setting-slider-speaker-volume" class="general-setting-slider">
-                                            <div id="setting-track-speaker-volume" class="general-setting-track">
-                                                <div id="setting-overlay-speaker-volume" class="general-setting-overlay"></div>
-                                                <div id="setting-thumb-speaker-volume" class="general-setting-thumb"></div>
+                                    <div id="slider-ctr-speaker-volume" class="general-setting-slider-ctr">
+                                        <div id="slider-speaker-volume" class="general-setting-slider">
+                                            <div id="track-speaker-volume" class="general-setting-track">
+                                                <div id="overlay-speaker-volume" class="general-setting-overlay"></div>
+                                                <div id="thumb-speaker-volume" class="general-setting-thumb"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -798,7 +826,7 @@
                                     </svg>
 
                                     <select class="general-setting-field" name="microphone">
-                                        <option value="default">Default</option>
+                                        <option value="Default">Default</option>
                                     </select>
                                 </div>
                             </div>
@@ -811,11 +839,11 @@
                                         <use href="../assets/svg/volume-down-solid.svg#volume-down-solid"></use>
                                     </svg>
 
-                                    <div id="setting-slider-ctr-microphone-volume" class="general-setting-slider-ctr">
-                                        <div id="setting-slider-microphone-volume" class="general-setting-slider">
-                                            <div id="setting-track-microphone-volume" class="general-setting-track">
-                                                <div id="setting-overlay-microphone-volume" class="general-setting-overlay"></div>
-                                                <div id="setting-thumb-microphone-volume" class="general-setting-thumb"></div>
+                                    <div id="slider-ctr-microphone-volume" class="general-setting-slider-ctr">
+                                        <div id="slider-microphone-volume" class="general-setting-slider">
+                                            <div id="track-microphone-volume" class="general-setting-track">
+                                                <div id="overlay-microphone-volume" class="general-setting-overlay"></div>
+                                                <div id="thumb-microphone-volume" class="general-setting-thumb"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -833,8 +861,8 @@
                                     </svg>
 
                                     <select class="general-setting-field" name="webcam">
-                                        <option value="none">None</option>
-                                        <option value="default">Default</option>
+                                        <option value="None">None</option>
+                                        <option value="Default">Default</option>
                                     </select>
                                 </div>
                             </div>

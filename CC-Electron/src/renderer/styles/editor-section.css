@@ -13,6 +13,10 @@
     background-color: var(--vctr-bgcolor);
 }
 
+#ctr-video:fullscreen {
+    border-radius: 0;
+}
+
 #player-video {
     border-radius: inherit;
     display: block;

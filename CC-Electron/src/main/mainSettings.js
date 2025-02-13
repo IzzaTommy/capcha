@@ -17,6 +17,7 @@
 import { exec } from 'child_process';
 import { dialog, ipcMain, shell } from 'electron';
 import Store from 'electron-store';
+import extract from 'extract-file-icon';
 import ffmpeg from 'fluent-ffmpeg';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -25,13 +26,13 @@ import { promisify } from 'util'
 import { 
     ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
     CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
-    CHECK_PROGRAMS_DELAY_IN_MSECONDS, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
+    CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
     SCENE_NAME, SPEAKER_INPUT_NAME, MICROPHONE_INPUT_NAME, 
     CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, THUMBNAIL_SIZE, 
     SETTINGS_CONFIG_PATH, SETTINGS_DATA_SCHEMA, SETTINGS_DATA_DEFS, RECORD_ENCODER_PATH, SHELL_DEVICES_COMMAND, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    data, flags, insts, progs, states, uuids 
+    data, flags, insts, states, uuids 
 } from './mainVariables.js';
 import { initMainGen, createClip, getVideoDate, getLogDate, logProc, atmpAsyncFunc } from './mainGeneral.js';
 import { initMainWebSocket, webSocketReq, webSocketBatchReq } from './mainWebSocket.js';
@@ -174,13 +175,13 @@ async function initStgs() {
     uuids['spkInp'] = data['inps'].some(input => input['inputName'] === 'Speaker Input') ? data['inps'][data['inps'].findIndex(input => input['inputName'] === 'Speaker Input')]['inputUuid'] : (await atmpAsyncFunc(async () => webSocketReq('CreateInput', { sceneName: 'CapCha', sceneUuid: uuids['scenes'], inputName: 'Speaker Input', inputKind: 'wasapi_output_capture', inputSettings: { }, sceneItemEnabled: true })))['responseData']['inputUuid'];
 
     // check if the speaker is not the default speaker and the speaker is currently available
-    if (data['stgs'].get('speaker') !== 'default' && data['stgs'].get('speaker') in data['devs']['outs']) {
+    if (data['stgs'].get('speaker') !== 'Default' && data['stgs'].get('speaker') in data['devs']['outs']) {
         // set the speaker to the device in the settings
         await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuids['spkInp'], inputSettings: { device_id: data['devs']['outs'][data['stgs'].get('speaker')] }, overlay: true }));
     }
     // else, set the speaker to the default
     else {
-        data['stgs'].set('speaker', 'default');
+        data['stgs'].set('speaker', 'Default');
         await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Speaker Input', inputUuid: uuids['spkInp'], inputSettings: { }, overlay: false }));
     }
 
@@ -191,13 +192,13 @@ async function initStgs() {
     uuids['micInp'] = data['inps'].some(input => input['inputName'] === 'Microphone Input') ? data['inps'][data['inps'].findIndex(input => input['inputName'] === 'Microphone Input')]['inputUuid'] : (await atmpAsyncFunc(async () => webSocketReq('CreateInput', { sceneName: 'CapCha', sceneUuid: uuids['scenes'], inputName: 'Microphone Input', inputKind: 'wasapi_input_capture', inputSettings: { }, sceneItemEnabled: true })))['responseData']['inputUuid'];
     
     // check if the microphone is not the default microphone and the microphone is currently available
-    if (data['stgs'].get('microphone') !== 'default' && data['stgs'].get('microphone') in data['devs']['inps']) {
+    if (data['stgs'].get('microphone') !== 'Default' && data['stgs'].get('microphone') in data['devs']['inps']) {
         // set the microphone to the device in the settings
         await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuids['micInp'], inputSettings: { device_id: data['devs']['inps'][data['stgs'].get('microphone')] }, overlay: true }));
     }
     // else, set the microphone to the default
     else {
-        data['stgs'].set('microphone', 'default');
+        data['stgs'].set('microphone', 'Default');
         await atmpAsyncFunc(async () => webSocketReq('SetInputSettings', { inputName: 'Microphone Input', inputUuid: uuids['micInp'], inputSettings: { }, overlay: false }));
     }
 
@@ -241,6 +242,19 @@ function initStgsL() {
         await atmpAsyncFunc(() => shell.openPath(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory')));
     });
 
+    // deletes the program from the programs list
+    ipcMain.handle('stgs:delProg', (_, name) => {
+        // get the programs list
+        const progs = data['stgs'].get('programs');
+
+        // delete the program and update the programs list
+        delete progs[name];
+        data['stgs'].set('programs', progs);
+
+        // return if the program was removed or not
+        return !(name in data['stgs'].get('programs'));
+    });
+
     // gets the videos data for the directory
     ipcMain.handle('stgs:getAllDirData', async (_, isCaps) => {
         // get the captures or clips variable
@@ -266,7 +280,7 @@ function initStgsL() {
 
         // get the data and thumbnail for each video
         const videosData = await Promise.all(videos.map(video => getVideoData(video, dir, isCaps)));
-    
+
         // return all the data on the videos
         return videosData.filter(videoData => videoData !== null);
     });
@@ -283,46 +297,49 @@ function initStgsL() {
     // sets the value of a specific setting
     ipcMain.handle('stgs:setStg', async (_, key, value) => {
         // variables for the dialog
-        let canceled, filePaths;
+        let result;
 
         // log basic information about the setting
         logProc('Settings', 'SET', 'Setting a setting', false);  // boolean1 isFinalMsg
         logProc('Settings', 'SET', `Key: ${key}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        logProc('Settings', 'SET', `Value: ${value}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'SET', `Value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         logProc('Settings', 'SET', `Type: ${typeof(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // validate the setting type and value
-        value = validateStg(key, value);
+        value = validStg(key, value);
 
-        logProc('Settings', 'SET', `Validated value: ${value}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'SET', `Validated value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         logProc('Settings', 'SET', `Validated type: ${typeof(value)}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // certain settings require unique behavior
         switch (key) {
             case 'capturesDirectory':
                 // open the directory
-                ({ canceled, filePaths } = await atmpAsyncFunc(() => dialog.showOpenDialog(insts['mainWindow'], { 'defaultPath': data['stgs'].get('capturesDirectory'), 'properties': ['openDirectory'] })));
+                result = await atmpAsyncFunc(() => dialog.showOpenDialog({ 'defaultPath': data['stgs'].get('capturesDirectory'), 'properties': ['openDirectory'] }));
         
                 // check if the operation was not canceled and there is a new value
-                if (!canceled && filePaths[0] !== value) {
+                if (!result.canceled && result.filePaths[0] !== data['stgs'].get('capturesDirectory')) {
                     // grab the new value
-                    value = filePaths[0];
+                    value = result.filePaths[0];
 
                     // delete the old thumbnail directory and its content
                     await atmpAsyncFunc(() => fs.rm(CAPTURES_THUMBNAIL_DIRECTORY, { 'recursive': true, 'force': true }));
             
                     // recreate the thumbnail directory
                     await atmpAsyncFunc(() => fs.mkdir(CAPTURES_THUMBNAIL_DIRECTORY));
-                }
 
-                // should realistically never fail, but checks if the new directory exists
-                if (await atmpAsyncFunc(() => fs.access(value))) {
-                    // reverts to the default setting if needed
-                    value = SETTINGS_DATA_DEFS[key];
-                }
+                    // should realistically never fail, but checks if the new directory exists
+                    if (await atmpAsyncFunc(() => fs.access(value))) {
+                        // reverts to the default setting if needed
+                        value = SETTINGS_DATA_DEFS[key];
+                    }
 
-                // sets the new captures directory
-                await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': value }));
+                    // sets the new captures directory
+                    await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': value }));
+                }
+                else {
+                    return null;
+                }
 
                 break;
             
@@ -381,33 +398,59 @@ function initStgsL() {
                 
                 break;
 
+            case 'programs':
+                // open the program path
+                result = await atmpAsyncFunc(() => dialog.showOpenDialog({ 'properties': ['openFile'], 'filters': [{ 'name': "Executable", 'extensions': ['exe', 'app'] }] }));
+            
+                // check if the operation was not cancelled
+                if (!result.canceled) {
+                    // get the program name without the extension and create the program object
+                    const name = path.parse(result.filePaths[0]).name;
+                    const prog = { [name]: { 'extName': path.basename(result.filePaths[0]), 'iconPath': `data:image/png;base64,${extract(result.filePaths[0], 32).toString('base64')}` } };
+
+                    // if the program is not already in the list of programs
+                    if (!(name in data['stgs'].get('programs'))) {
+                        // replace the program list with the updated list
+                        data['stgs'].set(key, { ...data['stgs'].get('programs'), ...prog });
+
+                        // return the program by itself
+                        return prog;
+                    }
+                }
+
+                // return null if the operation was cancelled or if the program is already in the list
+                return null;
+
             case 'clipsDirectory':
                 // open the directory
-                ({ canceled, filePaths } = await dialog.showOpenDialog(insts['mainWindow'], { 'defaultPath': data['stgs'].get('clipsDirectory'), 'properties': ['openDirectory'] }));
+                result = await dialog.showOpenDialog({ 'defaultPath': data['stgs'].get('clipsDirectory'), 'properties': ['openDirectory'] });
         
                 // check if the operation was not cancled and there is a new value
-                if (!canceled && filePaths[0] !== value) {
+                if (!result.canceled && result.filePaths[0] !== value) {
                     // grab the new value
-                    value = filePaths[0];
+                    value = result.filePaths[0];
     
                     // delete the old thumbnail directory and its content
                     await atmpAsyncFunc(() => fs.rm(CLIPS_THUMBNAIL_DIRECTORY, { 'recursive': true, 'force': true }));
             
                     // recreate the thumbnail directory
                     await atmpAsyncFunc(() => fs.mkdir(CLIPS_THUMBNAIL_DIRECTORY));
-                }
 
-                // should realistically never fail, but checks if the new directory exists
-                if (await atmpAsyncFunc(() => fs.access(value))) {
-                    // reverts to the default setting if needed
-                    value = SETTINGS_DATA_DEFS[key];
+                    // should realistically never fail, but checks if the new directory exists
+                    if (await atmpAsyncFunc(() => fs.access(value))) {
+                        // reverts to the default setting if needed
+                        value = SETTINGS_DATA_DEFS[key];
+                    }
+                }
+                else {
+                    return null;
                 }
 
                 break;
 
             case 'speaker':
                 // set the new speaker, or set to default
-                if (value !== 'default') {
+                if (value !== 'Default') {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Speaker Input', 'inputUuid': uuids['spkInp'], 'inputSettings': { 'device_id': data['devs']['outs'][value] }, 'overlay': true }));
                 }
                 else {
@@ -424,7 +467,7 @@ function initStgsL() {
 
             case 'microphone':
                 // set the new microphone, or set to default
-                if (data['stgs'].get('microphone') !== 'default') {
+                if (data['stgs'].get('microphone') !== 'Default') {
                     await atmpAsyncFunc(() => webSocketReq('SetInputSettings', { 'inputName': 'Microphone Input', 'inputUuid': uuids['micInp'], 'inputSettings': { 'device_id': data['devs']['inps'][value] }, 'overlay': true }));
                 }
                 else {
@@ -484,13 +527,13 @@ async function getVideoData(video, dir, isCaps) {
     }
 
     return {
-        'created': videoMetaData.birthtime, 
+        'date': videoMetaData.birthtime, 
         'dur': videoMetaData2.format.duration, 
         'game': video.split('-')[1] ? video.split('-')[0] : 'External', 
+        'extName': video, 
         'fps': videoStream.r_frame_rate.split("/").map(Number).reduce((a, b) => a / b), 
-        'fullName': video,
-        'path': videoPath,
-        'size': videoMetaData.size,
+        'path': videoPath, 
+        'size': videoMetaData.size, 
         'tbnlPath': tbnlPath 
     };
 }
@@ -533,7 +576,7 @@ async function getDirSize(dir) {
  * @param {boolean | number | string} value - The value of the setting
  * @returns {boolean | number | string} The validated value of the setting
  */
-function validateStg(key, value) {
+function validStg(key, value) {
     // check what type this setting SHOULD have
     switch(SETTINGS_DATA_SCHEMA[key]['type']) {
         case 'boolean':
@@ -570,6 +613,14 @@ function validateStg(key, value) {
                 }
             }
             
+            break;
+
+        case 'object':
+            // if the type is not object, revert to the default value
+            if (typeof(value) !== 'object') {
+                value = SETTINGS_DATA_DEFS[key];
+            }
+
             break;
 
         case 'string':
@@ -627,27 +678,29 @@ async function getDisps() {
  */
 function togAutoRec() {
     // if auto recording is on, start checking the programs list periodically; else, cancel the auto recording
-    data['stgs'].get('autoRecord') ? states['autoRecIntv'] = setInterval(checkProgs, CHECK_PROGRAMS_DELAY_IN_MSECONDS) : clearInterval(states['autoRecIntv']);
+    data['stgs'].get('autoRecord') ? states['autoRecIntv'] = setInterval(checkProgs, CHECK_PROGRAMS_DELAY) : clearInterval(states['autoRecIntv']);
 }
 
 /**
  * Checks if certain programs are running and toggle auto recording
  */
 async function checkProgs() {
-    // get the process list
+    // get the process list and programs list
     const procs = await atmpAsyncFunc(() => psList());
+    const progs = data['stgs'].get('programs');
 
     // check if recording is enabled
     if (flags['isRec']) {
-        // check if the recording game is not running and stop the recording
-        if (states['recGame'] && !procs.some(proc => proc['name'].toLowerCase() === progs[states['recGame']].toLowerCase()))
+        // check if the recording game is not running or the program is not in the list, and stop the recording
+        if (!progs[states['recGame']] || (states['recGame'] && !procs.some(proc => proc.name === progs[states['recGame']]['extName']))) {
             insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn');
+        }
     }
     // else, check the program list and enable recording if a match is found
     else {
-        for (const [key, value] of Object.entries(progs)) {
-            if (procs.some(proc => proc['name'].toLowerCase() === value.toLowerCase())) {
-                states['recGame'] = key;
+        for (const [name, progInfo] of Object.entries(progs)) {
+            if (procs.some(proc => proc.name === progInfo['extName'])) {
+                states['recGame'] = name;
 
                 insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn', states['recGame']);
 

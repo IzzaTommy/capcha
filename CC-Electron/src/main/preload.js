@@ -40,6 +40,9 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     // R -> M, opens the captures or clips directory
     openDir: (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 
 
+    // R -> M, deletes a program from the programs list
+    delProg: (name) => ipcRenderer.invoke('stgs:delProg', name), 
+
     // R -> M, gets the videos data from the captures or clips directory
     getAllDirData: (isCaps) => ipcRenderer.invoke('stgs:getAllDirData', isCaps),
 

@@ -48,6 +48,8 @@
 }
 
 .general-setting-icon {
+    align-self: center;
+
     display: block;
     flex: 0 0 auto;
     height: var(--gsticon-length);
@@ -141,6 +143,122 @@
 
 .general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-icon {
     background-color: var(--gsttoggleicon-alt-bgcolor);
+}
+
+#board-programs {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row wrap;
+    gap: var(--prboard-gap);
+    padding: var(--prboard-padding);
+    width: var(--prboard-width);
+
+    background-color: var(--prboard-bgcolor);
+}
+
+.general-setting-tile {
+    align-items: center;
+
+    border-radius: var(--gsttile-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    padding: var(--gsttile-vpadding) var(--gsttile-rpadding) var(--gsttile-vpadding) var(--gsttile-lpadding);
+    
+    background-color: var(--gsttile-bgcolor);
+    transition: var(--gsttile-transition);
+}
+
+.general-setting-tile:hover {
+    background-color: var(--gsttile-alt-bgcolor);
+}
+
+.general-setting-delete-btn {
+    flex: 0 0 fit-content;
+}
+
+.general-setting-delete-icon {
+    display: block;
+    height: var(--gstdeleteicon-length);
+    width: var(--gstdeleteicon-length);
+}
+
+.general-setting-path {
+    transition: var(--gstpath-transition);
+}
+
+.general-setting-primary-path {
+    fill: var(--gstprimarypath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-primary-path {
+    fill: var(--gstprimarypath-alt-fill);
+}
+
+.general-setting-secondary-path {
+    fill: var(--gstsecondarypath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-secondary-path {
+    fill: var(--gstsecondarypath-alt-fill);
+}
+
+.general-setting-tertiary-path {
+    fill: var(--gsttertiarypath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-tertiary-path {
+    fill: var(--gsttertiarypath-alt-fill);
+}
+
+.general-setting-program-icon {
+    display: block;
+    flex: 0 0 auto;
+
+    height: var(--gstprogramicon-length);
+    width: var(--gstprogramicon-length);
+    margin-right: var(--gstprogramicon-rmargin);
+    margin-left: var(--gstprogramicon-lmargin);
+}
+
+.general-setting-program-label {
+    flex: 0 0 fit-content;
+
+    color: var(--gstprogramlabel-color);
+    font-size: var(--gstprogramlabel-fsize);
+    font-weight: var(--gstprogramlabel-fweight);
+    transition: var(--gstprogramlabel-transition);
+}
+
+.general-setting-tile:hover > .general-setting-program-label {
+    color: var(--gstprogramlabel-alt-color);
+}
+
+#add-btn-programs {
+    border-radius: var(--praddbtn-bradius);
+    flex: 0 0 fit-content;
+    padding: var(--praddbtn-vpadding) var(--praddbtn-hpadding);
+    
+    background-color: var(--praddbtn-bgcolor);
+    transition: var(--praddbtn-transition);
+}
+
+#add-btn-programs:hover {
+    background-color: var(--praddbtn-alt-bgcolor);
+}
+
+#add-icon-programs {
+    display: block;
+    height: var(--praddicon-length);
+    width: var(--praddicon-length);
+
+    fill: var(--praddicon-fill);
+}
+
+#add-btn-programs:hover > #add-icon-programs {
+    fill: var(--praddicon-alt-fill);
 }
 
 .general-setting-slider-ctr {

@@ -416,6 +416,37 @@ html[data-theme="dark"] {
     /* ==== gsttoggleicon -> General Setting Toggle Icon ==== */
     --gsttoggleicon-fill: #5a5a5a;
 
+    /* ==== prboard -> Programs Board ==== */
+    --prboard-bgcolor: #5a5a5a;
+
+    /* ==== gsttile -> General Setting Tile ==== */
+    --gsttile-bgcolor: #dddddd;
+    --gsttile-alt-bgcolor: #ffffff;
+
+    /* ==== gstprimarypath -> General Setting Primary Path ==== */
+    --gstprimarypath-fill: #5a5a5a;
+    --gstprimarypath-alt-fill: #ffffff;
+
+    /* ==== gstsecondarypath -> General Setting Secondary Path ==== */
+    --gstsecondarypath-fill: #5a5a5a;
+    --gstsecondarypath-alt-fill: #ffffff;
+
+    /* ==== gsttertiarypath -> General Setting Tertiary Path ==== */
+    --gsttertiarypath-fill: #dddddd;
+    --gsttertiarypath-alt-fill: #000000;
+
+    /* ==== gstprogramlabel -> General Setting Program Label ==== */
+    --gstprogramlabel-color: #373737;
+    --gstprogramlabel-alt-color: #000000;
+
+    /* ==== praddbtn -> Programs Add Button ==== */
+    --praddbtn-bgcolor: #dddddd;
+    --praddbtn-alt-bgcolor: #ffffff;
+
+    /* ==== praddicon -> Programs Add Icon ==== */
+    --praddicon-fill: #373737;
+    --praddicon-alt-fill: #000000;
+
     /* ==== gstsliderctr -> General Setting Slider Container ==== */
     --gstsliderctr-bgcolor: #5a5a5a;
 
@@ -732,6 +763,37 @@ html[data-theme="light"] {
     /* ==== gsttoggleicon -> General Setting Toggle Icon ==== */
     --gsttoggleicon-fill: #acb5c4;
 
+    /* ==== prboard -> Programs Board ==== */
+    --prboard-bgcolor: #dfe1e5;
+
+    /* ==== gsttile -> General Setting Tile ==== */
+    --gsttile-bgcolor: #363636;
+    --gsttile-alt-bgcolor: #000000;
+
+    /* ==== gstprimarypath -> General Setting Primary Path ==== */
+    --gstprimarypath-fill: #363636;
+    --gstprimarypath-alt-fill: #000000;
+
+    /* ==== gstsecondarypath -> General Setting Secondary Path ==== */
+    --gstsecondarypath-fill: #dfe1e5;
+    --gstsecondarypath-alt-fill: #000000;
+
+    /* ==== gsttertiarypath -> General Setting Tertiary Path ==== */
+    --gsttertiarypath-fill: #363636;
+    --gsttertiarypath-alt-fill: #ffffff;
+
+    /* ==== gstprogramlabel -> General Setting Program Label ==== */
+    --gstprogramlabel-color: #dddddd;
+    --gstprogramlabel-alt-color: #ffffff;
+
+    /* ==== praddbtn -> Programs Add Button ==== */
+    --praddbtn-bgcolor: #363636;
+    --praddbtn-alt-bgcolor: #000000;
+
+    /* ==== praddicon -> Programs Add Icon ==== */
+    --praddicon-fill: #dddddd;
+    --praddicon-alt-fill: #ffffff;
+
     /* ==== gstsliderctr -> General Setting Slider Container ==== */
     --gstsliderctr-bgcolor: #dfe1e5;
 
@@ -906,6 +968,18 @@ html {
 
     /* ==== gsttoggleicon -> General Setting Toggle Icon ==== */
     --gsttoggleicon-transition: transform 0.3s ease 0s, fill 0.3s ease 0s, background-color 0.3s ease 0s;
+
+    /* ==== gsttile -> General Setting Tile ==== */
+    --gsttile-transition: background-color 0.3s ease 0s;
+
+    /* ==== gstpath -> General Setting Path ==== */
+    --gstpath-transition: fill 0.3s ease 0s;
+
+    /* ==== gstprogramlabel -> General Setting Program Label ==== */
+    --gstprogramlabel-transition: color 0.3s ease 0s;
+
+    /* ==== praddbtn -> Programs Add Button ==== */
+    --praddbtn-transition: background-color 0.3s ease 0s;
 
     /* ==== gsttrack -> General Setting Track ==== */
     --gsttrack-transition: background-color 0.3s ease 0s;

@@ -7,14 +7,15 @@
 import { TimelineState } from './timelineState.js';
 
 /**
- * @exports CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
- *  MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
- *  NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+ * @exports CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, 
+ *  NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, VIDEO_PREVIEW_AGE_LABEL_DELAY, 
  *  PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
  *  VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
  *  PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
  *  TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
  *  TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
+ *  SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+ *  MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
  *  MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
  *  ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
  *  html, 
@@ -23,9 +24,9 @@ import { TimelineState } from './timelineState.js';
  *  navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
  *  navTglBtn, navTglIcon, 
  *  contStatLabel, dirsSect, editSect, stgsSect, 
- *  capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
- *  clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
- *  videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+ *  capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
+ *  clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
+ *  videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
  *  editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
  *  plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
  *  mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -35,21 +36,22 @@ import { TimelineState } from './timelineState.js';
  *  fscBarBtn, fscBarIcon, 
  *  tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
  *  clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
- *  mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
- *  mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
- *  spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
+ *  mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
+ *  mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
+ *  spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
  *  boxes, data, flags, states, 
  *  initRendVars 
  */
 export {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
-    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
-    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, VIDEO_PREVIEW_AGE_LABEL_DELAY, 
     PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
     VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
     PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
     TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
     TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
+    SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -58,9 +60,9 @@ export {
     navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
+    videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -70,9 +72,9 @@ export {
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
-    mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
+    mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
+    mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
+    spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
     boxes, data, flags, states, 
     initRendVars 
 };
@@ -85,22 +87,13 @@ const CONTENT_STATUS_LABEL_TIMEOUT = 5000;
 const TIME_PAD = (time) => time.toString().padStart(2, '0');
 const DECIMAL_TRUNC = 6;
 
-// speaker and microphone volume min max
-const SPEAKER_VOLUME_MIN = 0;
-const SPEAKER_VOLUME_MAX = 1;
-const SPEAKER_VOLUME_GROW = 0.05;
-const SPEAKER_VOLUME_REDUCE = 0.05
-const MICROPHONE_VOLUME_MIN = 0;
-const MICROPHONE_VOLUME_MAX = 1;
-const MICROPHONE_VOLUME_GROW = 0.05;
-const MICROPHONE_VOLUME_REDUCE = 0.05
-
 // navigation bar timeout
 const NAVIGATION_BAR_TIMEOUT = 500;
 
-// gallery gap and sizing
+// gallery gap, sizing, and video preview age label update delay
 const BYTES_IN_GIGABYTE = 1073741824;
 const GALLERY_MIN_GAP = 5;
+const VIDEO_PREVIEW_AGE_LABEL_DELAY = 10000;
 
 // grow reduce values and timeout
 const PLAYBACK_CONTAINER_GROW = 5;
@@ -149,6 +142,16 @@ const TIMELINE_OVERLAY_TICK_TEXT_OFFSET = 5;
 // clip length min
 const CLIP_LENGTH_MIN = 5;
 
+// speaker and microphone volume min max
+const SPEAKER_VOLUME_MIN = 0;
+const SPEAKER_VOLUME_MAX = 1;
+const SPEAKER_VOLUME_GROW = 0.05;
+const SPEAKER_VOLUME_REDUCE = 0.05
+const MICROPHONE_VOLUME_MIN = 0;
+const MICROPHONE_VOLUME_MAX = 1;
+const MICROPHONE_VOLUME_GROW = 0.05;
+const MICROPHONE_VOLUME_REDUCE = 0.05
+
 // timings
 const MSECONDS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
@@ -166,9 +169,9 @@ let html,
     navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
+    videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -178,9 +181,9 @@ let html,
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
-    mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
+    mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
+    mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
+    spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
     boxes, data, flags, states
 
 /**
@@ -233,8 +236,8 @@ function initRendVars() {
     capsUsageLabel3 = document.getElementById('usage-label3-captures');
     capsTotalLabel3 = document.getElementById('total-label3-captures');
 
-    capsGameFltDirStgFld = document.querySelector(`.directory-setting-field[name='capturesGameFilter']`);
-    capsMetaFltDirStgFld = document.querySelector(`.directory-setting-field[name='capturesMetaFilter']`);
+    capsGameFltFld = document.querySelector(`.directory-setting-field[name='capturesGameFilter']`);
+    capsMetaFltFld = document.querySelector(`.directory-setting-field[name='capturesMetaFilter']`);
 
     capsBarBtn = document.getElementById('bar-btn-captures');
     capsBarIcon = document.querySelector('#bar-icon-captures > use');
@@ -245,13 +248,13 @@ function initRendVars() {
     clipsUsageLabel3 = document.getElementById('usage-label3-clips');
     clipsTotalLabel3 = document.getElementById('total-label3-clips');
 
-    clipsGameFltDirStgFld = document.querySelector(`.directory-setting-field[name='clipsGameFilter']`);
-    clipsMetaFltDirStgFld = document.querySelector(`.directory-setting-field[name='clipsMetaFilter']`);
+    clipsGameFltFld = document.querySelector(`.directory-setting-field[name='clipsGameFilter']`);
+    clipsMetaFltFld = document.querySelector(`.directory-setting-field[name='clipsMetaFilter']`);
     
     clipsBarBtn = document.getElementById('bar-btn-clips');
     clipsBarIcon = document.querySelector('#bar-icon-clips > use');
 
-    videoPrvwTmpl = document.getElementById('template-video-preview');
+    videoPrvwCtrTmpl = document.getElementById('template-video-preview-ctr');
     videoPrvwCtrWidth = parseInt(STYLE.getPropertyValue('--vtnimage-height')) * 16 / 9 + 2 * parseInt(STYLE.getPropertyValue('--vpctr-padding'));
 
     capsLeftBtn = document.getElementById('left-btn-captures');
@@ -323,37 +326,41 @@ function initRendVars() {
     clipTglIcon = document.querySelector('#toggle-icon-clip > use');
 
     // settings section elements
-    mostStgTglSwtes = document.querySelectorAll(`.general-setting-toggle-switch:not(:has(> .general-setting-toggle-field[name='darkMode']))`);
+    mostTglSwtes = document.querySelectorAll(`.general-setting-toggle-switch:not(:has(> .general-setting-toggle-field[name='darkMode']))`);
 
-    darkModeStgTglFld = document.querySelector(`.general-setting-toggle-field[name='darkMode']`);
-    darkModeStgTglIcon = document.querySelector(`.general-setting-toggle-field[name='darkMode'] + .general-setting-toggle-icon > use`);
+    darkModeTglFld = document.querySelector(`.general-setting-toggle-field[name='darkMode']`);
+    darkModeTglIcon = document.querySelector(`.general-setting-toggle-field[name='darkMode'] + .general-setting-toggle-icon > use`);
 
-    mostStgFlds = document.querySelectorAll(`.general-setting-field:not([name='capturesDirectory']):not([name='capturesLimit']):not([name='capturesDisplay']):not([name='clipsDirectory']):not([name='clipsLimit']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='speaker']):not([name='microphone'])`);
+    mostFlds = document.querySelectorAll(`.general-setting-field:not([name='capturesDirectory']):not([name='capturesLimit']):not([name='capturesDisplay']):not([name='clipsDirectory']):not([name='clipsLimit']):not([name='clipsFormat']):not([name='clipsWidth']):not([name='clipsHeight']):not([name='speaker']):not([name='microphone'])`);
 
-    capsDirStgFld = document.querySelector(`.general-setting-field[name='capturesDirectory']`);
-    capsLimitStgFld = document.querySelector(`.general-setting-field[name='capturesLimit']`);
-    capsDispStgFld = document.querySelector(`.general-setting-field[name='capturesDisplay']`);
+    capsDirFld = document.querySelector(`.general-setting-field[name='capturesDirectory']`);
+    capsLimitFld = document.querySelector(`.general-setting-field[name='capturesLimit']`);
+    capsDispFld = document.querySelector(`.general-setting-field[name='capturesDisplay']`);
 
-    clipsDirStgFld = document.querySelector(`.general-setting-field[name='clipsDirectory']`);
-    clipsLimitStgFld = document.querySelector(`[name='clipsLimit']`);
+    progsBoard = document.getElementById('board-programs');
+    genStgTileTmpl = document.getElementById('template-general-setting-tile');
+    progsAddBtn = document.getElementById('add-btn-programs');
 
-    clipsFrmStgFlds = document.querySelectorAll(`[name='clipsFormat']`);
-    clipsWidthStgFlds = document.querySelectorAll(`[name='clipsWidth']`);
-    clipsHeightStgFlds = document.querySelectorAll(`[name='clipsHeight']`);
+    clipsDirFld = document.querySelector(`.general-setting-field[name='clipsDirectory']`);
+    clipsLimitFld = document.querySelector(`[name='clipsLimit']`);
 
-    spkStgFld = document.querySelector(`.general-setting-field[name='speaker']`);
+    clipsFrmFlds = document.querySelectorAll(`[name='clipsFormat']`);
+    clipsWidthFlds = document.querySelectorAll(`[name='clipsWidth']`);
+    clipsHeightFlds = document.querySelectorAll(`[name='clipsHeight']`);
 
-    spkVolStgSldrCtr = document.getElementById('setting-slider-ctr-speaker-volume');
-    spkVolStgSldr = document.getElementById('setting-slider-speaker-volume');
-    spkVolStgOvrl = document.getElementById('setting-overlay-speaker-volume');
-    spkVolStgThumb = document.getElementById('setting-thumb-speaker-volume');
+    spkFld = document.querySelector(`.general-setting-field[name='speaker']`);
 
-    micStgFld = document.querySelector(`.general-setting-field[name='microphone']`);
+    spkVolSldrCtr = document.getElementById('slider-ctr-speaker-volume');
+    spkVolSldr = document.getElementById('slider-speaker-volume');
+    spkVolOvrl = document.getElementById('overlay-speaker-volume');
+    spkVolThumb = document.getElementById('thumb-speaker-volume');
 
-    micVolStgSldrCtr = document.getElementById('setting-slider-ctr-microphone-volume');
-    micVolStgSldr = document.getElementById('setting-slider-microphone-volume');
-    micVolStgOvrl = document.getElementById('setting-overlay-microphone-volume');
-    micVolStgThumb = document.getElementById('setting-thumb-microphone-volume');
+    micFld = document.querySelector(`.general-setting-field[name='microphone']`);
+
+    micVolSldrCtr = document.getElementById('slider-ctr-microphone-volume');
+    micVolSldr = document.getElementById('slider-microphone-volume');
+    micVolOvrl = document.getElementById('overlay-microphone-volume');
+    micVolThumb = document.getElementById('thumb-microphone-volume');
 
     // element boxes
     boxes = {
@@ -363,8 +370,8 @@ function initRendVars() {
         videoVolSldrBox: videoVolSldr.getBoundingClientRect(), 
         plbkRateSldrBox: plbkRateSldr.getBoundingClientRect(), 
         tmlnSldrBox: tmlnSldr.getBoundingClientRect(), 
-        spkVolStgSldrBox: spkVolStgSldr.getBoundingClientRect(), 
-        micVolStgSldrBox: micVolStgSldr.getBoundingClientRect() 
+        spkVolSldrBox: spkVolSldr.getBoundingClientRect(), 
+        micVolSldrBox: micVolSldr.getBoundingClientRect() 
     };
 
     // video/setting/display/device data
@@ -373,7 +380,8 @@ function initRendVars() {
         clips: null, 
         stgs: null, 
         disps: null, 
-        devs: null
+        progs: null, 
+        devs: null 
     };
 
     // boolean flags
@@ -395,20 +403,22 @@ function initRendVars() {
         isTmlnSldrDrag: false, 
         isClipLeftThumbDrag: false, 
         isClipRightThumbDrag: false, 
-        isSpkVolStgSldrCtrHover: false, 
-        isSpkVolStgSldrDrag: false, 
-        isMicVolStgSldrCtrHover: false, 
-        isMicVolStgSldrDrag: false 
+        isSpkVolSldrCtrHover: false, 
+        isSpkVolSldrDrag: false, 
+        isMicVolSldrCtrHover: false, 
+        isMicVolSldrDrag: false 
     };
 
     // states data
     states = {
-        recTime: null, 
         contStatLabelTmo: null, 
+        recTime: null, 
+        recTimeIntv: null, 
+        capsIntvs: [],
+        clipsIntvs: [], 
         videoFrameLen: null, 
         animID: null, 
         plbkCtrTmo: null, 
-        recTimeIntv: null, 
         tmln: new TimelineState() 
     };
 }

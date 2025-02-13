@@ -8,14 +8,15 @@
  * @requires rendererSettingsSection
  */
 import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
-    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
-    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, 
+    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, 
+    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, VIDEO_PREVIEW_AGE_LABEL_DELAY, 
     PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
     VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
     PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
     TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
     TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
+    SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
+    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
     MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
     ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
     html, 
@@ -24,9 +25,9 @@ import {
     navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
     navTglBtn, navTglIcon, 
     contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltDirStgFld, capsMetaFltDirStgFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltDirStgFld, clipsMetaFltDirStgFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
+    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
+    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
+    videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
     editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
     plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
     mediaBar, playPauseBarBtn, playPauseBarIcon, 
@@ -36,15 +37,15 @@ import {
     fscBarBtn, fscBarIcon, 
     tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
     clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
-    mostStgTglSwtes, darkModeStgTglFld, darkModeStgTglIcon, 
-    mostStgFlds, capsDirStgFld, capsLimitStgFld, capsDispStgFld, clipsDirStgFld, clipsLimitStgFld, clipsFrmStgFlds, clipsWidthStgFlds, clipsHeightStgFlds, 
-    spkStgFld, spkVolStgSldrCtr, spkVolStgSldr, spkVolStgOvrl, spkVolStgThumb, micStgFld, micVolStgSldrCtr, micVolStgSldr, micVolStgOvrl, micVolStgThumb, 
+    mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
+    mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
+    spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
     boxes, data, flags, states, 
     initRendVars 
 } from './rendererVariables.js';
 import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
-import { initRendStgsSect, pseudoSetVol, setVol, setVolStgSldr, setVolStgOvrl, setVolStgThumb, updateVolStgSldr } from './rendererSettingsSection.js';
+import { initRendStgsSect, pseudoSetVol, setVol, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr } from './rendererSettingsSection.js';
 
 /**
  * @exports initRendEditSect, setVideoPlayerState, setVideoTime, setPlbkCtrTmo, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs
@@ -220,22 +221,22 @@ function initVideoCtrEL() {
                     // prevent the default behavior on the hotkey
                     event.preventDefault();
 
-                    if (flags['isSpkVolStgSldrCtrHover']) {
+                    if (flags['isSpkVolSldrCtrHover']) {
                         // set the speaker volume
                         pseudoSetVol(data['stgs']['speakerVolume'] - SPEAKER_VOLUME_REDUCE, true);  // boolean1 isSpk
                         setVol(true);  // boolean1 isSpk
 
                         // set the speaker volume slider
-                        setVolStgSldr(true);  // boolean1 isSpk
+                        setVolSldr(true);  // boolean1 isSpk
                     }
                     else {
-                        if (flags['isMicVolStgSldrCtrHover']) {
+                        if (flags['isMicVolSldrCtrHover']) {
                             // set the microphone volume
                             pseudoSetVol(data['stgs']['microphoneVolume'] - MICROPHONE_VOLUME_REDUCE, false);  // boolean1 isSpk
                             setVol(false);  // boolean1 isSpk
 
                             // set the microphone volume slider
-                            setVolStgSldr(false);  // boolean1 isSpk
+                            setVolSldr(false);  // boolean1 isSpk
                         }
                     }
 
@@ -246,22 +247,22 @@ function initVideoCtrEL() {
                     // prevent the default behavior on the hotkey
                     event.preventDefault();
                     
-                    if (flags['isSpkVolStgSldrCtrHover']) {
+                    if (flags['isSpkVolSldrCtrHover']) {
                         // set the speaker volume
                         pseudoSetVol(data['stgs']['speakerVolume'] + SPEAKER_VOLUME_GROW, true);  // boolean1 isSpk
                         setVol(true);  // boolean1 isSpk
 
                         // set the speaker volume slider
-                        setVolStgSldr(true);  // boolean1 isSpk
+                        setVolSldr(true);  // boolean1 isSpk
                     }
                     else {
-                        if (flags['isMicVolStgSldrCtrHover']) {
+                        if (flags['isMicVolSldrCtrHover']) {
                             // set the microphone volume
                             pseudoSetVol(data['stgs']['microphoneVolume'] + MICROPHONE_VOLUME_GROW, false);  // boolean1 isSpk
                             setVol(false);  // boolean1 isSpk
 
                             // set the microphone volume slider
-                            setVolStgSldr(false);  // boolean1 isSpk
+                            setVolSldr(false);  // boolean1 isSpk
                         }
                     }
             
@@ -678,20 +679,20 @@ function initTmlnSldrEL() {
                                 setVideoTime(null, false, true, true, false, false);  // boolean1 doPauseBeforeSet, boolean2 doBoundsCheck, boolean3 doPauseInCheck, boolean4 doVideoStateCheck, boolean5 doSetSldrsAtEnd
                             }
                             else {
-                                if (flags['isSpkVolStgSldrDrag']) {
+                                if (flags['isSpkVolSldrDrag']) {
                                     // set the speaker volume
-                                    pseudoSetVol(getPtrEventPct(ptr, boxes['spkVolStgSldrBox']), true);  // boolean1 isSpk
+                                    pseudoSetVol(getPtrEventPct(ptr, boxes['spkVolSldrBox']), true);  // boolean1 isSpk
 
                                     // set the speaker volume slider
-                                    setVolStgSldr(true);  // boolean1 isSpk
+                                    setVolSldr(true);  // boolean1 isSpk
                                 }
                                 else {
-                                    if (flags['isMicVolStgSldrDrag']) {
+                                    if (flags['isMicVolSldrDrag']) {
                                         // set the microphone volume
-                                        pseudoSetVol(getPtrEventPct(ptr, boxes['micVolStgSldrBox']), false);  // boolean1 isSpk
+                                        pseudoSetVol(getPtrEventPct(ptr, boxes['micVolSldrBox']), false);  // boolean1 isSpk
 
                                         // set the microphone volume slider
-                                        setVolStgSldr(false);  // boolean1 isSpk
+                                        setVolSldr(false);  // boolean1 isSpk
                                     } 
                                 }
                             }
@@ -790,15 +791,15 @@ function initTmlnSldrEL() {
                         }
                         else {
                             // if the speaker volume slider is dragging, set the speaker volume setting
-                            if (flags['isSpkVolStgSldrDrag']) {
-                                flags['isSpkVolStgSldrDrag'] = false;
+                            if (flags['isSpkVolSldrDrag']) {
+                                flags['isSpkVolSldrDrag'] = false;
 
                                 setVol(true);  // boolean1 isSpk
                             }
                             else {
                                 // if the microphone volume slider is dragging, set the microphone volume setting
-                                if (flags['isMicVolStgSldrDrag']) {
-                                    flags['isMicVolStgSldrDrag'] = false;
+                                if (flags['isMicVolSldrDrag']) {
+                                    flags['isMicVolSldrDrag'] = false;
 
                                     setVol(false);  // boolean1 isSpk
                                 } 
