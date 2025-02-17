@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('procAPI', {
     // M -> R, requests a call to finishInit
-    reqFinishInit: (callback) => ipcRenderer.on('proc:reqFinishInit', callback)
+    reqFinishInit: (cb) => ipcRenderer.on('proc:reqFinishInit', cb)
 });
 
 contextBridge.exposeInMainWorld('genAPI', {
@@ -32,10 +32,7 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     reqTogAutoRec: () => ipcRenderer.send('stgs:reqTogAutoRec'), 
 
     // M -> R, requests a call to togRecBarBtn
-    reqTogRecBarBtn: (callback) => ipcRenderer.on('stgs:reqTogRecBarBtn', (_, recGame) => callback(recGame)),
-
-    // R -> M, gets the size of the captures or clips directory
-    getDirSize: (isCaps) => ipcRenderer.invoke('stgs:getDirSize', isCaps), 
+    reqTogRecBarBtn: (cb) => ipcRenderer.on('stgs:reqTogRecBarBtn', (_, recGame) => cb(recGame)),
     
     // R -> M, opens the captures or clips directory
     openDir: (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 
@@ -56,5 +53,11 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     getAllDispsData: () => ipcRenderer.invoke('stgs:getAllDispsData'),
 
     // R -> M, sets a specific setting
-    setStg: (key, value) => ipcRenderer.invoke('stgs:setStg', key, value),
+    setStg: (key, value) => ipcRenderer.invoke('stgs:setStg', key, value), 
+
+    // M -> R, requests a call to addVideo
+    reqAddVideo: (cb) => ipcRenderer.on('stgs:reqAddVideo', (_, videoData, isCaps) => cb(videoData, isCaps)), 
+
+    // M -> R, requests a call to delVideo
+    reqDelVideo: (cb) => ipcRenderer.on('stgs:reqDelVideo', (_, extName, isCaps) => cb(extName, isCaps)) 
 });

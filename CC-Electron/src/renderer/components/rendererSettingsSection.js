@@ -43,7 +43,7 @@ import {
     initRendVars 
 } from './rendererVariables.js';
 import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
-import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
+import { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall } from './rendererDirectoriesSection.js';
 
 /**
  * @exports initRendStgsSect, pseudoSetVol, setVol, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr
@@ -111,7 +111,7 @@ function initStgCtrEL() {
             if (dir !== null) {
                 dirFld.value = data['stgs'][dirFld.name] = dir;
 
-                await atmpAsyncFunc(() => loadGall(isCaps, false));
+                await atmpAsyncFunc(() => addAllVideos(isCaps, false));  // boolean1 isCaps, boolean2 isInit
             }
         });
     }

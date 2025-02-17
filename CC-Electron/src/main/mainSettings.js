@@ -3,8 +3,10 @@
  * 
  * @module mainSettings
  * @requires child_process
+ * @requires chokidar
  * @requires electron
  * @requires electron-store
+ * @requires extract-file-icon
  * @requires fluent-ffmpeg
  * @requires fs
  * @requires path
@@ -15,6 +17,7 @@
  * @requires mainWebSocket
  */
 import { exec } from 'child_process';
+import chokidar from 'chokidar';
 import { dialog, ipcMain, shell } from 'electron';
 import Store from 'electron-store';
 import extract from 'extract-file-icon';
@@ -24,7 +27,7 @@ import path from 'path';
 import psList from 'ps-list';
 import { promisify } from 'util'
 import { 
-    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    TERMINATION_SIGNAL, ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
     CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
     CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
@@ -54,8 +57,7 @@ async function initMainStgs() {
  * Initializes the settings
  */
 async function initStgs() {
-    data['devs'] = await getDevs();
-    data['disps'] = await getDisps();
+    [data['devs'], data['disps']] = await Promise.all([getDevs(), getDisps()]);
 
     // try to load the settings for electron-store
     try {
@@ -80,6 +82,13 @@ async function initStgs() {
             logProc('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         }
     }
+
+    // create the captures and clips directory watchers to watch for any file updates
+    states['capsWatch'] = chokidar.watch(data['stgs'].get('capturesDirectory'), { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+    states['clipsWatch'] = chokidar.watch(data['stgs'].get('clipsDirectory'), { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+
+    loadWatchL(true);  // boolean1 isCaps
+    loadWatchL(false);  // boolean1 isCaps
 
     // create the CapCha profile if it does not exist
     if (!(await atmpAsyncFunc(() => webSocketReq('GetProfileList')))['responseData']['profiles'].includes('CapCha')) {
@@ -232,11 +241,6 @@ function initStgsL() {
     // on reqTogAutoRec, call togAutoRec
     ipcMain.on('stgs:reqTogAutoRec', togAutoRec); 
 
-    // gets the size of a directory
-    ipcMain.handle('stgs:getDirSize', async (_, isCaps) => {
-        return getDirSize(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory'));
-    });
-
     // opens the directory
     ipcMain.on('stgs:openDir', async (_, isCaps) => {
         await atmpAsyncFunc(() => shell.openPath(data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory')));
@@ -255,12 +259,14 @@ function initStgsL() {
         return !(name in data['stgs'].get('programs'));
     });
 
-    // gets the videos data for the directory
+    // gets the size and videos data for the directory
     ipcMain.handle('stgs:getAllDirData', async (_, isCaps) => {
         // get the captures or clips variable
         const frmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
         const dir = data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
         const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+        // videos data, video count, corrupted video count, and size
+        let videoCount = 0, corrCount = 0, size = 0;
 
         // ensures the thumbnail directory exists
         if (await atmpAsyncFunc(() => fs.access(tbnlDir))) {
@@ -271,7 +277,7 @@ function initStgsL() {
         if (await atmpAsyncFunc(() => fs.access(dir))) {
             await atmpAsyncFunc(() => fs.mkdir(dir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
         }
-    
+
         // read the video directory for files
         const files = await atmpAsyncFunc(() => fs.readdir(dir));
 
@@ -279,10 +285,24 @@ function initStgsL() {
         const videos = files.filter(file => SETTINGS_DATA_SCHEMA[frmtStr]['enum'].includes(path.extname(file).toLowerCase().replace('.', '')));
 
         // get the data and thumbnail for each video
-        const videosData = await Promise.all(videos.map(video => getVideoData(video, dir, isCaps)));
+        const videosData = await Promise.all(videos.map(video => getVideoData(video, isCaps)));
 
-        // return all the data on the videos
-        return videosData.filter(videoData => videoData !== null);
+        // iterate through each video data (backwards, since we may splice the array)
+        for (let i = videosData.length - 1; i > -1; i--) {
+            // if the video is not corrupted, update the video count and size
+            if (videosData[i] !== null) {
+                videoCount++;
+                size += videosData[i]['data']['size'];
+            }
+            // else, update the corrupted count and remove the corrupted video
+            else {
+                corrCount++;
+                videosData.splice(i, 1);
+            }
+        }
+
+        // return all the counts and data on the videos
+        return [ videosData, videoCount, corrCount, videoCount + corrCount, size ];
     });
 
     // gets the settings object
@@ -336,6 +356,11 @@ function initStgsL() {
 
                     // sets the new captures directory
                     await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': value }));
+
+                    // close the old captures directory watcher and create the new one to watch for any file updates
+                    await states['capsWatch'].close();
+                    states['capsWatch'] = chokidar.watch(value, { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+                    loadWatchL(true);  // boolean1 isCaps
                 }
                 else {
                     return null;
@@ -441,6 +466,11 @@ function initStgsL() {
                         // reverts to the default setting if needed
                         value = SETTINGS_DATA_DEFS[key];
                     }
+
+                    // close the old clips directory watcher and create the new one to watch for any file updates
+                    await states['clipsWatch'].close();
+                    states['clipsWatch'] = chokidar.watch(value, { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+                    loadWatchL(false);  // boolean1 isCaps
                 }
                 else {
                     return null;
@@ -499,74 +529,91 @@ function initStgsL() {
  * @param {boolean} isCaps - If the call is for captures or clips
  * @returns {Object} The list of video meta data
  */
-async function getVideoData(video, dir, isCaps) {
+async function getVideoData(video, isCaps) {
+    // get the captures or clips variable
+    const dir = data['stgs'].get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
     // turn ffprobe into a promise based function and get basic video data
     const ffprobeProm = promisify(ffmpeg.ffprobe);
     const videoName = path.parse(video).name;
+    const splitName = video.split('-CC');
     const videoPath = path.join(dir, video);
     const videoMetaData = await atmpAsyncFunc(() => fs.stat(videoPath));
     const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
     const tbnlPath = path.join(tbnlDir, `${videoName}.png`);
-    const videoMetaData2 = await atmpAsyncFunc(() => ffprobeProm(videoPath));
-    const videoStream = videoMetaData2.streams.find(stream => stream.codec_type === 'video');
+    const videoMetaData2 = await atmpAsyncFunc(() => ffprobeProm(videoPath), 1, 2000);
 
-    // check if the thumbnail for this video already exists
-    if (!(await atmpAsyncFunc(() => fs.access(tbnlPath)))) {
-        // create the thumbnail
-        await atmpAsyncFunc(() => new Promise((resolve, reject) => {
-            ffmpeg(videoPath)
-                .on('end', resolve)
-                .on('error', reject)
-                .screenshots({
-                    'timestamps': ['50%'],
-                    'filename': videoName,
-                    'folder': tbnlDir,
-                    'size': THUMBNAIL_SIZE
-                });
-        }));
+    // check if the file is not corrupted and can be read
+    if (videoMetaData2) {
+        // check if the thumbnail for this video already exists
+        if (!(await atmpAsyncFunc(() => fs.access(tbnlPath)))) {
+            // create the thumbnail
+            await atmpAsyncFunc(() => new Promise((resolve, reject) => {
+                ffmpeg(videoPath)
+                    .on('end', resolve)
+                    .on('error', reject)
+                    .screenshots({
+                        'timestamps': ['50%'],
+                        'filename': videoName,
+                        'folder': tbnlDir,
+                        'size': THUMBNAIL_SIZE
+                    });
+            }));
+        }
+
+        // return the data on the video
+        return {
+            'data': { 
+                'date': videoMetaData.birthtime, 
+                'dur': videoMetaData2.format.duration, 
+                'game': splitName[1] ? splitName[0] : 'External', 
+                'extName': video, 
+                'fps': videoMetaData2.streams.find(stream => stream.codec_type === 'video').r_frame_rate.split('/').map(Number).reduce((a, b) => a / b), 
+                'path': videoPath, 
+                'size': videoMetaData.size, 
+                'tbnlPath': tbnlPath 
+            }, 
+            'node': null, 
+            'intvId': null 
+        };
     }
-
-    return {
-        'date': videoMetaData.birthtime, 
-        'dur': videoMetaData2.format.duration, 
-        'game': video.split('-')[1] ? video.split('-')[0] : 'External', 
-        'extName': video, 
-        'fps': videoStream.r_frame_rate.split("/").map(Number).reduce((a, b) => a / b), 
-        'path': videoPath, 
-        'size': videoMetaData.size, 
-        'tbnlPath': tbnlPath 
-    };
+    // return null
+    else {
+        return null;
+    }
 }
 
 /**
- * Gets the size of the directory
+ * Loads the directory watcher listeners
  * 
- * @param {string} dir - The directory to get the size of
- * @returns {number} The size of the directory
+ * @param {boolean} isCaps - If the call is for captures or clips
  */
-async function getDirSize(dir) {  
-    // get all the files and subdirectories in the directory
-    const files = await atmpAsyncFunc(() => fs.readdir(dir));
-    let size = 0;
+function loadWatchL(isCaps) {
+    // get the captures or clips variable
+    const watchStr = isCaps ? 'capsWatch' : 'clipsWatch';
 
-    for (const file of files) {
-        // get the full path of the file
-        const filePath = path.join(dir, file);
-        const stats = await atmpAsyncFunc(() => fs.stat(filePath));
-        
-        // if the 'file' is a directory, do a recursive call into it
-        if (stats.isDirectory()) {
-            size += await getDirSize(filePath);
-        }
-        else {
-            // if it's a file, add its size
-            if (stats.isFile()) {
-                size += stats.size;
-            }
-        }
-    }
+    // on add, log that a video has been added and request the renderer to add the new video
+    states[watchStr].on('add', async (filePath) => {
+        logProc('Settings', 'ADD', 'New file added to the directory', false);  // boolean1 isFinalMsg
+        logProc('Settings', 'ADD', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'ADD', `filePath: ${filePath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
-    return size;
+        // add the new video to the gallery
+        insts['mainWindow']['webContents'].send('stgs:reqAddVideo', await getVideoData(path.basename(filePath), isCaps), isCaps);
+    });
+
+    // on unlink, log that a video has been deleted and request the renderer to remove the video
+    states[watchStr].on('unlink', async (filePath) => {
+        // get the captures or clips variable
+        const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+
+        logProc('Settings', 'DEL', 'File deleted from the directory', false);  // boolean1 isFinalMsg
+        logProc('Settings', 'DEL', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('Settings', 'DEL', `filePath: ${filePath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+
+        // remove the video from the gallery and delete the thumbnail image
+        insts['mainWindow']['webContents'].send('stgs:reqDelVideo', path.basename(filePath), isCaps);
+        atmpAsyncFunc(() => fs.unlink(path.join(tbnlDir, `${path.parse(filePath).name}.png`)));
+    });
 }
 
 /**

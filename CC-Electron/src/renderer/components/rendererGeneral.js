@@ -45,7 +45,7 @@ import {
     initRendVars 
 } from './rendererVariables.js';
 import { initRendNavBlock, togRecBarBtn } from './rendererNavigationBlock.js';
-import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
+import { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall } from './rendererDirectoriesSection.js';
 import { initRendEditSect, setVideoPlayerState, setVideoTime, setPlbkCtrTmo, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs } from './rendererEditorSection.js';
 import { initRendStgsSect, pseudoSetVol, setVol, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr } from './rendererSettingsSection.js';
 
@@ -87,6 +87,12 @@ function initGenEL() {
 function initGenIPC() {
     // on request, toggle the record button (initiated from the main auto recording process)
     window['stgsAPI'].reqTogRecBarBtn(async (recGame) => await atmpAsyncFunc(() => togRecBarBtn(true, false, recGame)));  // boolean1 isAutoStart, boolean2 isManualStop
+
+    // on request, add a video to the gallery
+    window['stgsAPI'].reqAddVideo((videoData, isCaps) => addVideo(videoData, isCaps));
+
+    // on request, delete a video from the gallery
+    window['stgsAPI'].reqDelVideo((extName, isCaps) => delVideo(extName, isCaps));
 }
 
 /**

@@ -44,7 +44,7 @@ import {
     initRendVars 
 } from './rendererVariables.js';
 import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
-import { initRendDirsSect, loadGall, updateGall } from './rendererDirectoriesSection.js';
+import { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall } from './rendererDirectoriesSection.js';
 import { initRendStgsSect, pseudoSetVol, setVol, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr } from './rendererSettingsSection.js';
 
 /**
@@ -971,8 +971,6 @@ function initClipCtrEL() {
     // on click, create the clip and reload the clip gallery
     createBarBtn.addEventListener('click', async () => {
         await atmpAsyncFunc(() => window['genAPI'].reqCreateClip(videoPlr.getAttribute('src'), states['tmln'].getClipStartTime(), states['tmln'].getClipEndTime()));
-
-        await atmpAsyncFunc(() => loadGall(false, false));
     });
 
     // on click, change the clip toggle button state

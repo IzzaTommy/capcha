@@ -93,7 +93,7 @@ const NAVIGATION_BAR_TIMEOUT = 500;
 // gallery gap, sizing, and video preview age label update delay
 const BYTES_IN_GIGABYTE = 1073741824;
 const GALLERY_MIN_GAP = 5;
-const VIDEO_PREVIEW_AGE_LABEL_DELAY = 10000;
+const VIDEO_PREVIEW_AGE_LABEL_DELAY = 600000;
 
 // grow reduce values and timeout
 const PLAYBACK_CONTAINER_GROW = 5;
@@ -376,8 +376,20 @@ function initRendVars() {
 
     // video/setting/display/device data
     data = {
-        caps: null, 
+        caps: null,
+        capsCounts: {
+            'videoCount': null, 
+            'corrCount': null, 
+            'totalCount': null, 
+            'size': null
+        }, 
         clips: null, 
+        clipsCounts: {
+            'videoCount': null, 
+            'corrCount': null, 
+            'totalCount': null, 
+            'size': null
+        }, 
         stgs: null, 
         disps: null, 
         progs: null, 
@@ -414,10 +426,10 @@ function initRendVars() {
         contStatLabelTmo: null, 
         recTime: null, 
         recTimeIntv: null, 
-        capsIntvs: [],
-        clipsIntvs: [], 
+        // capsIntvs: [],
+        // clipsIntvs: [], 
         videoFrameLen: null, 
-        animID: null, 
+        animId: null, 
         plbkCtrTmo: null, 
         tmln: new TimelineState() 
     };

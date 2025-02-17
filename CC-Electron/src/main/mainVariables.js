@@ -9,7 +9,7 @@ import { app } from 'electron';
 import path from 'path';
 
 /**
- * @exports ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+ * @exports TERMINATION_SIGNAL, ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
  *  CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
  *  CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
  *  OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
@@ -20,7 +20,7 @@ import path from 'path';
  *  data, flags, insts, states, uuids 
  */
 export { 
-    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    TERMINATION_SIGNAL, ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
     CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
     CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
@@ -35,6 +35,9 @@ export {
 const INITIALIZATION_DATE = new Date();
 const CAPTURES_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Captures');
 const CLIPS_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Clips');
+
+// termination signal for OBS
+const TERMINATION_SIGNAL = 'SIGTERM';
 
 // active directory
 const ACTIVE_DIRECTORY = import.meta.dirname;  // CC-Electron/src/main
@@ -259,8 +262,7 @@ const data = {
     disps: null, 
     inps: null, 
     scenes: null, 
-    stgs: null, 
-    videos: null 
+    stgs: null
 };
 
 // boolean flags
@@ -279,7 +281,9 @@ const insts = {
 const states = { 
     autoRecIntv: null, 
     recGame: null, 
-    pendReqs: new Map() 
+    pendReqs: new Map(), 
+    capsWatch: null, 
+    clipsWatch: null, 
 };
 
 // device uuids

@@ -3,14 +3,16 @@
  * 
  * @module mainWebSocket
  * @requires electron
+ * @requires path
  * @requires ws
  * @requires mainVariables
  * @requires mainGeneral
  */
 import { ipcMain } from 'electron';
+import path from 'path';
 import { WebSocket } from 'ws';
 import { 
-    ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
+    TERMINATION_SIGNAL, ACTIVE_DIRECTORY, MAIN_WINDOW_WIDTH_MIN, MAIN_WINDOW_HEIGHT_MIN, MAIN_WINDOW_ICON_PATH, PRELOAD_PATH, INDEX_PATH, 
     CLIP_FRAMERATE, CLIP_VIDEO_BITRATE, CLIP_AUDIO_CODEC, CLIP_AUDIO_BITRATE, CLIP_AUDIO_CHANNELS, CLIP_THREADS, CLIP_VIDEO_CODEC, 
     CHECK_PROGRAMS_DELAY, TIME_PAD, EVENT_PAD, LOGS_PATH, LOGS_DIV, 
     OBS_EXECUTABLE_PATH, CAPTURES_DATE_FORMAT, 
@@ -169,7 +171,7 @@ function initWebSocket() {
 function initWebSocketL() {
     // on startRecord, set the video file name and start recording
     ipcMain.handle('webSocket:startRecord', async (_, recGame) => {
-        await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recGame}-${CAPTURES_DATE_FORMAT}` }));
+        await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recGame}-CC${CAPTURES_DATE_FORMAT}` }));
         flags['isRec'] = (await atmpAsyncFunc(() => webSocketReq('StartRecord', { })))['requestStatus']['result'];
 
         // return if recording is enabled or not

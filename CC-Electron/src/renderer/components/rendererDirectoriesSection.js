@@ -44,9 +44,9 @@ import {
 import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 
 /**
- * @exports initRendDirsSect, loadGall, updateGall
+ * @exports initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall
  */
-export { initRendDirsSect, loadGall, updateGall }
+export { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall }
 
 /**
  * Initializes the directories section
@@ -61,8 +61,8 @@ async function initRendDirsSect() {
     initDirGallEL(true);  // boolean1 isCaps
     initDirGallEL(false);  // boolean1 isCaps
 
-    await atmpAsyncFunc(() => loadGall(true, true));  // boolean1 isCaps, boolean2 isInit
-    await atmpAsyncFunc(() => loadGall(false, true));  // boolean1 isCaps, boolean2 isInit
+    await atmpAsyncFunc(() => addAllVideos(true, true));  // boolean1 isCaps, boolean2 isInit
+    await atmpAsyncFunc(() => addAllVideos(false, true));  // boolean1 isCaps, boolean2 isInit
 }
 
 /**
@@ -86,16 +86,22 @@ async function initContCtr3EL(isCaps) {
     gameFltFld.addEventListener('change', async () => {
         gameFltFld.value = data['stgs'][gameFltFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(gameFltFld.name, gameFltFld.value));
     
-        delAllVideoPrvwCtrs(isCaps);
-        insertVideoPrvwCtrs(isCaps);
+        // remove all the video preview containers from the gallery
+        remAllVideoPrvwCtrs(isCaps);
+
+        // add the video preview containers into the gallery
+        addAllVideoPrvwCtrs(isCaps);
     });
 
     // on change, set the meta filter setting, then remove and re-insert the video preview containers in the new order
     metaFltFld.addEventListener('change', async () => {
         metaFltFld.value = data['stgs'][metaFltFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltFld.name, metaFltFld.value));
     
-        delAllVideoPrvwCtrs(isCaps);
-        insertVideoPrvwCtrs(isCaps);
+        // remove all the video preview containers from the gallery
+        remAllVideoPrvwCtrs(isCaps);
+
+        // add the video preview containers into the gallery
+        addAllVideoPrvwCtrs(isCaps);
     });
 
     // on click, change the sort order
@@ -107,15 +113,21 @@ async function initContCtr3EL(isCaps) {
             setIcon(barIcon, 'arrow-upward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true));
 
-            delAllVideoPrvwCtrs(isCaps);
-            insertVideoPrvwCtrs(isCaps);
+            // remove all the video preview containers from the gallery
+            remAllVideoPrvwCtrs(isCaps);
+
+            // add the video preview containers into the gallery
+            addAllVideoPrvwCtrs(isCaps);
         }
         else {
             setIcon(barIcon, 'arrow-downward-alt');
             data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false));
 
-            delAllVideoPrvwCtrs(isCaps);
-            insertVideoPrvwCtrs(isCaps);
+            // remove all the video preview containers from the gallery
+            remAllVideoPrvwCtrs(isCaps);
+
+            // add the video preview containers into the gallery
+            addAllVideoPrvwCtrs(isCaps);
         }
     });
 }
@@ -177,82 +189,243 @@ function initDirGallEL(isCaps) {
 }
 
 /**
- * Loads the directory gallery
+ * Adds all videos to the gallery, including creating and adding video preview containers
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  * @param {boolean} isInit - If the function is run during initialization
  */
-async function loadGall(isCaps, isInit) {
+async function addAllVideos(isCaps, isInit) {
     // get the captures or clips variables
-    const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
     const dataStr = isCaps ? 'caps' : 'clips';
+    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
 
-    // indicate that the gallery is loading
-    statLabel.textContent = 'Loading...';
-    statLabel.classList.add('active');
+    // indicate that the gallery is loading on the directory status label
+    if (!isInit) {
+        statLabel.textContent = 'Loading...';
+        statLabel.classList.add('active');
+    }
 
-    delAllVideoPrvwCtrs(isCaps);
+    // delete all the current videos
+    delAllVideos(isCaps);
 
-    // get the size of the directory
-    usageLabel3.textContent = `${Math.ceil(await atmpAsyncFunc(() => window['stgsAPI'].getDirSize(isCaps)) / BYTES_IN_GIGABYTE)} GB`;
+    // get the videos data and counts
+    [data[dataStr], data[dataCountsStr]['videoCount'], data[dataCountsStr]['corrCount'], data[dataCountsStr]['totalCount'], data[dataCountsStr]['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
 
-    // get the video data
-    data[dataStr] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
-
-    // console.log(data[dataStr]);
-    // console.log(data['stgs']);
+    // create all the video preview containers
+    createAllVideoPrvwCtrs(isCaps);
 
     // update the game filter field based on the games in the gallery
     await atmpAsyncFunc(() => updateGameFltFld(isCaps));
 
-    // insert the video preview containers  into the gallery
-    insertVideoPrvwCtrs(isCaps);
+    // remove all the video preview containers from the gallery
+    remAllVideoPrvwCtrs(isCaps);
+
+    // add the video preview containers into the gallery
+    addAllVideoPrvwCtrs(isCaps);
+
+    // set the usage label
+    setUsageLabel3(isCaps);
 }
 
 /**
- * Updates the gallery size
+ * Adds a video to the gallery, including creating and adding a video preview container
  * 
+ * @param {Object} videoData - The data of the video
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function updateGall(isCaps) {
-    // get the captures or clips variables
-    const gall = isCaps ? capsGall : clipsGall;
-    const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
-    let numVideoPrvw;
+async function addVideo(videoData, isCaps) {
+    // get the captures or clips variable
+    const dataStr = isCaps ? 'caps' : 'clips';
+    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
 
-    // get the new gallery bounding box
-    boxes[gallBoxStr] = getModBox(gall.getBoundingClientRect());
+    // update the total count
+    data[dataCountsStr]['totalCount'] += 1;
 
-    // calculate and set the gap between the video previews based on the width of the gallery
-    numVideoPrvw= Math.floor(boxes[gallBoxStr]['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
-
-    gall.style.gap = `${(boxes[gallBoxStr]['width'] - (numVideoPrvw* videoPrvwCtrWidth)) / (numVideoPrvw- 1)}px`;
-}
-
-/**
- * Deletes all video preview containers from a gallery
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-function delAllVideoPrvwCtrs(isCaps) {
-    // get the captures or clips variables
-    const gall = isCaps ? capsGall : clipsGall;
-    const intvsStr = isCaps ? 'capsIntvs' : 'clipsIntvs';
-
-    // remove every existing video preview from the gallery and delete their age update intervals
-    while (gall.children.length > 1) {
-        clearInterval(states[intvsStr][gall.children.length - 2]);
-        gall.removeChild(gall.lastElementChild);        
+    // if the video is corrupted, update the corrupted count
+    if (videoData === null) {
+        data[dataCountsStr]['corrCount'] += 1;
     }
+    else {
+        // add the video data to the array
+        data[dataStr].push(videoData);
+
+        // update the size
+        data[dataCountsStr]['size'] += videoData['data']['size'];
+
+        // update the video count
+        data[dataCountsStr]['videoCount'] += 1;
+
+        // create the video preview container
+        createVideoPrvwCtr(videoData);
+
+        // update the game filter field based on the games in the gallery
+        await atmpAsyncFunc(() => updateGameFltFld(isCaps));
+
+        // remove all the video preview containers from the gallery
+        remAllVideoPrvwCtrs(isCaps);
+
+        // add the video preview containers into the gallery
+        addAllVideoPrvwCtrs(isCaps);
+    }
+
+    // set the usage label
+    setUsageLabel3(isCaps);
 }
 
 /**
- * Inserts video preview containers into a gallery
+ * Deletes all videos from the gallery, including its video preview containers
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function insertVideoPrvwCtrs(isCaps) {
+function delAllVideos(isCaps) {
+    // get the captures or clips variable
+    const dataStr = isCaps ? 'caps' : 'clips';
+
+    // if there is videos data, clear every age update interval
+    if (data[dataStr] !== null) {
+        for (const videoData of data[dataStr]) { 
+            clearInterval(videoData['intvId']);
+        }
+    }
+
+    // set the videos data to null
+    data[dataStr] = null;
+
+    // remove all video preview containers
+    remAllVideoPrvwCtrs(isCaps);
+}
+
+/**
+ * Deletes a video from the gallery, including its video preview container
+ * 
+ * @param {string} extName - The name of the video including the extension
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+async function delVideo(extName, isCaps) {
+    // get the captures or clips variables
+    const gall = isCaps ? capsGall : clipsGall;
+    const dataStr = isCaps ? 'caps' : 'clips';
+    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
+    const index = data[dataStr].findIndex(videoData => videoData['data']['extName'] === extName);
+
+    // update the total count
+    data[dataCountsStr]['totalCount'] -= 1;
+
+    // if the index is found
+    if (index !== -1) {
+        // update the video count
+        data[dataCountsStr]['videoCount'] -= 1;
+
+        // update the size
+        data[dataCountsStr]['size'] -= data[dataStr][index]['data']['size'];
+
+        // clear the age update interval
+        clearInterval(data[dataStr][index]['intvId']);
+
+        // remove the node from the gallery
+        gall.removeChild(data[dataStr][index]['node']);
+
+        // remove the video from the array
+        data[dataStr].splice(index, 1);
+    }
+    else {
+        // the video is corrupted, so update the corrupted count
+        data[dataCountsStr]['corrCount'] -= 1;
+    }
+
+    // update the game filter field based on the games in the gallery
+    await atmpAsyncFunc(() => updateGameFltFld(isCaps));
+
+    // set the usage label
+    setUsageLabel3(isCaps);
+}
+
+/**
+ * Creates all video preview containers
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function createAllVideoPrvwCtrs(isCaps) {
+    // get the captures or clips variable
+    const dataStr = isCaps ? 'caps' : 'clips';
+
+    // iterate through each video data and create a video preview container
+    data[dataStr].forEach(videoData => createVideoPrvwCtr(videoData));
+}
+
+/**
+ * Creates a video preview container based on the video data
+ * 
+ * @param {Object} videoData - The data of the video
+ */
+function createVideoPrvwCtr(videoData) {
+    // get the current date
+    let curDate = new Date();
+
+    // get a clone of the video preview container template
+    const videoPrvwCtrClone = videoPrvwCtrTmpl.content.cloneNode(true);
+    const videoPrvwCtr = videoPrvwCtrClone.querySelector('.video-preview-ctr');
+    const videoPrvwAgeLabel = videoPrvwCtrClone.querySelector('.video-preview-age-label')
+
+    // set the video source
+    videoPrvwCtr.dataset.src = videoData['data']['path'];
+    // set the video thumbnail source
+    videoPrvwCtrClone.querySelector('.video-thumbnail-image').setAttribute('src', videoData['data']['tbnlPath']);
+    // set the video duration
+    videoPrvwCtrClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(videoData['data']['dur']);
+    // set the video game
+    videoPrvwCtrClone.querySelector('.video-preview-game-label').textContent = `${videoData['data']['game']}`;
+    // set the video age
+    videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['data']['date']) / MSECONDS_IN_SECOND)}`;
+    // set the video name with the extension
+    videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = videoData['data']['extName'];
+
+    // on click, open the video in the editor section
+    videoPrvwCtr.addEventListener('click', () => {
+        // set the video frame length (to go frame by frame)
+        states['videoFrameLen'] = getTruncDec(1 / videoData['data']['fps']);
+
+        // set the video player source
+        videoPlr.setAttribute('src', videoData['data']['path']);
+
+        // set the editor game label
+        editGameLabel.textContent = `${videoData['data']['game']}`;
+
+        // change the active content section to the editor section
+        setActiveSect('editor');
+    });
+
+    // on click, ...
+    videoPrvwCtrClone.querySelector('.video-preview-rename-btn').addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    // on click, ...
+    videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', (event) => {
+        event.stopPropagation();
+        // delVideoPrvwCtr(videoData['data']['extName'], true);
+    });
+
+    // set the element node
+    videoData['node'] = videoPrvwCtr;
+
+    // set the interval for updating the age periodically
+    videoData['intvId'] = setInterval(() => {
+        // get the new date
+        curDate = new Date();
+
+        // set the video age
+        videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['data']['date']) / MSECONDS_IN_SECOND)}`;
+    }, VIDEO_PREVIEW_AGE_LABEL_DELAY);
+}
+
+/**
+ * Adds all video preview containers into a gallery, based on the game and meta filters
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function addAllVideoPrvwCtrs(isCaps) {
     // get the captures or clips variables
     const gall = isCaps ? capsGall : clipsGall;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
@@ -260,101 +433,79 @@ function insertVideoPrvwCtrs(isCaps) {
     const gameFltStr = isCaps ? 'capturesGameFilter' : 'clipsGameFilter';
     const metaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
-    const intvsStr = isCaps ? 'capsIntvs' : 'clipsIntvs';
-    let curDate = new Date();
 
     // sort the video data depending on the meta data filter
     switch (data['stgs'][metaFltStr]) {
         case 'Name':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['extName'].localeCompare(b['extName'])) : data[dataStr].sort((a, b) => b['extName'].localeCompare(a['extName']));
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['extName'].localeCompare(b['data']['extName'])) : data[dataStr].sort((a, b) => b['data']['extName'].localeCompare(a['data']['extName']));
 
             break;
 
         case 'Date':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['date'] - b['date']) : data[dataStr].sort((a, b) => b['date'] - a['date']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['date'] - b['data']['date']) : data[dataStr].sort((a, b) => b['data']['date'] - a['data']['date']);
 
             break;
 
         case 'Size':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['size'] - b['size']) : data[dataStr].sort((a, b) => b['size'] - a['size']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['size'] - b['data']['size']) : data[dataStr].sort((a, b) => b['data']['size'] - a['data']['size']);
 
             break;
 
         case 'Duration':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['dur'] - b['dur']) : data[dataStr].sort((a, b) => b['dur'] - a['dur']);
+            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['dur'] - b['data']['dur']) : data[dataStr].sort((a, b) => b['data']['dur'] - a['data']['dur']);
 
             break;
     }
 
     // indicate that no videos are found, or hide the label
-    if (data[dataStr]['length'] === 0) {
+    if (data[dataStr].length === 0) {
         statLabel.textContent = 'No Videos Found';
     }
     else {
         statLabel.classList.remove('active');
 
-        // for (const [index, videoData] of data[dataStr]) {
-        for (const [index, videoData] of data[dataStr].entries()) {
+        for (const videoData of data[dataStr]) {
             // insert video preview depending on the game filter
-            if (data['stgs'][gameFltStr] === 'All' || videoData['game'] === data['stgs'][gameFltStr]) {
-                // get a clone of the video preview container template
-                const videoPrvwCtrClone = videoPrvwCtrTmpl.content.cloneNode(true);
-                const videoPrvwCtr = videoPrvwCtrClone.querySelector('.video-preview-ctr');
-                const videoPrvwAgeLabel = videoPrvwCtrClone.querySelector('.video-preview-age-label')
-
-                // set the video source
-                videoPrvwCtr.dataset.src = videoData['path'];
-                // set the video thumbnail source
-                videoPrvwCtrClone.querySelector('.video-thumbnail-image').setAttribute('src', videoData['tbnlPath']);
-                // set the video duration
-                videoPrvwCtrClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(videoData['dur']);
-                // set the video game
-                videoPrvwCtrClone.querySelector('.video-preview-game-label').textContent = `${videoData['game']}`;
-                // set the video age
-                videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['date']) / MSECONDS_IN_SECOND)}`;
-                // set the video name with the extension
-                videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = videoData['extName'];
-
-                // set the interval for updating the age periodically
-                states[intvsStr][index] = setInterval(() => {
-                    // get the new date
-                    curDate = new Date();
-
-                    // set the video age
-                    videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['date']) / MSECONDS_IN_SECOND)}`;
-                }, VIDEO_PREVIEW_AGE_LABEL_DELAY);
-
-                // on click, open the video in the editor section
-                videoPrvwCtr.addEventListener('click', () => {
-                    // set the video frame length (to go frame by frame)
-                    states['videoFrameLen'] = getTruncDec(1 / videoData['fps']);
-
-                    // set the video player source
-                    videoPlr.setAttribute('src', videoData['path']);
-
-                    // set the editor game label
-                    editGameLabel.textContent = `${videoData['game']}`;
-
-                    // change the active content section to the editor section
-                    setActiveSect('editor');
-                });
-
-                // on click, ...
-                videoPrvwCtrClone.querySelector('.video-preview-rename-btn').addEventListener('click', () => {
-                });
-
-                // on click, ...
-                videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', () => {
-                });
-
-                // append the video preview to the gallery
-                gall.appendChild(videoPrvwCtrClone);
+            if (data['stgs'][gameFltStr] === 'All' || videoData['data']['game'] === data['stgs'][gameFltStr]) {
+                gall.appendChild(videoData['node']);
             }
         }
     }
 
-    // on scroll, toggle the caps gallery buttons
+    // reset the scroll to the left
+    gall.scrollLeft = 0;
+
+    // toggle the caps gallery buttons
     togDirBtn(isCaps);
+}
+
+/**
+ * Removes all video preview containers from a gallery
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function remAllVideoPrvwCtrs(isCaps) {
+    // get the captures or clips variables
+    const gall = isCaps ? capsGall : clipsGall;
+
+    // remove every existing video preview from the gallery (do not need to delete intervals yet)
+    while (gall.children.length > 1) {
+        gall.removeChild(gall.lastElementChild);        
+    }
+}
+
+/**
+ * 
+ * @param {*} isCaps 
+ */
+function setUsageLabel3(isCaps) {
+    // get the captures or clips variables
+    const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
+    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
+
+    // set the video counts and size of the directory
+    // usageLabel3.textContent = `${data[dataCountsStr]['totalCount']} Video${data[dataCountsStr]['totalCount'] !== 1 ? 's' : ''} (${data[dataCountsStr]['videoCount']} Normal, ${data[dataCountsStr]['corrCount']} Corrupted) - ${Math.ceil(data[dataCountsStr]['size'] / BYTES_IN_GIGABYTE)} GB`;
+    usageLabel3.textContent = `${data[dataCountsStr]['totalCount']} Video${data[dataCountsStr]['totalCount'] !== 1 ? 's' : ''} (${data[dataCountsStr]['videoCount']} Normal, ${data[dataCountsStr]['corrCount']} Corrupted) - ${data[dataCountsStr]['size']} GB`;
 }
 
 /**
@@ -367,9 +518,14 @@ async function updateGameFltFld(isCaps) {
     const gameFltFld = isCaps ? capsGameFltFld : clipsGameFltFld;
     const dataStr = isCaps ? 'caps' : 'clips';
     // get the unique set of games in the gallery
-    const uniqGames = [...new Set(data[dataStr].map(videoData => videoData['game']))];
+    const uniqGames = [...new Set(data[dataStr].map(videoData => videoData['data']['game']))];
     // boolean if the game filter setting needs to be updated, if the old game filter doesn't exist
     let doUpdate = true;
+
+    // remove every existing game filter except 'All'
+    while (gameFltFld.children.length > 1) {
+        gameFltFld.removeChild(gameFltFld.lastElementChild);        
+    }
 
     // iterate through each game
     for (const game of uniqGames) {
@@ -397,6 +553,26 @@ async function updateGameFltFld(isCaps) {
     else {
         gameFltFld.value = data['stgs'][gameFltFld.name];
     }
+}
+
+/**
+ * Updates the gallery size
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function updateGall(isCaps) {
+    // get the captures or clips variables
+    const gall = isCaps ? capsGall : clipsGall;
+    const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
+    let numVideoPrvw;
+
+    // get the new gallery bounding box
+    boxes[gallBoxStr] = getModBox(gall.getBoundingClientRect());
+
+    // calculate and set the gap between the video previews based on the width of the gallery
+    numVideoPrvw= Math.floor(boxes[gallBoxStr]['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
+
+    gall.style.gap = `${(boxes[gallBoxStr]['width'] - (numVideoPrvw* videoPrvwCtrWidth)) / (numVideoPrvw- 1)}px`;
 }
 
 /**
