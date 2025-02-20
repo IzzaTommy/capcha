@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('genAPI', {
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
     // R -> M, starts recording
-    startRecord: (recGame) => ipcRenderer.invoke('webSocket:startRecord', recGame), 
+    startRecord: (recProg) => ipcRenderer.invoke('webSocket:startRecord', recProg), 
 
     // R -> M, stops recording
     stopRecord: () => ipcRenderer.invoke('webSocket:stopRecord')
@@ -32,7 +32,7 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     reqTogAutoRec: () => ipcRenderer.send('stgs:reqTogAutoRec'), 
 
     // M -> R, requests a call to togRecBarBtn
-    reqTogRecBarBtn: (cb) => ipcRenderer.on('stgs:reqTogRecBarBtn', (_, recGame) => cb(recGame)),
+    reqTogRecBarBtn: (cb) => ipcRenderer.on('stgs:reqTogRecBarBtn', (_, recProg) => cb(recProg)),
     
     // R -> M, opens the captures or clips directory
     openDir: (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 

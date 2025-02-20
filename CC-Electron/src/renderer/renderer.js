@@ -2,7 +2,6 @@
  * Module for initializing all components for the renderer process
  * 
  * @module renderer
- * @requires rendererVariables
  * @requires rendererGeneral
  * @requires rendererTitleBar
  * @requires rendererNavigationBlock
@@ -10,13 +9,12 @@
  * @requires rendererDirectoriesSection
  * @requires rendererSettingsSection
  */
-import { initRendVars, titleBar, initOvrl } from './components/rendererVariables.js';
-import { initRendGen, setInitStatLabel } from './components/rendererGeneral.js';
-import { initRendTitleBar } from './components/rendererTitleBar.js';
-import { initRendNavBlock } from './components/rendererNavigationBlock.js';
-import { initRendEditSect } from './components/rendererEditorSection.js';
-import { initRendDirsSect } from './components/rendererDirectoriesSection.js';
-import { initRendStgsSect } from './components/rendererSettingsSection.js';
+import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText } from './components/rendererGeneral.js';
+import { initRendTitleBarVars, initRendTitleBar, setTitleBarStyle } from './components/rendererTitleBar.js';
+import { initRendNavBlockVars, initRendNavBlock } from './components/rendererNavigationBlock.js';
+import { initRendEditSectVars, initRendEditSect } from './components/rendererEditorSection.js';
+import { initRendDirsSectVars, initRendDirsSect } from './components/rendererDirectoriesSection.js';
+import { initRendStgsSectVars, initRendStgsSect } from './components/rendererSettingsSection.js';
 
 // on DOM load, initialize all components
 window.addEventListener('DOMContentLoaded', initRend);
@@ -25,17 +23,32 @@ window.addEventListener('DOMContentLoaded', initRend);
  * Initializes the renderer process
  */
 function initRend() {
+    // initialize the renderer variables
+    initVars();
+    
+    // initialize the renderer components
     init();
 
-    // on request, finish initialization
+    // on request, finish initializing the renderer components
     window['procAPI'].reqFinishInit(finishInit);
 }
 
 /**
- * Initializes the variables, general components, and title bar
+ * Initializes all the variables
+ */
+function initVars() {
+    initRendGenVars();
+    initRendTitleBarVars();
+    initRendNavBlockVars();
+    initRendEditSectVars();
+    initRendDirsSectVars();
+    initRendStgsSectVars();
+}
+
+/**
+ * Initializes the general components and title bar
  */
 function init() {
-    initRendVars();
     initRendGen();
     initRendTitleBar();
 }
@@ -45,19 +58,23 @@ function init() {
  */
 async function finishInit() {
     // indicate to the user the settings are being loaded
-    setInitStatLabel('Loading Settings...');
+    setInitStatLabelText('Loading Settings...');
     await initRendStgsSect();
 
     initRendNavBlock();
 
     // indicate to the user the files are being loaded
-    setInitStatLabel('Loading Files...');
+    setInitStatLabelText('Loading Files...');
     await initRendDirsSect();
     
     initRendEditSect();
 
-    // toggle the auto recording, allow window dragging, and remove the initialization overlay
+    // toggle auto recording
     window['stgsAPI'].reqTogAutoRec();
-    titleBar.style.webkitAppRegion = 'drag';
-    initOvrl.classList.remove('active');
+
+    // allow window dragging
+    setTitleBarStyle('webkitAppRegion', 'drag');
+
+    // hide the initialization overlay
+    setInitOvrlState(STATE.INACTIVE);
 }

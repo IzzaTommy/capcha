@@ -2,64 +2,74 @@
  * Module for initializing the navigation block for the renderer process
  * 
  * @module rendererNavigationBlock
- * @requires rendererVariables
  * @requires rendererGeneral
  * @requires rendererDirectoriesSection
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, 
-    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, VIDEO_PREVIEW_AGE_LABEL_DELAY, 
-    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
-    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
-    SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
-    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
-    MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
-    ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    html, 
-    initOvrl, initStatLabel, 
-    titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
-    navTglBtn, navTglIcon, 
-    contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
-    editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
-    plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
-    mediaBar, playPauseBarBtn, playPauseBarIcon, 
-    videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
-    curVideoTimeLabel, curVideoDurLabel, 
-    plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
-    fscBarBtn, fscBarIcon, 
-    tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
-    mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
-    mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
-    spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
-    boxes, data, flags, states, 
-    initRendVars 
-} from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
-import { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall } from './rendererDirectoriesSection.js';
-import { initRendEditSect, setVideoPlayerState, setVideoTime, setPlbkCtrTmo, setSeekSldr, setSeekTrack, setSeekOvrl, setSeekThumb, updateSeekSldr, setVideoVol, setVideoVolBtnSldr, setVideoVolOvrl, setVideoVolThumb, updateVideoVolSldr, setPlbkRateBtnSldr, setPlbkRateThumb, updatePlbkRateSldr, setTmlnSldr, setTmlnOvrl, setTmlnThumb, updateTmlnSldr, setClipLeftThumb, setClipRightThumb, syncSeekTmlnSldrs } from './rendererEditorSection.js';
-import { initRendStgsSect, pseudoSetVol, setVol, setVolSldr, setVolOvrl, setVolThumb, updateVolSldr } from './rendererSettingsSection.js';
+import { STATE, SECTION, MSECONDS_IN_SECOND, setSectState, setIcon, getRdblRecDur, atmpAsyncFunc } from './rendererGeneral.js';
+import { setGallBox } from './rendererDirectoriesSection.js';
+import { setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox } from './rendererEditorSection.js';
+import { setVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
+
+// navigation block constants
+// program default name and navigation bar timeout
+const PROGRAM_DEF = 'Manual';
+const NAVIGATION_BAR_TIMEOUT = 500;
+
+// navigation block variables
+let navBar, 
+dirsBarBtn, stgsBarBtn, 
+curRecLabelCtr, curRecTimeLabel, curRecProgLabel, 
+recBarBtn, 
+autoRecResLabel, 
+navTogBtn, navTogIcon;
+
+// navigation block time, interval, recording flags
+let curRecTime, curRecTimeIntvId, wasAutoStart, wasManualStop, isRec;
 
 /**
- * @exports initRendNavBlock, togRecBarBtn
+ * Initializes the navigation block variables
  */
-export { initRendNavBlock, togRecBarBtn };
+export function initRendNavBlockVars() {
+    // navigation bar
+    navBar = document.getElementById('bar-nav');
+
+    // navigation bar buttons
+    dirsBarBtn = document.getElementById('bar-btn-directories');
+    stgsBarBtn = document.getElementById('bar-btn-settings');
+
+    // current recording container, labels, time, and interval
+    curRecLabelCtr = document.getElementById('label-ctr-current-recording');
+    curRecTimeLabel = document.getElementById('time-label-current-recording');
+    curRecProgLabel = document.getElementById('program-label-current-recording');
+
+    // recording bar button
+    recBarBtn = document.getElementById('bar-btn-record');
+
+    // automatic recording resume label
+    autoRecResLabel = document.getElementById('resume-label-auto-record');
+
+    // navigation toggle button and icon
+    navTogBtn = document.getElementById('toggle-btn-nav');
+    navTogIcon = document.querySelector('#toggle-icon-nav > use');
+
+    // current recording time, interval, and recording flags
+    curRecTime = null;
+    curRecTimeIntvId = null;
+    wasAutoStart = false;
+    wasManualStop = false;
+    isRec = false
+}
 
 /**
  * Initializes the navigation block
  */
-function initRendNavBlock() {
+export function initRendNavBlock() {
+    // initializes the navigation bar button event listeners
     initNavBarBtnEL();
 
+    // initializes the navigation toggle button
     initNavTogBtnEL();
     initNavTogBtn();
 }
@@ -68,20 +78,19 @@ function initRendNavBlock() {
  * Initializes the navigation bar button event listeners
  */
 function initNavBarBtnEL() {
-    // on click, change the active content section to the directories section
-    dirsBarBtn.addEventListener('click', () => setActiveSect('directories'));
+    // on click, change the active section to the directories section
+    dirsBarBtn.addEventListener('click', () => setSectState(SECTION.DIRECTORIES));
 
-    // on click, change the active content section to the settings section
-    stgsBarBtn.addEventListener('click', () => setActiveSect('settings'));
+    // on click, change the active section to the settings section
+    stgsBarBtn.addEventListener('click', () => setSectState(SECTION.SETTINGS));
 
-    // on click, toggle the recording
-    recBarBtn.addEventListener('click', async () => await atmpAsyncFunc(() => togRecBarBtn(false, true, 'Manual')));  // boolean1 isAutoStart, boolean2 isManualStop
+    // on click, toggle recording
+    recBarBtn.addEventListener('click', async () => await atmpAsyncFunc(() => togRecBarBtn(false, true)));  // boolean1 isAutoStart, boolean2 isManualStop
 
-    // on click, reallow auto recording if it is enabled
+    // on click, hide the label and reallow auto recording if it is shown
     autoRecResLabel.addEventListener('click', () => {
         autoRecResLabel.classList.remove('active');
-
-        flags['isManualStop'] = false;
+        wasManualStop = false;
      });
 }
 
@@ -90,7 +99,7 @@ function initNavBarBtnEL() {
  */
 function initNavTogBtnEL() {
     // on click, change the navigation bar state
-    navTglBtn.addEventListener('click', async () => {
+    navTogBtn.addEventListener('click', async () => {
         // toggle the navigation bar
         navBar.classList.toggle('active');
 
@@ -99,30 +108,33 @@ function initNavTogBtnEL() {
 
         // change the toggle icon and save the setting, depending on if the navigation bar is active
         if (navBar.classList.contains('active')) {
-            setIcon(navTglIcon, 'arrow-back-ios');
-            data['stgs']['navigationBarActive'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', true));  // boolean1 value
+            setIcon(navTogIcon, 'arrow-back-ios');
+            setStg('navigationBarActive', await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', true)));  // boolean1 value
         }
         else {
-            setIcon(navTglIcon, 'arrow-forward-ios');
-            data['stgs']['navigationBarActive'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', false));  // boolean1 value
+            setIcon(navTogIcon, 'arrow-forward-ios');
+            setStg('navigationBarActive', await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', false)));  // boolean1 value
         }
         
-        // update all width dependent elements after the navigation bar transition finishes
+        // update all size/location dependent elements after the navigation bar transition finishes
         atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
-            updateGall(true);  // boolean1 isCaps
-            updateGall(false);
+            // update the captures and clips galleries
+            setGallBox(true);  // boolean1 isCaps
+            setGallBox(false);  // boolean1 isCaps
 
-            updateSeekSldr();
-            updatePlbkRateSldr();
-            updateVideoVolSldr();
-            updateTmlnSldr();
+            // update the seek, video volume, playback rate, and timeline sliders
+            setSeekSldrBox();
+            setVideoVolSldrBox();
+            setPlbkRateSldrBox();
+            setTmlnSldrBox();
+            
+            // update the speaker and microphone volume sliders
+            setVolSldrBox(true);  // boolean1 isSpk
+            setVolSldrBox(false);  // boolean1 isSpk
 
-            updateVolSldr(true);  // boolean1 isSpk
-            updateVolSldr(false);  // boolean1 isSpk
-
-            // check if auto record is on and the recording was manually stopped
-            if (flags['isManualStop'] && data['stgs']['autoRecord']) {
-                // show to let the user reenable auto recording
+            // check if auto recording is on and the recording was manually stopped
+            if (wasManualStop && getStg('autoRecord')) {
+                // show the label to let the user reenable auto recording
                 // not width dependent, but transition dependent, show after the navigation bar finishes transition
                 autoRecResLabel.classList.add('active');
             }
@@ -136,85 +148,108 @@ function initNavTogBtnEL() {
  * Initializes the navigation toggle button
  */
 async function initNavTogBtn() {
-    // toggle the navigation bar and change the icon, depending on setting
-    if (data['stgs']['navigationBarActive'] === true) {
+    // toggle the navigation bar and change the icon depending on setting
+    if (getStg('navigationBarActive') === true) {
         navBar.classList.add('active');
-        setIcon(navTglIcon, 'arrow-back-ios');
+        setIcon(navTogIcon, 'arrow-back-ios');
     }
 
-    // update all width dependent elements after the navigation bar transition finishes
+    // update all size/location dependent elements after the navigation bar transition finishes
     await atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
-        updateGall(true);  // boolean1 isCaps
-        updateGall(false);  // boolean1 isCaps
+        // update the captures and clips galleries
+        setGallBox(true);  // boolean1 isCaps
+        setGallBox(false);  // boolean1 isCaps
 
-        updateSeekSldr();
-        updateVideoVolSldr();
-        updatePlbkRateSldr();
-        updateTmlnSldr();
+        // update the seek, video volume, playback rate, and timeline sliders
+        setSeekSldrBox();
+        setVideoVolSldrBox();
+        setPlbkRateSldrBox();
+        setTmlnSldrBox();
         
-        updateVolSldr(true);  // boolean1 isSpk
-        updateVolSldr(false);  // boolean1 isSpk
+        // update the speaker and microphone volume sliders
+        setVolSldrBox(true);  // boolean1 isSpk
+        setVolSldrBox(false);  // boolean1 isSpk
 
         resolve();
     }, NAVIGATION_BAR_TIMEOUT)));
 }
 
 /**
- * Toggles the recording on or off
+ * Sets the directories bar button state
+ * 
+ * @param {number} state - The new state of the bar button
+ */
+export function setDirsBarBtnState(state) {
+    state === STATE.ACTIVE ? dirsBarBtn.classList.add('active') : dirsBarBtn.classList.remove('active');
+}
+
+/**
+ * Sets the settings bar button state
+ * 
+ * @param {number} state - The new state of the bar button
+ */
+export function setStgsBarBtnState(state) {
+    state === STATE.ACTIVE ? stgsBarBtn.classList.add('active') : stgsBarBtn.classList.remove('active');
+}
+
+/**
+ * Toggles the recording bar button
  * 
  * @param {boolean} isAutoStart - If function is called by the main process by the auto recording process
- * @param {boolean} isManualStop - If function is called by record button click by the user
- * @param {string} recGame - The game that is being recorded
+ * @param {boolean} isManualStop - If function is called by the user clicking the record button
+ * @param {string} recProg - The program being recorded
  */
-async function togRecBarBtn(isAutoStart, isManualStop, recGame) {
+export async function togRecBarBtn(isAutoStart, isManualStop, recProg = PROGRAM_DEF) {
     // check if recording is in progress
-    if (flags['isRec']) {
+    if (isRec) {
         // check if it was a (manual start / manual stop) or (auto start / auto stop) or (auto start / manual stop)
-        if ((!flags['isAutoStart'] && isManualStop) || (flags['isAutoStart'] && !isManualStop) || (flags['isAutoStart'] && isManualStop)) {
-            // stop recording
+        if ((!wasAutoStart && isManualStop) || (wasAutoStart && !isManualStop) || (wasAutoStart && isManualStop)) {
+            // send a request to OBS to stop recording
             if (await atmpAsyncFunc(() => window['webSocketAPI'].stopRecord())) {
-                // hide the record button and the recording label container
+                // hide the record bar button and the recording label container
                 recBarBtn.classList.remove('active');
                 curRecLabelCtr.classList.remove('active');
 
                 // check if auto record is on and the recording was manually stopped
-                if (isManualStop && data['stgs']['autoRecord']) {
-                    // show to let the user reenable auto recording
+                if (isManualStop && getStg('autoRecord')) {
+                    // show the label to let the user re-allow auto recording
                     autoRecResLabel.classList.add('active');
                 }
 
                 // clear the recording time label interval
-                clearInterval(states['recTimeIntv']);
+                clearInterval(curRecTimeIntvId);
 
                 // set the manual stop and recording flags
-                flags['isManualStop'] = isManualStop;
-                flags['isRec'] = false;
+                wasManualStop = isManualStop;
+                isRec = false;
             }
         }
     }
     else {
         // check if it was an (auto start / with no manual stop) or if it was a (manual start)
-        if ((isAutoStart && !flags['isManualStop']) || !isAutoStart) {
-            if (await atmpAsyncFunc(() => window['webSocketAPI'].startRecord(recGame))) {
-                // show the record button and the recording label container
+        if ((isAutoStart && !wasManualStop) || !isAutoStart) {
+            // send a request to OBS to start recording
+            if (await atmpAsyncFunc(() => window['webSocketAPI'].startRecord(recProg))) {
+                // show the record bar button and the recording label container
                 recBarBtn.classList.add('active');
                 curRecLabelCtr.classList.add('active');
 
-                // set the recording game
-                curRecGameLabel.textContent = recGame;
+                // set the recording program
+                curRecProgLabel.textContent = recProg;
+
+                // reset the recording time
+                curRecTime = 0;
+                curRecTimeLabel.textContent = getRdblRecDur(curRecTime);
+                
+                // set the recording time label interval to update the timer
+                curRecTimeIntvId = setInterval(() => {
+                    curRecTime++;
+                    curRecTimeLabel.textContent = getRdblRecDur(curRecTime);
+                }, MSECONDS_IN_SECOND);
 
                 // set auto start and recording flags
-                flags['isAutoStart'] = isAutoStart;
-                flags['isRec'] = true;
-
-                // restart the recording time and set the recording time label interval to update the timer
-                states['recTime'] = 0;
-                curRecTimeLabel.textContent = getRdblRecDur(states['recTime']);
-                
-                states['recTimeIntv'] = setInterval(() => {
-                    states['recTime']++;
-                    curRecTimeLabel.textContent = getRdblRecDur(states['recTime']);
-                }, MSECONDS_IN_SECOND);
+                wasAutoStart = isAutoStart;
+                isRec = true;
             }
         }
     }

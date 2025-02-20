@@ -38,12 +38,12 @@ powerMonitor.on('suspend', () => {
     if (flags['isRec']) {
         // log the recording status and attempt to stop
         logProc('General', 'SUSPD', 'Recording active', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        logProc('General', 'SUSPD', 'Attempting to stop recording', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('General', 'SUSPD', 'Attempting to stop recording', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn');
     }
     else {
-        logProc('General', 'SUSPD', 'Recording not active', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        logProc('General', 'SUSPD', 'Recording not active', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 });
 
@@ -52,7 +52,7 @@ powerMonitor.on('suspend', () => {
 
 // on window-all-closed, log and initiate the app quitting process
 app.on('window-all-closed', () => {
-    logProc('General', 'CLOSE', 'All windows closed', false);  // boolean1 isFinalMsg
+    logProc('General', 'CLOSE', 'All windows closed');
 
     app.quit();
 })

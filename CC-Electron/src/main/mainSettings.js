@@ -565,7 +565,7 @@ async function getVideoData(video, isCaps) {
             'data': { 
                 'date': videoMetaData.birthtime, 
                 'dur': videoMetaData2.format.duration, 
-                'game': splitName[1] ? splitName[0] : 'External', 
+                'prog': splitName[1] ? splitName[0] : 'External', 
                 'extName': video, 
                 'fps': videoMetaData2.streams.find(stream => stream.codec_type === 'video').r_frame_rate.split('/').map(Number).reduce((a, b) => a / b), 
                 'path': videoPath, 
@@ -738,8 +738,8 @@ async function checkProgs() {
 
     // check if recording is enabled
     if (flags['isRec']) {
-        // check if the recording game is not running or the program is not in the list, and stop the recording
-        if (!progs[states['recGame']] || (states['recGame'] && !procs.some(proc => proc.name === progs[states['recGame']]['extName']))) {
+        // check if the recording program is not running or the program is not in the list, and stop the recording
+        if (!progs[states['recProg']] || (states['recProg'] && !procs.some(proc => proc.name === progs[states['recProg']]['extName']))) {
             insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn');
         }
     }
@@ -747,9 +747,9 @@ async function checkProgs() {
     else {
         for (const [name, progInfo] of Object.entries(progs)) {
             if (procs.some(proc => proc.name === progInfo['extName'])) {
-                states['recGame'] = name;
+                states['recProg'] = name;
 
-                insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn', states['recGame']);
+                insts['mainWindow']['webContents'].send('stgs:reqTogRecBarBtn', states['recProg']);
 
                 break;
             }

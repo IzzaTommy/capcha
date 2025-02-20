@@ -277,18 +277,18 @@
     transition: var(--vplabel-transition);
 }
 
-.video-preview-game-label {
+.video-preview-program-label {
     flex: 0 1 fit-content;
-    margin-right: var(--vpgamelabel-rmargin);
+    margin-right: var(--vpprogramlabel-rmargin);
     overflow: hidden;
 
-    color: var(--vpgamelabel-color);
+    color: var(--vpprogramlabel-color);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-game-label {
-    color: var(--vpgamelabel-alt-color);
+.video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-program-label {
+    color: var(--vpprogramlabel-alt-color);
 }
 
 .video-preview-age-label {

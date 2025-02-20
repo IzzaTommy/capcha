@@ -170,8 +170,8 @@ function initWebSocket() {
  */
 function initWebSocketL() {
     // on startRecord, set the video file name and start recording
-    ipcMain.handle('webSocket:startRecord', async (_, recGame) => {
-        await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recGame}-CC${CAPTURES_DATE_FORMAT}` }));
+    ipcMain.handle('webSocket:startRecord', async (_, recProg) => {
+        await atmpAsyncFunc(() => webSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recProg}-CC${CAPTURES_DATE_FORMAT}` }));
         flags['isRec'] = (await atmpAsyncFunc(() => webSocketReq('StartRecord', { })))['requestStatus']['result'];
 
         // return if recording is enabled or not

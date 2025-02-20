@@ -85,7 +85,7 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'boolean'
     },
 
-    capturesGameFilter: {
+    capturesProgramFilter: {
         type: 'string'
     },
     capturesMetaFilter: {
@@ -96,7 +96,7 @@ const SETTINGS_DATA_SCHEMA = {
         type: 'boolean'
     },
 
-    clipsGameFilter: {
+    clipsProgramFilter: {
         type: 'string'
     },
     clipsMetaFilter: {
@@ -212,11 +212,11 @@ const SETTINGS_DATA_SCHEMA = {
 const SETTINGS_DATA_DEFS = { 
     navigationBarActive: true,
     
-    capturesGameFilter: 'All',
+    capturesProgramFilter: 'All',
     capturesMetaFilter: 'Date',
     capturesAscending: false,
 
-    clipsGameFilter: 'All',
+    clipsProgramFilter: 'All',
     clipsMetaFilter: 'Date',
     clipsAscending: false,
 
@@ -280,7 +280,7 @@ const insts = {
 // states data
 const states = { 
     autoRecIntv: null, 
-    recGame: null, 
+    recProg: null, 
     pendReqs: new Map(), 
     capsWatch: null, 
     clipsWatch: null, 

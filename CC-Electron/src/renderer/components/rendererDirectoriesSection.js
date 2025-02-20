@@ -2,100 +2,160 @@
  * Module for initializing the directories section for the renderer process
  * 
  * @module rendererDirectoriesSection
- * @requires rendererVariables
  * @requires rendererGeneral
+ * @requires rendererEditorSection
+ * @requires rendererSettingsSection
  */
-import {
-    CONTENT_STATUS_LABEL_TIMEOUT, TIME_PAD, DECIMAL_TRUNC, 
-    NAVIGATION_BAR_TIMEOUT, BYTES_IN_GIGABYTE, GALLERY_MIN_GAP, VIDEO_PREVIEW_AGE_LABEL_DELAY, 
-    PLAYBACK_CONTAINER_GROW, PLAYBACK_CONTAINER_REDUCE, PLAYBACK_CONTAINER_TIMEOUT, 
-    VIDEO_VOLUME_MIN, VIDEO_VOLUME_MAX, VIDEO_VOLUME_GROW, VIDEO_VOLUME_REDUCE, VIDEO_VOLUME_MUTED, 
-    PLAYBACK_RATE_MIN, PLAYBACK_RATE_MAX, PLAYBACK_RATE_GROW, PLAYBACK_RATE_REDUCE, PLAYBACK_RATE_DEF, PLAYBACK_RATE_SEGMENTS, PLAYBACK_RATE_MAPPING, PLAYBACK_RATE_MAPPING_OFFSET, 
-    TIMELINE_ZOOM_MIN, TIMELINE_GROW_FACTOR, TIMELINE_REDUCE_FACTOR, TIMELINE_OVERLAY_SUB_TICK_LINE_TOP, TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM, 
-    TIMELINE_OVERLAY_TICK_LINE_TOP, TIMELINE_OVERLAY_TICK_LINE_BOTTOM, TIMELINE_OVERLAY_TICK_TEXT_TOP, TIMELINE_OVERLAY_TICK_TEXT_OFFSET, CLIP_LENGTH_MIN, 
-    SPEAKER_VOLUME_MIN, SPEAKER_VOLUME_MAX, SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, 
-    MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, MICROPHONE_VOLUME_MIN, MICROPHONE_VOLUME_MAX, 
-    MSECONDS_IN_SECOND, SECONDS_IN_MINUTE, SECONDS_IN_HOUR, SECONDS_IN_DAY, 
-    ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 
-    html, 
-    initOvrl, initStatLabel, 
-    titleBar, minBarBtn, maxBarBtn, closeBarBtn, 
-    navBar, dirsBarBtn, stgsBarBtn, curRecLabelCtr, curRecTimeLabel, curRecGameLabel, recBarBtn, autoRecResLabel, 
-    navTglBtn, navTglIcon, 
-    contStatLabel, dirsSect, editSect, stgsSect, 
-    capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, capsGameFltFld, capsMetaFltFld, capsBarBtn, capsBarIcon, 
-    clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, clipsGameFltFld, clipsMetaFltFld, clipsBarBtn, clipsBarIcon, 
-    videoPrvwCtrTmpl, videoPrvwCtrWidth, capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn, 
-    editGameLabel, videoCtr, videoPlr, playPauseStatIcon, 
-    plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
-    mediaBar, playPauseBarBtn, playPauseBarIcon, 
-    videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
-    curVideoTimeLabel, curVideoDurLabel, 
-    plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, 
-    fscBarBtn, fscBarIcon, 
-    tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
-    clipBar, viewBarBtn, createBarBtn, clipTglBtn, clipTglIcon, 
-    mostTglSwtes, darkModeTglFld, darkModeTglIcon, 
-    mostFlds, capsDirFld, capsLimitFld, capsDispFld, progsBoard, genStgTileTmpl, progsAddBtn, clipsDirFld, clipsLimitFld, clipsFrmFlds, clipsWidthFlds, clipsHeightFlds, 
-    spkFld, spkVolSldrCtr, spkVolSldr, spkVolOvrl, spkVolThumb, micFld, micVolSldrCtr, micVolSldr, micVolOvrl, micVolThumb, 
-    boxes, data, flags, states, 
-    initRendVars 
-} from './rendererVariables.js';
-import { initRendGen, setInitStatLabel, setContStatLabel, getModBox, setActiveSect, setIcon, getParsedTime, getRdblAge, getRdblDur, getRdblRecDur, getPtrEventLoc, getPtrEventPct, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, getStyle, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { setEditProgLabelText, setVideoFrameLen, setVideoPlrSrc } from './rendererEditorSection.js';
+import { getStg, setStg } from './rendererSettingsSection.js';
+
+// directories section constants
+// byte sizing, gallery gap, and video preview age label update delay
+const BYTES_IN_GIGABYTE = 1073741824;
+const GALLERY_MIN_GAP = 5;
+const VIDEO_PREVIEW_AGE_LABEL_DELAY = 600000;
+
+// directories section variables
+let capsNameLabel, capsDirLabel2, capsUsageLabel3, capsTotalLabel3, 
+capsProgFltFld, capsMetaFltFld, 
+capsBarBtn, capsBarIcon, 
+clipsNameLabel, clipsDirLabel2, clipsUsageLabel3, clipsTotalLabel3, 
+clipsProgFltFld, clipsMetaFltFld, 
+clipsBarBtn, clipsBarIcon, 
+videoPrvwCtrTmpl, videoPrvwCtrWidth, 
+capsLeftBtn, capsGall, capsStatLabel, capsRightBtn, 
+clipsLeftBtn, clipsGall, clipsStatLabel, clipsRightBtn;
+
+// directories section boxes
+let capsGallBox, clipsGallBox;
+
+// directories captures and clips videos and counts
+let caps, clips, capsCounts, clipsCounts;
 
 /**
- * @exports initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall
+ * Initializes the directories section variables
  */
-export { initRendDirsSect, addAllVideos, addVideo, delAllVideos, delVideo, createAllVideoPrvwCtrs, createVideoPrvwCtr, addAllVideoPrvwCtrs, remAllVideoPrvwCtrs, setUsageLabel3, updateGameFltFld, updateGall }
+export function initRendDirsSectVars() {
+    // captures name label, directory label 2, usage label 3, total label 3
+    capsNameLabel = document.getElementById('name-label-captures');
+    capsDirLabel2 = document.getElementById('directory-label2-captures');
+    capsUsageLabel3 = document.getElementById('usage-label3-captures');
+    capsTotalLabel3 = document.getElementById('total-label3-captures');
+
+    // captures program and meta filters
+    capsProgFltFld = document.querySelector(`.directory-setting-field[name='capturesProgramFilter']`);
+    capsMetaFltFld = document.querySelector(`.directory-setting-field[name='capturesMetaFilter']`);
+
+    // captures bar button and icon
+    capsBarBtn = document.getElementById('bar-btn-captures');
+    capsBarIcon = document.querySelector('#bar-icon-captures > use');
+
+    // clips name label, directory label 2, usage label 3, total label 3
+    clipsNameLabel = document.getElementById('name-label-clips');
+    clipsDirLabel2 = document.getElementById('directory-label2-clips');
+    clipsUsageLabel3 = document.getElementById('usage-label3-clips');
+    clipsTotalLabel3 = document.getElementById('total-label3-clips');
+
+    // clips program and meta filters
+    clipsProgFltFld = document.querySelector(`.directory-setting-field[name='clipsProgramFilter']`);
+    clipsMetaFltFld = document.querySelector(`.directory-setting-field[name='clipsMetaFilter']`);
+    
+    // clips bar button and icon
+    clipsBarBtn = document.getElementById('bar-btn-clips');
+    clipsBarIcon = document.querySelector('#bar-icon-clips > use');
+
+    // video preview container template and width
+    videoPrvwCtrTmpl = document.getElementById('template-video-preview-ctr');
+    videoPrvwCtrWidth = getStyle('--vtnimage-height') * 16 / 9 + 2 * getStyle('--vpctr-padding');
+
+    // captures left and right button, gallery, and status label
+    capsLeftBtn = document.getElementById('left-btn-captures');
+    capsGall = document.getElementById('gallery-captures');
+    capsStatLabel = document.getElementById('status-label-captures');
+    capsRightBtn = document.getElementById('right-btn-captures');
+
+    // clips left and right button, gallery, and status label
+    clipsLeftBtn = document.getElementById('left-btn-clips');
+    clipsGall = document.getElementById('gallery-clips');
+    clipsStatLabel = document.getElementById('status-label-clips');
+    clipsRightBtn = document.getElementById('right-btn-clips');
+
+    // captures and clips gallery boxes
+    capsGallBox = getModBox(capsGall.getBoundingClientRect());
+    clipsGallBox = getModBox(clipsGall.getBoundingClientRect()); 
+
+    // captures and clips videos and counts
+    caps = null;
+    clips = null;
+    capsCounts = {
+        'normal': null, 
+        'corr': null, 
+        'total': null, 
+        'size': null
+    };
+    clipsCounts = {
+        'normal': null, 
+        'corr': null, 
+        'total': null, 
+        'size': null
+    };
+}
 
 /**
  * Initializes the directories section
  */
-async function initRendDirsSect() {
+export async function initRendDirsSect() {
+    // initializes the content container 3 event listeners for captures and clips
     initContCtr3EL(true);  // boolean1 isCaps
     initContCtr3EL(false);  // boolean1 isCaps
 
+    // initializes the content container 3 for captures and clips
     initContCtr3(true);  // boolean1 isCaps
     initContCtr3(false);  // boolean1 isCaps
 
+    // initializes the directory gallery event listeners for captures and clips
     initDirGallEL(true);  // boolean1 isCaps
     initDirGallEL(false);  // boolean1 isCaps
 
+    // adds all videos to the gallery for captures and clips
     await atmpAsyncFunc(() => addAllVideos(true, true));  // boolean1 isCaps, boolean2 isInit
     await atmpAsyncFunc(() => addAllVideos(false, true));  // boolean1 isCaps, boolean2 isInit
 }
 
 /**
- * Initializes the content container 3 event listeners for the directories section
+ * Initializes the content container 3 event listeners
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
 async function initContCtr3EL(isCaps) {
     // get the captures or clips variables
     const nameLabel = isCaps ? capsNameLabel : clipsNameLabel;
-    const gameFltFld = isCaps ? capsGameFltFld : clipsGameFltFld;
+    const progFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
     const metaFltFld = isCaps ? capsMetaFltFld : clipsMetaFltFld;
     const barBtn = isCaps ? capsBarBtn : clipsBarBtn;
     const barIcon = isCaps ? capsBarIcon : clipsBarIcon;
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
-    // on click, open the appropriate directory
+    // on click, open the right directory
     nameLabel.addEventListener('click', () => window['stgsAPI'].openDir(isCaps));
 
-    // on change, set the game filter setting, then remove and re-insert the video preview containers in the new order
-    gameFltFld.addEventListener('change', async () => {
-        gameFltFld.value = data['stgs'][gameFltFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(gameFltFld.name, gameFltFld.value));
+    // on change, set the program filter setting, then remove and re-insert the video preview containers in the new order
+    progFltFld.addEventListener('change', async () => {
+        setStg(progFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, progFltFld.value)));
+        progFltFld.value = getStg(progFltFld.name);
     
         // remove all the video preview containers from the gallery
         remAllVideoPrvwCtrs(isCaps);
 
-        // add the video preview containers into the gallery
+        // add all the video preview containers into the gallery
         addAllVideoPrvwCtrs(isCaps);
     });
 
     // on change, set the meta filter setting, then remove and re-insert the video preview containers in the new order
     metaFltFld.addEventListener('change', async () => {
-        metaFltFld.value = data['stgs'][metaFltFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltFld.name, metaFltFld.value));
+        setStg(metaFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltFld.name, metaFltFld.value)));
+        metaFltFld.value = getStg(metaFltFld.name);
     
         // remove all the video preview containers from the gallery
         remAllVideoPrvwCtrs(isCaps);
@@ -111,7 +171,7 @@ async function initContCtr3EL(isCaps) {
         // change the icon, save the order setting, then remove and re-insert the video preview containers
         if (barBtn.classList.contains('active')) {
             setIcon(barIcon, 'arrow-upward-alt');
-            data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true));
+            setStg(ascStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true)));
 
             // remove all the video preview containers from the gallery
             remAllVideoPrvwCtrs(isCaps);
@@ -121,7 +181,7 @@ async function initContCtr3EL(isCaps) {
         }
         else {
             setIcon(barIcon, 'arrow-downward-alt');
-            data['stgs'][ascStr] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false));
+            setStg(ascStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false)));
 
             // remove all the video preview containers from the gallery
             remAllVideoPrvwCtrs(isCaps);
@@ -133,7 +193,7 @@ async function initContCtr3EL(isCaps) {
 }
 
 /**
- * Initializes the content container 3 for the directories section
+ * Initializes the content container 3
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
@@ -146,12 +206,12 @@ function initContCtr3(isCaps) {
     const dirStr = isCaps ? 'capturesDirectory' : 'clipsDirectory';
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
-    // set the directory label and filter values
-    dirLabel2.textContent = data['stgs'][dirStr];
-    metaFltFld.value = data['stgs'][metaFltFld.name]; // game filter is done after gallery is loaded
+    // set the directory label and meta filter
+    dirLabel2.textContent = getStg(dirStr);
+    metaFltFld.value = getStg(metaFltFld.name); // program filter is done later as the gallery is loaded
 
     // toggle the sort order and change the icon, depending on setting
-    if (data['stgs'][ascStr] === true) {
+    if (getStg(ascStr) === true) {
         barBtn.classList.add('active');
         setIcon(barIcon, 'arrow-upward-alt');
     }
@@ -167,14 +227,14 @@ function initDirGallEL(isCaps) {
     const leftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
     const gall = isCaps ? capsGall : clipsGall;
     const rightBtn = isCaps ? capsRightBtn : clipsRightBtn;
-    const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
+    const gallBox = isCaps ? capsGallBox : clipsGallBox;
 
     // on click, scroll the gallery left by approximately its width
-    leftBtn.addEventListener('click', () => gall.scrollBy({ 'left': -boxes[gallBoxStr]['width'] }));
+    leftBtn.addEventListener('click', () => gall.scrollBy({ 'left': -gallBox['width'] }));
 
     // on scroll, scroll the gallery by increments of the video preview
     gall.addEventListener('wheel', (ptr) => {
-        // prevent scrolling vertically on section container 1
+        // prevent scrolling vertically on the section container
         ptr.preventDefault();
 
         // scroll the gallery by approximately the video preview width
@@ -182,85 +242,161 @@ function initDirGallEL(isCaps) {
     });
 
     // on scroll, toggle the gallery buttons
-    gall.addEventListener('scroll', () => togDirBtn(isCaps));
+    gall.addEventListener('scroll', () => setDirBtnState(isCaps));
 
     // on click, scroll the gallery right by approximately its width
-    rightBtn.addEventListener('click', () => gall.scrollBy({ 'left': boxes[gallBoxStr]['width'] }));
+    rightBtn.addEventListener('click', () => gall.scrollBy({ 'left': gallBox['width'] }));
 }
 
 /**
- * Adds all videos to the gallery, including creating and adding video preview containers
+ * Sets the usage label 3 text
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
- * @param {boolean} isInit - If the function is run during initialization
  */
-async function addAllVideos(isCaps, isInit) {
+function setUsageLabel3Text(isCaps) {
     // get the captures or clips variables
-    const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
-    const dataStr = isCaps ? 'caps' : 'clips';
-    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
+    const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
+    const counts = isCaps ? capsCounts : clipsCounts;
 
-    // indicate that the gallery is loading on the directory status label
-    if (!isInit) {
-        statLabel.textContent = 'Loading...';
-        statLabel.classList.add('active');
+    // set the video counts and size of the directory
+    usageLabel3.textContent = `${counts ['total']} Video${counts ['total'] !== 1 ? 's' : ''} (${counts ['normal']} Normal, ${counts ['corr']} Corrupted) - ${Math.ceil(counts ['size'] / BYTES_IN_GIGABYTE)} GB`;
+}
+
+/**
+ * Sets the total label 3 text
+ * 
+ * @param {string} text - The new text of the label
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+export function setTotalLabel3Text(text, isCaps) {
+    // get the captures or clips variable
+    const totalLabel3 = isCaps ? capsTotalLabel3 : clipsTotalLabel3;
+
+    totalLabel3.textContent = text;
+}
+
+/**
+ * Updates the program filter field with the programs present in the gallery
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+async function setProgFltFld(isCaps) {
+    // get the captures or clips variables
+    const progFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
+    const videos = isCaps ? caps : clips;
+    // get the unique set of programs in the gallery
+    const uniqProgs = [...new Set(videos.map(video => video['data']['prog']))];
+    // boolean if the program filter setting needs to be updated, if the old program filter doesn't exist
+    let doUpdate = true;
+
+    // remove every existing program filter except 'All'
+    while (progFltFld.children.length > 1) {
+        progFltFld.removeChild(progFltFld.lastElementChild);        
     }
 
-    // delete all the current videos
-    delAllVideos(isCaps);
+    // iterate through each program
+    for (const prog of uniqProgs) {
+        // create a new setting field option
+        const fldOption = document.createElement('option');
 
-    // get the videos data and counts
-    [data[dataStr], data[dataCountsStr]['videoCount'], data[dataCountsStr]['corrCount'], data[dataCountsStr]['totalCount'], data[dataCountsStr]['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
+        // assign the name of the program to the value and text
+        fldOption.value = prog;
+        fldOption.text = prog;
 
-    // create all the video preview containers
-    createAllVideoPrvwCtrs(isCaps);
+        // append the child to the program filter setting field
+        progFltFld.appendChild(fldOption);
 
-    // update the game filter field based on the games in the gallery
-    await atmpAsyncFunc(() => updateGameFltFld(isCaps));
+        // if the program filter's program is present, do not update
+        if (getStg(progFltFld.name) === prog) {
+            doUpdate = false;
+        }
+    }
 
-    // remove all the video preview containers from the gallery
-    remAllVideoPrvwCtrs(isCaps);
+    // check if the filter is not 'all' (no program named 'all') and if an update is needed
+    if (getStg(progFltFld.name) !== 'All' && doUpdate) {
+        progFltFld.value = getStg(progFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, 'All'));
+    }
+    // else, set the value of the program filter field
+    else {
+        progFltFld.value = getStg(progFltFld.name);
+    }
+}
 
-    // add the video preview containers into the gallery
-    addAllVideoPrvwCtrs(isCaps);
+/**
+ * Toggles the directory button on or off based on available scroll width
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function setDirBtnState(isCaps) {
+    // get the captures or clips variables
+    const leftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
+    const gall = isCaps ? capsGall : clipsGall;
+    const rightBtn = isCaps ? capsRightBtn : clipsRightBtn;
+    const gallBox = isCaps ? capsGallBox : clipsGallBox;
 
-    // set the usage label
-    setUsageLabel3(isCaps);
+    // if there is more to scroll left, enable the left button
+    gall.scrollLeft > 0 ? leftBtn.classList.add('active') : leftBtn.classList.remove('active');
+    
+    // if there is more to scroll right, enable the right button
+    gall.scrollLeft < (gall.scrollWidth - Math.ceil(gallBox['width'])) ? rightBtn.classList.add('active') : rightBtn.classList.remove('active');
+}
+
+/**
+ * Updates the gallery size
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+export function setGallBox(isCaps) {
+    // get the captures or clips variable
+    const gall = isCaps ? capsGall : clipsGall;
+    let gallBox, numVideoPrvw;
+
+    // get the new modifiable gallery bounding box
+    isCaps ? capsGallBox = getModBox(capsGall.getBoundingClientRect()) : clipsGallBox = getModBox(clipsGall.getBoundingClientRect());
+
+    // get the captures or clips variable
+    gallBox = isCaps ? capsGallBox : clipsGallBox;
+
+    // calculate the gap between the video previews based on the width of the gallery
+    numVideoPrvw= Math.floor(gallBox['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
+
+    // set the gap
+    gall.style.gap = `${(gallBox['width'] - (numVideoPrvw * videoPrvwCtrWidth)) / (numVideoPrvw - 1)}px`;
 }
 
 /**
  * Adds a video to the gallery, including creating and adding a video preview container
  * 
- * @param {Object} videoData - The data of the video
+ * @param {Object} video - The video data
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-async function addVideo(videoData, isCaps) {
-    // get the captures or clips variable
-    const dataStr = isCaps ? 'caps' : 'clips';
-    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
+export async function addVideo(video, isCaps) {
+    // get the captures or clips variables
+    const videos = isCaps ? caps : clips;
+    const counts = isCaps ? capsCounts : clipsCounts;
 
     // update the total count
-    data[dataCountsStr]['totalCount'] += 1;
+    counts['total'] += 1;
 
     // if the video is corrupted, update the corrupted count
-    if (videoData === null) {
-        data[dataCountsStr]['corrCount'] += 1;
+    if (video === null) {
+        counts['corr'] += 1;
     }
     else {
-        // add the video data to the array
-        data[dataStr].push(videoData);
+        // add the video to the captures or clips array
+        videos.push(video);
 
         // update the size
-        data[dataCountsStr]['size'] += videoData['data']['size'];
+        counts['size'] += video['data']['size'];
 
-        // update the video count
-        data[dataCountsStr]['videoCount'] += 1;
+        // update the normal count
+        counts['normal'] += 1;
 
         // create the video preview container
-        createVideoPrvwCtr(videoData);
+        createVideoPrvwCtr(video);
 
-        // update the game filter field based on the games in the gallery
-        await atmpAsyncFunc(() => updateGameFltFld(isCaps));
+        // update the program filter field based on the programs in the gallery
+        await atmpAsyncFunc(() => setProgFltFld(isCaps));
 
         // remove all the video preview containers from the gallery
         remAllVideoPrvwCtrs(isCaps);
@@ -270,30 +406,47 @@ async function addVideo(videoData, isCaps) {
     }
 
     // set the usage label
-    setUsageLabel3(isCaps);
+    setUsageLabel3Text(isCaps);
 }
 
 /**
- * Deletes all videos from the gallery, including its video preview containers
+ * Adds all the videos to the gallery, including creating and adding video preview containers
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
+ * @param {boolean} isInit - If the function is run during initialization
  */
-function delAllVideos(isCaps) {
-    // get the captures or clips variable
-    const dataStr = isCaps ? 'caps' : 'clips';
+export async function addAllVideos(isCaps, isInit) {
+    // get the captures or clips variables
+    const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
+    const counts = isCaps ? capsCounts : clipsCounts;
 
-    // if there is videos data, clear every age update interval
-    if (data[dataStr] !== null) {
-        for (const videoData of data[dataStr]) { 
-            clearInterval(videoData['intvId']);
-        }
+    // if this function is not run during initialization, indicate that the gallery is loading on the directory status label
+    if (!isInit) {
+        statLabel.textContent = 'Loading...';
+        statLabel.classList.add('active');
     }
 
-    // set the videos data to null
-    data[dataStr] = null;
+    // delete all the current videos
+    delAllVideos(isCaps);
 
-    // remove all video preview containers
+    // get the captures or clips and counts
+    isCaps ? [caps, counts['normal'], counts['corr'], counts['total'], counts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
+    : [clips, counts['normal'], counts['corr'], counts['total'], counts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
+
+    // create all the video preview containers
+    createAllVideoPrvwCtrs(isCaps);
+
+    // update the program filter field based on the programs in the videos
+    await atmpAsyncFunc(() => setProgFltFld(isCaps));
+
+    // remove all the video preview containers from the gallery
     remAllVideoPrvwCtrs(isCaps);
+
+    // add the video preview containers into the gallery
+    addAllVideoPrvwCtrs(isCaps);
+
+    // set the usage label
+    setUsageLabel3Text(isCaps);
 }
 
 /**
@@ -302,64 +455,74 @@ function delAllVideos(isCaps) {
  * @param {string} extName - The name of the video including the extension
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-async function delVideo(extName, isCaps) {
+export async function delVideo(extName, isCaps) {
     // get the captures or clips variables
     const gall = isCaps ? capsGall : clipsGall;
-    const dataStr = isCaps ? 'caps' : 'clips';
-    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
-    const index = data[dataStr].findIndex(videoData => videoData['data']['extName'] === extName);
+    const videos = isCaps ? caps : clips;
+    const counts = isCaps ? capsCounts : clipsCounts;
+    const index = videos.findIndex(video => video['data']['extName'] === extName);
 
     // update the total count
-    data[dataCountsStr]['totalCount'] -= 1;
+    counts['total'] -= 1;
 
     // if the index is found
     if (index !== -1) {
-        // update the video count
-        data[dataCountsStr]['videoCount'] -= 1;
+        // update the normal count
+        counts['normal'] -= 1;
 
         // update the size
-        data[dataCountsStr]['size'] -= data[dataStr][index]['data']['size'];
+        counts['size'] -= videos[index]['data']['size'];
 
         // clear the age update interval
-        clearInterval(data[dataStr][index]['intvId']);
+        clearInterval(videos[index]['intvId']);
 
         // remove the node from the gallery
-        gall.removeChild(data[dataStr][index]['node']);
+        gall.removeChild(videos[index]['node']);
 
         // remove the video from the array
-        data[dataStr].splice(index, 1);
+        videos.splice(index, 1);
     }
     else {
-        // the video is corrupted, so update the corrupted count
-        data[dataCountsStr]['corrCount'] -= 1;
+        // otherwise, update the corrupted count
+        counts['corr'] -= 1;
     }
 
-    // update the game filter field based on the games in the gallery
-    await atmpAsyncFunc(() => updateGameFltFld(isCaps));
+    // update the program filter field based on the programs in the gallery
+    await atmpAsyncFunc(() => setProgFltFld(isCaps));
 
     // set the usage label
-    setUsageLabel3(isCaps);
+    setUsageLabel3Text(isCaps);
 }
 
 /**
- * Creates all video preview containers
+ * Deletes all the videos from the gallery, including the video preview containers
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function createAllVideoPrvwCtrs(isCaps) {
+function delAllVideos(isCaps) {
     // get the captures or clips variable
-    const dataStr = isCaps ? 'caps' : 'clips';
+    let videos = isCaps ? caps : clips;
 
-    // iterate through each video data and create a video preview container
-    data[dataStr].forEach(videoData => createVideoPrvwCtr(videoData));
+    // if there are videos, clear every age update interval
+    if (videos !== null) {
+        for (const video of videos) { 
+            clearInterval(video['intvId']);
+        }
+    }
+
+    // set the videos data to null
+    isCaps ? caps = null : clips = null;
+
+    // remove all the video preview containers
+    remAllVideoPrvwCtrs(isCaps);
 }
 
 /**
- * Creates a video preview container based on the video data
+ * Creates a video preview container for the video
  * 
- * @param {Object} videoData - The data of the video
+ * @param {Object} video - The video data
  */
-function createVideoPrvwCtr(videoData) {
+function createVideoPrvwCtr(video) {
     // get the current date
     let curDate = new Date();
 
@@ -369,31 +532,31 @@ function createVideoPrvwCtr(videoData) {
     const videoPrvwAgeLabel = videoPrvwCtrClone.querySelector('.video-preview-age-label')
 
     // set the video source
-    videoPrvwCtr.dataset.src = videoData['data']['path'];
+    videoPrvwCtr.dataset.src = video['data']['path'];
     // set the video thumbnail source
-    videoPrvwCtrClone.querySelector('.video-thumbnail-image').setAttribute('src', videoData['data']['tbnlPath']);
+    videoPrvwCtrClone.querySelector('.video-thumbnail-image').setAttribute('src', video['data']['tbnlPath']);
     // set the video duration
-    videoPrvwCtrClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(videoData['data']['dur']);
-    // set the video game
-    videoPrvwCtrClone.querySelector('.video-preview-game-label').textContent = `${videoData['data']['game']}`;
+    videoPrvwCtrClone.querySelector('.video-thumbnail-duration-label').textContent = getRdblDur(video['data']['dur']);
+    // set the video program
+    videoPrvwCtrClone.querySelector('.video-preview-program-label').textContent = `${video['data']['prog']}`;
     // set the video age
-    videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['data']['date']) / MSECONDS_IN_SECOND)}`;
+    videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - video['data']['date']) / MSECONDS_IN_SECOND)}`;
     // set the video name with the extension
-    videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = videoData['data']['extName'];
+    videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = video['data']['extName'];
 
     // on click, open the video in the editor section
     videoPrvwCtr.addEventListener('click', () => {
         // set the video frame length (to go frame by frame)
-        states['videoFrameLen'] = getTruncDec(1 / videoData['data']['fps']);
+        setVideoFrameLen(getTruncDec(1 / video['data']['fps']));
 
         // set the video player source
-        videoPlr.setAttribute('src', videoData['data']['path']);
+        setVideoPlrSrc(video['data']['path']);
 
-        // set the editor game label
-        editGameLabel.textContent = `${videoData['data']['game']}`;
+        // set the editor program label
+        setEditProgLabelText(`${video['data']['prog']}`);
 
         // change the active content section to the editor section
-        setActiveSect('editor');
+        setSectState(SECTION.EDITOR);
     });
 
     // on click, ...
@@ -404,24 +567,37 @@ function createVideoPrvwCtr(videoData) {
     // on click, ...
     videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', (event) => {
         event.stopPropagation();
-        // delVideoPrvwCtr(videoData['data']['extName'], true);
+        // delVideoPrvwCtr(video['data']['extName'], true);
     });
 
-    // set the element node
-    videoData['node'] = videoPrvwCtr;
+    // set the video element node
+    video['node'] = videoPrvwCtr;
 
     // set the interval for updating the age periodically
-    videoData['intvId'] = setInterval(() => {
+    video['intvId'] = setInterval(() => {
         // get the new date
         curDate = new Date();
 
         // set the video age
-        videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - videoData['data']['date']) / MSECONDS_IN_SECOND)}`;
+        videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - video['data']['date']) / MSECONDS_IN_SECOND)}`;
     }, VIDEO_PREVIEW_AGE_LABEL_DELAY);
 }
 
 /**
- * Adds all video preview containers into a gallery, based on the game and meta filters
+ * Creates all video preview containers
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+function createAllVideoPrvwCtrs(isCaps) {
+    // get the captures or clips variable
+    const videos = isCaps ? caps : clips;
+
+    // iterate through each video and create a video preview container
+    videos.forEach(video => createVideoPrvwCtr(video));
+}
+
+/**
+ * Adds all the video preview containers into a gallery, based on the program and meta filters
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
@@ -429,45 +605,48 @@ function addAllVideoPrvwCtrs(isCaps) {
     // get the captures or clips variables
     const gall = isCaps ? capsGall : clipsGall;
     const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
-    const dataStr = isCaps ? 'caps' : 'clips';
-    const gameFltStr = isCaps ? 'capturesGameFilter' : 'clipsGameFilter';
+    const videos = isCaps ? caps : clips;
+    const progFltStr = isCaps ? 'capturesProgramFilter' : 'clipsProgramFilter';
     const metaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
     const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // sort the video data depending on the meta data filter
-    switch (data['stgs'][metaFltStr]) {
+    switch (getStg(metaFltStr)) {
         case 'Name':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['extName'].localeCompare(b['data']['extName'])) : data[dataStr].sort((a, b) => b['data']['extName'].localeCompare(a['data']['extName']));
+            getStg(ascStr) ? videos.sort((a, b) => a['data']['extName'].localeCompare(b['data']['extName'])) : videos.sort((a, b) => b['data']['extName'].localeCompare(a['data']['extName']));
 
             break;
 
         case 'Date':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['date'] - b['data']['date']) : data[dataStr].sort((a, b) => b['data']['date'] - a['data']['date']);
+            getStg(ascStr) ? videos.sort((a, b) => a['data']['date'] - b['data']['date']) : videos.sort((a, b) => b['data']['date'] - a['data']['date']);
 
             break;
 
         case 'Size':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['size'] - b['data']['size']) : data[dataStr].sort((a, b) => b['data']['size'] - a['data']['size']);
+            getStg(ascStr) ? videos.sort((a, b) => a['data']['size'] - b['data']['size']) : videos.sort((a, b) => b['data']['size'] - a['data']['size']);
 
             break;
 
         case 'Duration':
-            data['stgs'][ascStr] ? data[dataStr].sort((a, b) => a['data']['dur'] - b['data']['dur']) : data[dataStr].sort((a, b) => b['data']['dur'] - a['data']['dur']);
+            getStg(ascStr) ? videos.sort((a, b) => a['data']['dur'] - b['data']['dur']) : videos.sort((a, b) => b['data']['dur'] - a['data']['dur']);
 
             break;
     }
 
-    // indicate that no videos are found, or hide the label
-    if (data[dataStr].length === 0) {
+    // check if there are no videos
+    if (videos.length === 0) {
+        // set the directory status label
         statLabel.textContent = 'No Videos Found';
     }
     else {
+        // set the directory status label
         statLabel.classList.remove('active');
 
-        for (const videoData of data[dataStr]) {
-            // insert video preview depending on the game filter
-            if (data['stgs'][gameFltStr] === 'All' || videoData['data']['game'] === data['stgs'][gameFltStr]) {
-                gall.appendChild(videoData['node']);
+        // iterate through each video
+        for (const video of videos) {
+            // insert video preview depending on the program filter
+            if (getStg(progFltStr) === 'All' || video['data']['prog'] === getStg(progFltStr)) {
+                gall.appendChild(video['node']);
             }
         }
     }
@@ -475,121 +654,21 @@ function addAllVideoPrvwCtrs(isCaps) {
     // reset the scroll to the left
     gall.scrollLeft = 0;
 
-    // toggle the caps gallery buttons
-    togDirBtn(isCaps);
+    // toggle the directory buttons
+    setDirBtnState(isCaps);
 }
 
 /**
- * Removes all video preview containers from a gallery
+ * Removes all the video preview containers from a gallery
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
 function remAllVideoPrvwCtrs(isCaps) {
-    // get the captures or clips variables
+    // get the captures or clips variable
     const gall = isCaps ? capsGall : clipsGall;
 
     // remove every existing video preview from the gallery (do not need to delete intervals yet)
     while (gall.children.length > 1) {
         gall.removeChild(gall.lastElementChild);        
     }
-}
-
-/**
- * 
- * @param {*} isCaps 
- */
-function setUsageLabel3(isCaps) {
-    // get the captures or clips variables
-    const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
-    const dataCountsStr = isCaps ? 'capsCounts' : 'clipsCounts';
-
-    // set the video counts and size of the directory
-    // usageLabel3.textContent = `${data[dataCountsStr]['totalCount']} Video${data[dataCountsStr]['totalCount'] !== 1 ? 's' : ''} (${data[dataCountsStr]['videoCount']} Normal, ${data[dataCountsStr]['corrCount']} Corrupted) - ${Math.ceil(data[dataCountsStr]['size'] / BYTES_IN_GIGABYTE)} GB`;
-    usageLabel3.textContent = `${data[dataCountsStr]['totalCount']} Video${data[dataCountsStr]['totalCount'] !== 1 ? 's' : ''} (${data[dataCountsStr]['videoCount']} Normal, ${data[dataCountsStr]['corrCount']} Corrupted) - ${data[dataCountsStr]['size']} GB`;
-}
-
-/**
- * Updates the game filter field with the games present in the gallery
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-async function updateGameFltFld(isCaps) {
-    // get the captures or clips variables
-    const gameFltFld = isCaps ? capsGameFltFld : clipsGameFltFld;
-    const dataStr = isCaps ? 'caps' : 'clips';
-    // get the unique set of games in the gallery
-    const uniqGames = [...new Set(data[dataStr].map(videoData => videoData['data']['game']))];
-    // boolean if the game filter setting needs to be updated, if the old game filter doesn't exist
-    let doUpdate = true;
-
-    // remove every existing game filter except 'All'
-    while (gameFltFld.children.length > 1) {
-        gameFltFld.removeChild(gameFltFld.lastElementChild);        
-    }
-
-    // iterate through each game
-    for (const game of uniqGames) {
-        // create a new setting field option
-        const fldOption = document.createElement('option');
-
-        // assign the name of the game to the value and text
-        fldOption.value = game;
-        fldOption.text = game;
-
-        // append the child to the game filter setting field
-        gameFltFld.appendChild(fldOption);
-
-        // if the game filter's game is present, do not update
-        if (data['stgs'][gameFltFld.name] === game) {
-            doUpdate = false;
-        }
-    }
-
-    // check if the filter is not 'all' (no game named 'all') and if an update is needed
-    if (data['stgs'][gameFltFld.name] !== 'All' && doUpdate) {
-        gameFltFld.value = data['stgs'][gameFltFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(gameFltFld.name, 'All'));
-    }
-    // else, set the value of the game filter field
-    else {
-        gameFltFld.value = data['stgs'][gameFltFld.name];
-    }
-}
-
-/**
- * Updates the gallery size
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-function updateGall(isCaps) {
-    // get the captures or clips variables
-    const gall = isCaps ? capsGall : clipsGall;
-    const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
-    let numVideoPrvw;
-
-    // get the new gallery bounding box
-    boxes[gallBoxStr] = getModBox(gall.getBoundingClientRect());
-
-    // calculate and set the gap between the video previews based on the width of the gallery
-    numVideoPrvw= Math.floor(boxes[gallBoxStr]['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
-
-    gall.style.gap = `${(boxes[gallBoxStr]['width'] - (numVideoPrvw* videoPrvwCtrWidth)) / (numVideoPrvw- 1)}px`;
-}
-
-/**
- * Toggles the directory button on or off based on available scroll width
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-function togDirBtn(isCaps) {
-    // get the captures or clips variables
-    const leftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
-    const gall = isCaps ? capsGall : clipsGall;
-    const rightBtn = isCaps ? capsRightBtn : clipsRightBtn;
-    const gallBoxStr = isCaps ? 'capsGallBox' : 'clipsGallBox';
-
-    // if there is more to scroll left, enable the left button
-    gall.scrollLeft > 0 ? leftBtn.classList.add('active') : leftBtn.classList.remove('active');
-    
-    // if there is more to scroll right, enable the right button
-    gall.scrollLeft < (gall.scrollWidth - Math.ceil(boxes[gallBoxStr]['width'])) ? rightBtn.classList.add('active') : rightBtn.classList.remove('active');
 }

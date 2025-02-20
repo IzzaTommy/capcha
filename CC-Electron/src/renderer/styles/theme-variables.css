@@ -219,8 +219,8 @@ html[data-theme="dark"] {
     --curlabelctr-bcolor: #575757;
     --curlabelctr-bgcolor: #575757;
 
-    /* ==== curgamelabel -> Current Recording Game Label ==== */
-    --curgamelabel-color: #dddddd;
+    /* ==== curprogramlabel -> Current Recording Program Label ==== */
+    --curprogramlabel-color: #dddddd;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-color: #88959d;
@@ -275,9 +275,9 @@ html[data-theme="dark"] {
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #505050;
 
-    /* ==== vpgamelabel -> Video Preview Game Label ==== */
-    --vpgamelabel-color: #dddddd;
-    --vpgamelabel-alt-color: #ffffff;
+    /* ==== vpprogramlabel -> Video Preview Program Label ==== */
+    --vpprogramlabel-color: #dddddd;
+    --vpprogramlabel-alt-color: #ffffff;
 
     /* ==== vpagelabel -> Video Preview Age Label ==== */
     --vpagelabel-color: #dddddd;
@@ -566,8 +566,8 @@ html[data-theme="light"] {
     --curlabelctr-bcolor: #dbdbdb;
     --curlabelctr-bgcolor: #dbdbdb;
 
-    /* ==== curgamelabel -> Current Recording Game Label ==== */
-    --curgamelabel-color: #363636;
+    /* ==== curprogramlabel -> Current Recording Program Label ==== */
+    --curprogramlabel-color: #363636;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-color: #88959d;
@@ -622,9 +622,9 @@ html[data-theme="light"] {
     /* ==== vpctr -> Video Preview Container ==== */
     --vpctr-bgcolor: #dfe1e5;
 
-    /* ==== vpgamelabel -> Video Preview Game Label ==== */
-    --vpgamelabel-color: #1a69e0;
-    --vpgamelabel-alt-color: #0000ff;
+    /* ==== vpprogramlabel -> Video Preview Program Label ==== */
+    --vpprogramlabel-color: #1a69e0;
+    --vpprogramlabel-alt-color: #0000ff;
 
     /* ==== vpagelabel -> Video Preview Age Label ==== */
     --vpagelabel-color: #1a69e0;
@@ -836,9 +836,9 @@ html {
     /* ==== curlabelctr -> Current Recording Label Container ==== */
     --curlabelctr-transition: bottom 0.3s ease 0s;
 
-    /* ==== curgamelabel -> Current Recording Game Label ==== */
-    --curgamelabel-transition: opacity 0.2s ease 0s;
-    --curgamelabel-alt-transition: opacity 0.2s ease 0.5s;
+    /* ==== curprogramlabel -> Current Recording Program Label ==== */
+    --curprogramlabel-transition: opacity 0.2s ease 0s;
+    --curprogramlabel-alt-transition: opacity 0.2s ease 0.5s;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-transition: color 0.3s ease 0s, opacity 0.3s ease 0s;

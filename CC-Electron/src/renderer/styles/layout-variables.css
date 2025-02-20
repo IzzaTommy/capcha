@@ -140,10 +140,10 @@ html {
     --curtimelabel-fsize: 10.75px;
     --curtimelabel-fweight: 300;
 
-    /* ==== curgamelabel -> Current Recording Game Label ==== */
-    --curgamelabel-width: 120px;
-    --curgamelabel-fsize: 12px;
-    --curgamelabel-fweight: 400;
+    /* ==== curprogramlabel -> Current Recording Program Label ==== */
+    --curprogramlabel-width: 120px;
+    --curprogramlabel-fsize: 12px;
+    --curprogramlabel-fweight: 400;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
     --arresumelabel-height: 36px;
@@ -228,8 +228,8 @@ html {
     --vplabel-fsize: 17px;
     --vplabel-fweight: 350;
 
-    /* ==== vpgamelabel -> Video Preview Game Label ==== */
-    --vpgamelabel-rmargin: 15px;
+    /* ==== vpprogramlabel -> Video Preview Program Label ==== */
+    --vpprogramlabel-rmargin: 15px;
 
     /* ==== vpagelabel -> Video Preview Age Label ==== */
     --vpagelabel-mwidth: 200px;

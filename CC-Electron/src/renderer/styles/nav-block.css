@@ -262,25 +262,25 @@
     font-weight: var(--curtimelabel-fweight);
 }
 
-#game-label-current-recording {
+#program-label-current-recording {
     margin: auto;
     overflow: hidden;
-    width: var(--curgamelabel-width);
+    width: var(--curprogramlabel-width);
 
-    color: var(--curgamelabel-color);
-    font-size: var(--curgamelabel-fsize);
-    font-weight: var(--curgamelabel-fweight);
+    color: var(--curprogramlabel-color);
+    font-size: var(--curprogramlabel-fsize);
+    font-weight: var(--curprogramlabel-fweight);
     opacity: 0;
     text-overflow: ellipsis;
-    transition: var(--curgamelabel-transition);
+    transition: var(--curprogramlabel-transition);
     white-space: nowrap;
 
     pointer-events: none;
 }
 
-#bar-nav.active > #label-ctr-current-recording > #game-label-current-recording {
+#bar-nav.active > #label-ctr-current-recording > #program-label-current-recording {
     opacity: 1;
-    transition: var(--curgamelabel-alt-transition);
+    transition: var(--curprogramlabel-alt-transition);
 
     pointer-events: all;
 }
