@@ -28,11 +28,11 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
 });
 
 contextBridge.exposeInMainWorld('stgsAPI', {
-    // R -> M, requests a call to togAutoRec
-    reqTogAutoRec: () => ipcRenderer.send('stgs:reqTogAutoRec'), 
+    // R -> M, requests a call to setAutoRecState
+    reqSetAutoRecState: () => ipcRenderer.send('stgs:reqSetAutoRecState'), 
 
-    // M -> R, requests a call to togRecBarBtn
-    reqTogRecBarBtn: (cb) => ipcRenderer.on('stgs:reqTogRecBarBtn', (_, recProg) => cb(recProg)),
+    // M -> R, requests a call to setAutoRecState
+    reqSetAutoRecState: (cb) => ipcRenderer.on('stgs:reqSetAutoRecState', (_, recProg) => cb(recProg)),
     
     // R -> M, opens the captures or clips directory
     openDir: (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 

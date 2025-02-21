@@ -13,6 +13,7 @@ import { getStg, setStg } from './rendererSettingsSection.js';
 // directories section constants
 // byte sizing, gallery gap, and video preview age label update delay
 const BYTES_IN_GIGABYTE = 1073741824;
+const GAME_FILTER_DEF = 'All';
 const GALLERY_MIN_GAP = 5;
 const VIDEO_PREVIEW_AGE_LABEL_DELAY = 600000;
 
@@ -106,19 +107,19 @@ export function initRendDirsSectVars() {
  * Initializes the directories section
  */
 export async function initRendDirsSect() {
-    // initializes the content container 3 event listeners for captures and clips
+    // initialize the content container 3 event listeners for captures and clips
     initContCtr3EL(true);  // boolean1 isCaps
     initContCtr3EL(false);  // boolean1 isCaps
 
-    // initializes the content container 3 for captures and clips
+    // initialize the content container 3 for captures and clips
     initContCtr3(true);  // boolean1 isCaps
     initContCtr3(false);  // boolean1 isCaps
 
-    // initializes the directory gallery event listeners for captures and clips
+    // initialize the directory gallery event listeners for captures and clips
     initDirGallEL(true);  // boolean1 isCaps
     initDirGallEL(false);  // boolean1 isCaps
 
-    // adds all videos to the gallery for captures and clips
+    // add all videos to the gallery for captures and clips
     await atmpAsyncFunc(() => addAllVideos(true, true));  // boolean1 isCaps, boolean2 isInit
     await atmpAsyncFunc(() => addAllVideos(false, true));  // boolean1 isCaps, boolean2 isInit
 }
@@ -312,9 +313,9 @@ async function setProgFltFld(isCaps) {
         }
     }
 
-    // check if the filter is not 'all' (no program named 'all') and if an update is needed
-    if (getStg(progFltFld.name) !== 'All' && doUpdate) {
-        progFltFld.value = getStg(progFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, 'All'));
+    // check if the filter is not 'All' (no program named 'All') and if an update is needed
+    if (getStg(progFltFld.name) !== GAME_FILTER_DEF && doUpdate) {
+        progFltFld.value = getStg(progFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, GAME_FILTER_DEF));
     }
     // else, set the value of the program filter field
     else {
@@ -645,7 +646,7 @@ function addAllVideoPrvwCtrs(isCaps) {
         // iterate through each video
         for (const video of videos) {
             // insert video preview depending on the program filter
-            if (getStg(progFltStr) === 'All' || video['data']['prog'] === getStg(progFltStr)) {
+            if (getStg(progFltStr) === GAME_FILTER_DEF || video['data']['prog'] === getStg(progFltStr)) {
                 gall.appendChild(video['node']);
             }
         }

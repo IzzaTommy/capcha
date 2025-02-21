@@ -7,7 +7,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { setDirsBarBtnState, setStgsBarBtnState, togRecBarBtn } from './rendererNavigationBlock.js';
+import { setDirsBarBtnState, setStgsBarBtnState, setRecBarBtnState } from './rendererNavigationBlock.js';
 import { setGallBox, addVideo, delVideo } from './rendererDirectoriesSection.js';
 import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
 import { setVolSldrBox } from './rendererSettingsSection.js';
@@ -76,13 +76,13 @@ export function initRendGenVars() {
 }
 
 /**
- * Initializes general components
+ * Initializes the general components
  */
 export function initRendGen() {
-    // initializes the general event listeners
+    // initialize the general event listeners
     initGenEL();
     
-    // initializes the inter-process communication listeners to the main process
+    // initialize the inter-process communication listeners to the main process
     initGenIPC();
 }
 
@@ -113,7 +113,7 @@ function initGenEL() {
  */
 function initGenIPC() {
     // on request, toggle the record button (initiated from the main auto recording process)
-    window['stgsAPI'].reqTogRecBarBtn(async (recProg) => await atmpAsyncFunc(() => togRecBarBtn(true, false, recProg)));  // boolean1 isAutoStart, boolean2 isManualStop
+    window['stgsAPI'].reqSetRecBarBtnState(async (recProg) => await atmpAsyncFunc(() => setRecBarBtnState(true, false, recProg)));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on request, add a video to the captures or clips gallery
     window['stgsAPI'].reqAddVideo((videoData, isCaps) => addVideo(videoData, isCaps));

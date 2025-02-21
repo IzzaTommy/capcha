@@ -73,7 +73,7 @@ let isVideoLoaded, isVideoPlrHover, wasPaused, isPlbkCtrHover, isSeekSldrDrag, i
 isPlbkRateBarBtnHover, isPlbkRateSldrCtrHover, isPlbkRateSldrDrag, isTmlnSldrDrag, isClipLeftThumbDrag, isClipRightThumbDrag;
 
 // editor section states
-let videoFrameLen, animId, plbkCtrTmo, tmln;
+let videoFrameLen, animId, plbkCtrTmoId, tmln;
 
 /**
  * Initializes the editor section variables
@@ -157,7 +157,7 @@ export function initRendEditSectVars() {
     // video frame length, animation id, playback container timeout, and timeline
     videoFrameLen = null;
     animId = null;
-    plbkCtrTmo = null;
+    plbkCtrTmoId = null;
     tmln = {
         'startTime': null, 
         'endTime': null, 
@@ -174,14 +174,14 @@ export function initRendEditSectVars() {
  * Initializes the editor section
  */
 export function initRendEditSect() {
-    // initializes the video container
+    // initialize the video container
     initVideoCtrEL();
     initVideoCtr();
 
-    // initializes the timeline slider event listeners
+    // initialize the timeline slider event listeners
     initTmlnSldrEL();
 
-    // initializes the clip container event listeners
+    // initialize the clip container event listeners
     initClipCtrEL();
 }
 
@@ -474,7 +474,7 @@ function initVideoCtrEL() {
         isVideoPlrHover = true;
 
         // set the playback container timeout
-        setPlbkCtrTmo();
+        setplbkCtrTmoId();
     });
 
     // on mousemove, show the playback container and reset the timeout for hiding
@@ -488,7 +488,7 @@ function initVideoCtrEL() {
         plbkCtr.classList.add('active');
 
         // set the playback container timeout
-        setPlbkCtrTmo();
+        setplbkCtrTmoId();
     });
 
     // on click, toggle the video state
@@ -512,7 +512,7 @@ function initVideoCtrEL() {
         isVideoPlrHover = false;
 
         // remove the old timeout
-        clearTimeout(plbkCtrTmo);
+        clearTimeout(plbkCtrTmoId);
 
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
         if (!videoPlr.paused && !isSeekSldrDrag && !isVideoVolSldrDrag && !isPlbkRateSldrDrag) {
@@ -857,7 +857,7 @@ function initTmlnSldrEL() {
         }
     });
 
-    // on mouseup, validate the sldr input and change the video time
+    // on mouseup, validate the slider input and change the video time
     document.addEventListener('mouseup', async () => { 
         // check if the timeline or seek slider is dragging
         if (isTmlnSldrDrag === true || isSeekSldrDrag === true) {
@@ -873,7 +873,7 @@ function initTmlnSldrEL() {
                 // check if the video player is hovered
                 if (isVideoPlrHover) {
                     // set the playback container timeout
-                    setPlbkCtrTmo();
+                    setplbkCtrTmoId();
                 }
             }
 
@@ -898,7 +898,7 @@ function initTmlnSldrEL() {
                     // check if the video player is hovered
                     if (isVideoPlrHover) {
                         // set the playback container timeout
-                        setPlbkCtrTmo();
+                        setplbkCtrTmoId();
                     }
                 }
 
@@ -927,7 +927,7 @@ function initTmlnSldrEL() {
                         // check if the video player is hovered
                         if (isVideoPlrHover) {
                             // set the playback container timeout
-                            setPlbkCtrTmo();
+                            setplbkCtrTmoId();
                         }
                     }
     
@@ -1351,12 +1351,12 @@ function setVideoTime(time, doPauseBeforeSet, doBoundsCheck, doPauseInCheck, doV
 /**
  * Sets the playback container timeout
  */
-function setPlbkCtrTmo() {
+function setplbkCtrTmoId() {
     // remove the old playback container timeout
-    clearTimeout(plbkCtrTmo);
+    clearTimeout(plbkCtrTmoId);
 
     // set a new playback container timeout
-    plbkCtrTmo = setTimeout(() => {
+    plbkCtrTmoId = setTimeout(() => {
         // if the video is not paused and none of the video container sliders are dragging, then hide the playback container
         if (!videoPlr.paused && !isSeekSldrDrag && !isVideoVolSldrDrag && !isPlbkRateSldrDrag) {
             plbkCtr.classList.remove('active');

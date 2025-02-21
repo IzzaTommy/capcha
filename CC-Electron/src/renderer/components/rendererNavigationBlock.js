@@ -66,10 +66,10 @@ export function initRendNavBlockVars() {
  * Initializes the navigation block
  */
 export function initRendNavBlock() {
-    // initializes the navigation bar button event listeners
+    // initialize the navigation bar button event listeners
     initNavBarBtnEL();
 
-    // initializes the navigation toggle button
+    // initialize the navigation toggle button
     initNavTogBtnEL();
     initNavTogBtn();
 }
@@ -84,8 +84,8 @@ function initNavBarBtnEL() {
     // on click, change the active section to the settings section
     stgsBarBtn.addEventListener('click', () => setSectState(SECTION.SETTINGS));
 
-    // on click, toggle recording
-    recBarBtn.addEventListener('click', async () => await atmpAsyncFunc(() => togRecBarBtn(false, true)));  // boolean1 isAutoStart, boolean2 isManualStop
+    // on click, set the recording bar button state
+    recBarBtn.addEventListener('click', async () => await atmpAsyncFunc(() => setRecBarBtnState(false, true)));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on click, hide the label and reallow auto recording if it is shown
     autoRecResLabel.addEventListener('click', () => {
@@ -193,13 +193,13 @@ export function setStgsBarBtnState(state) {
 }
 
 /**
- * Toggles the recording bar button
+ * Sets the recording bar button state
  * 
  * @param {boolean} isAutoStart - If function is called by the main process by the auto recording process
  * @param {boolean} isManualStop - If function is called by the user clicking the record button
  * @param {string} recProg - The program being recorded
  */
-export async function togRecBarBtn(isAutoStart, isManualStop, recProg = PROGRAM_DEF) {
+export async function setRecBarBtnState(isAutoStart, isManualStop, recProg = PROGRAM_DEF) {
     // check if recording is in progress
     if (isRec) {
         // check if it was a (manual start / manual stop) or (auto start / auto stop) or (auto start / manual stop)

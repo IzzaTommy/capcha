@@ -37,6 +37,7 @@ function initRend() {
  * Initializes all the variables
  */
 function initVars() {
+    // initialize all the variables
     initRendGenVars();
     initRendTitleBarVars();
     initRendNavBlockVars();
@@ -49,7 +50,10 @@ function initVars() {
  * Initializes the general components and title bar
  */
 function init() {
+    // initialize the general components
     initRendGen();
+
+    // initialize the title bar
     initRendTitleBar();
 }
 
@@ -57,20 +61,22 @@ function init() {
  * Initializes the settings section, navigation block, directories section, and editor section after the settings are read
  */
 async function finishInit() {
-    // indicate to the user the settings are being loaded
+    // initialize and indicate to the user the settings are being loaded
     setInitStatLabelText('Loading Settings...');
     await initRendStgsSect();
 
+    // initialize the navigation block
     initRendNavBlock();
 
-    // indicate to the user the files are being loaded
+    // initialize and indicate to the user that the directories are being loaded
     setInitStatLabelText('Loading Files...');
     await initRendDirsSect();
     
+    // initialize the editor section
     initRendEditSect();
 
-    // toggle auto recording
-    window['stgsAPI'].reqTogAutoRec();
+    // request a call to setAutoRecState on the main process
+    window['stgsAPI'].reqSetAutoRecState();
 
     // allow window dragging
     setTitleBarStyle('webkitAppRegion', 'drag');

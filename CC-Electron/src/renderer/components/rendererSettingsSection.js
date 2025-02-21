@@ -102,10 +102,10 @@ export function initRendStgsSectVars() {
  * Initializes the settings section
  */
 export async function initRendStgsSect() {
-    // initializes the setting container event listeners
+    // initialize the setting container event listeners
     initStgCtrEL();
 
-    // initializes the setting container
+    // initialize the setting container
     await atmpAsyncFunc(() => initStgCtr());
 }
 
@@ -515,7 +515,7 @@ export function setVolSldrBox(isSpk) {
 }
 
 /**
- * Gets a setting
+ * Gets a setting value
  * 
  * @param {string} stg - The name of the setting
  * @param {boolean | number | string} The value of the setting
@@ -525,7 +525,7 @@ export function getStg(stg) {
 }
 
 /**
- * Sets a setting
+ * Sets a setting value
  * 
  * @param {string} stg - The name of the setting
  * @param {boolean | number | string} value - The new value of the setting
