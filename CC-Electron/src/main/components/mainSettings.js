@@ -29,7 +29,8 @@ import { addLog, sendIPC, atmpAsyncFunc } from './mainGeneral.js';
 import { getIsRec, sendWebSocketReq, sendWebSocketBatchReq } from './mainWebSocket.js';
 
 // settings constants
-// default video and thumbnail directories, thumbnail size
+// active directory, default video and thumbnail directories, thumbnail size
+const ACTIVE_DIRECTORY = import.meta.dirname;
 const CAPTURES_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Captures');
 const CLIPS_DIRECTORY_DEF = path.join(app.getPath('videos'), 'CapCha', 'Clips');
 const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
@@ -121,8 +122,8 @@ const SETTINGS_DATA_SCHEMA = {
     'programs': {
         'type': 'object', 
         'properties': { 
-            'extName': { 'type': 'string' }, 
-            'iconPath': { 'type': 'string' }
+            'fullName': { 'type': 'string' }, 
+            'dataURL': { 'type': 'string' }
         }
     }, 
 
@@ -208,8 +209,12 @@ const SETTINGS_DATA_DEFS = {
     'microphoneVolume': 0.5
     // webcam: ''
 };
-const RECORDING_ENCODER_PATH = path.join(import.meta.dirname, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
-const RUNTIME_DISPLAYS_PATH = path.join(import.meta.dirname, '..', 'runtime-displays.json');
+const RECORDING_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
+const RUNTIME_DISPLAYS_PATH = path.join(ACTIVE_DIRECTORY, '..', 'runtime-displays.json');
+
+// watcher stability threshold and poll interval
+const WATCHER_STABILITY_THRESHOLD = 2000;
+const WATCHER_POLL_INTERVAL = 100;
 
 // default profile, scene, speaker, microphone, and display input names, check programs delay
 const PROFILE_NAME = 'CapCha';
@@ -219,8 +224,11 @@ const MICROPHONE_INPUT_NAME = 'Microphone Input';
 const DISPLAY_INPUT_NAME = 'Display Input';
 const CHECK_PROGRAMS_DELAY = 5000;
 
+// byte sizing
+const BYTES_IN_GIGABYTE = 1073741824;
+
 // settings variable
-let recProg;
+let recProgName;
 
 // settings states
 let capsWatch, clipsWatch, checkProgsIntvId;
@@ -228,15 +236,15 @@ let capsWatch, clipsWatch, checkProgsIntvId;
 // settings uuids
 let sceneUuid, spkInpUuid, micInpUuid, dispInpUuid, scenes, inps;
 
-// settings, devices, displays
-let stgs, devs, disps;
+// settings, devices, displays, captures, and clips
+let stgs, devs, disps, caps, clips, capsCounts, clipsCounts;
 
 /**
  * Initializes the settings variables
  */
 export function initMainStgsVars() {
     // recording program
-    recProg = null;
+    recProgName = null;
 
     // captures and clips watcher, check programs interval id
     capsWatch = null;
@@ -251,10 +259,20 @@ export function initMainStgsVars() {
     scenes = null;
     inps = null;
 
-    // settings, displays, and devices
+    // settings, displays, devices, caps, clips videos and counts
     stgs = null;
     disps = null;
     devs = null;
+    caps = null;
+    clips = null;
+    capsCounts = {
+        'normal': null, 
+        'size': null
+    };
+    clipsCounts = {
+        'normal': null, 
+        'size': null
+    };
 }
 
 /**
@@ -307,12 +325,12 @@ async function initStgs() {
     }
 
     // create the captures and clips directory watchers to watch for any file changes
-    capsWatch = chokidar.watch(stgs.get('capturesDirectory'), { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
-    clipsWatch = chokidar.watch(stgs.get('clipsDirectory'), { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+    capsWatch = chokidar.watch(stgs.get('capturesDirectory'), { 'ignored': (capPath, capStats) => capStats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(capPath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': { stabilityThreshold: WATCHER_STABILITY_THRESHOLD, pollInterval: WATCHER_POLL_INTERVAL }, 'depth': 0 });
+    clipsWatch = chokidar.watch(stgs.get('clipsDirectory'), { 'ignored': (clipPath, clipStats) => clipStats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(clipPath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': { stabilityThreshold: WATCHER_STABILITY_THRESHOLD, pollInterval: WATCHER_POLL_INTERVAL }, 'depth': 0 });
 
     // load the captures and clips watcher listeners
-    loadWatchL(true);  // boolean1 isCaps
-    loadWatchL(false);  // boolean1 isCaps
+    setWatchL(true);  // boolean1 isCaps
+    setWatchL(false);  // boolean1 isCaps
 
     // check if the CapCha profile does not exist
     if (!(await atmpAsyncFunc(() => sendWebSocketReq('GetProfileList')))['responseData']['profiles'].includes(PROFILE_NAME)) {
@@ -472,62 +490,76 @@ function initStgsL() {
     });
 
     // on delProg, delete the program from the programs list
-    ipcMain.handle('stgs:delProg', (_, name) => {
+    ipcMain.handle('stgs:delProg', (_, progName) => {
         // get the programs list
         const progs = stgs.get('programs');
 
         // delete the program and update the programs list
-        delete progs[name];
+        delete progs[progName];
         stgs.set('programs', progs);
 
         // return if the program was removed
-        return !(name in stgs.get('programs'));
+        return !(progName in stgs.get('programs'));
     });
 
-    // on getAllDirData, gets the size and videos for the directory
+    // on delVideo, delete the video from the captures or clips
+    ipcMain.on('stgs:delVideo', async (_, videoPath) => {
+        // deletes the video
+        await atmpAsyncFunc(() => fs.unlink(videoPath), 1);
+    });
+
+    // on getAllDirData, get the videos and counts for the captures or clips directory
     ipcMain.handle('stgs:getAllDirData', async (_, isCaps) => {
         // get the captures or clips variables
-        const frmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
-        const dir = stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
-        const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
-        // videos data, video count, corrupted video count, and size
-        let videoCount = 0, corrCount = 0, size = 0;
+        const videosFrmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
+        const videosDir = stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
+        const videosTbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+        const videosCounts = isCaps ? capsCounts : clipsCounts;
+
+        // reset the videos counts
+        videosCounts['normal'] = 0, videosCounts['size'] = 0;
 
         // ensures the thumbnail directory exists
-        if (await atmpAsyncFunc(() => fs.access(tbnlDir))) {
-            await atmpAsyncFunc(() => fs.mkdir(tbnlDir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        if (await atmpAsyncFunc(() => fs.access(videosTbnlDir))) {
+            await atmpAsyncFunc(() => fs.mkdir(videosTbnlDir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
         }
         
-        // ensures the video directory exists
-        if (await atmpAsyncFunc(() => fs.access(dir))) {
-            await atmpAsyncFunc(() => fs.mkdir(dir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
+        // ensures the videos directory exists
+        if (await atmpAsyncFunc(() => fs.access(videosDir))) {
+            await atmpAsyncFunc(() => fs.mkdir(videosDir, { recursive: true }));  // don't need to check exist technically since recursive means no error on exist
         }
 
         // read the directory for files
-        const files = await atmpAsyncFunc(() => fs.readdir(dir));
+        const filesFullNames = await atmpAsyncFunc(() => fs.readdir(videosDir));
 
-        // filter the files for videos
-        const videos = files.filter(file => SETTINGS_DATA_SCHEMA[frmtStr]['enum'].includes(path.extname(file).toLowerCase().replace('.', '')));
+        // filter the files for videos names
+        const videosFullNames = filesFullNames.filter(fileFullName => SETTINGS_DATA_SCHEMA[videosFrmtStr]['enum'].includes(path.extname(fileFullName).toLowerCase().replace('.', '')));
 
-        // get the data and thumbnail for each video
-        const videosData = await Promise.all(videos.map(video => getVideoData(video, isCaps)));
+        // get the videos (data) and create the thumbnail for each video
+        isCaps ? caps = await Promise.all(videosFullNames.map(videoFullName => getVideo(videoFullName, isCaps)))
+        : clips = await Promise.all(videosFullNames.map(videoFullName => getVideo(videoFullName, isCaps)));
 
-        // iterate through each video data (backwards, since we may splice the array)
-        for (let i = videosData.length - 1; i > -1; i--) {
+        // get the captures or clips variable
+        const videos = isCaps ? caps : clips;
+
+        // iterate through each video (backwards, since we may splice the array)
+        for (let i = videos.length - 1; i > -1; i--) {
             // if the video is not corrupted, update the normal count and size
-            if (videosData[i] !== null) {
-                videoCount++;
-                size += videosData[i]['data']['size'];
+            if (videos[i] !== null) {
+                videosCounts['normal']++;
+                videosCounts['size'] += videos[i]['data']['size'];
             }
-            // else, update the corrupted count and remove the corrupted video
             else {
-                corrCount++;
-                videosData.splice(i, 1);
+                // remove the corrupted video
+                videos.splice(i, 1);
             }
         }
 
-        // return all the counts and data on the videos
-        return [ videosData, videoCount, corrCount, videoCount + corrCount, size ];
+        // check if the storage limit has been exceeded
+        await checkDirSize(isCaps);
+
+        // return the videos and counts
+        return [ videos, videosCounts['normal'], videosCounts['size'] ];
     });
 
     // gets the settings object
@@ -541,7 +573,7 @@ function initStgsL() {
 
     // sets the value of a specific setting
     ipcMain.handle('stgs:setStg', async (_, key, value) => {
-        // result of the opening the dialog
+        // result of opening the dialog
         let result;
 
         // log basic information about the setting
@@ -587,17 +619,29 @@ function initStgsL() {
                     await capsWatch.close();
 
                     // create the captures directory watchers to watch for any file changes
-                    capsWatch = chokidar.watch(value, { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+                    capsWatch = chokidar.watch(value, { 'ignored': (capPath, capStats) => capStats?.isFile() && !SETTINGS_DATA_SCHEMA['capturesFormat']['enum'].includes(path.extname(capPath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': { stabilityThreshold: WATCHER_STABILITY_THRESHOLD, pollInterval: WATCHER_POLL_INTERVAL }, 'depth': 0});
                     
-                    // load the captures watcher listeners
-                    loadWatchL(true);  // boolean1 isCaps
+                    // set the captures watcher listeners
+                    setWatchL(true);  // boolean1 isCaps
                 }
                 else {
-                    return null;
+                    return stgs.get('capturesDirectory');
                 }
 
                 break;
             
+            case 'capturesLimit':
+                // save the setting
+                stgs.set(key, value);
+
+                // check if the storage limit has been exceeded
+                await checkDirSize(true);  // boolean1 isCaps
+
+                // return the value to the renderer process to show in the setting field
+                return value;
+
+                break;
+
             case 'capturesFormat':
                 // sets the new captures format
                 await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFormat2', 'parameterValue': value }));
@@ -609,7 +653,7 @@ function initStgsL() {
                 await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecEncoder', 'parameterValue': value }));
 
                 // changes the bitrate by file manipulation (no websocket implementation for this yet)
-                await atmpAsyncFunc(() => fs.writeFile(RECORDING_ENCODER_PATH, JSON.stringify(value == 'obs_x264' ? { 'bitrate': stgs.get('capturesBitrate') } : { 'rate_control': 'CBR', 'bitrate': stgs.get('capturesBitrate') }), { }));
+                await atmpAsyncFunc(() => fs.writeFile(RECORDING_ENCODER_PATH, JSON.stringify(value === 'obs_x264' ? { 'bitrate': stgs.get('capturesBitrate') } : { 'rate_control': 'CBR', 'bitrate': stgs.get('capturesBitrate') }), { }));
 
                 break;
 
@@ -651,6 +695,9 @@ function initStgsL() {
 
                 // set the auto recording state
                 setAutoRecState();
+
+                // return the value to the renderer process
+                return value;
                 
                 break;
 
@@ -660,12 +707,14 @@ function initStgsL() {
             
                 // check if the operation was not cancelled
                 if (!result.canceled) {
-                    // get the program name without the extension and create the program object
-                    const name = path.parse(result.filePaths[0]).name;
-                    const prog = { [name]: { 'extName': path.basename(result.filePaths[0]), 'iconPath': `data:image/png;base64,${extract(result.filePaths[0], 32).toString('base64')}` } };
+                    // get the program name
+                    const progName = path.parse(result.filePaths[0])['name'];
 
                     // if the program is not already in the list of programs
-                    if (!(name in stgs.get('programs'))) {
+                    if (!(progName in stgs.get('programs'))) {
+                        // create the program object with the full name and icon path
+                        const prog = { [progName]: { 'fullName': path.basename(result.filePaths[0]), 'dataURL': `data:image/png;base64,${extract(result.filePaths[0], 32).toString('base64')}` } };
+
                         // replace the program list with the updated list
                         stgs.set(key, { ...stgs.get('programs'), ...prog });
 
@@ -702,14 +751,26 @@ function initStgsL() {
                     await clipsWatch.close();
 
                     // create the clips directory watchers to watch for any file changes
-                    clipsWatch = chokidar.watch(value, { 'ignored': (filePath, stats) => stats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(filePath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': true, 'depth': 0});
+                    clipsWatch = chokidar.watch(value, { 'ignored': (clipPath, clipStats) => clipStats?.isFile() && !SETTINGS_DATA_SCHEMA['clipsFormat']['enum'].includes(path.extname(clipPath).toLowerCase().replace('.', '')), 'ignoreInitial': true, 'awaitWriteFinish': { stabilityThreshold: WATCHER_STABILITY_THRESHOLD, pollInterval: WATCHER_POLL_INTERVAL }, 'depth': 0});
                     
                     // load the clips watcher listeners
-                    loadWatchL(false);  // boolean1 isCaps
+                    setWatchL(false);  // boolean1 isCaps
                 }
                 else {
-                    return null;
+                    return stgs.get('clipsDirectory');
                 }
+
+                break;
+
+            case 'clipsLimit':
+                // save the setting
+                stgs.set(key, value);
+
+                // check if the storage limit has been exceeded
+                await checkDirSize(false);  // boolean1 isCaps
+
+                // return the value to the renderer process to show in the setting field
+                return value;
 
                 break;
 
@@ -751,42 +812,80 @@ function initStgsL() {
         // save the setting
         stgs.set(key, value);
 
-        // return the value to renderer process to show in the setting field
+        // return the value to the renderer process to show in the setting field
         return value;
     });
 }
 
 /**
- * Loads the directory watcher listeners
+ * Sets the videos watcher listeners
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function loadWatchL(isCaps) {
+function setWatchL(isCaps) {
     // get the captures or clips variable
-    const dirWatch = isCaps ? capsWatch : clipsWatch;
+    const videosWatch = isCaps ? capsWatch : clipsWatch;
 
     // on add, log that a video has been added and request the renderer to add the new video
-    dirWatch.on('add', async (filePath) => {
+    videosWatch.on('add', async (videoPath) => {
+        // get the captures or clips variables
+        const videos = isCaps ? caps : clips;
+        const videosCounts = isCaps ? capsCounts : clipsCounts;
+        // get the video (data)
+        const video = await getVideo(path.basename(videoPath), isCaps);
+
+        // log that a new file was added to the captures or clips directory
         addLog('Settings', 'ADD', 'New file added to the directory', false);  // boolean1 isFinalMsg
         addLog('Settings', 'ADD', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'ADD', `filePath: ${filePath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLog('Settings', 'ADD', `filePath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
-        // add the new video to the gallery
-        sendIPC('stgs:reqAddVideo', await getVideoData(path.basename(filePath), isCaps), isCaps);
+        // check if the video is not corrupted
+        if (video !== null) {
+            // update the normal count and size
+            videosCounts['normal']++;
+            videosCounts['size'] += video['data']['size'];
+
+            // add the video to the captures or clips
+            videos.push(video);
+
+            // add the new video to the gallery
+            sendIPC('stgs:reqAddVideo', video, isCaps);
+
+            // check if the storage limit has been exceeded
+            await checkDirSize(isCaps);
+        }
     });
 
     // on unlink, log that a video has been deleted and request the renderer to remove the video
-    dirWatch.on('unlink', async (filePath) => {
-        // get the captures or clips variable
-        const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+    videosWatch.on('unlink', async (videoPath) => {
+        // get the captures or clips variables
+        const videos = isCaps ? caps : clips;
+        const videosCounts = isCaps ? capsCounts : clipsCounts;
+        const videosTbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
 
+        // get the index of the video
+        const index = videos.findIndex(video => video['data']['path'] === videoPath);
+
+        // log that a new file was deleted from the captures or clips directory
         addLog('Settings', 'DEL', 'File deleted from the directory', false);  // boolean1 isFinalMsg
         addLog('Settings', 'DEL', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'DEL', `filePath: ${filePath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLog('Settings', 'DEL', `videoPath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
-        // request the renderer to remove the video from the gallery and delete the thumbnail image
-        sendIPC('stgs:reqDelVideo', path.basename(filePath), isCaps);
-        atmpAsyncFunc(() => fs.unlink(path.join(tbnlDir, `${path.parse(filePath).name}.png`)));
+        // check if the video was found
+        if (index !== -1) {
+            // decrease the normal video count and size
+            videosCounts['normal']--;
+            videosCounts['size'] -= videos[index]['data']['size'];
+
+            // remove the video from the videos array
+            videos.splice(index, 1);
+
+            // request the renderer to remove the video from the gallery
+            sendIPC('stgs:reqDelVideo', path.basename(videoPath), isCaps);
+
+            // delete the thumbnail image
+            atmpAsyncFunc(() => fs.unlink(path.join(videosTbnlDir, `${path.parse(videoPath).name}.png`)), 1);
+        }
     });
 }
 
@@ -794,27 +893,24 @@ function loadWatchL(isCaps) {
  * Gets the data of the video
  * 
  * @param {string} video - The video to get the data of
- * @param {string} dir - The directory of the video
  * @param {boolean} isCaps - If the call is for captures or clips
- * @returns {Object} The video data
+ * @returns {Object} The video (data)
  */
-async function getVideoData(video, isCaps) {
-    // get the captures or clips variable
-    const dir = stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
+async function getVideo(video, isCaps) {
     // turn ffprobe into a promise based function and get the basic video data
     const ffprobeProm = promisify(ffmpeg.ffprobe);
     const videoName = path.parse(video).name;
-    const splitName = video.split('-CC');
-    const videoPath = path.join(dir, video);
-    const videoMetaData = await atmpAsyncFunc(() => fs.stat(videoPath));
-    const tbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
-    const tbnlPath = path.join(tbnlDir, `${videoName}.png`);
-    const videoMetaData2 = await atmpAsyncFunc(() => ffprobeProm(videoPath), 1, 2000);
+    const videoParsedName = video.split('-CC');
+    const videoPath = path.join(stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory'), video);
+    const videoStats = await atmpAsyncFunc(() => fs.stat(videoPath));
+    const videosTbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
+    const videoTbnlPath = path.join(videosTbnlDir, `${videoName}.png`);
+    const videoProbe = await atmpAsyncFunc(() => ffprobeProm(videoPath), 1, 2000);
 
     // check if the file is not corrupted and the data can be read
-    if (videoMetaData2) {
+    if (videoProbe) {
         // check if the thumbnail for this video already exists
-        if (!(await atmpAsyncFunc(() => fs.access(tbnlPath)))) {
+        if (!(await atmpAsyncFunc(() => fs.access(videoTbnlPath)))) {
             // create the thumbnail
             await atmpAsyncFunc(() => new Promise((resolve, reject) => {
                 ffmpeg(videoPath)
@@ -823,7 +919,7 @@ async function getVideoData(video, isCaps) {
                     .screenshots({
                         'timestamps': ['50%'],
                         'filename': videoName,
-                        'folder': tbnlDir,
+                        'folder': videosTbnlDir,
                         'size': THUMBNAIL_SIZE
                     });
             }));
@@ -832,17 +928,15 @@ async function getVideoData(video, isCaps) {
         // return the data on the video
         return {
             'data': { 
-                'date': videoMetaData.birthtime, 
-                'dur': videoMetaData2.format.duration, 
-                'prog': splitName[1] ? splitName[0] : 'External',  // set the program to External if it cannot be parsed
-                'extName': video, 
-                'fps': videoMetaData2.streams.find(stream => stream.codec_type === 'video').r_frame_rate.split('/').map(Number).reduce((a, b) => a / b),  // get the video fps
+                'date': videoStats.birthtime, 
+                'dur': videoProbe.format.duration, 
+                'prog': videoParsedName[1] ? videoParsedName[0] : 'External',  // set the program to External if it cannot be parsed
+                'fullName': video, 
+                'fps': videoProbe.streams.find(stream => stream.codec_type === 'video').r_frame_rate.split('/').map(Number).reduce((a, b) => a / b),  // get the video fps
                 'path': videoPath, 
-                'size': videoMetaData.size, 
-                'tbnlPath': tbnlPath 
-            }, 
-            'node': null, 
-            'intvId': null 
+                'size': videoStats.size, 
+                'tbnlPath': videoTbnlPath 
+            }
         };
     }
     else {
@@ -898,7 +992,7 @@ async function getDisps() {
  * @param {boolean | number | string} The value of the setting
  */
 export function getStg(stg) {
-    return stgs[stg];
+    return stgs.get(stg);
 }
 
 /**
@@ -968,6 +1062,48 @@ function validStg(key, value) {
 }
 
 /**
+ * Checks if the captures or clips directory storage limit has been exceeded and removes the oldest video(s)
+ * 
+ * @param {boolean} isCaps - If the call is for captures or clips
+ */
+async function checkDirSize(isCaps) {
+    // get the captures or clips variables
+    const videos = isCaps ? caps : clips;
+    const videosCounts = isCaps ? capsCounts : clipsCounts;
+    const videosLimitStr = isCaps ? 'capturesLimit' : 'clipsLimit';
+
+    // sort the videos in descending order by date
+    videos.sort((a, b) => b['data']['date'] - a['data']['date']);
+
+    // check if the storage is being limited
+    if (stgs.get(videosLimitStr) !== 0) {
+        // get the videos list length, removal size, and removal array
+        let i = videos.length;
+        let remSize = 0;
+        const remVideos = [];
+
+        // continue while the storage limit is exceeded
+        while (videosCounts['size'] - remSize > stgs.get(videosLimitStr) * BYTES_IN_GIGABYTE) {
+            // decrement the index
+            i -= 1;
+
+            // get the video at the index
+            const video = videos[i];
+            
+            // increment the removed size variable and add the video to the removed array
+            remSize += video['data']['size'];
+            remVideos.push(video);
+        }
+
+        // iterate through each video in the removed videos array
+        for (const remVideo of remVideos) {
+            // delete the video
+            await atmpAsyncFunc(() => fs.unlink(remVideo['data']['path']));
+        }
+    }
+}
+
+/**
  * Checks if certain programs are running and toggle recording
  */
 async function checkProgs() {
@@ -978,21 +1114,21 @@ async function checkProgs() {
     // check if recording is on
     if (getIsRec()) {
         // check if the recording program is not running or the program is not in the list
-        if (!progs[recProg] || (recProg && !procs.some(proc => proc.name === progs[recProg]['extName']))) {
-            // stop recording
-            sendIPC('stgs:reqSetAutoRecState');
+        if (!progs[recProgName] || (recProgName && !procs.some(proc => proc.name === progs[recProgName]['fullName']))) {
+            // request a call to setRecBarBtnState on the renderer process
+            sendIPC('stgs:reqSetRecBarBtnState');
         }
     }
     else {
         // iterate through each program
-        for (const [name, progInfo] of Object.entries(progs)) {
+        for (const [progName, progInfo] of Object.entries(progs)) {
             // check the program list for a match
-            if (procs.some(proc => proc.name === progInfo['extName'])) {
+            if (procs.some(proc => proc.name === progInfo['fullName'])) {
                 // set the recording program
-                recProg = name;
+                recProgName = progName;
 
-                // start recording
-                sendIPC('stgs:reqSetAutoRecState', recProg);
+                // request a call to setRecBarBtnState on the renderer process
+                sendIPC('stgs:reqSetRecBarBtnState', recProgName);
 
                 break;
             }

@@ -197,9 +197,9 @@ export function setStgsBarBtnState(state) {
  * 
  * @param {boolean} isAutoStart - If function is called by the main process by the auto recording process
  * @param {boolean} isManualStop - If function is called by the user clicking the record button
- * @param {string} recProg - The program being recorded
+ * @param {string} recProgName - The name of the program being recorded
  */
-export async function setRecBarBtnState(isAutoStart, isManualStop, recProg = PROGRAM_DEF) {
+export async function setRecBarBtnState(isAutoStart, isManualStop, recProgName = PROGRAM_DEF) {
     // check if recording is in progress
     if (isRec) {
         // check if it was a (manual start / manual stop) or (auto start / auto stop) or (auto start / manual stop)
@@ -229,13 +229,13 @@ export async function setRecBarBtnState(isAutoStart, isManualStop, recProg = PRO
         // check if it was an (auto start / with no manual stop) or if it was a (manual start)
         if ((isAutoStart && !wasManualStop) || !isAutoStart) {
             // send a request to OBS to start recording
-            if (await atmpAsyncFunc(() => window['webSocketAPI'].startRecord(recProg))) {
+            if (await atmpAsyncFunc(() => window['webSocketAPI'].startRecord(recProgName))) {
                 // show the record bar button and the recording label container
                 recBarBtn.classList.add('active');
                 curRecLabelCtr.classList.add('active');
 
                 // set the recording program
-                curRecProgLabel.textContent = recProg;
+                curRecProgLabel.textContent = recProgName;
 
                 // reset the recording time
                 curRecTime = 0;

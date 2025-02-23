@@ -91,14 +91,10 @@ export function initRendDirsSectVars() {
     clips = null;
     capsCounts = {
         'normal': null, 
-        'corr': null, 
-        'total': null, 
         'size': null
     };
     clipsCounts = {
         'normal': null, 
-        'corr': null, 
-        'total': null, 
         'size': null
     };
 }
@@ -131,20 +127,20 @@ export async function initRendDirsSect() {
  */
 async function initContCtr3EL(isCaps) {
     // get the captures or clips variables
-    const nameLabel = isCaps ? capsNameLabel : clipsNameLabel;
-    const progFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
-    const metaFltFld = isCaps ? capsMetaFltFld : clipsMetaFltFld;
-    const barBtn = isCaps ? capsBarBtn : clipsBarBtn;
-    const barIcon = isCaps ? capsBarIcon : clipsBarIcon;
-    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
+    const videosNameLabel = isCaps ? capsNameLabel : clipsNameLabel;
+    const videosProgFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
+    const videosMetaFltFld = isCaps ? capsMetaFltFld : clipsMetaFltFld;
+    const videosBarBtn = isCaps ? capsBarBtn : clipsBarBtn;
+    const videosBarIcon = isCaps ? capsBarIcon : clipsBarIcon;
+    const videosAscStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
-    // on click, open the right directory
-    nameLabel.addEventListener('click', () => window['stgsAPI'].openDir(isCaps));
+    // on click, open the captures or clips directory
+    videosNameLabel.addEventListener('click', () => window['stgsAPI'].openDir(isCaps));
 
     // on change, set the program filter setting, then remove and re-insert the video preview containers in the new order
-    progFltFld.addEventListener('change', async () => {
-        setStg(progFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, progFltFld.value)));
-        progFltFld.value = getStg(progFltFld.name);
+    videosProgFltFld.addEventListener('change', async () => {
+        setStg(videosProgFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosProgFltFld.name, videosProgFltFld.value)));
+        videosProgFltFld.value = getStg(videosProgFltFld.name);
     
         // remove all the video preview containers from the gallery
         remAllVideoPrvwCtrs(isCaps);
@@ -154,40 +150,40 @@ async function initContCtr3EL(isCaps) {
     });
 
     // on change, set the meta filter setting, then remove and re-insert the video preview containers in the new order
-    metaFltFld.addEventListener('change', async () => {
-        setStg(metaFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(metaFltFld.name, metaFltFld.value)));
-        metaFltFld.value = getStg(metaFltFld.name);
+    videosMetaFltFld.addEventListener('change', async () => {
+        setStg(videosMetaFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosMetaFltFld.name, videosMetaFltFld.value)));
+        videosMetaFltFld.value = getStg(videosMetaFltFld.name);
     
         // remove all the video preview containers from the gallery
         remAllVideoPrvwCtrs(isCaps);
 
-        // add the video preview containers into the gallery
+        // add all the video preview containers into the gallery
         addAllVideoPrvwCtrs(isCaps);
     });
 
     // on click, change the sort order
-    barBtn.addEventListener('click', async () => {
-        barBtn.classList.toggle('active');
+    videosBarBtn.addEventListener('click', async () => {
+        videosBarBtn.classList.toggle('active');
 
         // change the icon, save the order setting, then remove and re-insert the video preview containers
-        if (barBtn.classList.contains('active')) {
-            setIcon(barIcon, 'arrow-upward-alt');
-            setStg(ascStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, true)));
+        if (videosBarBtn.classList.contains('active')) {
+            setIcon(videosBarIcon, 'arrow-upward-alt');
+            setStg(videosAscStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosAscStr, true)));
 
             // remove all the video preview containers from the gallery
             remAllVideoPrvwCtrs(isCaps);
 
-            // add the video preview containers into the gallery
+            // add all the video preview containers into the gallery
             addAllVideoPrvwCtrs(isCaps);
         }
         else {
-            setIcon(barIcon, 'arrow-downward-alt');
-            setStg(ascStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(ascStr, false)));
+            setIcon(videosBarIcon, 'arrow-downward-alt');
+            setStg(videosAscStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosAscStr, false)));
 
             // remove all the video preview containers from the gallery
             remAllVideoPrvwCtrs(isCaps);
 
-            // add the video preview containers into the gallery
+            // add all the video preview containers into the gallery
             addAllVideoPrvwCtrs(isCaps);
         }
     });
@@ -200,21 +196,21 @@ async function initContCtr3EL(isCaps) {
  */
 function initContCtr3(isCaps) {
     // get the captures or clips variables
-    const dirLabel2 = isCaps ? capsDirLabel2 : clipsDirLabel2;
-    const metaFltFld = isCaps ? capsMetaFltFld : clipsMetaFltFld;
-    const barBtn = isCaps ? capsBarBtn : clipsBarBtn;
-    const barIcon = isCaps ? capsBarIcon : clipsBarIcon;
-    const dirStr = isCaps ? 'capturesDirectory' : 'clipsDirectory';
-    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
+    const videosDirLabel2 = isCaps ? capsDirLabel2 : clipsDirLabel2;
+    const videosMetaFltFld = isCaps ? capsMetaFltFld : clipsMetaFltFld;
+    const videosBarBtn = isCaps ? capsBarBtn : clipsBarBtn;
+    const videosBarIcon = isCaps ? capsBarIcon : clipsBarIcon;
+    const videosDirStr = isCaps ? 'capturesDirectory' : 'clipsDirectory';
+    const videosAscStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // set the directory label and meta filter
-    dirLabel2.textContent = getStg(dirStr);
-    metaFltFld.value = getStg(metaFltFld.name); // program filter is done later as the gallery is loaded
+    videosDirLabel2.textContent = getStg(videosDirStr);
+    videosMetaFltFld.value = getStg(videosMetaFltFld.name); // program filter is done later as the gallery is loaded
 
     // toggle the sort order and change the icon, depending on setting
-    if (getStg(ascStr) === true) {
-        barBtn.classList.add('active');
-        setIcon(barIcon, 'arrow-upward-alt');
+    if (getStg(videosAscStr) === true) {
+        videosBarBtn.classList.add('active');
+        setIcon(videosBarIcon, 'arrow-upward-alt');
     }
 }
 
@@ -225,28 +221,28 @@ function initContCtr3(isCaps) {
  */
 function initDirGallEL(isCaps) {
     // get the captures or clips variables
-    const leftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
-    const gall = isCaps ? capsGall : clipsGall;
-    const rightBtn = isCaps ? capsRightBtn : clipsRightBtn;
-    const gallBox = isCaps ? capsGallBox : clipsGallBox;
+    const videosLeftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
+    const videosGall = isCaps ? capsGall : clipsGall;
+    const videosRightBtn = isCaps ? capsRightBtn : clipsRightBtn;
+    const videosGallBox = isCaps ? capsGallBox : clipsGallBox;
 
     // on click, scroll the gallery left by approximately its width
-    leftBtn.addEventListener('click', () => gall.scrollBy({ 'left': -gallBox['width'] }));
+    videosLeftBtn.addEventListener('click', () => videosGall.scrollBy({ 'left': -videosGallBox['width'] }));
 
     // on scroll, scroll the gallery by increments of the video preview
-    gall.addEventListener('wheel', (ptr) => {
+    videosGall.addEventListener('wheel', (ptr) => {
         // prevent scrolling vertically on the section container
         ptr.preventDefault();
 
         // scroll the gallery by approximately the video preview width
-        gall.scrollBy({ 'left': ptr['deltaY'] < 0 ? -videoPrvwCtrWidth : videoPrvwCtrWidth }); 
+        videosGall.scrollBy({ 'left': ptr['deltaY'] < 0 ? -videoPrvwCtrWidth : videoPrvwCtrWidth }); 
     });
 
     // on scroll, toggle the gallery buttons
-    gall.addEventListener('scroll', () => setDirBtnState(isCaps));
+    videosGall.addEventListener('scroll', () => setDirBtnState(isCaps));
 
     // on click, scroll the gallery right by approximately its width
-    rightBtn.addEventListener('click', () => gall.scrollBy({ 'left': gallBox['width'] }));
+    videosRightBtn.addEventListener('click', () => videosGall.scrollBy({ 'left': videosGallBox['width'] }));
 }
 
 /**
@@ -256,11 +252,11 @@ function initDirGallEL(isCaps) {
  */
 function setUsageLabel3Text(isCaps) {
     // get the captures or clips variables
-    const usageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
-    const counts = isCaps ? capsCounts : clipsCounts;
+    const videosUsageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
+    const videosCounts = isCaps ? capsCounts : clipsCounts;
 
     // set the video counts and size of the directory
-    usageLabel3.textContent = `${counts ['total']} Video${counts ['total'] !== 1 ? 's' : ''} (${counts ['normal']} Normal, ${counts ['corr']} Corrupted) - ${Math.ceil(counts ['size'] / BYTES_IN_GIGABYTE)} GB`;
+    videosUsageLabel3.textContent = `${videosCounts['normal']} Video${videosCounts['normal'] !== 1 ? 's' : ''} - ${Math.ceil(videosCounts['size'] / BYTES_IN_GIGABYTE)} GB`;
 }
 
 /**
@@ -271,9 +267,9 @@ function setUsageLabel3Text(isCaps) {
  */
 export function setTotalLabel3Text(text, isCaps) {
     // get the captures or clips variable
-    const totalLabel3 = isCaps ? capsTotalLabel3 : clipsTotalLabel3;
+    const videosTotalLabel3 = isCaps ? capsTotalLabel3 : clipsTotalLabel3;
 
-    totalLabel3.textContent = text;
+    videosTotalLabel3.textContent = text;
 }
 
 /**
@@ -283,43 +279,43 @@ export function setTotalLabel3Text(text, isCaps) {
  */
 async function setProgFltFld(isCaps) {
     // get the captures or clips variables
-    const progFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
+    const videosProgFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
     const videos = isCaps ? caps : clips;
     // get the unique set of programs in the gallery
-    const uniqProgs = [...new Set(videos.map(video => video['data']['prog']))];
+    const uniqProgNames = [...new Set(videos.map(video => video['data']['prog']))];
     // boolean if the program filter setting needs to be updated, if the old program filter doesn't exist
     let doUpdate = true;
 
     // remove every existing program filter except 'All'
-    while (progFltFld.children.length > 1) {
-        progFltFld.removeChild(progFltFld.lastElementChild);        
+    while (videosProgFltFld.children.length > 1) {
+        videosProgFltFld.removeChild(videosProgFltFld.lastElementChild);        
     }
 
     // iterate through each program
-    for (const prog of uniqProgs) {
+    for (const progName of uniqProgNames) {
         // create a new setting field option
         const fldOption = document.createElement('option');
 
         // assign the name of the program to the value and text
-        fldOption.value = prog;
-        fldOption.text = prog;
+        fldOption.value = progName;
+        fldOption.text = progName;
 
         // append the child to the program filter setting field
-        progFltFld.appendChild(fldOption);
+        videosProgFltFld.appendChild(fldOption);
 
         // if the program filter's program is present, do not update
-        if (getStg(progFltFld.name) === prog) {
+        if (getStg(videosProgFltFld.name) === progName) {
             doUpdate = false;
         }
     }
 
     // check if the filter is not 'All' (no program named 'All') and if an update is needed
-    if (getStg(progFltFld.name) !== GAME_FILTER_DEF && doUpdate) {
-        progFltFld.value = getStg(progFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(progFltFld.name, GAME_FILTER_DEF));
+    if (getStg(videosProgFltFld.name) !== GAME_FILTER_DEF && doUpdate) {
+        videosProgFltFld.value = getStg(videosProgFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosProgFltFld.name, GAME_FILTER_DEF));
     }
     // else, set the value of the program filter field
     else {
-        progFltFld.value = getStg(progFltFld.name);
+        videosProgFltFld.value = getStg(videosProgFltFld.name);
     }
 }
 
@@ -330,16 +326,16 @@ async function setProgFltFld(isCaps) {
  */
 function setDirBtnState(isCaps) {
     // get the captures or clips variables
-    const leftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
-    const gall = isCaps ? capsGall : clipsGall;
-    const rightBtn = isCaps ? capsRightBtn : clipsRightBtn;
-    const gallBox = isCaps ? capsGallBox : clipsGallBox;
+    const videosLeftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
+    const videosGall = isCaps ? capsGall : clipsGall;
+    const videosRightBtn = isCaps ? capsRightBtn : clipsRightBtn;
+    const videosGallBox = isCaps ? capsGallBox : clipsGallBox;
 
     // if there is more to scroll left, enable the left button
-    gall.scrollLeft > 0 ? leftBtn.classList.add('active') : leftBtn.classList.remove('active');
+    videosGall.scrollLeft > 0 ? videosLeftBtn.classList.add('active') : videosLeftBtn.classList.remove('active');
     
     // if there is more to scroll right, enable the right button
-    gall.scrollLeft < (gall.scrollWidth - Math.ceil(gallBox['width'])) ? rightBtn.classList.add('active') : rightBtn.classList.remove('active');
+    videosGall.scrollLeft < (videosGall.scrollWidth - Math.ceil(videosGallBox['width'])) ? videosRightBtn.classList.add('active') : videosRightBtn.classList.remove('active');
 }
 
 /**
@@ -349,62 +345,53 @@ function setDirBtnState(isCaps) {
  */
 export function setGallBox(isCaps) {
     // get the captures or clips variable
-    const gall = isCaps ? capsGall : clipsGall;
-    let gallBox, numVideoPrvw;
+    const videosGall = isCaps ? capsGall : clipsGall;
+    let videosGallBox, numVideoPrvw;
 
     // get the new modifiable gallery bounding box
     isCaps ? capsGallBox = getModBox(capsGall.getBoundingClientRect()) : clipsGallBox = getModBox(clipsGall.getBoundingClientRect());
 
     // get the captures or clips variable
-    gallBox = isCaps ? capsGallBox : clipsGallBox;
+    videosGallBox = isCaps ? capsGallBox : clipsGallBox;
 
     // calculate the gap between the video previews based on the width of the gallery
-    numVideoPrvw= Math.floor(gallBox['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
+    numVideoPrvw= Math.floor(videosGallBox['width'] / (videoPrvwCtrWidth + GALLERY_MIN_GAP));
 
     // set the gap
-    gall.style.gap = `${(gallBox['width'] - (numVideoPrvw * videoPrvwCtrWidth)) / (numVideoPrvw - 1)}px`;
+    videosGall.style.gap = `${(videosGallBox['width'] - (numVideoPrvw * videoPrvwCtrWidth)) / (numVideoPrvw - 1)}px`;
 }
 
 /**
  * Adds a video to the gallery, including creating and adding a video preview container
  * 
- * @param {Object} video - The video data
+ * @param {Object} video - The video (data)
  * @param {boolean} isCaps - If the call is for captures or clips
  */
 export async function addVideo(video, isCaps) {
     // get the captures or clips variables
     const videos = isCaps ? caps : clips;
-    const counts = isCaps ? capsCounts : clipsCounts;
+    const videosCounts = isCaps ? capsCounts : clipsCounts;
 
-    // update the total count
-    counts['total'] += 1;
+    // add the video to the captures or clips array
+    videos.push(video);
 
-    // if the video is corrupted, update the corrupted count
-    if (video === null) {
-        counts['corr'] += 1;
-    }
-    else {
-        // add the video to the captures or clips array
-        videos.push(video);
+    // update the normal count
+    videosCounts['normal'] += 1;
 
-        // update the size
-        counts['size'] += video['data']['size'];
+    // update the size
+    videosCounts['size'] += video['data']['size'];
 
-        // update the normal count
-        counts['normal'] += 1;
+    // create the video preview container
+    createVideoPrvwCtr(video);
 
-        // create the video preview container
-        createVideoPrvwCtr(video);
+    // update the program filter field based on the programs in the gallery
+    await atmpAsyncFunc(() => setProgFltFld(isCaps));
 
-        // update the program filter field based on the programs in the gallery
-        await atmpAsyncFunc(() => setProgFltFld(isCaps));
+    // remove all the video preview containers from the gallery
+    remAllVideoPrvwCtrs(isCaps);
 
-        // remove all the video preview containers from the gallery
-        remAllVideoPrvwCtrs(isCaps);
-
-        // add the video preview containers into the gallery
-        addAllVideoPrvwCtrs(isCaps);
-    }
+    // add all the video preview containers into the gallery
+    addAllVideoPrvwCtrs(isCaps);
 
     // set the usage label
     setUsageLabel3Text(isCaps);
@@ -418,32 +405,38 @@ export async function addVideo(video, isCaps) {
  */
 export async function addAllVideos(isCaps, isInit) {
     // get the captures or clips variables
-    const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
-    const counts = isCaps ? capsCounts : clipsCounts;
+    const videosStatLabel = isCaps ? capsStatLabel : clipsStatLabel;
+    let videos = isCaps ? caps : clips;
+    const videosCounts = isCaps ? capsCounts : clipsCounts;
 
     // if this function is not run during initialization, indicate that the gallery is loading on the directory status label
     if (!isInit) {
-        statLabel.textContent = 'Loading...';
-        statLabel.classList.add('active');
+        videosStatLabel.textContent = 'Loading...';
+        videosStatLabel.classList.add('active');
+
+        // remove all the video preview containers from the gallery
+        remAllVideoPrvwCtrs(isCaps);
+
+        // if there are videos, clear every age update interval
+        for (const video of videos) { 
+            clearInterval(video['intvId']);
+        }
     }
 
-    // delete all the current videos
-    delAllVideos(isCaps);
-
     // get the captures or clips and counts
-    isCaps ? [caps, counts['normal'], counts['corr'], counts['total'], counts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
-    : [clips, counts['normal'], counts['corr'], counts['total'], counts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
+    isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
+    : [clips, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
 
-    // create all the video preview containers
-    createAllVideoPrvwCtrs(isCaps);
+    // get the new captures or clips variable
+    videos = isCaps ? caps : clips;
+
+    // iterate through each video and create a video preview container
+    videos.forEach(video => createVideoPrvwCtr(video));
 
     // update the program filter field based on the programs in the videos
     await atmpAsyncFunc(() => setProgFltFld(isCaps));
 
-    // remove all the video preview containers from the gallery
-    remAllVideoPrvwCtrs(isCaps);
-
-    // add the video preview containers into the gallery
+    // add all the video preview containers into the gallery
     addAllVideoPrvwCtrs(isCaps);
 
     // set the usage label
@@ -453,69 +446,42 @@ export async function addAllVideos(isCaps, isInit) {
 /**
  * Deletes a video from the gallery, including its video preview container
  * 
- * @param {string} extName - The name of the video including the extension
+ * @param {string} fullName - The name of the video including the extension
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-export async function delVideo(extName, isCaps) {
+export async function delVideo(fullName, isCaps) {
     // get the captures or clips variables
-    const gall = isCaps ? capsGall : clipsGall;
+    const videosGall = isCaps ? capsGall : clipsGall;
     const videos = isCaps ? caps : clips;
-    const counts = isCaps ? capsCounts : clipsCounts;
-    const index = videos.findIndex(video => video['data']['extName'] === extName);
+    const videosCounts = isCaps ? capsCounts : clipsCounts;
+    const index = videos.findIndex(video => video['data']['fullName'] === fullName);
 
-    // update the total count
-    counts['total'] -= 1;
+    // update the normal count
+    videosCounts['normal'] -= 1;
 
-    // if the index is found
-    if (index !== -1) {
-        // update the normal count
-        counts['normal'] -= 1;
+    // update the size
+    videosCounts['size'] -= videos[index]['data']['size'];
 
-        // update the size
-        counts['size'] -= videos[index]['data']['size'];
+    // clear the age update interval
+    clearInterval(videos[index]['intvId']);
 
-        // clear the age update interval
-        clearInterval(videos[index]['intvId']);
+    // remove the node from the gallery
+    videosGall.removeChild(videos[index]['node']);
 
-        // remove the node from the gallery
-        gall.removeChild(videos[index]['node']);
-
-        // remove the video from the array
-        videos.splice(index, 1);
-    }
-    else {
-        // otherwise, update the corrupted count
-        counts['corr'] -= 1;
-    }
+    // remove the video from the array
+    videos.splice(index, 1);
 
     // update the program filter field based on the programs in the gallery
     await atmpAsyncFunc(() => setProgFltFld(isCaps));
 
     // set the usage label
     setUsageLabel3Text(isCaps);
-}
 
-/**
- * Deletes all the videos from the gallery, including the video preview containers
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-function delAllVideos(isCaps) {
-    // get the captures or clips variable
-    let videos = isCaps ? caps : clips;
-
-    // if there are videos, clear every age update interval
-    if (videos !== null) {
-        for (const video of videos) { 
-            clearInterval(video['intvId']);
-        }
+    // check if there are no videos
+    if (videos.length === 0) {
+        // set the directory status label
+        videosStatLabel.textContent = 'No Videos Found';
     }
-
-    // set the videos data to null
-    isCaps ? caps = null : clips = null;
-
-    // remove all the video preview containers
-    remAllVideoPrvwCtrs(isCaps);
 }
 
 /**
@@ -543,7 +509,7 @@ function createVideoPrvwCtr(video) {
     // set the video age
     videoPrvwAgeLabel.textContent = `${getRdblAge((curDate - video['data']['date']) / MSECONDS_IN_SECOND)}`;
     // set the video name with the extension
-    videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = video['data']['extName'];
+    videoPrvwCtrClone.querySelector('.video-preview-name-label').textContent = video['data']['fullName'];
 
     // on click, open the video in the editor section
     videoPrvwCtr.addEventListener('click', () => {
@@ -560,15 +526,20 @@ function createVideoPrvwCtr(video) {
         setSectState(SECTION.EDITOR);
     });
 
+    // ###
     // on click, ...
     videoPrvwCtrClone.querySelector('.video-preview-rename-btn').addEventListener('click', (event) => {
+        // prevent the click from propagating to the video preview container
         event.stopPropagation();
     });
 
-    // on click, ...
+    // on click, delete the video
     videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', (event) => {
+        // prevent the click from propagating to the video preview container
         event.stopPropagation();
-        // delVideoPrvwCtr(video['data']['extName'], true);
+
+        // send a request to main to delete the video
+        window['stgsAPI'].delVideo(video['data']['path']);
     });
 
     // set the video element node
@@ -585,51 +556,38 @@ function createVideoPrvwCtr(video) {
 }
 
 /**
- * Creates all video preview containers
- * 
- * @param {boolean} isCaps - If the call is for captures or clips
- */
-function createAllVideoPrvwCtrs(isCaps) {
-    // get the captures or clips variable
-    const videos = isCaps ? caps : clips;
-
-    // iterate through each video and create a video preview container
-    videos.forEach(video => createVideoPrvwCtr(video));
-}
-
-/**
  * Adds all the video preview containers into a gallery, based on the program and meta filters
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
 function addAllVideoPrvwCtrs(isCaps) {
     // get the captures or clips variables
-    const gall = isCaps ? capsGall : clipsGall;
-    const statLabel = isCaps ? capsStatLabel : clipsStatLabel;
+    const videosGall = isCaps ? capsGall : clipsGall;
+    const videosStatLabel = isCaps ? capsStatLabel : clipsStatLabel;
     const videos = isCaps ? caps : clips;
-    const progFltStr = isCaps ? 'capturesProgramFilter' : 'clipsProgramFilter';
-    const metaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
-    const ascStr = isCaps ? 'capturesAscending' : 'clipsAscending';
+    const videosProgFltStr = isCaps ? 'capturesProgramFilter' : 'clipsProgramFilter';
+    const videosMetaFltStr = isCaps ? 'capturesMetaFilter' : 'clipsMetaFilter';
+    const videosAscStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // sort the video data depending on the meta data filter
-    switch (getStg(metaFltStr)) {
+    switch (getStg(videosMetaFltStr)) {
         case 'Name':
-            getStg(ascStr) ? videos.sort((a, b) => a['data']['extName'].localeCompare(b['data']['extName'])) : videos.sort((a, b) => b['data']['extName'].localeCompare(a['data']['extName']));
+            getStg(videosAscStr) ? videos.sort((a, b) => a['data']['fullName'].localeCompare(b['data']['fullName'])) : videos.sort((a, b) => b['data']['fullName'].localeCompare(a['data']['fullName']));
 
             break;
 
         case 'Date':
-            getStg(ascStr) ? videos.sort((a, b) => a['data']['date'] - b['data']['date']) : videos.sort((a, b) => b['data']['date'] - a['data']['date']);
+            getStg(videosAscStr) ? videos.sort((a, b) => a['data']['date'] - b['data']['date']) : videos.sort((a, b) => b['data']['date'] - a['data']['date']);
 
             break;
 
         case 'Size':
-            getStg(ascStr) ? videos.sort((a, b) => a['data']['size'] - b['data']['size']) : videos.sort((a, b) => b['data']['size'] - a['data']['size']);
+            getStg(videosAscStr) ? videos.sort((a, b) => a['data']['size'] - b['data']['size']) : videos.sort((a, b) => b['data']['size'] - a['data']['size']);
 
             break;
 
         case 'Duration':
-            getStg(ascStr) ? videos.sort((a, b) => a['data']['dur'] - b['data']['dur']) : videos.sort((a, b) => b['data']['dur'] - a['data']['dur']);
+            getStg(videosAscStr) ? videos.sort((a, b) => a['data']['dur'] - b['data']['dur']) : videos.sort((a, b) => b['data']['dur'] - a['data']['dur']);
 
             break;
     }
@@ -637,23 +595,23 @@ function addAllVideoPrvwCtrs(isCaps) {
     // check if there are no videos
     if (videos.length === 0) {
         // set the directory status label
-        statLabel.textContent = 'No Videos Found';
+        videosStatLabel.textContent = 'No Videos Found';
     }
     else {
         // set the directory status label
-        statLabel.classList.remove('active');
+        videosStatLabel.classList.remove('active');
 
         // iterate through each video
         for (const video of videos) {
             // insert video preview depending on the program filter
-            if (getStg(progFltStr) === GAME_FILTER_DEF || video['data']['prog'] === getStg(progFltStr)) {
-                gall.appendChild(video['node']);
+            if (getStg(videosProgFltStr) === GAME_FILTER_DEF || video['data']['prog'] === getStg(videosProgFltStr)) {
+                videosGall.appendChild(video['node']);
             }
         }
     }
 
     // reset the scroll to the left
-    gall.scrollLeft = 0;
+    videosGall.scrollLeft = 0;
 
     // toggle the directory buttons
     setDirBtnState(isCaps);
@@ -666,10 +624,10 @@ function addAllVideoPrvwCtrs(isCaps) {
  */
 function remAllVideoPrvwCtrs(isCaps) {
     // get the captures or clips variable
-    const gall = isCaps ? capsGall : clipsGall;
+    const videosGall = isCaps ? capsGall : clipsGall;
 
     // remove every existing video preview from the gallery (do not need to delete intervals yet)
-    while (gall.children.length > 1) {
-        gall.removeChild(gall.lastElementChild);        
+    while (videosGall.children.length > 1) {
+        videosGall.removeChild(videosGall.lastElementChild);        
     }
 }

@@ -9,8 +9,11 @@ import { spawn } from 'child_process';
 import path from 'path';
 
 // OBS constants
+// active directory
+const ACTIVE_DIRECTORY = import.meta.dirname;
+
 // OBS executable path and termination signal
-const OBS_EXECUTABLE_PATH = path.join(import.meta.dirname, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 const TERMINATION_SIGNAL = 'SIGTERM';
 
 // OBS instance

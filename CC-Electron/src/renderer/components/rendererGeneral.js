@@ -119,7 +119,7 @@ function initGenIPC() {
     window['stgsAPI'].reqAddVideo((videoData, isCaps) => addVideo(videoData, isCaps));
 
     // on request, delete a video from the captures or clips gallery
-    window['stgsAPI'].reqDelVideo((extName, isCaps) => delVideo(extName, isCaps));
+    window['stgsAPI'].reqDelVideo((fullName, isCaps) => delVideo(fullName, isCaps));
 }
 
 /**

@@ -15,14 +15,15 @@ import { promises as fs } from 'fs';
 import { getStg } from './mainSettings.js';
 
 // general constants
-// initialization date
+// active directory, initialization date
+const ACTIVE_DIRECTORY = import.meta.dirname;
 const INITIALIZATION_DATE = new Date();
 
 // minimum window size, paths
 const MAIN_WINDOW_WIDTH_MIN = 1280;
 const MAIN_WINDOW_HEIGHT_MIN = 900;
-const MAIN_WINDOW_ICON_PATH = path.join(import.meta.dirname, '..', '..', 'assets', 'app-icon', 'capcha-app-icon.png');
-const PRELOAD_PATH = path.join(import.meta.dirname, '..', 'preload.js');
+const MAIN_WINDOW_ICON_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', 'assets', 'app-icon', 'capcha-app-icon.png');
+const PRELOAD_PATH = path.join(ACTIVE_DIRECTORY, '..', 'preload.js');
 const INDEX_PATH = 'src/renderer/index.html';
 
 // clip parameters
@@ -34,11 +35,14 @@ const CLIP_AUDIO_CHANNELS = 1;
 const CLIP_THREADS = '-threads 2';
 const CLIP_VIDEO_CODEC = 'h264_nvenc';
 
-// padding functions, log path, and divider
+// padding functions, logs limit, path, and divider, and byte sizing
 const TIME_PAD = (time) => time.toString().padStart(2, '0');
 const EVENT_PAD = (event) => event.toString().padEnd(5, '-');
-const LOGS_PATH = path.join(app.getPath('logs'), `${INITIALIZATION_DATE.getFullYear()}-${TIME_PAD(INITIALIZATION_DATE.getMonth() + 1)}-${TIME_PAD(INITIALIZATION_DATE.getDate())}_${TIME_PAD(INITIALIZATION_DATE.getHours())}-${TIME_PAD(INITIALIZATION_DATE.getMinutes())}-${TIME_PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
+const LOGS_LIMIT = 1;
+const LOGS_DIRECTORY = app.getPath('logs');
+const LOGS_PATH = path.join(LOGS_DIRECTORY, `${INITIALIZATION_DATE.getFullYear()}-${TIME_PAD(INITIALIZATION_DATE.getMonth() + 1)}-${TIME_PAD(INITIALIZATION_DATE.getDate())}_${TIME_PAD(INITIALIZATION_DATE.getHours())}-${TIME_PAD(INITIALIZATION_DATE.getMinutes())}-${TIME_PAD(INITIALIZATION_DATE.getSeconds())}.txt`);
 const LOGS_DIV = '------------------------------------------------------------';
+const BYTES_IN_GIGABYTE = 1073741824;
 
 // asynchronous function attempts and delay
 const ASYNC_ATTEMPTS = 3;
@@ -188,6 +192,49 @@ function getRdblLogTime() {
 }
 
 /**
+ * Checks if the logs directory storage limit has been exceeded and removes the oldest log(s)
+ */
+export async function checkLogsDirSize() {
+    // read the directory for files
+    const filesFullNames = await atmpAsyncFunc(() => fs.readdir(LOGS_DIRECTORY));
+
+    // filter the files for logs
+    const logsFullNames = filesFullNames.filter(fileFullName => ['txt'].includes(path.extname(fileFullName).toLowerCase().replace('.', '')));
+
+    // get the logs (data)
+    const logs = await Promise.all(logsFullNames.map(async (logFullName) => { 
+        // get the logs path and stats
+        const logPath = path.join(LOGS_DIRECTORY, logFullName);
+        const logStats = await atmpAsyncFunc(() => fs.stat(logPath));
+
+        // return the logs date, path, and size
+        return {
+            'date': logStats.birthtime, 
+            'path': logPath,  
+            'size': logStats.size
+        };
+    }));
+
+    // get the total size of the logs
+    let logsSize = logs.reduce((sum, log) => sum + log['size'], 0);
+
+    // sort the videos in descending order by date
+    logs.sort((a, b) => b['date'] - a['date']);
+
+    // continue while the storage limit is exceeded
+    while (logsSize > LOGS_LIMIT * BYTES_IN_GIGABYTE) {
+        // get the oldest log
+        const log = logs.pop();
+        
+        // decrease the logs size
+        logsSize -= log['size'];
+
+        // delete the log
+        await atmpAsyncFunc(() => fs.unlink(log['path']));
+    }
+}
+
+/**
  * Adds a log to the console or log file
  * 
  * @param {string} proc - The process being logged
@@ -252,7 +299,7 @@ export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = A
             }
             else {
                 // log that an error has occurred
-                addLog('WebSocket', 'GEN', error);
+                addLog('General', 'GEN', error);
                 // throw new Error(`Function failed after ${atmps} atmps: `, error);
                 // error code...
             }

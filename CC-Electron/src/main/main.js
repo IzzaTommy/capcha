@@ -9,7 +9,7 @@
  * @requires mainSettings
  */
 import { app, powerMonitor } from 'electron';
-import { initMainGenVars, initMainGen, addLog, openDevTools, sendIPC } from './components/mainGeneral.js';
+import { initMainGenVars, initMainGen, checkLogsDirSize, addLog, openDevTools, sendIPC } from './components/mainGeneral.js';
 import { initMainOBSVars, initMainOBS, getOBSState, setOBSState } from './components/mainOBS.js';
 import { initMainWebSocketVars, initMainWebSocket, getIsRec } from './components/mainWebSocket.js';
 import { initMainStgsVars, initMainStgs } from './components/mainSettings.js';
@@ -29,8 +29,8 @@ powerMonitor.on('suspend', () => {
         addLog('General', 'SUSPD', 'Recording active', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         addLog('General', 'SUSPD', 'Attempting to stop recording', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
-        // request a call to setAutoRecState on the renderer process
-        sendIPC('stgs:reqSetAutoRecState');
+        // request a call to setRecBarBtnState on the renderer process
+        sendIPC('stgs:reqSetRecBarBtnState');
     }
     else {
         // log the recording status
@@ -79,6 +79,9 @@ app.on('quit', () => {
  * Initializes the main process
  */
 function initMain() {
+    // check the logs directory storage limit
+    checkLogsDirSize();
+
     // initialize the main variables
     initVars();
 

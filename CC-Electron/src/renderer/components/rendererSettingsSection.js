@@ -158,8 +158,8 @@ function initStgCtrEL() {
         dirFld.addEventListener('click', async () => {
             const dir = await atmpAsyncFunc(() => window['stgsAPI'].setStg(dirFld.name, ''));
 
-            // if the directory is not null, set the new value and load the new gallery
-            if (dir !== null) {
+            // if the directory is not the old value, set the new value and load the new gallery
+            if (dir !== dirFld.value) {
                 dirFld.value = stgs[dirFld.name] = dir;
                 await atmpAsyncFunc(() => addAllVideos(isCaps, false));  // boolean1 isCaps, boolean2 isInit
             }
@@ -186,12 +186,12 @@ function initStgCtrEL() {
         // if the name is not null (the user did not cancel and it is a new program)
         if (prog !== null) {
             // get the name and program info
-            const name = Object.keys(prog)[0];
+            const progName = Object.keys(prog)[0];
             const progInfo = Object.values(prog)[0];
 
             // update the programs list and insert the program into the board
-            stgs['programs'][name] = progInfo;
-            addGenStgTile(name, progInfo);
+            stgs['programs'][progName] = progInfo;
+            addGenStgTile(progName, progInfo);
         }
     });
 
@@ -314,13 +314,13 @@ async function initStgCtr() {
     }
 
     // iterate through each display
-    for (const [name, dispInfo] of Object.entries(disps)) {
+    for (const [dispName, dispInfo] of Object.entries(disps)) {
         // create a new field option
         const fldOption = document.createElement('option');
 
         // assign the name of the display to the value and set the text to the name, size, and position
-        fldOption.value = name;
-        fldOption.text = `${name} (${dispInfo['sizeX']} x ${dispInfo['sizeY']}) @ (${dispInfo['posX']}, ${dispInfo['posY']})`;
+        fldOption.value = dispName;
+        fldOption.text = `${dispName} (${dispInfo['sizeX']} x ${dispInfo['sizeY']}) @ (${dispInfo['posX']}, ${dispInfo['posY']})`;
 
         // append the child to the captures display field
         capsDispFld.appendChild(fldOption);
@@ -330,9 +330,9 @@ async function initStgCtr() {
     capsDispFld.value = stgs['capturesDisplay'];
 
     // iterate through each program
-    for (const [name, progInfo] of Object.entries(stgs['programs'])) {
+    for (const [progName, progInfo] of Object.entries(stgs['programs'])) {
         // insert the general setting tile for each program
-        addGenStgTile(name, progInfo);
+        addGenStgTile(progName, progInfo);
     }
 
     // iterate through each device field
@@ -343,13 +343,13 @@ async function initStgCtr() {
         const stgStr = isSpk ? 'speaker' : 'microphone';
 
         // iterate through each device
-        for (const [name, _] of Object.entries(devs[devStr])) {
+        for (const [devName, _] of Object.entries(devs[devStr])) {
             // create a new field option
             const fldOption = document.createElement('option');
 
             // assign the name of the device to the value and text
-            fldOption.value = name;
-            fldOption.text = name;
+            fldOption.value = devName;
+            fldOption.text = devName;
 
             // append the child to the device field
             fld.appendChild(fldOption);
@@ -369,25 +369,25 @@ async function initStgCtr() {
  * @param {String} name - The name of the program
  * @param {Object} progInfo - The program information including the alternate name and icon data
  */
-function addGenStgTile(name, progInfo) {
+function addGenStgTile(progName, progInfo) {
     // get a clone of the general setting tile template
     const genStgTileClone = genStgTileTmpl.content.cloneNode(true);
     const genStgTile = genStgTileClone.querySelector('.general-setting-tile');
     const genStgProgIcon = genStgTileClone.querySelector('.general-setting-program-icon');
 
     // set the program icon data and alt
-    genStgProgIcon.setAttribute('src', progInfo['iconPath']);
-    genStgProgIcon.setAttribute('alt', `The icon for ${name}`);
+    genStgProgIcon.setAttribute('src', progInfo['dataURL']);
+    genStgProgIcon.setAttribute('alt', `The icon for ${progName}`);
 
     // set the program label
-    genStgTileClone.querySelector('.general-setting-program-label').textContent = `${name}`;
+    genStgTileClone.querySelector('.general-setting-program-label').textContent = `${progName}`;
 
     // on click, delete the program from the list
     genStgTileClone.querySelector('.general-setting-delete-btn').addEventListener('click', async () => { 
         // check if the operation was successful on the main process
-        if (await atmpAsyncFunc(() => window['stgsAPI'].delProg(name))) {
+        if (await atmpAsyncFunc(() => window['stgsAPI'].delProg(progName))) {
             // delete the program from the programs list and remove the tile from the board
-            delete stgs['programs'][name];
+            delete stgs['programs'][progName];
             progsBoard.removeChild(genStgTile);
         }
     });
