@@ -14,7 +14,7 @@ const ACTIVE_DIRECTORY = import.meta.dirname;
 
 // OBS executable path and termination signal
 const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
-const TERMINATION_SIGNAL = 'SIGTERM';
+const OBS_TERMINATION_SIGNAL = 'SIGTERM';
 
 // OBS instance
 let obsProc;
@@ -62,5 +62,5 @@ export function getOBSState() {
  * Sets the OBS state to killed
  */
 export function setOBSState() {
-    obsProc.kill(TERMINATION_SIGNAL);
+    obsProc.kill(OBS_TERMINATION_SIGNAL);
 }

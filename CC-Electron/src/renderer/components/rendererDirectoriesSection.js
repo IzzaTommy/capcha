@@ -112,8 +112,8 @@ export async function initRendDirsSect() {
     initContCtr3(false);  // boolean1 isCaps
 
     // initialize the directory gallery event listeners for captures and clips
-    initDirGallEL(true);  // boolean1 isCaps
-    initDirGallEL(false);  // boolean1 isCaps
+    initVideosGallEL(true);  // boolean1 isCaps
+    initVideosGallEL(false);  // boolean1 isCaps
 
     // add all videos to the gallery for captures and clips
     await atmpAsyncFunc(() => addAllVideos(true, true));  // boolean1 isCaps, boolean2 isInit
@@ -215,11 +215,11 @@ function initContCtr3(isCaps) {
 }
 
 /**
- * Initializes the directory gallery event listeners
+ * Initializes the videos gallery event listeners
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function initDirGallEL(isCaps) {
+function initVideosGallEL(isCaps) {
     // get the captures or clips variables
     const videosLeftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
     const videosGall = isCaps ? capsGall : clipsGall;
@@ -239,18 +239,18 @@ function initDirGallEL(isCaps) {
     });
 
     // on scroll, toggle the gallery buttons
-    videosGall.addEventListener('scroll', () => setDirBtnState(isCaps));
+    videosGall.addEventListener('scroll', () => setVideosBtnState(isCaps));
 
     // on click, scroll the gallery right by approximately its width
     videosRightBtn.addEventListener('click', () => videosGall.scrollBy({ 'left': videosGallBox['width'] }));
 }
 
 /**
- * Sets the usage label 3 text
+ * Sets the videos usage label 3 text
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function setUsageLabel3Text(isCaps) {
+function setVideosUsageLabel3Text(isCaps) {
     // get the captures or clips variables
     const videosUsageLabel3 = isCaps ? capsUsageLabel3 : clipsUsageLabel3;
     const videosCounts = isCaps ? capsCounts : clipsCounts;
@@ -260,12 +260,12 @@ function setUsageLabel3Text(isCaps) {
 }
 
 /**
- * Sets the total label 3 text
+ * Sets the videos total label 3 text
  * 
  * @param {string} text - The new text of the label
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-export function setTotalLabel3Text(text, isCaps) {
+export function setVideosTotalLabel3Text(text, isCaps) {
     // get the captures or clips variable
     const videosTotalLabel3 = isCaps ? capsTotalLabel3 : clipsTotalLabel3;
 
@@ -273,11 +273,11 @@ export function setTotalLabel3Text(text, isCaps) {
 }
 
 /**
- * Updates the program filter field with the programs present in the gallery
+ * Updates the videos program filter field with the programs present in the gallery
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-async function setProgFltFld(isCaps) {
+async function setVideosProgFltFld(isCaps) {
     // get the captures or clips variables
     const videosProgFltFld = isCaps ? capsProgFltFld : clipsProgFltFld;
     const videos = isCaps ? caps : clips;
@@ -320,11 +320,11 @@ async function setProgFltFld(isCaps) {
 }
 
 /**
- * Toggles the directory button on or off based on available scroll width
+ * Toggles the videos button on or off based on available scroll width
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-function setDirBtnState(isCaps) {
+function setVideosBtnState(isCaps) {
     // get the captures or clips variables
     const videosLeftBtn = isCaps ? capsLeftBtn : clipsLeftBtn;
     const videosGall = isCaps ? capsGall : clipsGall;
@@ -339,11 +339,11 @@ function setDirBtnState(isCaps) {
 }
 
 /**
- * Updates the gallery size
+ * Updates the videos gallery size
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-export function setGallBox(isCaps) {
+export function setVideosGallBox(isCaps) {
     // get the captures or clips variable
     const videosGall = isCaps ? capsGall : clipsGall;
     let videosGallBox, numVideoPrvw;
@@ -385,7 +385,7 @@ export async function addVideo(video, isCaps) {
     createVideoPrvwCtr(video);
 
     // update the program filter field based on the programs in the gallery
-    await atmpAsyncFunc(() => setProgFltFld(isCaps));
+    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
 
     // remove all the video preview containers from the gallery
     remAllVideoPrvwCtrs(isCaps);
@@ -394,7 +394,7 @@ export async function addVideo(video, isCaps) {
     addAllVideoPrvwCtrs(isCaps);
 
     // set the usage label
-    setUsageLabel3Text(isCaps);
+    setVideosUsageLabel3Text(isCaps);
 }
 
 /**
@@ -424,8 +424,8 @@ export async function addAllVideos(isCaps, isInit) {
     }
 
     // get the captures or clips and counts
-    isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
-    : [clips, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllDirData(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
+    isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllVideos(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
+    : [clips, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllVideos(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
 
     // get the new captures or clips variable
     videos = isCaps ? caps : clips;
@@ -434,27 +434,27 @@ export async function addAllVideos(isCaps, isInit) {
     videos.forEach(video => createVideoPrvwCtr(video));
 
     // update the program filter field based on the programs in the videos
-    await atmpAsyncFunc(() => setProgFltFld(isCaps));
+    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
 
     // add all the video preview containers into the gallery
     addAllVideoPrvwCtrs(isCaps);
 
     // set the usage label
-    setUsageLabel3Text(isCaps);
+    setVideosUsageLabel3Text(isCaps);
 }
 
 /**
  * Deletes a video from the gallery, including its video preview container
  * 
- * @param {string} fullName - The name of the video including the extension
+ * @param {string} videoFullName - The name of the video including the extension
  * @param {boolean} isCaps - If the call is for captures or clips
  */
-export async function delVideo(fullName, isCaps) {
+export async function delVideo(videoFullName, isCaps) {
     // get the captures or clips variables
     const videosGall = isCaps ? capsGall : clipsGall;
     const videos = isCaps ? caps : clips;
     const videosCounts = isCaps ? capsCounts : clipsCounts;
-    const index = videos.findIndex(video => video['data']['fullName'] === fullName);
+    const index = videos.findIndex(video => video['data']['fullName'] === videoFullName);
 
     // update the normal count
     videosCounts['normal'] -= 1;
@@ -472,10 +472,10 @@ export async function delVideo(fullName, isCaps) {
     videos.splice(index, 1);
 
     // update the program filter field based on the programs in the gallery
-    await atmpAsyncFunc(() => setProgFltFld(isCaps));
+    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
 
     // set the usage label
-    setUsageLabel3Text(isCaps);
+    setVideosUsageLabel3Text(isCaps);
 
     // check if there are no videos
     if (videos.length === 0) {
@@ -614,7 +614,7 @@ function addAllVideoPrvwCtrs(isCaps) {
     videosGall.scrollLeft = 0;
 
     // toggle the directory buttons
-    setDirBtnState(isCaps);
+    setVideosBtnState(isCaps);
 }
 
 /**

@@ -25,7 +25,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import psList from 'ps-list';
 import { promisify } from 'util'
-import { addLog, sendIPC, atmpAsyncFunc } from './mainGeneral.js';
+import { addLogMsg, sendIPC, atmpAsyncFunc } from './mainGeneral.js';
 import { getIsRec, sendWebSocketReq, sendWebSocketBatchReq } from './mainWebSocket.js';
 
 // settings constants
@@ -169,7 +169,7 @@ const SETTINGS_DATA_SCHEMA = {
         'type': 'string'
     }
 };
-const SETTINGS_DATA_DEFS = { 
+const SETTINGS_DATA_DEF = { 
     'navigationBarActive': true,
     
     'capturesProgramFilter': 'All',
@@ -295,13 +295,13 @@ async function initStgs() {
 
     // try to load the settings for electron-store
     try {
-        stgs = new Store({ 'defaults': SETTINGS_DATA_DEFS, 'schema': SETTINGS_DATA_SCHEMA });
+        stgs = new Store({ 'defaults': SETTINGS_DATA_DEF, 'schema': SETTINGS_DATA_SCHEMA });
     }
     // error will occur if the file cannot be read, has corrupted values, or has invalid values (which should only occur if the user manually tampered with it)
     catch (error) {
         // log that the settings could not be read
-        addLog('Settings', 'ERROR', 'Configuration file cannot be read', false);  // boolean1 isFinalMsg
-        addLog('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ERROR', 'Configuration file cannot be read', false);  // boolean1 isFinalMsg
+        addLogMsg('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // try to delete the corrupted file and reinitialize the settings
         try {
@@ -309,18 +309,18 @@ async function initStgs() {
             atmpAsyncFunc(() => fs.unlink(SETTINGS_CONFIG_PATH));
 
             // log that the configuration file was deleted
-            addLog('Settings', 'ERROR', 'Deleting the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('Settings', 'ERROR', 'Deleting the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
             // reinitialize the settings with the default values
-            stgs = new Store({ 'defaults': SETTINGS_DATA_DEFS, 'schema': SETTINGS_DATA_SCHEMA });
+            stgs = new Store({ 'defaults': SETTINGS_DATA_DEF, 'schema': SETTINGS_DATA_SCHEMA });
 
             // log that the settings were reinitialized
-            addLog('Settings', 'ERROR', 'Reinitializing settings with default values', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('Settings', 'ERROR', 'Reinitializing settings with default values', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         } 
         catch (error) {
             // log that the configuration file could not be deleted
-            addLog('Settings', 'ERROR', 'Could not delete the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-            addLog('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('Settings', 'ERROR', 'Could not delete the corrupt configuration file', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
         }
     }
 
@@ -399,8 +399,8 @@ async function initStgs() {
     } 
     catch (error) {
         // log that the bitrate could not be set
-        addLog('Settings', 'ERROR', 'Could not set the bitrate', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ERROR', 'Could not set the bitrate', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 
     // get the list of scenes and inputs
@@ -508,8 +508,8 @@ function initStgsL() {
         await atmpAsyncFunc(() => fs.unlink(videoPath), 1);
     });
 
-    // on getAllDirData, get the videos and counts for the captures or clips directory
-    ipcMain.handle('stgs:getAllDirData', async (_, isCaps) => {
+    // on getAllVideos, get all the videos and counts for the captures or clips directory
+    ipcMain.handle('stgs:getAllVideos', async (_, isCaps) => {
         // get the captures or clips variables
         const videosFrmtStr = isCaps ? 'capturesFormat' : 'clipsFormat';
         const videosDir = stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory');
@@ -562,14 +562,14 @@ function initStgsL() {
         return [ videos, videosCounts['normal'], videosCounts['size'] ];
     });
 
-    // gets the settings object
-    ipcMain.handle('stgs:getAllStgsData', (_) => stgs.store);
+    // on getAllStgs, get all the settings
+    ipcMain.handle('stgs:getAllStgs', (_) => stgs.store);
     
-    // gets the list of devices
-    ipcMain.handle('stgs:getAllDevsData', (_) => devs);
+    // on getAllDevs, get all the devices
+    ipcMain.handle('stgs:getAllDevs', (_) => devs);
 
-    // gets the list of displays
-    ipcMain.handle('stgs:getAllDispsData', (_) => disps);
+    // on getAllDisps, get all the displays
+    ipcMain.handle('stgs:getAllDisps', (_) => disps);
 
     // sets the value of a specific setting
     ipcMain.handle('stgs:setStg', async (_, key, value) => {
@@ -577,17 +577,17 @@ function initStgsL() {
         let result;
 
         // log basic information about the setting
-        addLog('Settings', 'SET', 'Setting a setting', false);  // boolean1 isFinalMsg
-        addLog('Settings', 'SET', `Key: ${key}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'SET', `Value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'SET', `Type: ${typeof(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'SET', 'Setting a setting', false);  // boolean1 isFinalMsg
+        addLogMsg('Settings', 'SET', `Key: ${key}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'SET', `Value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'SET', `Type: ${typeof(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // validate the setting type and value
         value = validStg(key, value);
 
         // log the validated setting value and type
-        addLog('Settings', 'SET', `Validated value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'SET', `Validated type: ${typeof(value)}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'SET', `Validated value: ${JSON.stringify(value)}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'SET', `Validated type: ${typeof(value)}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // certain settings require unique behavior
         switch (key) {
@@ -609,7 +609,7 @@ function initStgsL() {
                     // checks if the new directory exists (should not fail)
                     if (await atmpAsyncFunc(() => fs.access(value))) {
                         // reverts to the default setting
-                        value = SETTINGS_DATA_DEFS[key];
+                        value = SETTINGS_DATA_DEF[key];
                     }
 
                     // sets the new captures directory
@@ -703,7 +703,7 @@ function initStgsL() {
 
             case 'programs':
                 // open the program path
-                result = await atmpAsyncFunc(() => dialog.showOpenDialog({ 'properties': ['openFile'], 'filters': [{ 'name': "Executable", 'extensions': ['exe', 'app'] }] }));
+                result = await atmpAsyncFunc(() => dialog.showOpenDialog({ 'properties': ['openFile'], 'filters': [{ 'name': 'Executable', 'extensions': ['exe', 'app'] }] }));
             
                 // check if the operation was not cancelled
                 if (!result.canceled) {
@@ -744,7 +744,7 @@ function initStgsL() {
                     // checks if the new directory exists (should not fail)
                     if (await atmpAsyncFunc(() => fs.access(value))) {
                         // reverts to the default setting
-                        value = SETTINGS_DATA_DEFS[key];
+                        value = SETTINGS_DATA_DEF[key];
                     }
 
                     // close the old clips directory watcher
@@ -835,9 +835,9 @@ function setWatchL(isCaps) {
         const video = await getVideo(path.basename(videoPath), isCaps);
 
         // log that a new file was added to the captures or clips directory
-        addLog('Settings', 'ADD', 'New file added to the directory', false);  // boolean1 isFinalMsg
-        addLog('Settings', 'ADD', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'ADD', `filePath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ADD', 'New file added to the directory', false);  // boolean1 isFinalMsg
+        addLogMsg('Settings', 'ADD', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ADD', `filePath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // check if the video is not corrupted
         if (video !== null) {
@@ -867,9 +867,9 @@ function setWatchL(isCaps) {
         const index = videos.findIndex(video => video['data']['path'] === videoPath);
 
         // log that a new file was deleted from the captures or clips directory
-        addLog('Settings', 'DEL', 'File deleted from the directory', false);  // boolean1 isFinalMsg
-        addLog('Settings', 'DEL', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('Settings', 'DEL', `videoPath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'DEL', 'File deleted from the directory', false);  // boolean1 isFinalMsg
+        addLogMsg('Settings', 'DEL', `isCaps: ${isCaps}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'DEL', `videoPath: ${videoPath}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // check if the video was found
         if (index !== -1) {
@@ -884,7 +884,7 @@ function setWatchL(isCaps) {
             sendIPC('stgs:reqDelVideo', path.basename(videoPath), isCaps);
 
             // delete the thumbnail image
-            atmpAsyncFunc(() => fs.unlink(path.join(videosTbnlDir, `${path.parse(videoPath).name}.png`)), 1);
+            atmpAsyncFunc(() => fs.unlink(path.join(videosTbnlDir, `${path.parse(videoPath)['name']}.png`)), 1);
         }
     });
 }
@@ -899,7 +899,7 @@ function setWatchL(isCaps) {
 async function getVideo(video, isCaps) {
     // turn ffprobe into a promise based function and get the basic video data
     const ffprobeProm = promisify(ffmpeg.ffprobe);
-    const videoName = path.parse(video).name;
+    const videoName = path.parse(video)['name'];
     const videoParsedName = video.split('-CC');
     const videoPath = path.join(stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory'), video);
     const videoStats = await atmpAsyncFunc(() => fs.stat(videoPath));
@@ -957,7 +957,7 @@ async function getDevs() {
 
     // iterate through each device and get the device name
     JSON.parse(stdout).forEach(dev => {
-        if (/microphone|line in/i.test(dev.Name)) {
+        if (/microphone|line in/i.test(dev['Name'])) {
             inps[dev['Name']] = dev.DeviceID.replace(/^SWD\\MMDEVAPI\\/, '').trim().toLowerCase();
         }
         else {
@@ -980,8 +980,8 @@ async function getDisps() {
     } 
     catch (error) {
         // log that the list of displays could not be read
-        addLog('Settings', 'ERROR', 'Cannot get list of displays', false);  // boolean1 isFinalMsg
-        addLog('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('Settings', 'ERROR', 'Cannot get list of displays', false);  // boolean1 isFinalMsg
+        addLogMsg('Settings', 'ERROR', `Error message: ${error}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 }
 
@@ -1008,7 +1008,7 @@ function validStg(key, value) {
         case 'boolean':
             // if the type is not boolean, revert to the default value
             if (typeof(value) !== 'boolean') {
-                value = SETTINGS_DATA_DEFS[key];
+                value = SETTINGS_DATA_DEF[key];
             }
 
             break;
@@ -1016,12 +1016,12 @@ function validStg(key, value) {
         case 'number':
             // if the value is not a number, revert to the default value
             if (isNaN(value)) {
-                value = SETTINGS_DATA_DEFS[key];
+                value = SETTINGS_DATA_DEF[key];
             }
             else {
                 // if the key has an enumeration, ensure the value is in it, or revert to the default value
                 if (SETTINGS_DATA_SCHEMA[key]['enum']) {
-                    value = !SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value)) ? SETTINGS_DATA_DEFS[key] : Number(value);
+                    value = !SETTINGS_DATA_SCHEMA[key]['enum'].includes(Number(value)) ? SETTINGS_DATA_DEF[key] : Number(value);
                 }
                 else {
                     // set it to the closest bound, or keep the value
@@ -1044,7 +1044,7 @@ function validStg(key, value) {
         case 'object':
             // if the type is not object, revert to the default value
             if (typeof(value) !== 'object') {
-                value = SETTINGS_DATA_DEFS[key];
+                value = SETTINGS_DATA_DEF[key];
             }
 
             break;
@@ -1052,7 +1052,7 @@ function validStg(key, value) {
         case 'string':
             // if the type is not string or the value is not un the enumeration, revert to the default value
             if (typeof(value) !== 'string' || (SETTINGS_DATA_SCHEMA[key]['enum'] && !SETTINGS_DATA_SCHEMA[key]['enum'].includes(value))) {
-                value = SETTINGS_DATA_DEFS[key];
+                value = SETTINGS_DATA_DEF[key];
             }
         
             break;
@@ -1114,7 +1114,7 @@ async function checkProgs() {
     // check if recording is on
     if (getIsRec()) {
         // check if the recording program is not running or the program is not in the list
-        if (!progs[recProgName] || (recProgName && !procs.some(proc => proc.name === progs[recProgName]['fullName']))) {
+        if (!progs[recProgName] || (recProgName && !procs.some(proc => proc['name'] === progs[recProgName]['fullName']))) {
             // request a call to setRecBarBtnState on the renderer process
             sendIPC('stgs:reqSetRecBarBtnState');
         }
@@ -1123,7 +1123,7 @@ async function checkProgs() {
         // iterate through each program
         for (const [progName, progInfo] of Object.entries(progs)) {
             // check the program list for a match
-            if (procs.some(proc => proc.name === progInfo['fullName'])) {
+            if (procs.some(proc => proc['name'] === progInfo['fullName'])) {
                 // set the recording program
                 recProgName = progName;
 

@@ -8,9 +8,9 @@
  * @requires rendererSettingsSection
  */
 import { setDirsBarBtnState, setStgsBarBtnState, setRecBarBtnState } from './rendererNavigationBlock.js';
-import { setGallBox, addVideo, delVideo } from './rendererDirectoriesSection.js';
-import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
-import { setVolSldrBox } from './rendererSettingsSection.js';
+import { setVideosGallBox, addVideo, delVideo } from './rendererDirectoriesSection.js';
+import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrSrc, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
+import { setStgVolSldrBox } from './rendererSettingsSection.js';
 
 // general constants
 // state and section enumerations
@@ -93,8 +93,8 @@ function initGenEL() {
     // on resize, update all size/location dependent elements
     window.addEventListener('resize', () => {
         // update the captures and clips galleries
-        setGallBox(true);  // boolean1 isCaps
-        setGallBox(false);  // boolean1 isCaps
+        setVideosGallBox(true);  // boolean1 isCaps
+        setVideosGallBox(false);  // boolean1 isCaps
 
         // update the seek, video volume, playback rate, and timeline sliders
         setSeekSldrBox();
@@ -103,8 +103,8 @@ function initGenEL() {
         setTmlnSldrBox();
         
         // update the speaker and microphone volume sliders
-        setVolSldrBox(true);  // boolean1 isSpk
-        setVolSldrBox(false);  // boolean1 isSpk
+        setStgVolSldrBox(true);  // boolean1 isSpk
+        setStgVolSldrBox(false);  // boolean1 isSpk
     });
 }
 
@@ -113,23 +113,23 @@ function initGenEL() {
  */
 function initGenIPC() {
     // on request, toggle the record button (initiated from the main auto recording process)
-    window['stgsAPI'].reqSetRecBarBtnState(async (recProg) => await atmpAsyncFunc(() => setRecBarBtnState(true, false, recProg)));  // boolean1 isAutoStart, boolean2 isManualStop
+    window['stgsAPI'].reqSetRecBarBtnState(async (recProgName) => await atmpAsyncFunc(() => setRecBarBtnState(true, false, recProgName)));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on request, add a video to the captures or clips gallery
-    window['stgsAPI'].reqAddVideo((videoData, isCaps) => addVideo(videoData, isCaps));
+    window['stgsAPI'].reqAddVideo((video, isCaps) => addVideo(video, isCaps));
 
     // on request, delete a video from the captures or clips gallery
-    window['stgsAPI'].reqDelVideo((fullName, isCaps) => delVideo(fullName, isCaps));
+    window['stgsAPI'].reqDelVideo((videoFullName, isCaps) => delVideo(videoFullName, isCaps));
 }
 
 /**
  * Gets the CSS style
  * 
- * @param {string} name - The name of the style
+ * @param {string} styleName - The name of the style
  * @returns {number} - The number value of the style
  */
-export function getStyle(name) {
-    return parseInt(style.getPropertyValue(name));
+export function getStyle(styleName) {
+    return parseInt(style.getPropertyValue(styleName));
 }
 
 /**
@@ -181,6 +181,9 @@ export function setSectState(sect) {
             if (getIsVideoLoaded()) {
                 setIsVideoLoaded(false);  // boolean1 value
                 
+                // unset the video player src to ensure the file isn't open (for deletion/renaming)
+                setVideoPlrSrc('');
+
                 // standby will pause the video but hide the play pause icon overlay
                 setVideoPlrState(STATE.STANDBY);
             }
@@ -216,6 +219,9 @@ export function setSectState(sect) {
             if (getIsVideoLoaded()) {
                 setIsVideoLoaded(false);  // boolean1 value
 
+                // unset the video player src to ensure the file isn't open (for deletion/renaming)
+                setVideoPlrSrc('');
+
                 // standby will pause the video but hide the play pause icon overlay
                 setVideoPlrState(STATE.STANDBY);
             }
@@ -240,10 +246,10 @@ export function setSectState(sect) {
  * Sets the icon (SVG) of an element
  * 
  * @param {HTMLElement} icon - The icon element
- * @param {string} name - The new name of the icon
+ * @param {string} iconName - The new name of the icon
  */
-export function setIcon(icon, name) {
-    icon.setAttribute('href', `../assets/svg/${name}.svg#${name}`);
+export function setIcon(icon, iconName) {
+    icon.setAttribute('href', `../assets/svg/${iconName}.svg#${iconName}`);
 }
 
 /**
@@ -448,7 +454,6 @@ export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = A
             return await asyncFunc();
         }
         catch (error) {
-            console.log(error);
             // check if attempts are remaining
             if (i < atmps) {
                 // set the right text label depending on if this is an initialization or runtime error

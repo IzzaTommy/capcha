@@ -9,7 +9,7 @@
  * @requires mainSettings
  */
 import { app, powerMonitor } from 'electron';
-import { initMainGenVars, initMainGen, checkLogsDirSize, addLog, openDevTools, sendIPC } from './components/mainGeneral.js';
+import { initMainGenVars, initMainGen, checkLogsDirSize, addLogMsg, openDevTools, sendIPC } from './components/mainGeneral.js';
 import { initMainOBSVars, initMainOBS, getOBSState, setOBSState } from './components/mainOBS.js';
 import { initMainWebSocketVars, initMainWebSocket, getIsRec } from './components/mainWebSocket.js';
 import { initMainStgsVars, initMainStgs } from './components/mainSettings.js';
@@ -21,20 +21,20 @@ app.on('ready', initMain);
 // on suspend, log and stop recording if it is enabled
 powerMonitor.on('suspend', () => {
     // log that a suspension has been detected
-    addLog('General', 'SUSPD', 'Suspension detected', false);  // boolean1 isFinalMsg
+    addLogMsg('General', 'SUSPD', 'Suspension detected', false);  // boolean1 isFinalMsg
 
     // check if the program is recording
     if (getIsRec()) {
         // log the recording status
-        addLog('General', 'SUSPD', 'Recording active', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-        addLog('General', 'SUSPD', 'Attempting to stop recording', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('General', 'SUSPD', 'Recording active', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('General', 'SUSPD', 'Attempting to stop recording', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // request a call to setRecBarBtnState on the renderer process
         sendIPC('stgs:reqSetRecBarBtnState');
     }
     else {
         // log the recording status
-        addLog('General', 'SUSPD', 'Recording not active', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+        addLogMsg('General', 'SUSPD', 'Recording not active', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
     }
 });
 
@@ -44,7 +44,7 @@ powerMonitor.on('suspend', () => {
 // on window-all-closed, log and initiate the app quitting process
 app.on('window-all-closed', () => {
     // log that all windows have been closed
-    addLog('General', 'CLOSE', 'All windows closed');
+    addLogMsg('General', 'CLOSE', 'All windows closed');
 
     // quit the app
     app.quit();
@@ -53,7 +53,7 @@ app.on('window-all-closed', () => {
 // on before-quit, log and kill the OBS process
 app.on('before-quit', () => { 
     // log that the OBS process is being terminated
-    addLog('General', 'CLOSE', 'Terminating the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('General', 'CLOSE', 'Terminating the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
     // check if the OBS process is not terminated
     if (getOBSState()) {
@@ -62,17 +62,17 @@ app.on('before-quit', () => {
     }
 
     // log if the OBS process has been terminated
-    addLog('General', 'CLOSE', `${getOBSState() ? 'Failed to terminate' : 'Successfully terminated'}` + 'the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('General', 'CLOSE', `${getOBSState() ? 'Failed to terminate' : 'Successfully terminated'}` + 'the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 });
 
 // on will-quit, log that CapCha is quitting
 app.on('will-quit', () => {
-    addLog('General', 'CLOSE', 'Quitting CapCha', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('General', 'CLOSE', 'Quitting CapCha', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 });
 
 // on quit, log that CapCha has successfully quit
 app.on('quit', () => {
-    addLog('General', 'CLOSE', 'Successfully quit CapCha', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('General', 'CLOSE', 'Successfully quit CapCha', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 });
 
 /**

@@ -136,25 +136,25 @@ function getRdblVideoDate() {
  */
 function createClip(videoPath, clipStartTime, clipEndTime) {
     // log that the clip is being created
-    addLog('General', 'CLIP', 'Creating clip...', false);  // boolean1 isFinalMsg
+    addLogMsg('General', 'CLIP', 'Creating clip...', false);  // boolean1 isFinalMsg
 
     // return a promise to create the clip
     return new Promise((resolve, reject) => {
         // get the ffmpeg command and clip name
         const cmd = ffmpeg(videoPath);
-        const name = `Clip-${getRdblVideoDate()}.${getStg('clipsFormat')}`;
+        const clipName = `Clip-${getRdblVideoDate()}.${getStg('clipsFormat')}`;
 
         // on end, log the successful clip creation and resolve the promise
         cmd.on('end', () => {
-            addLog('General', 'REQ', 'Successfully created clip', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-            addLog('General', 'REQ', `Clip name: ${name}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('General', 'REQ', 'Successfully created clip', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('General', 'REQ', `Clip name: ${clipName}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
             resolve();
         });
 
         // on error, log the error in clip creation and reject the promise
         cmd.on('error', (error) => {
-            addLog('General', 'ERROR', 'Couldn\'t create clip', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-            addLog('General', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('General', 'ERROR', 'Couldn\'t create clip', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('General', 'ERROR', `Error message: ${error}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
             reject(error);
         });
 
@@ -170,25 +170,12 @@ function createClip(videoPath, clipStartTime, clipEndTime) {
         cmd.inputOptions(CLIP_THREADS);  // set the number of threads to change CPU usage
         cmd.videoCodec(CLIP_VIDEO_CODEC);  // set the video codec
 
-        // set the output file name
-        cmd.output(path.join(getStg('clipsDirectory'), name));
+        // set the output clip name
+        cmd.output(path.join(getStg('clipsDirectory'), clipName));
 
         // run the command
         cmd.run();
     });
-}
-
-/**
- * Gets the readable log time
- * 
- * @returns {string} The readable log time (hh:mm:ss)
- */
-function getRdblLogTime() {
-    // get the current date
-    const curDate = new Date();
-
-    // return the formatted log time
-    return `${TIME_PAD(curDate.getHours())}:${TIME_PAD(curDate.getMinutes())}:${TIME_PAD(curDate.getSeconds())}`;
 }
 
 /**
@@ -235,7 +222,20 @@ export async function checkLogsDirSize() {
 }
 
 /**
- * Adds a log to the console or log file
+ * Gets the readable log time
+ * 
+ * @returns {string} The readable log time (hh:mm:ss)
+ */
+function getRdblLogTime() {
+    // get the current date
+    const curDate = new Date();
+
+    // return the formatted log time
+    return `${TIME_PAD(curDate.getHours())}:${TIME_PAD(curDate.getMinutes())}:${TIME_PAD(curDate.getSeconds())}`;
+}
+
+/**
+ * Adds a log message to the console or log file
  * 
  * @param {string} proc - The process being logged
  * @param {string} event - The event being logged
@@ -244,7 +244,7 @@ export async function checkLogsDirSize() {
  * @param {boolean} isSubMsg - If the log is a sub message in its set
  * @param {boolean} isCons - If the log is sent to console or a log file
  */
-export async function addLog(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = true) {
+export async function addLogMsg(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = true) {
     // get the log entry with the time
     const logEntry = `[${getRdblLogTime()}][${proc}][${EVENT_PAD(event.toUpperCase())}]: ${isSubMsg ? '  ' : ''}` + `${msg}${isFinalMsg ? `\n${LOGS_DIV}` : ''}`;
     
@@ -299,7 +299,7 @@ export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = A
             }
             else {
                 // log that an error has occurred
-                addLog('General', 'GEN', error);
+                addLogMsg('General', 'GEN', error);
                 // throw new Error(`Function failed after ${atmps} atmps: `, error);
                 // error code...
             }

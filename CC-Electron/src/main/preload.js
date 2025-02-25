@@ -16,12 +16,12 @@ contextBridge.exposeInMainWorld('genAPI', {
     'closeWindow': () => ipcRenderer.send('gen:closeWindow'),
 
     // R -> M, creates a clip of the video
-    'reqCreateClip': (videoDataPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoDataPath, clipStartTime, clipEndTime)
+    'reqCreateClip': (videoPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoPath, clipStartTime, clipEndTime)
 });
 
 contextBridge.exposeInMainWorld('webSocketAPI', {
     // R -> M, starts recording
-    'startRecord': (recProg) => ipcRenderer.invoke('webSocket:startRecord', recProg), 
+    'startRecord': (recProgName) => ipcRenderer.invoke('webSocket:startRecord', recProgName), 
 
     // R -> M, stops recording
     'stopRecord': () => ipcRenderer.invoke('webSocket:stopRecord')
@@ -32,25 +32,25 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     'reqSetAutoRecState': () => ipcRenderer.send('stgs:reqSetAutoRecState'), 
 
     // M -> R, requests a call to reqSetRecBarBtnState
-    'reqSetRecBarBtnState': (cb) => ipcRenderer.on('stgs:reqSetRecBarBtnState', (_, recProg) => cb(recProg)),
+    'reqSetRecBarBtnState': (cb) => ipcRenderer.on('stgs:reqSetRecBarBtnState', (_, recProgName) => cb(recProgName)),
     
     // R -> M, opens the captures or clips directory
     'openDir': (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 
 
     // R -> M, deletes a program from the programs list
-    'delProg': (name) => ipcRenderer.invoke('stgs:delProg', name), 
+    'delProg': (progName) => ipcRenderer.invoke('stgs:delProg', progName), 
 
-    // R -> M, gets the videos data from the captures or clips directory
-    'getAllDirData': (isCaps) => ipcRenderer.invoke('stgs:getAllDirData', isCaps),
+    // R -> M, gets all the videos data from the captures or clips directory
+    'getAllVideos': (isCaps) => ipcRenderer.invoke('stgs:getAllVideos', isCaps),
 
-    // R -> M, gets all settings data
-    'getAllStgsData': () => ipcRenderer.invoke('stgs:getAllStgsData'),
+    // R -> M, gets all the settings
+    'getAllStgs': () => ipcRenderer.invoke('stgs:getAllStgs'),
 
-    // R -> M, gets all devices data
-    'getAllDevsData': () => ipcRenderer.invoke('stgs:getAllDevsData'),
+    // R -> M, gets all the devices
+    'getAllDevs': () => ipcRenderer.invoke('stgs:getAllDevs'),
 
-    // R -> M, gets all displays data
-    'getAllDispsData': () => ipcRenderer.invoke('stgs:getAllDispsData'),
+    // R -> M, gets all the displays
+    'getAllDisps': () => ipcRenderer.invoke('stgs:getAllDisps'),
 
     // R -> M, sets a specific setting
     'setStg': (key, value) => ipcRenderer.invoke('stgs:setStg', key, value), 
@@ -59,8 +59,8 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     'delVideo': (videoPath) => ipcRenderer.send('stgs:delVideo', videoPath), 
 
     // M -> R, requests a call to addVideo
-    'reqAddVideo': (cb) => ipcRenderer.on('stgs:reqAddVideo', (_, videoData, isCaps) => cb(videoData, isCaps)), 
+    'reqAddVideo': (cb) => ipcRenderer.on('stgs:reqAddVideo', (_, video, isCaps) => cb(video, isCaps)), 
 
     // M -> R, requests a call to delVideo
-    'reqDelVideo': (cb) => ipcRenderer.on('stgs:reqDelVideo', (_, extName, isCaps) => cb(extName, isCaps))
+    'reqDelVideo': (cb) => ipcRenderer.on('stgs:reqDelVideo', (_, videoFullName, isCaps) => cb(videoFullName, isCaps))
 });

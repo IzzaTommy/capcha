@@ -8,9 +8,9 @@
  * @requires rendererSettingsSection
  */
 import { STATE, SECTION, MSECONDS_IN_SECOND, setSectState, setIcon, getRdblRecDur, atmpAsyncFunc } from './rendererGeneral.js';
-import { setGallBox } from './rendererDirectoriesSection.js';
+import { setVideosGallBox } from './rendererDirectoriesSection.js';
 import { setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox } from './rendererEditorSection.js';
-import { setVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
+import { setStgVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
 
 // navigation block constants
 // program default name and navigation bar timeout
@@ -119,8 +119,8 @@ function initNavTogBtnEL() {
         // update all size/location dependent elements after the navigation bar transition finishes
         atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
             // update the captures and clips galleries
-            setGallBox(true);  // boolean1 isCaps
-            setGallBox(false);  // boolean1 isCaps
+            setVideosGallBox(true);  // boolean1 isCaps
+            setVideosGallBox(false);  // boolean1 isCaps
 
             // update the seek, video volume, playback rate, and timeline sliders
             setSeekSldrBox();
@@ -129,8 +129,8 @@ function initNavTogBtnEL() {
             setTmlnSldrBox();
             
             // update the speaker and microphone volume sliders
-            setVolSldrBox(true);  // boolean1 isSpk
-            setVolSldrBox(false);  // boolean1 isSpk
+            setStgVolSldrBox(true);  // boolean1 isSpk
+            setStgVolSldrBox(false);  // boolean1 isSpk
 
             // check if auto recording is on and the recording was manually stopped
             if (wasManualStop && getStg('autoRecord')) {
@@ -157,8 +157,8 @@ async function initNavTogBtn() {
     // update all size/location dependent elements after the navigation bar transition finishes
     await atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
         // update the captures and clips galleries
-        setGallBox(true);  // boolean1 isCaps
-        setGallBox(false);  // boolean1 isCaps
+        setVideosGallBox(true);  // boolean1 isCaps
+        setVideosGallBox(false);  // boolean1 isCaps
 
         // update the seek, video volume, playback rate, and timeline sliders
         setSeekSldrBox();
@@ -167,8 +167,8 @@ async function initNavTogBtn() {
         setTmlnSldrBox();
         
         // update the speaker and microphone volume sliders
-        setVolSldrBox(true);  // boolean1 isSpk
-        setVolSldrBox(false);  // boolean1 isSpk
+        setStgVolSldrBox(true);  // boolean1 isSpk
+        setStgVolSldrBox(false);  // boolean1 isSpk
 
         resolve();
     }, NAVIGATION_BAR_TIMEOUT)));

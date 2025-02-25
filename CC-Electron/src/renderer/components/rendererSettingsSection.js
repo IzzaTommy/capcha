@@ -6,7 +6,7 @@
  * @requires rendererDirectoriesSection
  */
 import { ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, setIcon, getModBox, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
-import { setTotalLabel3Text, addAllVideos } from './rendererDirectoriesSection.js';
+import { setVideosTotalLabel3Text, addAllVideos } from './rendererDirectoriesSection.js';
 
 // settings section constants
 // speaker and microphone volume min, max, grow, and reduce
@@ -174,7 +174,7 @@ function initStgCtrEL() {
         // on change, set the setting, update the settings cache, update the field value, and update the total label
         limitFld.addEventListener('change', async () => {
             limitFld.value = stgs[limitFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(limitFld.name, limitFld.value));
-            setTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
+            setVideosTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
         });
     }
 
@@ -223,20 +223,20 @@ function initStgCtrEL() {
             // if scrolling 'up', increase the volume
             if (ptr.deltaY < 0) {
                 // set the volume
-                pseudoSetVol(stgs[stgStr] + growValue, isSpk);
-                setVol(isSpk);
+                pseudoSetStgVol(stgs[stgStr] + growValue, isSpk);
+                setStgVol(isSpk);
 
                 // set the volume slider
-                setVolSldr(isSpk);
+                setStgVolSldr(isSpk);
             }
             // else, decrease the speaker volume
             else {
                 // set the volume
-                pseudoSetVol(stgs[stgStr] - redValue, isSpk);
-                setVol(isSpk);
+                pseudoSetStgVol(stgs[stgStr] - redValue, isSpk);
+                setStgVol(isSpk);
 
                 // set the volume slider
-                setVolSldr(isSpk);
+                setStgVolSldr(isSpk);
             }
         });
 
@@ -253,10 +253,10 @@ function initStgCtrEL() {
         // on mousedown, enable the dragging boolean and set the volume based on the pointer location
         volSldr.addEventListener('mousedown', (ptr) => {
             // set the volume
-            pseudoSetVol(getPtrEventPct(ptr, volSldrBox), isSpk);
+            pseudoSetStgVol(getPtrEventPct(ptr, volSldrBox), isSpk);
 
             // set the volume slider and dragging boolean
-            setVolSldr(isSpk);
+            setStgVolSldr(isSpk);
             isSpk ? isSpkVolSldrDrag = true : isMicVolSldrDrag = true;
         });
     }
@@ -267,9 +267,9 @@ function initStgCtrEL() {
  */
 async function initStgCtr() {
     // get the settings, devices (speakers, microphones, webcams), displays, and the programs list for auto recording
-    stgs = await atmpAsyncFunc(() => window['stgsAPI'].getAllStgsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
-    disps = await atmpAsyncFunc(() => window['stgsAPI'].getAllDispsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
-    devs = await atmpAsyncFunc(() => window['stgsAPI'].getAllDevsData(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    stgs = await atmpAsyncFunc(() => window['stgsAPI'].getAllStgs(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    disps = await atmpAsyncFunc(() => window['stgsAPI'].getAllDisps(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    devs = await atmpAsyncFunc(() => window['stgsAPI'].getAllDevs(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
 
     // iterate through each toggle switch
     for (const togSwt of mostTogSwtes) {
@@ -310,7 +310,7 @@ async function initStgCtr() {
 
         // load each initial setting value from the stored settings and set the total label
         limitFld.value = stgs[limitFld.name];
-        setTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
+        setVideosTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
     }
 
     // iterate through each display
@@ -359,14 +359,14 @@ async function initStgCtr() {
         fld.value = stgs[stgStr];
 
         // set the volume slider
-        setVolSldr(isSpk);
+        setStgVolSldr(isSpk);
     }
 }
 
 /**
  * Inserts a general setting tile into the programs board
  * 
- * @param {String} name - The name of the program
+ * @param {String} progName - The name of the program
  * @param {Object} progInfo - The program information including the alternate name and icon data
  */
 function addGenStgTile(progName, progInfo) {
@@ -402,7 +402,7 @@ function addGenStgTile(progName, progInfo) {
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  * @returns {Object} The modifiable volume slider bounding box
  */
-export function getVolSldrBox(isSpk) {
+export function getStgVolSldrBox(isSpk) {
     return isSpk ? spkVolSldrBox : micVolSldrBox;
 }
 
@@ -412,7 +412,7 @@ export function getVolSldrBox(isSpk) {
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  * @returns {boolean} The volume slider container hover flag
  */
-export function getIsVolSldrCtrHover(isSpk) {
+export function getIsStgVolSldrCtrHover(isSpk) {
     return isSpk ? isSpkVolSldrCtrHover : isMicVolSldrCtrHover;
 }
 
@@ -422,7 +422,7 @@ export function getIsVolSldrCtrHover(isSpk) {
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  * @returns {boolean} The volume slider dragging flag
  */
-export function getIsVolSldrDrag(isSpk) {
+export function getIsStgVolSldrDrag(isSpk) {
     return isSpk ? isSpkVolSldrDrag : isMicVolSldrDrag;
 }
 
@@ -432,7 +432,7 @@ export function getIsVolSldrDrag(isSpk) {
  * @param {boolean} value - The new value of the flag
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  */
-export function setIsVolSldrDrag(value, isSpk) {
+export function setIsStgVolSldrDrag(value, isSpk) {
     isSpk ? isSpkVolSldrDrag = value : isMicVolSldrDrag = value;
 }
 
@@ -442,7 +442,7 @@ export function setIsVolSldrDrag(value, isSpk) {
  * @param {number} value - The new volume
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  */
-export function pseudoSetVol(value, isSpk) {
+export function pseudoSetStgVol(value, isSpk) {
     // get the speaker or microphone variables
     const volMin = isSpk ? SPEAKER_VOLUME_MIN : MICROPHONE_VOLUME_MIN;
     const volMax = isSpk ? SPEAKER_VOLUME_MAX : MICROPHONE_VOLUME_MAX;
@@ -456,7 +456,7 @@ export function pseudoSetVol(value, isSpk) {
  * 
  * @param {boolean} isSpk - If the call is for the speaker or microphone 
  */
-export async function setVol(isSpk) {
+export async function setStgVol(isSpk) {
     // get the speaker or microphone variables
     const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
 
@@ -468,14 +468,14 @@ export async function setVol(isSpk) {
  * 
  * @param {boolean} isSpk - If the call is for the speaker or microphone 
  */
-export function setVolSldr(isSpk) {
+export function setStgVolSldr(isSpk) {
     // get the speaker or microphone variables
     const volSldrBox = isSpk ? spkVolSldrBox : micVolSldrBox;
     const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
 
     // set the speaker volume thumb and overlay (trailing bar)
-    setVolThumb(stgs[stgStr] * volSldrBox['width'], isSpk);
-    setVolOvrl(stgs[stgStr] * 100, isSpk);
+    setStgVolThumb(stgs[stgStr] * volSldrBox['width'], isSpk);
+    setStgVolOvrl(stgs[stgStr] * 100, isSpk);
 }
 
 /**
@@ -484,7 +484,7 @@ export function setVolSldr(isSpk) {
  * @param {number} thumbLoc - The location of the slider thumb
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  */
-function setVolOvrl(thumbLoc, isSpk) {
+function setStgVolOvrl(thumbLoc, isSpk) {
     // get the speaker or microphone variables
     const volOvrl = isSpk ? spkVolOvrl : micVolOvrl;
 
@@ -497,7 +497,7 @@ function setVolOvrl(thumbLoc, isSpk) {
  * @param {number} thumbLoc - The location of the slider thumb
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  */
-function setVolThumb(thumbLoc, isSpk) {
+function setStgVolThumb(thumbLoc, isSpk) {
     // get the speaker or microphone variables
     const volThumb = isSpk ? spkVolThumb : micVolThumb;
 
@@ -509,7 +509,7 @@ function setVolThumb(thumbLoc, isSpk) {
  * 
  * @param {boolean} isSpk - If the call is for the speaker or microphone
  */
-export function setVolSldrBox(isSpk) {
+export function setStgVolSldrBox(isSpk) {
     // get the new modifiable speaker volume slider bounding box
     isSpk ? spkVolSldrBox = getModBox(spkVolSldr.getBoundingClientRect()) : micVolSldrBox = getModBox(micVolSldr.getBoundingClientRect());
 }

@@ -8,7 +8,7 @@
  */
 import { ipcMain } from 'electron';
 import { WebSocket } from 'ws';
-import { addLog, atmpAsyncFunc } from './mainGeneral.js';
+import { addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
 
 // WebSocket constants
 // captures date format
@@ -64,17 +64,17 @@ export function initWebSocket() {
         webSocket = new WebSocket('ws://localhost:4444');
 
         // on open, log that WebSocket is open
-        webSocket.on('open', () => addLog('WebSocket', 'OPEN', 'Connected to OBS WebSocket'));
+        webSocket.on('open', () => addLogMsg('WebSocket', 'OPEN', 'Connected to OBS WebSocket'));
     
         // on error, log that WebSocket had an error
-        webSocket.on('error', () => addLog('WebSocket', 'ERROR', 'Couldn\'t connect to OBS WebSocket'));
+        webSocket.on('error', () => addLogMsg('WebSocket', 'ERROR', 'Couldn\'t connect to OBS WebSocket'));
     
         // on close, log that the WebSocket connection has closed and reject the promise
         webSocket.on('close', (code, reason) => {
             // log that the WebSocket connection has closed
-            addLog('WebSocket', 'CLOSE', 'Connection to OBS WebSocket closed', false);  // boolean1 isFinalMsg
-            addLog('WebSocket', 'CLOSE', `Code: ${code}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-            addLog('WebSocket', 'CLOSE', `Reason: ${reason.length === 0 ? 'N/A' : reason}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('WebSocket', 'CLOSE', 'Connection to OBS WebSocket closed', false);  // boolean1 isFinalMsg
+            addLogMsg('WebSocket', 'CLOSE', `Code: ${code}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+            addLogMsg('WebSocket', 'CLOSE', `Reason: ${reason.length === 0 ? 'N/A' : reason}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
             reject('WebSocket connection failed');
         });
 
@@ -84,16 +84,16 @@ export function initWebSocket() {
             const msg = JSON.parse(data);
         
             // log that a message has been received from OBS WebSocket
-            addLog('WebSocket', 'MSG', 'Received message from OBS WebSocket', false);  // boolean1 isFinalMsg
+            addLogMsg('WebSocket', 'MSG', 'Received message from OBS WebSocket', false);  // boolean1 isFinalMsg
             
             // log the operation number, details, and data
             switch (msg['op']) {
                 case 0:
                     // log the operation number, message, version, and RPC version
-                    addLog('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', 'First message from the server', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `OBS WebSocket Version: ${msg['d']['obsWebSocketVersion']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `RPC Version: ${msg['d']['rpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', 'First message from the server', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OBS WebSocket Version: ${msg['d']['obsWebSocketVersion']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `RPC Version: ${msg['d']['rpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // send op 1 to OBS WebSocket to initiate a connection
                     webSocket.send(JSON.stringify({ 'op': 1, 'd': { rpcVersion: 1 } }));
@@ -102,9 +102,9 @@ export function initWebSocket() {
 
                 case 2:
                     // log the operation number, message, and RPC version
-                    addLog('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', 'Connection validated, ready for normal operation', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Negotiated RPC Version: ${msg['d']['negotiatedRpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', 'Connection validated, ready for normal operation', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Negotiated RPC Version: ${msg['d']['negotiatedRpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // resolve the promise after validating connection
                     resolve();
@@ -113,22 +113,22 @@ export function initWebSocket() {
 
                 case 5:
                     // log the operation number, message, event type, intent, and data
-                    addLog('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', 'An event from OBS has occurred', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Event Type: ${msg['d']['eventType']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Event Intent: ${msg['d']['eventIntent']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Event Data: ${msg['d']['eventData'] ? JSON.stringify(msg['d']['eventData']) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', 'An event from OBS has occurred', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Event Type: ${msg['d']['eventType']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Event Intent: ${msg['d']['eventIntent']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Event Data: ${msg['d']['eventData'] ? JSON.stringify(msg['d']['eventData']) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     break;
 
                 case 7:
                     // log the operation number, message, request type, id, status, and data
-                    addLog('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', 'OBS WebSocket is responding to a request coming from a client', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Request Type: ${msg['d']['requestType']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Request ID: ${msg['d']['requestId']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Request Status: ${msg['d']['requestStatus'] ? JSON.stringify(msg['d']['requestStatus']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Response Data: ${msg['d']['responseData'] ? JSON.stringify(msg['d']['responseData']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', 'OBS WebSocket is responding to a request coming from a client', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Request Type: ${msg['d']['requestType']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Request ID: ${msg['d']['requestId']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Request Status: ${msg['d']['requestStatus'] ? JSON.stringify(msg['d']['requestStatus']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Response Data: ${msg['d']['responseData'] ? JSON.stringify(msg['d']['responseData']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // check if the request ID is in the pending requests map
                     if (pendReqs.has(msg['d']['requestId'])) {
@@ -138,14 +138,14 @@ export function initWebSocket() {
                         // check if the request was successful
                         if (msg['d']['requestStatus']['result']) {
                             // log that the request was successful
-                            addLog('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                            addLogMsg('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
                             
                             // resolve the promise
                             resolve(msg['d']);
                         } 
                         else {
                             // log that the request failed
-                            addLog('WebSocket', 'MSG', `Request failed`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                            addLogMsg('WebSocket', 'MSG', `Request failed`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                             // reject the promise
                             reject(msg['d']);
@@ -159,10 +159,10 @@ export function initWebSocket() {
 
                 case 9:
                     // log the operation number, message, request id, and results
-                    addLog('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', 'OBS WebSocket is responding to a request batch coming from a client', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Request ID: ${msg['d']['requestId']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-                    addLog('WebSocket', 'MSG', `Results: ${msg['d']['results'] ? JSON.stringify(msg['d']['results']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `OP: ${msg['op']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', 'OBS WebSocket is responding to a request batch coming from a client', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Request ID: ${msg['d']['requestId']}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                    addLogMsg('WebSocket', 'MSG', `Results: ${msg['d']['results'] ? JSON.stringify(msg['d']['results']) : 'N/A'}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // NEED TO HANDLE INDIVIDUAL BATCH REQUESTS
                     // check if the request ID is in the pending requests map
@@ -173,14 +173,14 @@ export function initWebSocket() {
                         // check if the request was successful
                         if (msg['d']['results'][0]['requestStatus']['result']) {
                             // log that the request was successful
-                            addLog('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                            addLogMsg('WebSocket', 'MSG', `Request successful`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
                             
                             // resolve the promise
                             resolve(msg['d']);
                         } 
                         else {
                             // log that the request failed
-                            addLog('WebSocket', 'MSG', `Request failed`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+                            addLogMsg('WebSocket', 'MSG', `Request failed`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                             // reject the promise
                             reject(msg['d']);
@@ -201,9 +201,9 @@ export function initWebSocket() {
  */
 function initWebSocketL() {
     // on startRecord, set the video file name and start recording
-    ipcMain.handle('webSocket:startRecord', async (_, recProg) => {
+    ipcMain.handle('webSocket:startRecord', async (_, recProgName) => {
         // set the video file name
-        await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recProg}-CC${CAPTURES_DATE_FORMAT}` }));
+        await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { parameterCategory: 'Output', parameterName: 'FilenameFormatting', parameterValue: `${recProgName}-CC${CAPTURES_DATE_FORMAT}` }));
 
         // request WebSocket to start recording and set the is recording flag
         isRec = (await atmpAsyncFunc(() => sendWebSocketReq('StartRecord', { })))['requestStatus']['result'];
@@ -243,12 +243,12 @@ export function sendWebSocketReq(reqType, reqData) {
     const reqId = Math.random().toString(36).substring(2, 15);
 
     // log the operation number, message, request type, id, and data
-    addLog('WebSocket', 'REQ', 'Request sent to OBS WebSocket', false);  // boolean1 isFinalMsg
-    addLog('WebSocket', 'REQ', 'OP: 6', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', 'Client making a request to OBS WebSocket', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Request Type: ${reqType}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Request ID: ${reqId}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Request Data: ${reqData ? JSON.stringify(reqData) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', 'Request sent to OBS WebSocket', false);  // boolean1 isFinalMsg
+    addLogMsg('WebSocket', 'REQ', 'OP: 6', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', 'Client making a request to OBS WebSocket', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Request Type: ${reqType}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Request ID: ${reqId}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Request Data: ${reqData ? JSON.stringify(reqData) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
     // return a promise with the request in the pending requests map, then initiate the request
     return new Promise((resolve, reject) => {
@@ -273,13 +273,13 @@ export function sendWebSocketBatchReq(haltOnFail, execType, reqs) {
     const reqId = Math.random().toString(36).substring(2, 15);
 
     // log the operation number, message, request id, arguments, and requests
-    addLog('WebSocket', 'REQ', 'Batch request sent to OBS WebSocket', false);  // boolean1 isFinalMsg
-    addLog('WebSocket', 'REQ', 'OP: 8', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', 'Client making a batch request to OBS WebSocket', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Request ID: ${reqId}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Halt on failure: ${haltOnFail}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Execution Type: ${execType}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
-    addLog('WebSocket', 'REQ', `Requests: ${reqs ? JSON.stringify(reqs) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', 'Batch request sent to OBS WebSocket', false);  // boolean1 isFinalMsg
+    addLogMsg('WebSocket', 'REQ', 'OP: 8', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', 'Client making a batch request to OBS WebSocket', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Request ID: ${reqId}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Halt on failure: ${haltOnFail}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Execution Type: ${execType}`, false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('WebSocket', 'REQ', `Requests: ${reqs ? JSON.stringify(reqs) : 'N/A'}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
     // return a promise with the request in the pending requests map, then initiate the request
     return new Promise((resolve, reject) => {

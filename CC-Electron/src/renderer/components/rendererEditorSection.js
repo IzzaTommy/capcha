@@ -6,7 +6,7 @@
  * @requires rendererSettingsSection
  */
 import { STATE, SECTION, getStyle, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
-import { SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, getVolSldrBox, getIsVolSldrCtrHover, getIsVolSldrDrag, setIsVolSldrDrag, pseudoSetVol, setVol, setVolSldr, getStg, setStg } from './rendererSettingsSection.js';
+import { SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, getStgVolSldrBox, getIsStgVolSldrCtrHover, getIsStgVolSldrDrag, setIsStgVolSldrDrag, pseudoSetStgVol, setStgVol, setStgVolSldr, getStg, setStg } from './rendererSettingsSection.js';
 
 // editor section constants
 // playback container grow, reduce, and timeout
@@ -350,23 +350,23 @@ function initVideoCtrEL() {
                     kbd.preventDefault();
 
                     // check if the speaker volume slider container is hovered
-                    if (getIsVolSldrCtrHover(true)) {  // boolean1 isSpk
+                    if (getIsStgVolSldrCtrHover(true)) {  // boolean1 isSpk
                         // set the speaker volume
-                        pseudoSetVol(getStg('speakerVolume') - SPEAKER_VOLUME_REDUCE, true);  // boolean1 isSpk
-                        setVol(true);  // boolean1 isSpk
+                        pseudoSetStgVol(getStg('speakerVolume') - SPEAKER_VOLUME_REDUCE, true);  // boolean1 isSpk
+                        setStgVol(true);  // boolean1 isSpk
 
                         // set the speaker volume slider
-                        setVolSldr(true);  // boolean1 isSpk
+                        setStgVolSldr(true);  // boolean1 isSpk
                     }
                     else {
                         // check if the microphone volume slider container is hovered
-                        if (getIsVolSldrCtrHover(false)) {  // boolean1 isSpk
+                        if (getIsStgVolSldrCtrHover(false)) {  // boolean1 isSpk
                             // set the microphone volume
-                            pseudoSetVol(getStg('microphoneVolume') - MICROPHONE_VOLUME_REDUCE, false);  // boolean1 isSpk
-                            setVol(false);  // boolean1 isSpk
+                            pseudoSetStgVol(getStg('microphoneVolume') - MICROPHONE_VOLUME_REDUCE, false);  // boolean1 isSpk
+                            setStgVol(false);  // boolean1 isSpk
 
                             // set the microphone volume slider
-                            setVolSldr(false);  // boolean1 isSpk
+                            setStgVolSldr(false);  // boolean1 isSpk
                         }
                     }
 
@@ -378,23 +378,23 @@ function initVideoCtrEL() {
                     kbd.preventDefault();
                     
                     // check if the speaker volume slider container is hovered
-                    if (getIsVolSldrCtrHover(true)) {  // boolean1 isSpk
+                    if (getIsStgVolSldrCtrHover(true)) {  // boolean1 isSpk
                         // set the speaker volume
-                        pseudoSetVol(getStg('speakerVolume') + SPEAKER_VOLUME_GROW, true);  // boolean1 isSpk
-                        setVol(true);  // boolean1 isSpk
+                        pseudoSetStgVol(getStg('speakerVolume') + SPEAKER_VOLUME_GROW, true);  // boolean1 isSpk
+                        setStgVol(true);  // boolean1 isSpk
 
                         // set the speaker volume slider
-                        setVolSldr(true);  // boolean1 isSpk
+                        setStgVolSldr(true);  // boolean1 isSpk
                     }
                     else {
                         // check if the microphone volume slider container is hovered
-                        if (getIsVolSldrCtrHover(false)) {  // boolean1 isSpk
+                        if (getIsStgVolSldrCtrHover(false)) {  // boolean1 isSpk
                             // set the microphone volume
-                            pseudoSetVol(getStg('microphoneVolume') + MICROPHONE_VOLUME_GROW, false);  // boolean1 isSpk
-                            setVol(false);  // boolean1 isSpk
+                            pseudoSetStgVol(getStg('microphoneVolume') + MICROPHONE_VOLUME_GROW, false);  // boolean1 isSpk
+                            setStgVol(false);  // boolean1 isSpk
 
                             // set the microphone volume slider
-                            setVolSldr(false);  // boolean1 isSpk
+                            setStgVolSldr(false);  // boolean1 isSpk
                         }
                     }
             
@@ -474,7 +474,7 @@ function initVideoCtrEL() {
         isVideoPlrHover = true;
 
         // set the playback container timeout
-        setplbkCtrTmoId();
+        setPlbkCtrTmoId();
     });
 
     // on mousemove, show the playback container and reset the timeout for hiding
@@ -488,7 +488,7 @@ function initVideoCtrEL() {
         plbkCtr.classList.add('active');
 
         // set the playback container timeout
-        setplbkCtrTmoId();
+        setPlbkCtrTmoId();
     });
 
     // on click, toggle the video state
@@ -832,21 +832,21 @@ function initTmlnSldrEL() {
                             }
                             else {
                                 // check if the speaker volume slider is dragging
-                                if (getIsVolSldrDrag(true)) {
+                                if (getIsStgVolSldrDrag(true)) {
                                     // set the speaker volume
-                                    pseudoSetVol(getPtrEventPct(ptr, getVolSldrBox(true)), true);  // boolean1 isSpk
+                                    pseudoSetStgVol(getPtrEventPct(ptr, getStgVolSldrBox(true)), true);  // boolean1 isSpk, boolean2 isSpk
 
                                     // set the speaker volume slider
-                                    setVolSldr(true);  // boolean1 isSpk
+                                    setStgVolSldr(true);  // boolean1 isSpk
                                 }
                                 else {
                                     // check if the microphone volume slider is dragging
-                                    if (getIsVolSldrDrag(false)) {
+                                    if (getIsStgVolSldrDrag(false)) {
                                         // set the microphone volume
-                                        pseudoSetVol(getPtrEventPct(ptr, getVolSldrBox(false)), false);  // boolean1 isSpk
+                                        pseudoSetStgVol(getPtrEventPct(ptr, getStgVolSldrBox(false)), false);  // boolean1 isSpk, boolean2 isSpk
 
                                         // set the microphone volume slider
-                                        setVolSldr(false);  // boolean1 isSpk
+                                        setStgVolSldr(false);  // boolean1 isSpk
                                     } 
                                 }
                             }
@@ -873,7 +873,7 @@ function initTmlnSldrEL() {
                 // check if the video player is hovered
                 if (isVideoPlrHover) {
                     // set the playback container timeout
-                    setplbkCtrTmoId();
+                    setPlbkCtrTmoId();
                 }
             }
 
@@ -898,7 +898,7 @@ function initTmlnSldrEL() {
                     // check if the video player is hovered
                     if (isVideoPlrHover) {
                         // set the playback container timeout
-                        setplbkCtrTmoId();
+                        setPlbkCtrTmoId();
                     }
                 }
 
@@ -927,7 +927,7 @@ function initTmlnSldrEL() {
                         // check if the video player is hovered
                         if (isVideoPlrHover) {
                             // set the playback container timeout
-                            setplbkCtrTmoId();
+                            setPlbkCtrTmoId();
                         }
                     }
     
@@ -957,21 +957,21 @@ function initTmlnSldrEL() {
                         }
                         else {
                             // check if the speaker volume slider is dragging
-                            if (getIsVolSldrDrag(true)) {
+                            if (getIsStgVolSldrDrag(true)) {
                                 // set the speaker volume slider dragging flag
-                                setIsVolSldrDrag(false, true);
+                                setIsStgVolSldrDrag(false, true);  // boolean1 value, boolean1 isSpk
 
                                 // set the speaker volume
-                                setVol(true);  // boolean1 isSpk
+                                setStgVol(true);  // boolean1 isSpk
                             }
                             else {
                                 // check if the microphone volume slider is dragging
-                                if (getIsVolSldrDrag(false)) {
+                                if (getIsStgVolSldrDrag(false)) {
                                     // set the microphone volume slider dragging flag
-                                    setIsVolSldrDrag(false, false);
+                                    setIsStgVolSldrDrag(false, false);  // boolean1 value, boolean1 isSpk
 
                                     // set the microphone volume
-                                    setVol(false);  // boolean1 isSpk
+                                    setStgVol(false);  // boolean1 isSpk
                                 } 
                             }
                         }
@@ -1351,7 +1351,7 @@ function setVideoTime(time, doPauseBeforeSet, doBoundsCheck, doPauseInCheck, doV
 /**
  * Sets the playback container timeout
  */
-function setplbkCtrTmoId() {
+function setPlbkCtrTmoId() {
     // remove the old playback container timeout
     clearTimeout(plbkCtrTmoId);
 
@@ -1650,6 +1650,63 @@ export function setTmlnSldrBox() {
 }
 
 /**
+ * Sets the timeline state, including the start time, end time, duration, tick interval, tick subinterval, and clip length
+ * 
+ * @param {number} startTime - The new start time of the timeline
+ * @param {number} endTime - The new end time of the timeline
+ */
+function setTmlnState(startTime, endTime) {
+    // set the start time, end time, and duration
+    tmln['startTime'] = startTime;
+    tmln['endTime'] = endTime;
+    tmln['dur'] = endTime - startTime;
+
+    // check if the duration is greater than 7200 seconds, and set the predefined tick interval, tick subinterval, and clip length
+    if (tmln['dur'] > 7200) {
+        [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [3600, 900, 300];
+    }
+    else {
+        // check if the duration is greater than 2400 seconds, and set the predefined tick interval, tick subinterval, and clip length
+        if (tmln['dur'] > 2400) {
+            [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [600, 150, 120];
+        } 
+        else {
+            // check if the duration is greater than 960 seconds, and set the predefined tick interval, tick subinterval, and clip length
+            if (tmln['dur'] > 960) {
+                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [300, 60, 60];
+            } 
+            else {
+                // check if the duration is greater than 480 seconds, and set the predefined tick interval, tick subinterval, and clip length
+                if (tmln['dur'] > 480) {
+                    [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [120, 30, 50];
+                } 
+                else {
+                    // check if the duration is greater than 240 seconds, and set the predefined tick interval, tick subinterval, and clip length
+                    if (tmln['dur'] > 240) {
+                        [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [60, 15, 30];
+                    }
+                    else {
+                        // check if the duration is greater than 80 seconds, and set the predefined tick interval, tick subinterval, and clip length
+                        if (tmln['dur'] > 80) {
+                            [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [30, 10, 30];
+                        }
+                        else {
+                            // check if the duration is greater than 40 seconds, and set the predefined tick interval, tick subinterval, and clip length
+                            if (tmln['dur'] > 40) {
+                                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [10, 5, 20];
+                            }
+                            else {
+                                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [5, 1, 5];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
  * Syncs the seek and timeline thumbs to the video frame
  */
 function syncSeekTmlnSldrs() {
@@ -1725,62 +1782,5 @@ export function setClipBarState(state) {
             clipRightThumb.classList.remove('active');
 
             break;
-    }
-}
-
-/**
- * Sets the timeline state, including the start time, end time, duration, tick interval, tick subinterval, and clip length
- * 
- * @param {number} startTime - The new start time of the timeline
- * @param {number} endTime - The new end time of the timeline
- */
-function setTmlnState(startTime, endTime) {
-    // set the start time, end time, and duration
-    tmln['startTime'] = startTime;
-    tmln['endTime'] = endTime;
-    tmln['dur'] = endTime - startTime;
-
-    // check if the duration is greater than 7200 seconds, and set the predefined tick interval, tick subinterval, and clip length
-    if (tmln['dur'] > 7200) {
-        [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [3600, 900, 300];
-    }
-    else {
-        // check if the duration is greater than 2400 seconds, and set the predefined tick interval, tick subinterval, and clip length
-        if (tmln['dur'] > 2400) {
-            [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [600, 150, 120];
-        } 
-        else {
-            // check if the duration is greater than 960 seconds, and set the predefined tick interval, tick subinterval, and clip length
-            if (tmln['dur'] > 960) {
-                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [300, 60, 60];
-            } 
-            else {
-                // check if the duration is greater than 480 seconds, and set the predefined tick interval, tick subinterval, and clip length
-                if (tmln['dur'] > 480) {
-                    [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [120, 30, 50];
-                } 
-                else {
-                    // check if the duration is greater than 240 seconds, and set the predefined tick interval, tick subinterval, and clip length
-                    if (tmln['dur'] > 240) {
-                        [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [60, 15, 30];
-                    }
-                    else {
-                        // check if the duration is greater than 80 seconds, and set the predefined tick interval, tick subinterval, and clip length
-                        if (tmln['dur'] > 80) {
-                            [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [30, 10, 30];
-                        }
-                        else {
-                            // check if the duration is greater than 40 seconds, and set the predefined tick interval, tick subinterval, and clip length
-                            if (tmln['dur'] > 40) {
-                                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [10, 5, 20];
-                            }
-                            else {
-                                [tmln['intv'], tmln['subIntv'], tmln['clipLen']] = [5, 1, 5];
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
