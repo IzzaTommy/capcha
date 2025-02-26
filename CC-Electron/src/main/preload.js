@@ -55,6 +55,9 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     // R -> M, sets a specific setting
     'setStg': (key, value) => ipcRenderer.invoke('stgs:setStg', key, value), 
 
+    // R -> M, renames a video from the videos list
+    'renVideo': (videoPath, videoName, videoExt) => ipcRenderer.send('stgs:renVideo', videoPath, videoName, videoExt), 
+
     // R -> M, deletes a video from the videos list
     'delVideo': (videoPath) => ipcRenderer.send('stgs:delVideo', videoPath), 
 

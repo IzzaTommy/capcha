@@ -54,7 +54,7 @@ body {
     align-items: center;
     justify-content: center;
     position: absolute;
-    z-index: 3;
+    z-index: 4;
 
     display: flex;
     flex-flow: column nowrap;
@@ -101,6 +101,8 @@ body {
 }
 
 #area-client {
+    position: relative;
+
     display: flex;
     flex: 1 1 fit-content;
     flex-flow: row nowrap;
@@ -225,4 +227,167 @@ body {
     width: var(--cdivider2-width);
 
     background-color: var(--cdivider2-bgcolor);
+}
+
+
+
+
+
+
+
+#overlay-confirmation {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 3;
+
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--cfoverlay-bgcolor);
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
+#overlay-confirmation.active {
+    visibility: visible;
+
+    pointer-events: all;
+}
+
+#ctr-confirmation {
+    align-items: center;
+
+    border-radius: var(--cfctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    gap: var(--cfctr-vgap);
+    padding: var(--cfctr-padding);
+
+    background-color: var(--cfctr-bgcolor);
+}
+
+#label-confirmation {
+    flex: 0 0 fit-content;
+
+    color: var(--cflabel-color);
+    font-size: var(--cflabel-fsize);
+    font-weight: var(--cflabel-fweight);
+}
+
+#field-ctr-confirmation {
+    display: none;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+#field-ctr-confirmation.active {
+    display: flex;
+}
+
+.confirmation-field {
+    border-radius: var(--cffield-bradius);
+    flex: 0 0 auto;
+    padding-top: var(--cffield-vpadding);
+    padding-bottom: var(--cffield-vpadding);
+
+    color: var(--cffield-color);
+}
+
+#name-field-confirmation {
+    text-align: right;
+
+    padding-right: var(--cfnamefield-rpadding);
+    width: var(--cfnamefield-width);
+
+    background-color: var(--cfnamefield-bgcolor);
+    transition: var(--cfnamefield-transition);
+}
+
+#name-field-confirmation:hover {
+    color: var(--cfnamefield-color);
+}
+
+#format-field-confirmation {
+    padding-left: var(--cfformatfield-lpadding);
+    width: var(--cfformatfield-width);
+
+    cursor: default;
+}
+
+#btn-ctr-confirmation {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    gap: var(--cfbtnctr-hgap);
+}
+
+.confirmation-btn {
+    border-radius: var(--cfbtn-bradius);
+    flex: 0 0 auto;
+    padding: var(--cfbtn-padding);
+    width: var(--cfbtn-width);
+
+    color: var(--cfbtn-color);
+    transition: var(--cfbtn-transition);
+
+    cursor: pointer;
+}
+
+.confirmation-btn:hover {
+    color: white;
+}
+
+#cancel-btn-confirmation {
+    background-color: var(--cfcancelbtn-bgcolor);
+}
+
+#cancel-btn-confirmation:hover {
+    background-color: var(--cfcancelbtn-alt-bgcolor);
+}
+
+#confirm-btn-confirmation {
+    display: none;
+
+    background-color: var(--cfconfirmbtn-bgcolor);
+}
+
+#confirm-btn-confirmation:hover {
+    background-color: var(--cfconfirmbtn-alt-bgcolor);
+}
+
+#confirm-btn-confirmation.active {
+    display: block;
+}
+
+#rename-btn-confirmation {
+    display: none;
+
+    background-color: var(--cfrenamebtn-bgcolor);
+}
+
+#rename-btn-confirmation:hover {
+    background-color: var(--cfrenamebtn-alt-bgcolor);
+}
+
+#rename-btn-confirmation.active {
+    display: block;
+}
+
+#delete-btn-confirmation {
+    display: none;
+
+    background-color: var(--cfdeletebtn-bgcolor);
+}
+
+#delete-btn-confirmation:hover {
+    background-color: var(--cfdeletebtn-alt-bgcolor);
+}
+
+#delete-btn-confirmation.active {
+    display: block;
 }

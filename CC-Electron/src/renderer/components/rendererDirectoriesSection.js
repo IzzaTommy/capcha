@@ -6,7 +6,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, getStyle, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, getStyle, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { setEditProgLabelText, setVideoFrameLen, setVideoPlrSrc } from './rendererEditorSection.js';
 import { getStg, setStg } from './rendererSettingsSection.js';
 
@@ -33,6 +33,9 @@ let capsGallBox, clipsGallBox;
 
 // directories captures and clips videos and counts
 let caps, clips, capsCounts, clipsCounts;
+
+// promise
+let confProm;
 
 /**
  * Initializes the directories section variables
@@ -97,6 +100,9 @@ export function initRendDirsSectVars() {
         'normal': null, 
         'size': null
     };
+
+    // confirmation promise
+    confProm = null;
 }
 
 /**
@@ -526,20 +532,62 @@ function createVideoPrvwCtr(video) {
         setSectState(SECTION.EDITOR);
     });
 
-    // ###
-    // on click, ...
-    videoPrvwCtrClone.querySelector('.video-preview-rename-btn').addEventListener('click', (event) => {
+    // on click, rename the video
+    videoPrvwCtrClone.querySelector('.video-preview-rename-btn').addEventListener('click', async (ptr) => {
         // prevent the click from propagating to the video preview container
-        event.stopPropagation();
+        ptr.stopPropagation();
+
+        // set the confirmation container state to renaming mode
+        setConfCtrState(STATE.RENAME, video['data']['name'], video['data']['ext']);
+
+        // set the confirmation overlay state to active
+        setConfOvrlState(STATE.ACTIVE);
+
+        // create a new promise that is resolved/rejected based on the user action in the confirmation overlay
+        confProm = new Promise((resolve, reject) => {
+            rsvConfProm = resolve;
+            rejConfProm = reject;
+        });
+
+        // try to await the user action
+        try {
+            await confProm;
+
+            // send a request to main to delete the video
+            window['stgsAPI'].renVideo(video['data']['path'], getConfNameFldValue(), getConfFormatFldValue());
+        }
+        catch (error) {
+            console.log('ERROR RUNNING');
+        }
     });
 
     // on click, delete the video
-    videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', (event) => {
+    videoPrvwCtrClone.querySelector('.video-preview-delete-btn').addEventListener('click', async (ptr) => {
         // prevent the click from propagating to the video preview container
-        event.stopPropagation();
+        ptr.stopPropagation();
+        
+        // set the confirmation container state to renaming mode
+        setConfCtrState(STATE.DELETE);
 
-        // send a request to main to delete the video
-        window['stgsAPI'].delVideo(video['data']['path']);
+        // set the confirmation overlay state to active
+        setConfOvrlState(STATE.ACTIVE);
+
+        // create a new promise that is resolved/rejected based on the user action in the confirmation overlay
+        confProm = new Promise((resolve, reject) => {
+            rsvConfProm = resolve;
+            rejConfProm = reject;
+        });
+
+        // try to await the user action
+        try {
+            await confProm;
+
+            // send a request to main to delete the video
+            window['stgsAPI'].delVideo(video['data']['path']);
+        }
+        catch (error) {
+            console.log('ERROR');
+        }
     });
 
     // set the video element node
@@ -630,4 +678,18 @@ function remAllVideoPrvwCtrs(isCaps) {
     while (videosGall.children.length > 1) {
         videosGall.removeChild(videosGall.lastElementChild);        
     }
+}
+
+/**
+ * Resolves the confirmation promise
+ */
+export function rsvConfProm() {
+    confProm.resolve();
+}
+
+/**
+ * Rejects the confirmation promise
+ */
+export function rejConfProm() {
+    confProm.reject();
 }

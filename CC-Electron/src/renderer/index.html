@@ -90,6 +90,25 @@
     </div>
 
     <div id="area-client">
+
+        <div id="overlay-confirmation" class="">
+            <div id="ctr-confirmation">
+                <p id="label-confirmation">Example Label</p>
+
+                <div id="field-ctr-confirmation">
+                    <input id="name-field-confirmation" class="confirmation-field" type="text" value="placeholder">
+                    <input id="format-field-confirmation" class="confirmation-field" type="text" value=".mp4" readonly>
+                </div>
+
+                <div id="btn-ctr-confirmation">
+                    <button id="cancel-btn-confirmation" class="confirmation-btn">Cancel</button>
+                    <button id="confirm-btn-confirmation" class="confirmation-btn">Confirm</button>
+                    <button id="rename-btn-confirmation" class="confirmation-btn">Rename</button>
+                    <button id="delete-btn-confirmation" class="confirmation-btn">Delete </button>
+                </div>
+            </div>
+        </div>
+
         <div id="block-nav">
             <nav id="bar-nav">
                 <div id="display-brand">
@@ -147,9 +166,9 @@
         </div>
 
         <div id="block-content">
-            <p id="status-label-content">An error has occurred!</p>
+            <p id="status-label-content" class="active">An error has occurred!</p>
 
-            <section id="section-directories" class="content-section active">
+            <section id="section-directories" class="content-section">
                 <h2 class="content-label1">Directories</h2>
 
                 <hr class="content-divider1">
@@ -442,7 +461,7 @@
                 </div>
             </section>
 
-            <section id="section-settings" class="content-section">
+            <section id="section-settings" class="content-section active">
                 <h2 class="content-label1">Settings</h2>
 
                 <hr class="content-divider1">

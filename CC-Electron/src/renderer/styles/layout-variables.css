@@ -20,6 +20,35 @@ html {
     /* ==== ctarea -> Client Area ==== */
     --ctarea-hgap: 12px;
 
+    /* ==== cfctr -> Confirmation Container ==== */
+    --cfctr-bradius: 10px;
+    --cfctr-vgap: 20px;
+    --cfctr-padding: 20px;
+
+    /* ==== cflabel -> Confirmation Label ==== */
+    --cflabel-fsize: 30px;
+    --cflabel-fweight: 400;
+
+    /* ==== cffield -> Confirmation Field ==== */
+    --cffield-bradius: 10px;
+    --cffield-vpadding: 10px;
+
+    /* ==== cfnamefield -> Confirmation Name Field ==== */
+    --cfnamefield-rpadding: 5px;
+    --cfnamefield-width: 210px;
+
+    /* ==== cfformatfield -> Confirmation Format Field ==== */
+    --cfformatfield-lpadding: 5px;
+    --cfformatfield-width: 50px;
+
+    /* ==== cfbtnctr -> Confirmation Button Container ==== */
+    --cfbtnctr-hgap: 10px;
+
+    /* ==== cfbtn -> Confirmation Button ==== */
+    --cfbtn-bradius: 5px;
+    --cfbtn-padding: 10px;
+    --cfbtn-width: 125px;
+
     /* ==== cblock -> Content Block ==== */
     --cblock-tlbradius: 10px;
 

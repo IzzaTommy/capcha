@@ -502,6 +502,12 @@ function initStgsL() {
         return !(progName in stgs.get('programs'));
     });
 
+    // on renVideo, rename the video from the captures or clips
+    ipcMain.on('stgs:renVideo', async (_, videoPath, videoName, videoExt) => {
+        // renames the video
+        await atmpAsyncFunc(() => fs.rename(videoPath, path.join(path.dirname(videoPath), videoName + videoExt)), 1);
+    });
+
     // on delVideo, delete the video from the captures or clips
     ipcMain.on('stgs:delVideo', async (_, videoPath) => {
         // deletes the video
@@ -892,16 +898,16 @@ function setWatchL(isCaps) {
 /**
  * Gets the data of the video
  * 
- * @param {string} video - The video to get the data of
+ * @param {string} videoFullName - The full name of the video
  * @param {boolean} isCaps - If the call is for captures or clips
  * @returns {Object} The video (data)
  */
-async function getVideo(video, isCaps) {
+async function getVideo(videoFullName, isCaps) {
     // turn ffprobe into a promise based function and get the basic video data
     const ffprobeProm = promisify(ffmpeg.ffprobe);
-    const videoName = path.parse(video)['name'];
-    const videoParsedName = video.split('-CC');
-    const videoPath = path.join(stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory'), video);
+    const videoName = path.parse(videoFullName)['name'];
+    const videoParsedName = videoFullName.split('-CC');
+    const videoPath = path.join(stgs.get(isCaps ? 'capturesDirectory' : 'clipsDirectory'), videoFullName);
     const videoStats = await atmpAsyncFunc(() => fs.stat(videoPath));
     const videosTbnlDir = isCaps ? CAPTURES_THUMBNAIL_DIRECTORY : CLIPS_THUMBNAIL_DIRECTORY;
     const videoTbnlPath = path.join(videosTbnlDir, `${videoName}.png`);
@@ -931,8 +937,10 @@ async function getVideo(video, isCaps) {
                 'date': videoStats.birthtime, 
                 'dur': videoProbe.format.duration, 
                 'prog': videoParsedName[1] ? videoParsedName[0] : 'External',  // set the program to External if it cannot be parsed
-                'fullName': video, 
+                'ext': path.extname(videoFullName).replace('.', ''), 
+                'fullName': videoFullName, 
                 'fps': videoProbe.streams.find(stream => stream.codec_type === 'video').r_frame_rate.split('/').map(Number).reduce((a, b) => a / b),  // get the video fps
+                'name': videoName, 
                 'path': videoPath, 
                 'size': videoStats.size, 
                 'tbnlPath': videoTbnlPath 

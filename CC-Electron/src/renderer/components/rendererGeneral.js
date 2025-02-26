@@ -8,7 +8,7 @@
  * @requires rendererSettingsSection
  */
 import { setDirsBarBtnState, setStgsBarBtnState, setRecBarBtnState } from './rendererNavigationBlock.js';
-import { setVideosGallBox, addVideo, delVideo } from './rendererDirectoriesSection.js';
+import { setVideosGallBox, addVideo, delVideo, rsvConfProm, rejConfProm } from './rendererDirectoriesSection.js';
 import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrSrc, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
 import { setStgVolSldrBox } from './rendererSettingsSection.js';
 
@@ -20,7 +20,10 @@ export const STATE = {
     INACTIVE: 3, 
     PLAY: 4, 
     PAUSE: 5, 
-    STANDBY: 6
+    STANDBY: 6, 
+    CONFIRM: 7, 
+    RENAME: 8, 
+    DELETE: 9
 };
 export const SECTION = {
     DIRECTORIES: 1, 
@@ -46,6 +49,7 @@ export const ASYNC_DELAY_IN_MSECONDS = 3000;
 // general variables
 let style, 
 initOvrl, initStatLabel, 
+confOvrl, confCtr, confLabel, confFldCtr, confNameFld, confFormatFld, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
 contStatLabel, 
 dirsSect, editSect, stgsSect;
 
@@ -62,6 +66,18 @@ export function initRendGenVars() {
     // initialization overlay and status label
     initOvrl = document.getElementById('overlay-initialization');
     initStatLabel = document.getElementById('status-label-initialization');
+
+    // confirmation overlay, label, field container, cancel, and option button
+    confOvrl = document.getElementById('overlay-confirmation');
+    confCtr = document.getElementById('ctr-confirmation');
+    confLabel = document.getElementById('label-confirmation');
+    confFldCtr = document.getElementById('field-ctr-confirmation');
+    confNameFld = document.getElementById('name-field-confirmation');
+    confFormatFld = document.getElementById('format-field-confirmation');
+    confCancelBtn = document.getElementById('cancel-btn-confirmation');
+    confConfBtn = document.getElementById('confirm-btn-confirmation');
+    confRenBtn = document.getElementById('rename-btn-confirmation');
+    confDelBtn = document.getElementById('delete-btn-confirmation');
 
     // content status label
     contStatLabel = document.getElementById('status-label-content');
@@ -106,6 +122,46 @@ function initGenEL() {
         setStgVolSldrBox(true);  // boolean1 isSpk
         setStgVolSldrBox(false);  // boolean1 isSpk
     });
+
+    // on click, set the confirmation overlay state to inactive and reject the confirmation promise
+    confOvrl.addEventListener('click', () => {
+        setConfOvrlState(STATE.INACTIVE);
+
+        rejConfProm();
+    });
+
+    // on click, prevent the click event from propagating to the confirmation overlay
+    confCtr.addEventListener('click', (ptr) => {
+        ptr.stopPropagation();
+    });
+
+    // on click, set the confirmation overlay state to inactive and reject the confirmation promise
+    confCancelBtn.addEventListener('click', () => {
+        setConfOvrlState(STATE.INACTIVE);
+
+        rejConfProm();
+    });
+
+    // on click, set the confirmation overlay state to inactive and resolve the confirmation promise
+    confConfBtn.addEventListener('click', () => {
+        setConfOvrlState(STATE.INACTIVE);
+
+        rsvConfProm();
+    });
+
+    // on click, set the confirmation overlay state to inactive and resolve the confirmation promise
+    confRenBtn.addEventListener('click', () => {
+        setConfOvrlState(STATE.INACTIVE);
+
+        rsvConfProm();
+    });
+
+    // on click, set the confirmation overlay state to inactive and resolve the confirmation promise
+    confDelBtn.addEventListener('click', () => {
+        setConfOvrlState(STATE.INACTIVE);
+
+        rsvConfProm();
+    });
 }
 
 /**
@@ -135,7 +191,7 @@ export function getStyle(styleName) {
 /**
  * Sets the initialization overlay state
  * 
- * @param {number} state - The new state of the overlay
+ * @param {number} state - The new state of the initialization overlay
  */
 export function setInitOvrlState(state) {
     state === STATE.ACTIVE ? initOvrl.classList.add('active') : initOvrl.classList.remove('active');
@@ -148,6 +204,88 @@ export function setInitOvrlState(state) {
  */
 export function setInitStatLabelText(text) {
     initStatLabel.textContent = text;
+}
+
+/**
+ * Sets the confirmation overlay state
+ * 
+ * @param {number} state - The new state of the confirmation overlay
+ */
+export function setConfOvrlState(state) {
+    state === STATE.ACTIVE ? confOvrl.classList.add('active') : confOvrl.classList.remove('active');
+}
+
+/**
+ * Sets the confirmation container state
+ * 
+ * @param {number} state - The new state of the confirmation container
+ */
+export function setConfCtrState(state, videoName, videoExt) {
+    switch (state) {
+        case STATE.CONFIRM:
+            // change the confirmation label text
+            confLabel.textContent = 'Confirm';
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // show the correct confirmation button
+            confConfBtn.classList.add('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
+        case STATE.RENAME:
+            // change the confirmation label text
+            confLabel.textContent = 'Rename Video';
+
+            // show the confirmation field container
+            confFldCtr.classList.add('active');
+
+            // set the confirmation name and format labels to the video name and extension respectively
+            confNameFld.value = videoName;
+            confFormatFld.value = `.${videoExt}`
+
+            // show the correct confirmation button
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.add('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
+        case STATE.DELETE:
+            // change the confirmation label text
+            confLabel.textContent = 'Delete Video';
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // show the correct confirmation button
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.add('active');
+
+            break;
+    }
+}
+
+/**
+ * Gets the confirmation name field value
+ * 
+ * @returns {string} - The value of the confirmation name field
+ */
+export function getConfNameFldValue() {
+    return confNameFld.value;
+}
+
+/**
+ * Gets the confirmation format field value
+ * 
+ * @returns {string} - The value of the confirmation format field
+ */
+export function getConfFormatFldValue() {
+    return confFormatFld.value;
 }
 
 /**

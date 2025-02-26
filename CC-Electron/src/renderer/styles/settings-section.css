@@ -243,6 +243,8 @@
     
     background-color: var(--praddbtn-bgcolor);
     transition: var(--praddbtn-transition);
+
+    cursor: pointer;
 }
 
 #add-btn-programs:hover {

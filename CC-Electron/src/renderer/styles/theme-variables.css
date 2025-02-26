@@ -25,6 +25,17 @@ html {
 
 /* Shared Variables */
 html {
+    /* ==== cfoverlay -> Confirmation Overlay ==== */
+    --cfoverlay-bgcolor: rgba(0, 0, 0, 0.55);
+
+    /* ==== cfrenamebtn -> Confirmation Rename Button ==== */
+    --cfrenamebtn-bgcolor: #f2a72f;
+    --cfrenamebtn-alt-bgcolor: #ffa500;
+
+    /* ==== cfdeletebtn -> Confirmation Delete Button ==== */
+    --cfdeletebtn-bgcolor: #ea2d2d;
+    --cfdeletebtn-alt-bgcolor: #ff0000;
+
     /* ==== tclbarbtn -> Title Close Bar Button ==== */
     --tclbarbtn-bgcolor: #ff0000;
 
@@ -136,6 +147,30 @@ html[data-theme="dark"] {
     
     /* ==== istatuslabel -> Initialization Status Label ==== */
     --istatuslabel-color: #dddddd;
+
+    /* ==== cfctr -> Confirmation Container ==== */
+    --cfctr-bgcolor: #414344;
+
+    /* ==== cflabel -> Confirmation Label ==== */
+    --cflabel-color: #dddddd;
+
+    /* ==== cffield -> Confirmation Field ==== */
+    --cffield-color: #dddddd;
+
+    /* ==== cfnamefield -> Confirmation Name Field ==== */
+    --cfnamefield-bgcolor: #5a5a5a;
+    --cfnamefield-color: #ffffff;
+
+    /* ==== cfbtn -> Confirmation Button ==== */
+    --cfbtn-color: #dddddd;
+
+    /* ==== cfcancelbtn -> Confirmation Cancel Button ==== */
+    --cfcancelbtn-bgcolor: #5a5d5f;
+    --cfcancelbtn-alt-bgcolor: #808080;
+
+    /* ==== cfconfirmbtn -> Confirmation Confirm Button ==== */
+    --cfconfirmbtn-bgcolor: #ae2ff2;
+    --cfconfirmbtn-alt-bgcolor: #8c00ff;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #4a4c51;
@@ -480,6 +515,30 @@ html[data-theme="light"] {
     /* ==== istatuslabel -> Initialization Status Label ==== */
     --istatuslabel-color: #363636;
 
+    /* ==== cfctr -> Confirmation Container ==== */
+    --cfctr-bgcolor: #414344;
+
+    /* ==== cflabel -> Confirmation Label ==== */
+    --cflabel-color: #dddddd;
+
+    /* ==== cffield -> Confirmation Field ==== */
+    --cffield-color: #dddddd;
+
+    /* ==== cfnamefield -> Confirmation Name Field ==== */
+    --cfnamefield-bgcolor: #5a5a5a;
+    --cfnamefield-color: #ffffff;
+
+    /* ==== cfbtn -> Confirmation Button ==== */
+    --cfbtn-color: #dddddd;
+
+    /* ==== cfcancelbtn -> Confirmation Cancel Button ==== */
+    --cfcancelbtn-bgcolor: #5a5d5f;
+    --cfcancelbtn-alt-bgcolor: #808080;
+
+    /* ==== cfconfirmbtn -> Confirmation Confirm Button ==== */
+    --cfconfirmbtn-bgcolor: #ae2ff2;
+    --cfconfirmbtn-alt-bgcolor: #8c00ff;
+
     /* ==== cblock -> Content Block ==== */
     --cblock-bgcolor: #f2f2f2;
 
@@ -812,6 +871,12 @@ html {
 
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-transition: opacity 0.5s ease 0s;
+
+    /* ==== cfnamefield -> Confirmation Name Field ==== */
+    --cfnamefield-transition: color 0.3s ease 0s;
+
+    /* ==== cfbtn -> Confirmation Button ==== */
+    --cfbtn-transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
 
     /* ==== cstatuslabel -> Content Status Label ==== */
     --cstatuslabel-transition: opacity 0.5s ease 0s;
