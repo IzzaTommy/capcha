@@ -2,9 +2,16 @@
 	"Odyssey G60SD": {
 		"posX": "0", 
 		"posY": "0", 
-		"sizeX": "1920", 
-		"sizeY": "1080", 
+		"sizeX": "2560", 
+		"sizeY": "1440", 
 		"id": "DISPLAY#SAM75CB#5&44d6669&0&UID37126#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}"
+	}, 
+	"LG ULTRAGEAR": {
+		"posX": "2560", 
+		"posY": "0", 
+		"sizeX": "2560", 
+		"sizeY": "1440", 
+		"id": "DISPLAY#GSM7766#5&44d6669&0&UID37120#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}"
 	}, 
 	"DELL S2718D": {
 		"posX": "-2560", 
@@ -12,12 +19,5 @@
 		"sizeX": "2560", 
 		"sizeY": "1440", 
 		"id": "DISPLAY#DEL4110#5&44d6669&0&UID37124#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}"
-	}, 
-	"LG ULTRAGEAR": {
-		"posX": "1920", 
-		"posY": "0", 
-		"sizeX": "2560", 
-		"sizeY": "1440", 
-		"id": "DISPLAY#GSM7766#5&44d6669&0&UID37120#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}"
 	}
 }

@@ -13,7 +13,7 @@
     display: flex;
     flex: 0 0 auto;
     flex-flow: column nowrap;
-    gap: var(--nbar-vgap);
+    row-gap: var(--nbar-rgap);
     padding: var(--nbar-tpadding) var(--nbar-hpadding) var(--nbar-bpadding);
     width: var(--nbar-width);
 
@@ -30,7 +30,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--bdisplay-hgap);
+    column-gap: var(--bdisplay-cgap);
 }
 
 #icon-brand {
@@ -43,14 +43,21 @@
 }
 
 #name-label-brand {
-    flex: 0 0 auto;
-    width: var(--bnamelabel-width);
+    text-align: center;
+
+    flex: 0 0 fit-content;
+    height: var(--bnamelabel-height);
+    line-height: var(--bnamelabel-lheight);
+    overflow: hidden;
+    max-width: var(--bnamelabel-maxwidth);
 
     color: var(--bnamelabel-color);
     font-size: var(--bnamelabel-fsize);
     font-weight: var(--bnamelabel-fweight);
     opacity: 0;
+    text-overflow: ellipsis;
     transition: var(--bnamelabel-transition);
+    white-space: nowrap;
 
     pointer-events: none;
 }
@@ -78,7 +85,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--nbarbtn-hgap);
+    column-gap: var(--nbarbtn-cgap);
     margin-right: var(--nbarbtn-hmargin);
     margin-left: var(--nbarbtn-hmargin);
     padding: var(--nbarbtn-padding);
@@ -195,13 +202,21 @@
 }
 
 .nav-bar-label {
-    flex: 0 0 fit-content;
+    text-align: left;
+
+    flex: 0 0 auto;
+    height: var(--nbarlabel-height);
+    line-height: var(--nbarlabel-lheight);
+    overflow: hidden;
+    max-width: var(--nbarlabel-maxwidth);
 
     color: var(--nbarlabel-color);
     font-size: var(--nbarlabel-fsize);
     font-weight: var(--nbarlabel-fweight);
     opacity: 0;
+    text-overflow: ellipsis;
     transition: var(--nbarlabel-transition);
+    white-space: nowrap;
 
     pointer-events: none;
 }
@@ -226,6 +241,7 @@
 }
 
 #label-ctr-current-recording {
+    align-items: center;
     right: var(--curlabelctr-rinset);
     bottom: var(--curlabelctr-binset);
     left: var(--curlabelctr-linset);
@@ -236,7 +252,7 @@
     border-radius: var(--curlabelctr-bradius);
     display: flex;
     flex-flow: row nowrap;
-    gap: var(--curlabelctr-hgap);
+    column-gap: var(--curlabelctr-cgap);
     padding: var(--curlabelctr-tpadding) var(--curlabelctr-hpadding) var(--curlabelctr-bpadding);
 
     background-color: var(--curlabelctr-bgcolor);
@@ -248,24 +264,28 @@
 }
 
 .current-recording-label {
-    flex: 0 0 auto;
+    flex: 0 0 fit-content;
 }
 
 #time-label-current-recording {
-    text-align: center;
-
-    line-height: normal;
-    width: var(--curtimelabel-width);
+    height: var(--curtimelabel-height);
+    line-height: var(--curtimelabel-lheight);
+    overflow: hidden;
+    max-width: var(--curtimelabel-maxwidth);
     
     color: var(--curtimelabel-color);
     font-size: var(--curtimelabel-fsize);
     font-weight: var(--curtimelabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #program-label-current-recording {
+    height: var(--curprogramlabel-height);
+    line-height: var(--curprogramlabel-lheight);
     margin: auto;
     overflow: hidden;
-    width: var(--curprogramlabel-width);
+    max-width: var(--curprogramlabel-maxwidth);
 
     color: var(--curprogramlabel-color);
     font-size: var(--curprogramlabel-fsize);
@@ -294,8 +314,10 @@
     flex: 0 0 auto;
     flex-flow: row nowrap;
     height: var(--arresumelabel-height);
+    line-height: var(--arresumelabel-lheight);
     margin-right: var(--arresumelabel-hmargin);
     margin-left: var(--arresumelabel-hmargin);
+    overflow: hidden;
 
     color: var(--arresumelabel-color);
     font-size: var(--arresumelabel-fsize);

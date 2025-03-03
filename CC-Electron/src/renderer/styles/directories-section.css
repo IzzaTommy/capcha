@@ -1,10 +1,12 @@
-.directory-label {
+.directories-label2 {
+    flex: 0 1 fit-content;
+
     transition: var(--dlabel-transition);
 
     cursor: pointer;
 }
 
-.directory-label:hover {
+.directories-label2:hover {
     color: var(--dlabel-color);
 }
 
@@ -12,28 +14,28 @@
     justify-content: center;
 
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--sgctr-vgap);
-    width: var(--sgctr-width);
-
-    opacity: 0;
+    row-gap: var(--sgctr-rgap);
+    opacity: 1;
     transition: var(--sgctr-transition);
 }
 
-.directory-label:hover + .storage-ctr {
+.directories-label2:hover + .storage-ctr {
     opacity: 1;
 }
 
 .directory-label2 {
     text-align: left;
 
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--dlabel2-height);
     line-height: var(--dlabel2-lheight);
     overflow: hidden;
+    max-width: var(--dlabel2-maxwidth);
 
-    direction: rtl;
     color: var(--dlabel2-color);
+    direction: rtl;
     font-size: var(--dlabel2-fsize);
     font-weight: var(--dlabel2-fweight);
     text-overflow: ellipsis;
@@ -47,8 +49,11 @@
 }
 
 .directory-label3 {
-    flex: 0 1 fit-content;
+    flex: 0 0 fit-content;
+    height: var(--dlabel3-height);
+    line-height: var(--dlabel3-lheight);
     overflow: hidden;
+    max-width: var(--dlabel3-maxwidth);
 
     color: var(--dlabel3-color);
     font-size: var(--dlabel3-fsize);
@@ -62,8 +67,8 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
+    column-gap: var(--dbar-cgap);
     margin-left: auto;
-    gap: var(--dbar-hgap);
     padding: var(--dbar-padding);
 
     background-color: var(--dbar-bgcolor);
@@ -72,11 +77,16 @@
 .directory-setting-field {
     border-radius: var(--dstfield-bradius);
     flex: 0 0 fit-content;
+    height: var(--dstfield-height);
+    line-height: var(--dstfield-lheight);
     padding-right: var(--dstfield-hpadding);
     padding-left: var(--dstfield-hpadding);
+    max-width: var(--dstfield-maxwidth);
 
     background-color: var(--dstfield-bgcolor);
     color: var(--dstfield-color);
+    font-size: var(--dstfield-fsize);
+    font-weight: var(--dstfield-fweight);
     transition: var(--dstfield-transition);
 
     cursor: pointer;
@@ -191,12 +201,18 @@
     align-self: center;
 
     display: none;
+    flex: 0 0 fit-content;
+    height: var(--dstatuslabel-height);
+    line-height: var(--dstatuslabel-lheight);
     margin-left: auto;
     margin-right: auto;
+    overflow: hidden;
 
     color: var(--dstatuslabel-color);
     font-size: var(--dstatuslabel-fsize);
     font-weight: var(--dstatuslabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .directory-status-label.active {
@@ -208,7 +224,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--vpctr-vgap);
+    row-gap: var(--vpctr-rgap);
     padding: var(--vpctr-padding);
 
     transition: var(--vpctr-transition);
@@ -244,9 +260,12 @@
     bottom: var(--vtndurlabel-binset);
 
     border-radius: var(--vtndurlabel-bradius);
+    box-sizing: content-box;
+    height: var(--vtndurlabel-height);
+    line-height: var(--vtndurlabel-lheight);
     overflow: hidden;
     padding: var(--vtndurlabel-padding);
-    max-width: var(--vtndurlabel-mwidth);
+    max-width: var(--vtndurlabel-maxwidth);
 
     background-color: var(--vtndurlabel-bgcolor);
     color: var(--vtndurlabel-color);
@@ -263,28 +282,28 @@
 
 .video-preview-label-ctr {
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    height: var(--vplabelctr-height);
-    width: var(--vplabelctr-width);
+    column-gap: var(--vplabelctr-cgap);
 }
 
 .video-preview-label {
-    line-height: normal;
+    flex: 0 0 fit-content;
+    height: var(--vplabel-height);
+    line-height: var(--vplabel-lheight);
+    overflow: hidden;
 
     font-size: var(--vplabel-fsize);
     font-weight: var(--vplabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--vplabel-transition);
+    white-space: nowrap;
 }
 
 .video-preview-program-label {
-    flex: 0 1 fit-content;
-    margin-right: var(--vpprogramlabel-rmargin);
-    overflow: hidden;
+    max-width: var(--vpprogramlabel-maxwidth);
 
     color: var(--vpprogramlabel-color);
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-program-label {
@@ -292,14 +311,10 @@
 }
 
 .video-preview-age-label {
-    flex: 0 0 auto;
-    overflow: hidden;
     margin-left: auto;
-    max-width: var(--vpagelabel-mwidth);
+    max-width: var(--vpagelabel-maxwidth);
 
     color: var(--vpagelabel-color);
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-age-label {
@@ -308,10 +323,10 @@
 
 .video-preview-name-label {
     flex: 0 0 auto;
-    overflow: hidden;
-
+    height: var(--vpnamelabel-height);
     line-height: var(--vpnamelabel-lheight);
-    width: var(--vpnamelabel-width);
+    overflow: hidden;
+    max-width: var(--vpnamelabel-maxwidth);
 
     color: var(--vpnamelabel-color);
     font-size: var(--vpnamelabel-fsize);
@@ -324,7 +339,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--vpbtnctr-hgap);
+    column-gap: var(--vpbtnctr-cgap);
 }
 
 .video-preview-btn {

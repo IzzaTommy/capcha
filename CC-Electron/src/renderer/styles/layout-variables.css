@@ -1,541 +1,627 @@
 html {
-    /* ==== scbar -> Scroll Bar ==== */
-    --scbar-length: 20px;  /* width if vertical, height is horizontal of the whole scroll bar */
+    --usin-scale: 0.5;
+    /* --usin-scale: 2; */
+    --usin-scale: 1;
+    --effect-scale: 0.5;
 
-    --scbar-thumb-bwidth: 7px;
-    --scbar-thumb-bradius: 10px;
+    /* ==== scbar -> Scroll Bar ==== */
+    --scbar-length: calc(20px * var(--usin-scale));  /* width if vertical, height is horizontal of the whole scroll bar */
+
+    --scbar-thumb-bwidth: calc(7px * var(--usin-scale));
+    --scbar-thumb-bradius: calc(10px * var(--usin-scale));
 
     /* ==== iicon -> Initialization Icon ==== */
     --iicon-length: 100px;
 
     /* ==== inamelabel -> Initialization Name Label ==== */
+    --inamelabel-height: 100px;
+    --inamelabel-lheight: 100px;
     --inamelabel-fsize: 80px;
     --inamelabel-fweight: 600;
 
     /* ==== istatuslabel -> Initialization Status Label ==== */
+    --istatuslabel-height: 23px;
+    --istatuslabel-lheight: 23px;
     --istatuslabel-tmargin: 50px;
     --istatuslabel-fsize: 18px;
     --istatuslabel-fweight: 300;
 
     /* ==== ctarea -> Client Area ==== */
-    --ctarea-hgap: 12px;
+    --ctarea-cgap: calc(12px * var(--effect-scale) * var(--usin-scale));
 
     /* ==== cfctr -> Confirmation Container ==== */
-    --cfctr-bradius: 10px;
-    --cfctr-vgap: 20px;
-    --cfctr-padding: 20px;
+    --cfctr-bradius: calc(10px * var(--usin-scale));
+    --cfctr-rgap: calc(20px * var(--usin-scale));
+    --cfctr-padding: calc(20px * var(--usin-scale));
 
     /* ==== cflabel -> Confirmation Label ==== */
-    --cflabel-fsize: 30px;
+    --cflabel-height: calc(38px * var(--usin-scale));
+    --cflabel-lheight: calc(38px * var(--usin-scale));
+    --cflabel-maxwidth: calc(260px * var(--usin-scale));
+    --cflabel-fsize: calc(30px * var(--usin-scale));
     --cflabel-fweight: 400;
 
     /* ==== cffield -> Confirmation Field ==== */
-    --cffield-bradius: 10px;
-    --cffield-vpadding: 10px;
+    --cffield-bradius: calc(10px * var(--usin-scale));
+    --cffield-height: calc(35px * var(--usin-scale));
+    --cffield-lheight: calc(35px * var(--usin-scale));
+    --cffield-fsize: calc(14px * var(--usin-scale));
+    --cffield-fweight: 400;
 
     /* ==== cfnamefield -> Confirmation Name Field ==== */
-    --cfnamefield-rpadding: 5px;
-    --cfnamefield-width: 210px;
+    --cfnamefield-rpadding: calc(5px * var(--usin-scale));
+    --cfnamefield-lpadding: calc(10px * var(--usin-scale));
+    --cfnamefield-width: calc(210px * var(--usin-scale));
 
     /* ==== cfformatfield -> Confirmation Format Field ==== */
-    --cfformatfield-lpadding: 5px;
-    --cfformatfield-width: 50px;
+    --cfformatfield-rpadding: calc(10px * var(--usin-scale));
+    --cfformatfield-lpadding: calc(5px * var(--usin-scale));
+    --cfformatfield-width: calc(50px * var(--usin-scale));
 
     /* ==== cfbtnctr -> Confirmation Button Container ==== */
-    --cfbtnctr-hgap: 10px;
+    --cfbtnctr-cgap: calc(10px * var(--usin-scale));
 
     /* ==== cfbtn -> Confirmation Button ==== */
-    --cfbtn-bradius: 5px;
-    --cfbtn-padding: 10px;
-    --cfbtn-width: 125px;
+    --cfbtn-bradius: calc(5px * var(--usin-scale));
+    --cfbtn-height: calc(16px * var(--usin-scale));
+    --cfbtn-lheight: calc(16px * var(--usin-scale));
+    --cfbtn-padding: calc(10.5px * var(--usin-scale));
+    --cfbtn-width: calc(125px * var(--usin-scale));
+    --cfbtn-fsize: calc(12px * var(--usin-scale));
+    --cfbtn-fweight: 300;
 
     /* ==== cblock -> Content Block ==== */
-    --cblock-tlbradius: 10px;
+    --cblock-tlbradius: calc(10px * var(--usin-scale));
 
     /* ==== cstatuslabel -> Content Status Label ==== */
-    --cstatuslabel-tinset: 40px;
-    --cstatuslabel-bradius: 10px;
-    --cstatuslabel-padding: 10px;
-    --cstatuslabel-fsize: 15px;
+    --cstatuslabel-tinset: calc(40px * var(--usin-scale));
+    --cstatuslabel-bradius: calc(10px * var(--usin-scale));
+    --cstatuslabel-height: calc(20px * var(--usin-scale));
+    --cstatuslabel-lheight: calc(20px * var(--usin-scale));
+    --cstatuslabel-padding: calc(10px * var(--usin-scale));
+    --cstatuslabel-maxwidth: calc(800px * var(--usin-scale));
+    --cstatuslabel-fsize: calc(15px * var(--usin-scale));
     --cstatuslabel-fweight: 300;
 
     /* ==== csection -> Content Section ==== */
-    --csection-vgap: 10px;
-    --csection-vpadding: 10px;
-    --csection-hpadding: 25px;
+    --csection-rgap: calc(10px * var(--usin-scale));
+    --csection-vpadding: calc(10px * var(--usin-scale));
+    --csection-hpadding: calc(25px * var(--usin-scale));
 
     /* ==== clabel1 -> Content Label 1 ==== */
-    --clabel1-fsize: 60px;
+    --clabel1-height: calc(60px * var(--usin-scale));
+    --clabel1-lheight: calc(60px * var(--usin-scale));
+    --clabel1-fsize: calc(48px * var(--usin-scale));
     --clabel1-fweight: 500;
 
     /* ==== cdivider1 -> Content Divider 1 ==== */
     --cdivider1-height: 1.5px;
-    --cdivider1-lmargin: -5px;
-    --cdivider1-width: calc(100% + 25px);
+    --cdivider1-lmargin: calc(-5px * var(--usin-scale));
+    --cdivider1-width: calc(100% + 25px * var(--usin-scale));
 
     /* ==== cctr1 -> Content Container 1 ==== */
-    --cctr1-bradius: 10px;
-    --cctr1-vgap: 30px;
-    --cctr1-vpadding: 10px;
-    --cctr1-hpadding: 25px;
+    --cctr1-bradius: calc(10px * var(--usin-scale));
+    --cctr1-rgap: calc(30px * var(--usin-scale));
+    --cctr1-vpadding: calc(10px * var(--usin-scale));
+    --cctr1-hpadding: calc(25px * var(--usin-scale));
 
-    --cctr1-sb-track-vmargin: 3px;
+    --cctr1-sb-track-vmargin: calc(3px * var(--usin-scale));
 
     /* ==== cctr2 -> Content Container 2 ==== */
-    --cctr2-vgap: 10px;
+    --cctr2-rgap: calc(10px * var(--usin-scale));
 
     /* ==== cctr3 -> Content Container 3 ==== */
-    --cctr3-hgap: 20px;
+    --cctr3-rgap: calc(7.5px * var(--usin-scale));
+    --cctr3-cgap: calc(20px * var(--usin-scale));
+    --cctr3-maxheight: calc(87.5px * var(--usin-scale));
 
     /* ==== clabel2 -> Content Label 2 ==== */
-    --clabel2-fsize: 35px;
+    --clabel2-height: calc(40px * var(--usin-scale));
+    --clabel2-lheight: calc(40px * var(--usin-scale));
+    --clabel2-fsize: calc(32px * var(--usin-scale));
     --clabel2-fweight: 400;
 
     /* ==== cdivider2 -> Content Divider 2 ==== */
     --cdivider2-height: 1.5px;
-    --cdivider2-lmargin: -5px;
-    --cdivider2-width: calc(100% + 25px);
+    --cdivider2-lmargin: calc(-5px * var(--usin-scale));
+    --cdivider2-width: calc(100% + 25px * var(--usin-scale));
 
     /* ==== tversionlabel -> Title Version Label ==== */
-    --tversionlabel-lmargin: 10px;
-    --tversionlabel-fsize: 11px;
+    --tversionlabel-height: calc(14px * var(--usin-scale));
+    --tversionlabel-lheight: calc(14px * var(--usin-scale));
+    --tversionlabel-lmargin: calc(10px * var(--usin-scale));
+    --tversionlabel-fsize: calc(11px * var(--usin-scale));
     --tversionlabel-fweight: 300;
 
     /* ==== tbarbtn -> Title Bar Button ==== */
-    --tbarbtn-vpadding: 7.5px;
-    --tbarbtn-hpadding: 15px;
+    --tbarbtn-vpadding: calc(7.5px * var(--usin-scale));
+    --tbarbtn-hpadding: calc(15px * var(--usin-scale));
 
     /* ==== tbaricon -> Title Bar Icon ==== */
-    --tbaricon-length: 10px;
+    --tbaricon-length: calc(10px * var(--usin-scale));
 
     /* ==== nblock -> Nav(igation) Block ==== */
-    --nblock-trbradius: 10px;
+    --nblock-trbradius: calc(10px * var(--usin-scale));
 
     /* ==== nbar -> Nav(igation) Bar ==== */
-    --nbar-vgap: 10px;
-    --nbar-tpadding: 10px;
-    --nbar-hpadding: 10px;
-    --nbar-bpadding: 20px;
-    --nbar-width: 80px;
-    --nbar-alt-width: 211px;
+    --nbar-rgap: calc(10px * var(--usin-scale));
+    --nbar-tpadding: calc(10px * var(--usin-scale));
+    --nbar-hpadding: calc(10px * var(--usin-scale));
+    --nbar-bpadding: calc(20px * var(--usin-scale));
+    --nbar-width: calc(80px * var(--usin-scale));
+    --nbar-alt-width: calc(211px * var(--usin-scale));
 
     /* ==== bdisplay -> Brand Display ==== */
-    --bdisplay-hgap: 20px;
+    --bdisplay-cgap: calc(20px * var(--usin-scale));
 
     /* ==== bicon -> Brand Icon ==== */
-    --bicon-length: 60px;
+    --bicon-length: calc(60px * var(--usin-scale));
 
     /* ==== bnamelabel -> Brand Name Label ==== */
-    --bnamelabel-width: 111px;
-    --bnamelabel-fsize: 28px;
+    --bnamelabel-height: calc(36px * var(--usin-scale));
+    --bnamelabel-lheight: calc(36px * var(--usin-scale));
+    --bnamelabel-maxwidth: calc(111px * var(--usin-scale));
+    --bnamelabel-fsize: calc(28px * var(--usin-scale));
     --bnamelabel-fweight: 600;
 
     /* ==== ndivider -> Nav(igation) Divider ==== */
     --ndivider-height: 1.5px;
-    --ndivider-lmargin: -5px;
-    --ndivider-width: calc(100% + 10px);
+    --ndivider-lmargin: calc(-5px * var(--usin-scale));
+    --ndivider-width: calc(100% + 10px * var(--usin-scale));
 
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
-    --nbarbtn-bradius: 10px;
-    --nbarbtn-hgap: 40px;
-    --nbarbtn-hmargin: 5px;
-    --nbarbtn-padding: 10px;
+    --nbarbtn-bradius: calc(10px * var(--usin-scale));
+    --nbarbtn-cgap: calc(40px * var(--usin-scale));
+    --nbarbtn-hmargin: calc(5px * var(--usin-scale));
+    --nbarbtn-padding: calc(10px * var(--usin-scale));
 
     /* ==== rbarbtn -> Record Bar Button ==== */
-    --rbarbtn-bwidth: 1.5px;
-    --rbarbtn-padding: 8.5px;
+    --rbarbtn-bwidth: calc(1.5px * var(--usin-scale));
+    --rbarbtn-padding: calc(8.5px * var(--usin-scale));
 
     /* ==== nbaricon -> Nav(igation) Bar Icon ==== */
-    --nbaricon-length: 30px;
+    --nbaricon-length: calc(30px * var(--usin-scale));
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
-    --nbarlabel-fsize: 20px;
+    --nbarlabel-height: calc(26px * var(--usin-scale));
+    --nbarlabel-lheight: calc(26px * var(--usin-scale));
+    --nbarlabel-maxwidth: calc(91px * var(--usin-scale));
+    --nbarlabel-fsize: calc(20px * var(--usin-scale));
     --nbarlabel-fweight: 400;
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
-    --curlabelctr-rinset: 15px;
-    --curlabelctr-binset: 66px;
-    --curlabelctr-alt-binset: 93.5px;
-    --curlabelctr-linset: 15px;
-    --curlabelctr-bwidth: 1.5px;
-    --curlabelctr-bradius: 10px;
-    --curlabelctr-hgap: 10px;
-    --curlabelctr-tpadding: 2.5px;
-    --curlabelctr-hpadding: 2.5px;
-    --curlabelctr-bpadding: 25px;
+    --curlabelctr-rinset: calc(15px * var(--usin-scale));
+    --curlabelctr-binset: calc(78px * var(--usin-scale));
+    --curlabelctr-alt-binset: calc(105.5px * var(--usin-scale));
+    --curlabelctr-linset: calc(15px * var(--usin-scale));
+    --curlabelctr-bwidth: calc(1.5px * var(--usin-scale));
+    --curlabelctr-bradius: calc(10px * var(--usin-scale));
+    --curlabelctr-cgap: calc(10px * var(--usin-scale));
+    --curlabelctr-tpadding: calc(2.5px * var(--usin-scale));
+    --curlabelctr-hpadding: calc(2.5px * var(--usin-scale));
+    --curlabelctr-bpadding: calc(25px * var(--usin-scale));
 
     /* ==== curtimelabel -> Current Recording Time Label ==== */
-    --curtimelabel-width: 43px;
-    --curtimelabel-fsize: 10.75px;
+    --curtimelabel-height: calc(14px * var(--usin-scale));
+    --curtimelabel-lheight: calc(14px * var(--usin-scale));
+    --curtimelabel-maxwidth: calc(43px * var(--usin-scale));
+    --curtimelabel-fsize: calc(10.75px * var(--usin-scale));
     --curtimelabel-fweight: 300;
 
     /* ==== curprogramlabel -> Current Recording Program Label ==== */
-    --curprogramlabel-width: 120px;
-    --curprogramlabel-fsize: 12px;
+    --curprogramlabel-height: calc(16px * var(--usin-scale));
+    --curprogramlabel-lheight: calc(16px * var(--usin-scale));
+    --curprogramlabel-maxwidth: calc(120px * var(--usin-scale));
+    --curprogramlabel-fsize: calc(12px * var(--usin-scale));
     --curprogramlabel-fweight: 400;
 
     /* ==== arresumelabel -> Auto Record Resume Label ==== */
-    --arresumelabel-height: 36px;
-    --arresumelabel-hmargin: 5px;
-    --arresumelabel-fsize: 12px;
+    --arresumelabel-height: calc(48px * var(--usin-scale));
+    --arresumelabel-lheight: calc(16px * var(--usin-scale));
+    --arresumelabel-hmargin: calc(5px * var(--usin-scale));
+    --arresumelabel-fsize: calc(12px * var(--usin-scale));
     --arresumelabel-fweight: 400;
 
     /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
-    --ntoggleicon-length: 15px;
+    --ntoggleicon-length: calc(15px * var(--usin-scale));
 
     /* ==== sgctr -> Storage Container ==== */
-    --sgctr-vgap: 2px;
-    --sgctr-width: 400px;
+    --sgctr-rgap: calc(2px * var(--usin-scale));
 
     /* ==== dlabel2 -> Directory Label 2==== */
-    --dlabel2-lheight: 19px;
-    --dlabel2-fsize: 15px;
+    --dlabel2-height: calc(20px * var(--usin-scale));
+    --dlabel2-lheight: calc(20px * var(--usin-scale));
+    --dlabel2-maxwidth: calc(250px * var(--usin-scale));
+    --dlabel2-fsize: calc(15px * var(--usin-scale));
     --dlabel2-fweight: 400;
 
     /* ==== dlabel3 -> Directory Label 3 ==== */
-    --dlabel3-fsize: 10px;
+    --dlabel3-height: calc(13px * var(--usin-scale));
+    --dlabel3-lheight: calc(13px * var(--usin-scale));
+    --dlabel3-maxwidth: calc(125px * var(--usin-scale));
+    --dlabel3-fsize: calc(10px * var(--usin-scale));
     --dlabel3-fweight: 350;
 
     /* ==== dbar -> Directory Bar ==== */
-    --dbar-bradius: 10px;
-    --dbar-hgap: 5px;
-    --dbar-padding: 5px;
+    --dbar-bradius: calc(10px * var(--usin-scale));
+    --dbar-cgap: calc(5px * var(--usin-scale));
+    --dbar-padding: calc(5px * var(--usin-scale));
 
     /* ==== dstfield -> Directory Setting Field ==== */
-    --dstfield-bradius: 5px;
-    --dstfield-hpadding: 10px;
+    --dstfield-bradius: calc(5px * var(--usin-scale));
+    --dstfield-height: calc(30px * var(--usin-scale));
+    --dstfield-lheight: calc(30px * var(--usin-scale));
+    --dstfield-hpadding: calc(10px * var(--usin-scale));
+    --dstfield-maxwidth: calc(200px * var(--usin-scale));
+    --dstfield-fsize: calc(14px * var(--usin-scale));
+    --dstfield-fweight: 400;
 
     /* ==== dbarbtn -> Directory Bar Button ==== */
-    --dbarbtn-bradius: 5px;
+    --dbarbtn-bradius: calc(5px * var(--usin-scale));
 
     /* ==== dbaricon -> Directory Bar Icon ==== */
-    --dbaricon-length: 25px;
+    --dbaricon-length: calc(30px * var(--usin-scale));
 
     /* ==== dctr -> Directory Container ==== */
-    --dctr-bwidth: 1.5px;
-    --dctr-bradius: 10px;
-    --dctr-height: 304px;
+    --dctr-bwidth: calc(1.5px * var(--usin-scale));
+    --dctr-bradius: calc(10px * var(--usin-scale));
+    --dctr-height: calc(304px * var(--usin-scale));
 
     /* ==== dicon -> Directory Icon ==== */
-    --dicon-length: 15px;
+    --dicon-length: calc(15px * var(--usin-scale));
 
     /* ==== dgallery -> Directory Gallery ==== */
-    --dgallery-hmargin: 10px;
-    --dgallery-vpadding: 8.5px;
+    --dgallery-hmargin: calc(10px * var(--usin-scale));
+    --dgallery-vpadding: calc(8.5px * var(--usin-scale));
 
-    --dgallery-sb-track-hmargin: -7px;
+    --dgallery-sb-track-hmargin: calc(-7px * var(--usin-scale));
 
     /* ==== dstatuslabel -> Directory Status Label ==== */
-    --dstatuslabel-fsize: 40px;
+    --dstatuslabel-height: calc(50px * var(--usin-scale));
+    --dstatuslabel-lheight: calc(50px * var(--usin-scale));
+    --dstatuslabel-maxwidth: 100%;
+    --dstatuslabel-fsize: calc(40px * var(--usin-scale));
     --dstatuslabel-fweight: 500;
 
     /* ==== vpctr -> Video Preview Container ==== */
-    --vpctr-bradius: 10px;
-    --vpctr-vgap: 10px;
-    --vpctr-padding: 10px;
-    
+    --vpctr-bradius: calc(10px * var(--usin-scale));
+    --vpctr-rgap: calc(10px * var(--usin-scale));
+    --vpctr-padding: calc(10px * var(--usin-scale));
+
     /* ==== vtnctr -> Video Thumbnail Container ==== */
-    --vtnctr-bradius: 10px;
+    --vtnctr-bradius: calc(10px * var(--usin-scale));
 
     /* ==== vtnimage -> Video Thumbnail Image ==== */
-    --vtnimage-height: 144px;
+    --vtnimage-height: calc(144px * var(--usin-scale));
 
     /* ==== vtndurlabel -> Video Thumbnail Duration Label ==== */
-    --vtndurlabel-rinset: 5px;
-    --vtndurlabel-binset: 5px;
-    --vtndurlabel-bradius: 3px;
-    --vtndurlabel-padding: 5px;
-    --vtndurlabel-mwidth: 150px;
-    --vtndurlabel-fsize: 15px;
+    --vtndurlabel-rinset: calc(5px * var(--usin-scale));
+    --vtndurlabel-binset: calc(5px * var(--usin-scale));
+    --vtndurlabel-bradius: calc(3px * var(--usin-scale));
+    --vtndurlabel-height: calc(20px * var(--usin-scale));
+    --vtndurlabel-lheight: calc(20px * var(--usin-scale));
+    --vtndurlabel-padding: calc(5px * var(--usin-scale));
+    --vtndurlabel-maxwidth: calc(150px * var(--usin-scale));
+    --vtndurlabel-fsize: calc(15px * var(--usin-scale));
     --vtndurlabel-fweight: 400;
 
     /* ==== vplabelctr -> Video Preview Label Container ==== */
-    --vplabelctr-height: 22px;
-    --vplabelctr-width: 256px;
+    --vplabelctr-cgap: calc(15px * var(--usin-scale));
 
     /* ==== vplabel -> Video Preview Label ==== */
-    --vplabel-fsize: 17px;
+    --vplabel-height: calc(22px * var(--usin-scale));
+    --vplabel-lheight: calc(22px * var(--usin-scale));
+    --vplabel-fsize: calc(17px * var(--usin-scale));
     --vplabel-fweight: 350;
 
     /* ==== vpprogramlabel -> Video Preview Program Label ==== */
-    --vpprogramlabel-rmargin: 15px;
+    --vpprogramlabel-maxwidth: calc(170px * var(--usin-scale));
 
     /* ==== vpagelabel -> Video Preview Age Label ==== */
-    --vpagelabel-mwidth: 200px;
+    --vpagelabel-maxwidth: calc(71px * var(--usin-scale));
 
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
-    --vpnamelabel-lheight: 14px;
-    --vpnamelabel-width: 256px;
-    --vpnamelabel-fsize: 11px;
+    --vpnamelabel-height: calc(14px * var(--usin-scale));
+    --vpnamelabel-lheight: calc(14px * var(--usin-scale));
+    --vpnamelabel-maxwidth: calc(256px * var(--usin-scale));
+    --vpnamelabel-fsize: calc(11px * var(--usin-scale));
     --vpnamelabel-fweight: 300;
 
     /* ==== vpbtnctr -> Video Preview Button Container ==== */
-    --vpbtnctr-hgap: 10px;
+    --vpbtnctr-cgap: calc(10px * var(--usin-scale));
 
     /* ==== vpbtn -> Video Preview Button ==== */
-    --vpbtn-bradius: 5px;
-    --vpbtn-padding: 2px;
+    --vpbtn-bradius: calc(5px * var(--usin-scale));
+    --vpbtn-padding: calc(2px * var(--usin-scale));
 
     /* ==== vpicon -> Video Preview Icon ==== */
-    --vpicon-length: 30px;
+    --vpicon-length: calc(30px * var(--usin-scale));
 
     /* ==== vctr -> Video Container ==== */
-    --vctr-bradius: 10px;
-    --vctr-height: 525px;
-    --vctr-width: 1100px;
+    --vctr-bradius: calc(10px * var(--usin-scale));
+    --vctr-height: calc(525px * var(--usin-scale));
+    --vctr-width: calc(1100px * var(--usin-scale));
 
     /* ==== plpastatusicon -> Play Pause Status Icon ==== */
-    --plpastatusicon-length: 80px;
+    --plpastatusicon-length: calc(80px * var(--usin-scale));
 
     /* ==== sslider -> Seek Slider ==== */
-    --sslider-height: 3px;
-    --sslider-hmargin: 6px;
-    --sslider-tpadding: 10px;
-    --sslider-bpadding: 2.25px;
+    --sslider-height: calc(3px * var(--usin-scale));
+    --sslider-hmargin: calc(6px * var(--usin-scale));
+    --sslider-tpadding: calc(10px * var(--usin-scale));
+    --sslider-bpadding: calc(2.25px * var(--usin-scale));
 
     /* ==== strack -> Seek Track ==== */
-    --strack-transform: 2.5;
+    --strack-transform: calc(2.5 * var(--usin-scale));
 
     /* ==== mbar -> Media Bar ==== */
-    --mbar-tpadding: 1px;
-    --mbar-bpadding: 3px;
+    --mbar-tpadding: calc(1px * var(--usin-scale));
+    --mbar-bpadding: calc(3px * var(--usin-scale));
 
     /* ==== mbarbtn -> Media Bar Button ==== */
-    --mbarbtn-hmargin: 3px;
+    --mbarbtn-hmargin: calc(3px * var(--usin-scale));
     
     /* ==== pbrtbarbtn -> Playback Rate Bar Button ==== */
-    --pbrtbarbtn-vpadding: 10px;
+    --pbrtbarbtn-vpadding: calc(7px * var(--usin-scale));
 
     /* ==== mbaricon -> Media Bar Icon ==== */
-    --mbaricon-length: 40px;
+    --mbaricon-length: calc(40px * var(--usin-scale));
 
     /* ==== pbrtlabel -> Playback Rate Label ==== */
-    --pbrtlabel-fsize: 20px;
+    --pbrtlabel-height: calc(26px * var(--usin-scale));
+    --pbrtlabel-lheight: calc(26px * var(--usin-scale));
+    --pbrtlabel-width: calc(2.5ch * var(--usin-scale));
+    --pbrtlabel-fsize: calc(20px * var(--usin-scale));
     --pbrtlabel-fweight: 400;
 
-    /* ==== pbrtvaluelabel -> Playback Rate Value Label ==== */
-    --pbrtvaluelabel-width: 2.5ch;
-
     /* ==== vvosliderctr -> Video Volume Slider Container ==== */
-    --vvosliderctr-hpadding: 2px;
+    --vvosliderctr-hpadding: calc(2px * var(--usin-scale));
 
     /* ==== pbrtsliderctr -> Playback Rate Slider Container ==== */
-    --pbrtsliderctr-rpadding: 3px;
-    --pbrtsliderctr-lpadding: 7px;
+    --pbrtsliderctr-rpadding: calc(3px * var(--usin-scale));
+    --pbrtsliderctr-lpadding: calc(7px * var(--usin-scale));
 
     /* ==== mslider -> Media Slider ==== */
-    --mslider-height: 4px;
-    --mslider-vpadding: 18px;
+    --mslider-height: calc(4px * var(--usin-scale));
+    --mslider-vpadding: calc(18px * var(--usin-scale));
 
     /* ==== vvoslider -> Video Volume Slider ==== */
-    --vvoslider-width: 100px;
+    --vvoslider-width: calc(100px * var(--usin-scale));
 
     /* ==== pbrtslider -> Playback Rate Slider ==== */
-    --pbrtslider-width: 150px;
+    --pbrtslider-width: calc(150px * var(--usin-scale));
 
     /* ==== mtrack-> Media Track ==== */
-    --mtrack-bradius: 2px;
+    --mtrack-bradius: calc(2px * var(--usin-scale));
 
     /* ==== vvooverlay -> Video Volume Overlay ==== */
-    --vvooverlay-width: 100px;
+    --vvooverlay-width: calc(100px * var(--usin-scale));
 
     /* ==== pbrtoverlay -> Playback Rate Overlay ==== */
-    --pbrtoverlay-linset: -7px;
-    --pbrtoverlay-height: 20px;
-    --pbrtoverlay-width: 160px;
-    --pbrtoverlay-swidth: 1px;
+    --pbrtoverlay-linset: calc(-7px * var(--usin-scale));
+    --pbrtoverlay-height: calc(20px * var(--usin-scale));
+    --pbrtoverlay-width: calc(160px * var(--usin-scale));
+    --pbrtoverlay-swidth: calc(1px * var(--usin-scale));
 
     /* ==== pbrttext -> Playback Rate Text ==== */
-    --pbrttext-fsize: 10px;
+    --pbrttext-fsize: calc(10px * var(--usin-scale));
     --pbrttext-fweight: 100;
 
     /* ==== mthumb -> Media Thumb ==== */
-    --mthumb-tinset: -6px;
-    --mthumb-linset: -2px;
-    --mthumb-bradius: 2px;
-    --mthumb-height: 16px;
-    --mthumb-width: 4px;
+    --mthumb-tinset: calc(-6px * var(--usin-scale));
+    --mthumb-linset: calc(-2px * var(--usin-scale));
+    --mthumb-bradius: calc(2px * var(--usin-scale));
+    --mthumb-height: calc(16px * var(--usin-scale));
+    --mthumb-width: calc(4px * var(--usin-scale));
 
     /* ==== cuvlabel -> Current Video Label ==== */
-    --cuvlabel-fsize: 15px;
+    --cuvlabel-height: calc(20px * var(--usin-scale));
+    --cuvlabel-lheight: calc(20px * var(--usin-scale));
+    --cuvlabel-fsize: calc(15px * var(--usin-scale));
     --cuvlabel-fweight: 400;
 
     /* ==== cuvtimelabel -> Current Video Time Label ==== */
-    --cuvtimelabel-width: 7ch;
+    --cuvtimelabel-width: calc(7ch * var(--usin-scale));
+
+    /* ==== cuvdurlabel -> Current Video Duration Label ==== */
+    --cuvdurlabel-width: calc(8ch * var(--usin-scale));
 
     /* ==== tlslider -> Timeline Slider ==== */
-    --tlslider-bradius: 10px;
-    --tlslider-height: 60px;
-    --tlslider-width: 1100px;
+    --tlslider-bradius: calc(10px * var(--usin-scale));
+    --tlslider-height: calc(60px * var(--usin-scale));
+    --tlslider-width: calc(1100px * var(--usin-scale));
 
     /* ==== tloverlay -> Timeline Overlay ==== */
-    --tloverlay-swidth: 1px;
+    --tloverlay-swidth: calc(1px * var(--usin-scale));
 
     /* ==== tltext -> Timeline Text ==== */
-    --tltext-fsize: 12px;
+    --tltext-fsize: calc(12px * var(--usin-scale));
     --tltext-fweight: 10;
 
     /* ==== tlthumb -> Timeline Thumb ==== */
-    --tlthumb-tinset: -12px;
-    --tlthumb-linset: -2px;
-    --tlthumb-bradius: 3px;
-    --tlthumb-height: 84px;
-    --tlthumb-width: 4px;
+    --tlthumb-tinset: calc(-12px * var(--usin-scale));
+    --tlthumb-linset: calc(-2px * var(--usin-scale));
+    --tlthumb-bradius: calc(3px * var(--usin-scale));
+    --tlthumb-height: calc(84px * var(--usin-scale));
+    --tlthumb-width: calc(4px * var(--usin-scale));
 
     /* ==== cpthumb -> Clip Thumb ==== */
-    --cpthumb-tinset: -16px;
-    --cpthumb-linset: -4px;
-    --cpthumb-bradius: 3px;
-    --cpthumb-height: 92px;
-    --cpthumb-width: 8px;
+    --cpthumb-tinset: calc(-16px * var(--usin-scale));
+    --cpthumb-linset: calc(-4px * var(--usin-scale));
+    --cpthumb-bradius: calc(3px * var(--usin-scale));
+    --cpthumb-height: calc(92px * var(--usin-scale));
+    --cpthumb-width: calc(8px * var(--usin-scale));
 
     /* ==== cppath -> Clip Path ==== */
-    --cppath-swidth: 1px;
+    --cppath-swidth: calc(1px * var(--usin-scale));
 
     /* ==== cpctr -> Clip Container ==== */
-    --cpctr-bwidth: 1.5px;
-    --cpctr-bradius: 10px;
+    --cpctr-bwidth: calc(1.5px * var(--usin-scale));
+    --cpctr-bradius: calc(10px * var(--usin-scale));
 
     /* ==== cpicon -> Clip Icon ==== */
-    --cpicon-length: 45px;
-    --cpicon-rmargin: 10px;
-    --cpicon-lmargin: 8.5px;
+    --cpicon-length: calc(45px * var(--usin-scale));
+    --cpicon-rmargin: calc(10px * var(--usin-scale));
+    --cpicon-lmargin: calc(8.5px * var(--usin-scale));
 
     /* ==== cpbar -> Clip Bar ==== */
-    --cpbar-hgap: 30px;
-    --cpbar-vpadding: 3.5px;
-    --cpbar-width: 980px;
+    --cpbar-cgap: calc(20px * var(--usin-scale));
+    --cpbar-vpadding: calc(3.5px * var(--usin-scale));
+    --cpbar-width: calc(960px * var(--usin-scale));
 
     /* ==== cpstctr -> Clip Setting Container ==== */
-    --cpstctr-bwidth: 1.5px;
-    --cpstctr-bradius: 10px;
-    --cpstctr-vgap: 5px;
-    --cpstctr-vpadding: 8.5px;
-    --cpstctr-hpadding: 23.5px;
+    --cpstctr-bwidth: calc(1.5px * var(--usin-scale));
+    --cpstctr-bradius: calc(10px * var(--usin-scale));
+    --cpstctr-rgap: calc(5px * var(--usin-scale));
+    --cpstctr-vpadding: calc(8.5px * var(--usin-scale));
+    --cpstctr-hpadding: calc(23.5px * var(--usin-scale));
 
     /* ==== cpstlabel -> Clip Setting Label ==== */
-    --cpstlabel-fsize: 17px;
+    --cpstlabel-height: calc(22px * var(--usin-scale));
+    --cpstlabel-lheight: calc(22px * var(--usin-scale));
+    --cpstlabel-width: calc(120px * var(--usin-scale));
+    --cpstlabel-fsize: calc(17px * var(--usin-scale));
     --cpstlabel-fweight: 350;
 
     /* ==== cpstpill -> Clip Setting Pill ==== */
-    --cpstpill-bradius: 5px;
+    --cpstpill-bradius: calc(5px * var(--usin-scale));
 
     /* ==== cpsticon -> Clip Setting Icon ==== */
-    --cpsticon-length: 25px;
-    --cpsticon-margin: 5px;
+    --cpsticon-length: calc(25px * var(--usin-scale));
+    --cpsticon-margin: calc(5px * var(--usin-scale));
 
     /* ==== cpstfield -> Clip Setting Field ==== */
-    --cpstfield-hpadding: 10px;
-    --cpstfield-width: 65px;
+    --cpstfield-height: calc(35px * var(--usin-scale));
+    --cpstfield-lheight: calc(35px * var(--usin-scale));
+    --cpstfield-hpadding: calc(10px * var(--usin-scale));
+    --cpstfield-maxwidth: calc(75px * var(--usin-scale));
+    --cpstfield-fsize: calc(13px * var(--usin-scale));
+    --cpstfield-fweight: 400;
 
     /* ==== cpbarbtn -> Clip Bar Button ==== */
-    --cpbarbtn-bwidth: 1.5px;
-    --cpbarbtn-bradius: 10px;
-    --cpbarbtn-hgap: 10px;
-    --cpbarbtn-width: 150px;
-    --cpbarbtn-padding: 8.5px;
+    --cpbarbtn-bwidth: calc(1.5px * var(--usin-scale));
+    --cpbarbtn-bradius: calc(10px * var(--usin-scale));
+    --cpbarbtn-cgap: calc(12.5px * var(--usin-scale));
+    --cpbarbtn-width: calc(150px * var(--usin-scale));
+    --cpbarbtn-padding: calc(8.5px * var(--usin-scale));
 
     /* ==== cpbaricon -> Clip Bar Icon ==== */
-    --cpbaricon-length: 25px;
+    --cpbaricon-length: calc(25px * var(--usin-scale));
 
     /* ==== cpbarlabel -> Clip Bar Label ==== */
-    --cpbarlabel-fsize: 17px;
+    --cpbarlabel-height: calc(22px * var(--usin-scale));
+    --cpbarlabel-lheight: calc(22px * var(--usin-scale));
+    --cpbarlabel-maxwidth: calc(96px * var(--usin-scale));
+    --cpbarlabel-fsize: calc(17px * var(--usin-scale));
     --cpbarlabel-fweight: 350;
 
     /* ==== cptoggleicon -> Clip Toggle Icon ==== */
-    --cptoggleicon-length: 15px;
+    --cptoggleicon-length: calc(15px * var(--usin-scale));
 
     /* ==== gstgroupctr -> General Setting Group Container ==== */
-    --gstgroupctr-hgap: 30px;
+    --gstgroupctr-cgap: calc(30px * var(--usin-scale));
 
     /* ==== gstctr -> General Setting Container ==== */
-    --gstctr-bwidth: 1.5px;
-    --gstctr-bradius: 10px;
-    --gstctr-vgap: 5px;
-    --gstctr-vpadding: 8.5px;
-    --gstctr-hpadding: 23.5px;
+    --gstctr-bwidth: calc(1.5px * var(--usin-scale));
+    --gstctr-bradius: calc(10px * var(--usin-scale));
+    --gstctr-rgap: calc(5px * var(--usin-scale));
+    --gstctr-vpadding: calc(8.5px * var(--usin-scale));
+    --gstctr-hpadding: calc(23.5px * var(--usin-scale));
 
     /* ==== gstlabel -> General Setting Label ==== */
-    --gstlabel-fsize: 17px;
+    --gstlabel-height: calc(22px * var(--usin-scale));
+    --gstlabel-lheight: calc(22px * var(--usin-scale));
+    --gstlabel-maxwidth: calc(500px * var(--usin-scale));
+    --gstlabel-fsize: calc(17px * var(--usin-scale));
     --gstlabel-fweight: 350;
 
     /* ==== gstpill -> General Setting Pill ==== */
-    --gstpill-bradius: 10px;
+    --gstpill-bradius: calc(10px * var(--usin-scale));
 
     /* ==== gsticon -> General Setting Icon ==== */
-    --gsticon-length: 25px;
-    --gsticon-margin: 5px;
+    --gsticon-length: calc(25px * var(--usin-scale));
+    --gsticon-margin: calc(5px * var(--usin-scale));
 
     /* ==== gstfield -> General Setting Field ==== */
-    --gstfield-hpadding: 10px;
-    --gstfield-width: 110px;
-    --gstfield-alt-width: 500px;
-    --gstfield-alt2-width: 275px;
+    --gstfield-height: calc(35px * var(--usin-scale));
+    --gstfield-lheight: calc(35px * var(--usin-scale));
+    --gstfield-hpadding: calc(10px * var(--usin-scale));
+    --gstfield-width: calc(120px * var(--usin-scale));
+    --gstfield-alt-width: calc(500px * var(--usin-scale));
+    --gstfield-alt2-width: calc(275px * var(--usin-scale));
+    --gstfield-fsize: calc(13px * var(--usin-scale));
+    --gstfield-fweight: 400;
 
     /* ==== gsttoggleswitch -> General Setting Toggle Switch ==== */
-    --gsttoggleswitch-width: 66px;
+    --gsttoggleswitch-width: calc(66px * var(--usin-scale));
 
     /* ==== gsttogglefield -> General Setting Toggle Field ==== */
-    --gsttogglefield-hpadding: 10px;
-    --gsttogglefield-width: 110px;
+    --gsttogglefield-hpadding: calc(10px * var(--usin-scale));
+    --gsttogglefield-width: calc(110px * var(--usin-scale));
 
     /* ==== gsttoggleicon -> General Setting Toggle Icon ==== */
-    --gsttoggleicon-inset: 2px;
-    --gsttoggleicon-bradius: 7.5px;
-    --gsttoggleicon-height: 31px;
-    --gsttoggleicon-width: 31px;
-    --gsttoggleicon-translateX: 31px;
+    --gsttoggleicon-inset: calc(2px * var(--usin-scale));
+    --gsttoggleicon-bradius: calc(7.5px * var(--usin-scale));
+    --gsttoggleicon-height: calc(31px * var(--usin-scale));
+    --gsttoggleicon-width: calc(31px * var(--usin-scale));
+    --gsttoggleicon-translateX: calc(31px * var(--usin-scale));
 
     /* ==== prboard -> Programs Board ==== */
-    --prboard-gap: 5px;
-    --prboard-padding: 5px;
-    --prboard-width: 400px;
+    --prboard-gap: calc(5px * var(--usin-scale));
+    --prboard-padding: calc(5px * var(--usin-scale));
+    --prboard-width: calc(400px * var(--usin-scale));
 
     /* ==== gsttile -> General Setting Tile ==== */
-    --gsttile-bradius: 8px;
-    --gsttile-vpadding: 5px;
-    --gsttile-rpadding: 10px;
-    --gsttile-lpadding: 5px;
+    --gsttile-bradius: calc(8px * var(--usin-scale));
+    --gsttile-vpadding: calc(5px * var(--usin-scale));
+    --gsttile-rpadding: calc(10px * var(--usin-scale));
+    --gsttile-lpadding: calc(5px * var(--usin-scale));
 
     /* ==== gstdeleteicon -> General Setting Delete Icon ==== */
-    --gstdeleteicon-length: 20px;
+    --gstdeleteicon-length: calc(20px * var(--usin-scale));
 
     /* ==== gstprogramicon -> General Setting Program Icon ==== */
-    --gstprogramicon-length: 30px;
-    --gstprogramicon-rmargin: 5px;
-    --gstprogramicon-lmargin: 10px;
+    --gstprogramicon-length: calc(30px * var(--usin-scale));
+    --gstprogramicon-rmargin: calc(5px * var(--usin-scale));
+    --gstprogramicon-lmargin: calc(10px * var(--usin-scale));
 
     /* ==== gstprogramlabel -> General Setting Program Label ==== */
-    --gstprogramlabel-fsize: 15px;
+    --gstprogramlabel-height: calc(20px * var(--usin-scale));
+    --gstprogramlabel-lheight: calc(20px * var(--usin-scale));
+    --gstprogramlabel-maxwidth: calc(310px * var(--usin-scale));
+    --gstprogramlabel-fsize: calc(15px * var(--usin-scale));
     --gstprogramlabel-fweight: 400;
 
     /* ==== praddbtn -> Programs Add Button ==== */
-    --praddbtn-bradius: 8px;
-    --praddbtn-vpadding: 10px;
-    --praddbtn-hpadding: 40px;
+    --praddbtn-bradius: calc(8px * var(--usin-scale));
+    --praddbtn-vpadding: calc(10px * var(--usin-scale));
+    --praddbtn-hpadding: calc(40px * var(--usin-scale));
 
     /* ==== praddicon -> Programs Add Icon ==== */
-    --praddicon-length: 20px;
+    --praddicon-length: calc(20px * var(--usin-scale));
 
     /* ==== gstsliderctr -> General Setting Slider Container ==== */
-    --gstsliderctr-hmargin: 11.5px;
+    --gstsliderctr-hmargin: calc(11.5px * var(--usin-scale));
 
     /* ==== gstslider -> General Setting Slider ==== */
-    --gstslider-height: 4px;
-    --gstslider-vpadding: 15.5px;
-    --gstslider-width: 107px;
+    --gstslider-height: calc(4px * var(--usin-scale));
+    --gstslider-vpadding: calc(15.5px * var(--usin-scale));
+    --gstslider-width: calc(107px * var(--usin-scale));
 
     /* ==== gsttrack -> General Setting Track ==== */
-    --gsttrack-bradius: 2px;
+    --gsttrack-bradius: calc(2px * var(--usin-scale));
 
     /* ==== gstthumb -> General Setting Thumb ==== */
-    --gstthumb-tinset: -6px;
-    --gstthumb-linset: -2px;
-    --gstthumb-bradius: 2px;
-    --gstthumb-height: 16px;
-    --gstthumb-width: 4px;
+    --gstthumb-tinset: calc(-6px * var(--usin-scale));
+    --gstthumb-linset: calc(-2px * var(--usin-scale));
+    --gstthumb-bradius: calc(2px * var(--usin-scale));
+    --gstthumb-height: calc(16px * var(--usin-scale));
+    --gstthumb-width: calc(4px * var(--usin-scale));
 
     /* ==== gstdesc -> General Setting Description ==== */
-    --gstdesc-fsize: 11px;
+    --gstdesc-height: calc(14px * var(--usin-scale));
+    --gstdesc-lheight: calc(14px * var(--usin-scale));
+    --gstdesc-maxwidth: calc(500px * var(--usin-scale));
+    --gstdesc-fsize: calc(11px * var(--usin-scale));
     --gstdesc-fweight: 300;
 }

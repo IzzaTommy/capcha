@@ -124,14 +124,14 @@ function initGenEL() {
     });
 
     // on click, set the confirmation overlay state to inactive and reject the confirmation promise
-    confOvrl.addEventListener('click', () => {
+    confOvrl.addEventListener('mousedown', () => {
         setConfOvrlState(STATE.INACTIVE);
 
         rejConfProm();
     });
 
     // on click, prevent the click event from propagating to the confirmation overlay
-    confCtr.addEventListener('click', (ptr) => {
+    confCtr.addEventListener('mousedown', (ptr) => {
         ptr.stopPropagation();
     });
 

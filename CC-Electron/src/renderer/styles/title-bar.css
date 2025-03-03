@@ -7,12 +7,17 @@
 }
 
 #version-label-title {
-    flex: 0 0 fit-content;
+    flex: 0 1 fit-content;
+    height: var(--tversionlabel-height);
+    line-height: var(--tversionlabel-lheight);
     margin-left: var(--tversionlabel-lmargin);
+    overflow: hidden;
 
     color: var(--tversionlabel-color);
     font-size: var(--tversionlabel-fsize);
     font-weight: var(--tversionlabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .title-bar-btn {

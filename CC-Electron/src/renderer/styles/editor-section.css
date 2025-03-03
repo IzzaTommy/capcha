@@ -155,12 +155,19 @@
 }
 
 .playback-rate-label {
-    flex: 0 0 fit-content;
+    text-align: left;
+    flex: 0 0 auto;
+    height: var(--pbrtlabel-height);
+    line-height: var(--pbrtlabel-lheight);
+    overflow: hidden;
+    width: var(--pbrtlabel-width);
 
     color: var(--pbrtlabel-color);
     font-size: var(--pbrtlabel-fsize);
     font-weight: var(--pbrtlabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--pbrtlabel-transition);
+    white-space: nowrap;
 }
 
 #slider-ctr-playback-rate:hover + #bar-btn-playback-rate > .playback-rate-label {
@@ -172,7 +179,7 @@
 }
 
 #value-label-playback-rate {
-    width: var(--pbrtvaluelabel-width);
+    text-align: right;
 }
 
 .media-slider-ctr {
@@ -322,15 +329,26 @@
 }
 
 .current-video-label {
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--cuvlabel-height);
+    line-height: var(--cuvlabel-lheight);
+    overflow: hidden;
 
     color: var(--cuvlabel-color);
     font-size: var(--cuvlabel-fsize);
     font-weight: var(--cuvlabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #time-label-current-video {
+    text-align: right;
+    
     width: var(--cuvtimelabel-width);
+}
+
+#duration-label-current-video {
+    width: var(--cuvdurlabel-width);
 }
 
 #slider-timeline {
@@ -434,7 +452,7 @@
     display: flex;
     flex: 0 0 auto;
     flex-flow: row nowrap;
-    gap: var(--cpbar-hgap);
+    column-gap: var(--cpbar-cgap);
     padding-top: var(--cpbar-vpadding);
     padding-bottom: var(--cpbar-vpadding);
     width: 0;
@@ -452,7 +470,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--cpstctr-vgap);
+    row-gap: var(--cpstctr-rgap);
     padding: var(--cpstctr-vpadding) var(--cpstctr-hpadding);
 
     opacity: 0;
@@ -474,12 +492,18 @@
 }
 
 .clip-setting-label {
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--cpstlabel-height);
+    line-height: var(--cpstlabel-lheight);
+    overflow: hidden;
+    width: var(--cpstlabel-width);
 
     color: var(--cpstlabel-color);
     font-size: var(--cpstlabel-fsize);
     font-weight: var(--cpstlabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--cpstlabel-transition);
+    white-space: nowrap;
 }
 
 .clip-setting-ctr:hover > .clip-setting-label {
@@ -514,13 +538,17 @@
     border-top-right-radius: inherit;
     border-bottom-right-radius: inherit;
     box-sizing: content-box;
-    flex: 0 0 auto;
+    flex: 0 0 fit-content;
+    height: var(--cpstfield-height);
+    line-height: var(--cpstfield-lheight);
     padding-right: var(--cpstfield-hpadding);
     padding-left: var(--cpstfield-hpadding);
-    width: var(--cpstfield-width);
+    max-width: var(--cpstfield-maxwidth);
 
     background-color: var(--cpstfield-bgcolor);
     color: var(--cpstfield-color);
+    font-size: var(--cpstfield-fsize);
+    font-weight: var(--cpstfield-fweight);
     transition: var(--cpstfield-transition);
 
     cursor: pointer;
@@ -542,7 +570,7 @@
     display: flex;
     flex: 0 0 auto;
     flex-flow: row nowrap;
-    gap: var(--cpbarbtn-hgap);
+    column-gap: var(--cpbarbtn-cgap);
     width: var(--cpbarbtn-width);
     padding: var(--cpbarbtn-padding);
 
@@ -601,12 +629,20 @@
 }
 
 .clip-bar-label {
-    flex: 0 0 fit-content;
+    text-align: center;
+
+    flex: 0 0 auto;
+    height: var(--cpbarlabel-height);
+    line-height: var(--cpbarlabel-lheight);
+    overflow: hidden;
+    max-width: var(--cpbarlabel-maxwidth);
 
     color: var(--cpbarlabel-color);
     font-size: var(--cpbarlabel-fsize);
     font-weight: var(--cpbarlabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--cpbarlabel-transition);
+    white-space: nowrap;
 }
 
 .clip-bar-btn:hover > .clip-bar-label {

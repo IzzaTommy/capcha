@@ -1,8 +1,12 @@
+.settings-label2 {
+    flex: 0 0 auto;
+}
+
 .general-setting-group-ctr {
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: row nowrap;
-    gap: var(--gstgroupctr-hgap);
+    column-gap: var(--gstgroupctr-cgap);
 }
 
 .general-setting-ctr {
@@ -14,7 +18,7 @@
     display: flex;
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
-    gap: var(--gstctr-vgap);
+    row-gap: var(--gstctr-rgap);
     padding: var(--gstctr-vpadding) var(--gstctr-hpadding);
 
     transition: var(--gstctr-transition);
@@ -26,12 +30,18 @@
 }
 
 .general-setting-label {
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--gstlabel-height);
+    line-height: var(--gstlabel-lheight);
+    overflow: hidden;
+    max-width: var(--gstlabel-maxwidth);
 
     color: var(--gstlabel-color);
     font-size: var(--gstlabel-fsize);
     font-weight: var(--gstlabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--gstlabel-transition);
+    white-space: nowrap;
 }
 
 .general-setting-ctr:hover > .general-setting-label/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-label*/ {
@@ -69,12 +79,16 @@
     border-bottom-right-radius: inherit;
     box-sizing: content-box;
     flex: 0 0 auto;
+    height: var(--gstfield-height);
+    line-height: var(--gstfield-lheight);
     padding-right: var(--gstfield-hpadding);
     padding-left: var(--gstfield-hpadding);
     width: var(--gstfield-width);
 
     background-color: var(--gstfield-bgcolor);
     color: var(--gstfield-color);
+    font-size: var(--gstfield-fsize);
+    font-weight: var(--gstfield-fweight);
     transition: var(--gstfield-transition);
 
     cursor: pointer;
@@ -218,18 +232,24 @@
     flex: 0 0 auto;
 
     height: var(--gstprogramicon-length);
-    width: var(--gstprogramicon-length);
     margin-right: var(--gstprogramicon-rmargin);
     margin-left: var(--gstprogramicon-lmargin);
+    width: var(--gstprogramicon-length);
 }
 
 .general-setting-program-label {
     flex: 0 0 fit-content;
+    height: var(--gstprogramlabel-height);
+    line-height: var(--gstprogramlabel-lheight);
+    overflow: hidden;
+    max-width: var(--gstprogramlabel-maxwidth);
 
     color: var(--gstprogramlabel-color);
     font-size: var(--gstprogramlabel-fsize);
     font-weight: var(--gstprogramlabel-fweight);
+    text-overflow: ellipsis;
     transition: var(--gstprogramlabel-transition);
+    white-space: nowrap;
 }
 
 .general-setting-tile:hover > .general-setting-program-label {
@@ -318,12 +338,18 @@
 }
 
 .general-setting-description {
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
+    height: var(--gstdesc-height);
+    line-height: var(--gstdesc-lheight);
+    overflow: hidden;
+    max-width: var(--gstdesc-maxwidth);
 
     color: var(--gstdesc-color);
     font-size: var(--gstdesc-fsize);
     font-weight: var(--gstdesc-fweight);
+    text-overflow: ellipsis;
     transition: var(--gstdesc-transition);
+    white-space: nowrap;
 }
 
 .general-setting-ctr:hover > .general-setting-description/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-description*/ {

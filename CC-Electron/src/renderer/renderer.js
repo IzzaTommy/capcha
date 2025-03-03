@@ -50,7 +50,8 @@ function initVars() {
  * Initializes the general components and title bar
  */
 function init() {
-    // initialize the general components
+    // initialize and indicate to the user the general components are being loaded
+    // setInitStatLabelText('Loading...');
     initRendGen();
 
     // initialize the title bar
