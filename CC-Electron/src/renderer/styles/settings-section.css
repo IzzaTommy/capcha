@@ -128,6 +128,10 @@
     background-color: var(--gsttoggleswitch-alt-bgcolor);
 }
 
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch:has(.general-setting-toggle-field:checked) {
+    background-color: var(--gsttoggleswitch-alt2-bgcolor);
+}
+
 .general-setting-toggle-field {
     padding-right: var(--gsttogglefield-hpadding);
     padding-left: var(--gsttogglefield-hpadding);
@@ -157,6 +161,10 @@
 
 .general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-icon {
     background-color: var(--gsttoggleicon-alt-bgcolor);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-field:checked + .general-setting-toggle-icon {
+    fill: var(--gsttoggleicon-alt2-fill);
 }
 
 #board-programs {

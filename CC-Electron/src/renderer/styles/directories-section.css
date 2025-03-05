@@ -17,7 +17,7 @@
     flex: 0 0 fit-content;
     flex-flow: column nowrap;
     row-gap: var(--sgctr-rgap);
-    opacity: 1;
+    opacity: 0;
     transition: var(--sgctr-transition);
 }
 
@@ -63,6 +63,7 @@
 }
 
 .directory-bar {
+    border: var(--dbar-bwidth) solid var(--dbar-bcolor);
     border-radius: var(--dbar-bradius);
     display: flex;
     flex: 0 0 fit-content;

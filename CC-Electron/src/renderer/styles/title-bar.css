@@ -46,3 +46,7 @@
 
     fill: var(--tbaricon-fill);
 }
+
+.title-bar-btn:hover > .title-bar-icon {
+    fill: var(--tbaricon-alt-fill);
+}

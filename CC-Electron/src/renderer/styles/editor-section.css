@@ -538,12 +538,12 @@
     border-top-right-radius: inherit;
     border-bottom-right-radius: inherit;
     box-sizing: content-box;
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
     height: var(--cpstfield-height);
     line-height: var(--cpstfield-lheight);
     padding-right: var(--cpstfield-hpadding);
     padding-left: var(--cpstfield-hpadding);
-    max-width: var(--cpstfield-maxwidth);
+    width: var(--cpstfield-width);
 
     background-color: var(--cpstfield-bgcolor);
     color: var(--cpstfield-color);

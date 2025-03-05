@@ -263,15 +263,14 @@
     bottom: var(--curlabelctr-alt-binset);
 }
 
-.current-recording-label {
-    flex: 0 0 fit-content;
-}
-
 #time-label-current-recording {
+    text-align: center;
+
+    flex: 0 0 auto;
     height: var(--curtimelabel-height);
     line-height: var(--curtimelabel-lheight);
     overflow: hidden;
-    max-width: var(--curtimelabel-maxwidth);
+    width: var(--curtimelabel-width);
     
     color: var(--curtimelabel-color);
     font-size: var(--curtimelabel-fsize);
@@ -281,6 +280,7 @@
 }
 
 #program-label-current-recording {
+    flex: 0 0 fit-content;
     height: var(--curprogramlabel-height);
     line-height: var(--curprogramlabel-lheight);
     margin: auto;

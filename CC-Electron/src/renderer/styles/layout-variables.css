@@ -66,9 +66,9 @@ html {
     --cfbtn-height: calc(16px * var(--usin-scale));
     --cfbtn-lheight: calc(16px * var(--usin-scale));
     --cfbtn-padding: calc(10.5px * var(--usin-scale));
-    --cfbtn-width: calc(125px * var(--usin-scale));
+    --cfbtn-width: calc(104px * var(--usin-scale));
     --cfbtn-fsize: calc(12px * var(--usin-scale));
-    --cfbtn-fweight: 300;
+    --cfbtn-fweight: 400;
 
     /* ==== cblock -> Content Block ==== */
     --cblock-tlbradius: calc(10px * var(--usin-scale));
@@ -204,7 +204,7 @@ html {
     /* ==== curtimelabel -> Current Recording Time Label ==== */
     --curtimelabel-height: calc(14px * var(--usin-scale));
     --curtimelabel-lheight: calc(14px * var(--usin-scale));
-    --curtimelabel-maxwidth: calc(43px * var(--usin-scale));
+    --curtimelabel-width: calc(43px * var(--usin-scale));
     --curtimelabel-fsize: calc(10.75px * var(--usin-scale));
     --curtimelabel-fweight: 300;
 
@@ -243,9 +243,10 @@ html {
     --dlabel3-fweight: 350;
 
     /* ==== dbar -> Directory Bar ==== */
+    --dbar-bwidth: calc(1.5px * var(--usin-scale));
     --dbar-bradius: calc(10px * var(--usin-scale));
     --dbar-cgap: calc(5px * var(--usin-scale));
-    --dbar-padding: calc(5px * var(--usin-scale));
+    --dbar-padding: calc(3.5px * var(--usin-scale));
 
     /* ==== dstfield -> Directory Setting Field ==== */
     --dstfield-bradius: calc(5px * var(--usin-scale));
@@ -494,7 +495,7 @@ html {
     --cpstfield-height: calc(35px * var(--usin-scale));
     --cpstfield-lheight: calc(35px * var(--usin-scale));
     --cpstfield-hpadding: calc(10px * var(--usin-scale));
-    --cpstfield-maxwidth: calc(75px * var(--usin-scale));
+    --cpstfield-width: calc(75px * var(--usin-scale));
     --cpstfield-fsize: calc(13px * var(--usin-scale));
     --cpstfield-fweight: 400;
 
