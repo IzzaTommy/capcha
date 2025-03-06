@@ -6,7 +6,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, getStyle, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
 import { setEditProgLabelText, setVideoFrameLen, setVideoPlrSrc } from './rendererEditorSection.js';
 import { getStg, setStg } from './rendererSettingsSection.js';
 
@@ -71,7 +71,7 @@ export function initRendDirsSectVars() {
 
     // video preview container template and width
     videoPrvwCtrTmpl = document.getElementById('template-video-preview-ctr');
-    videoPrvwCtrWidth = getStyle('--vtnimage-height') * 16 / 9 + 2 * getStyle('--vpctr-padding');
+    videoPrvwCtrWidth = parseInt(window.getComputedStyle(videoPrvwCtrTmpl).getPropertyValue('height')) * 16 / 9 + 2 * parseInt(window.getComputedStyle(videoPrvwCtrTmpl).getPropertyValue('padding'));
 
     // captures left and right button, gallery, and status label
     capsLeftBtn = document.getElementById('left-btn-captures');

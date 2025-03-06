@@ -171,6 +171,99 @@ body {
     white-space: nowrap;
 }
 
+#loading-icon-confirmation {
+    display: none;
+    flex: 0 0 auto;
+    height: var(--cfloadingicon-length);
+    width: var(--cfloadingicon-length);
+    margin-right: var(--cfloadingicon-hmargin);
+    margin-left: var(--cfloadingicon-hmargin);
+
+    clip-path: var(--cfloadingicon-cpath);
+}
+
+#loading-icon-confirmation.active {
+    display: block;
+
+    animation: var(--cfloadingicon-anim);
+}
+
+#primary-path-confirmation {
+	fill: var(--cfprimarypath-fill);
+    stroke: var(--cfprimarypath-stroke);
+}
+
+#secondary-path-confirmation {
+    fill: var(--cfsecondarypath-fill);
+	rotate: var(--cfsecondarypath-rotate);
+    stroke: var(--cfsecondarypath-stroke);
+}
+
+#tertiary-path-confirmation {
+    fill: var(--cftertiarypath-fill);
+	rotate: var(--cftertiarypath-rotate);
+    stroke: var(--cftertiarypath-stroke);
+}
+
+#fourth-path-confirmation {
+    fill: var(--cffourthpath-fill);
+	rotate: var(--cffourthpath-rotate);
+    stroke: var(--cffourthpath-stroke);
+}
+
+#fifth-path-confirmation {
+    fill: var(--cffifthpath-fill);
+	rotate: var(--cffifthpath-rotate);
+    stroke: var(--cffifthpath-stroke);
+}
+
+#sixth-path-confirmation {
+    fill: var(--cfsixthpath-fill);
+	rotate: var(--cfsixthpath-rotate);
+    stroke: var(--cfsixthpath-stroke);
+}
+
+#seventh-path-confirmation {
+    fill: var(--cfseventhpath-fill);
+	rotate: var(--cfseventhpath-rotate);
+    stroke: var(--cfseventhpath-stroke);
+}
+
+#eighth-path-confirmation {
+    fill: var(--cfeighthpath-fill);
+	rotate: var(--cfeighthpath-rotate);
+    stroke: var(--cfeighthpath-stroke);
+}
+
+#ninth-path-confirmation {
+    fill: var(--cfninthpath-fill);
+	rotate: var(--cfninthpath-rotate);
+    stroke: var(--cfninthpath-stroke);
+}
+
+#tenth-path-confirmation {
+    fill: var(--cftenthpath-fill);
+	rotate: var(--cftenthpath-rotate);
+    stroke: var(--cftenthpath-stroke);
+}
+
+#eleventh-path-confirmation {
+    fill: var(--cfeleventhpath-fill);
+	rotate: var(--cfeleventhpath-rotate);
+    stroke: var(--cfeleventhpath-stroke);
+}
+
+#twelfth-path-confirmation {
+    fill: var(--cftwelfthpath-fill);
+	rotate: var(--cftwelfthpath-rotate);
+    stroke: var(--cftwelfthpath-stroke);
+}
+
+#thirteenth-path-confirmation {
+	fill: var(--cfthirteenthpath-fill);
+    stroke: var(--cfthirteenthpath-stroke);
+}
+
 #field-ctr-confirmation {
     display: none;
     flex: 0 0 fit-content;
@@ -225,6 +318,7 @@ body {
 .confirmation-btn {
     border-radius: var(--cfbtn-bradius);
     box-sizing: content-box;
+    display: none;
     flex: 0 0 auto;
     height: var(--cfbtn-height);
     line-height: var(--cfbtn-lheight);
@@ -246,6 +340,10 @@ body {
     color: var(--cfbtn-alt-color);
 }
 
+.confirmation-btn.active {
+    display: block;
+}
+
 #cancel-btn-confirmation {
     background-color: var(--cfcancelbtn-bgcolor);
 }
@@ -255,8 +353,6 @@ body {
 }
 
 #confirm-btn-confirmation {
-    display: none;
-
     background-color: var(--cfconfirmbtn-bgcolor);
 }
 
@@ -264,13 +360,7 @@ body {
     background-color: var(--cfconfirmbtn-alt-bgcolor);
 }
 
-#confirm-btn-confirmation.active {
-    display: block;
-}
-
 #rename-btn-confirmation {
-    display: none;
-
     background-color: var(--cfrenamebtn-bgcolor);
 }
 
@@ -278,22 +368,12 @@ body {
     background-color: var(--cfrenamebtn-alt-bgcolor);
 }
 
-#rename-btn-confirmation.active {
-    display: block;
-}
-
 #delete-btn-confirmation {
-    display: none;
-
     background-color: var(--cfdeletebtn-bgcolor);
 }
 
 #delete-btn-confirmation:hover {
     background-color: var(--cfdeletebtn-alt-bgcolor);
-}
-
-#delete-btn-confirmation.active {
-    display: block;
 }
 
 #block-content {

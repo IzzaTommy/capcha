@@ -47,8 +47,7 @@ export const ASYNC_ATTEMPTS = 3;
 export const ASYNC_DELAY_IN_MSECONDS = 3000;
 
 // general variables
-let style, 
-initOvrl, initStatLabel, 
+let initOvrl, initStatLabel, 
 confOvrl, confCtr, confLabel, confFldCtr, confNameFld, confFormatFld, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
 contStatLabel, 
 dirsSect, editSect, stgsSect;
@@ -60,9 +59,6 @@ let contStatLabelTmoId;
  * Initializes the general variables
  */
 export function initRendGenVars() {
-    // style
-    style = getComputedStyle(document.documentElement);
-
     // initialization overlay and status label
     initOvrl = document.getElementById('overlay-initialization');
     initStatLabel = document.getElementById('status-label-initialization');
@@ -179,16 +175,6 @@ function initGenIPC() {
 }
 
 /**
- * Gets the CSS style
- * 
- * @param {string} styleName - The name of the style
- * @returns {number} - The number value of the style
- */
-export function getStyle(styleName) {
-    return parseInt(style.getPropertyValue(styleName));
-}
-
-/**
  * Sets the initialization overlay state
  * 
  * @param {number} state - The new state of the initialization overlay
@@ -230,6 +216,7 @@ export function setConfCtrState(state, videoName, videoExt) {
             confFldCtr.classList.remove('active');
 
             // show the correct confirmation button
+            confCancelBtn.classList.add('active');
             confConfBtn.classList.add('active');
             confRenBtn.classList.remove('active');
             confDelBtn.classList.remove('active');
@@ -248,6 +235,7 @@ export function setConfCtrState(state, videoName, videoExt) {
             confFormatFld.value = `.${videoExt}`
 
             // show the correct confirmation button
+            confCancelBtn.classList.add('active');
             confConfBtn.classList.remove('active');
             confRenBtn.classList.add('active');
             confDelBtn.classList.remove('active');
@@ -262,6 +250,7 @@ export function setConfCtrState(state, videoName, videoExt) {
             confFldCtr.classList.remove('active');
 
             // show the correct confirmation button
+            confCancelBtn.classList.add('active');
             confConfBtn.classList.remove('active');
             confRenBtn.classList.remove('active');
             confDelBtn.classList.add('active');

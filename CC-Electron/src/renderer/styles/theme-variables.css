@@ -3,6 +3,15 @@
     src: url("../../assets/font/Lexend/Lexend-VariableFont_wght.ttf");
 }
 
+@keyframes full-rotation {
+    0% { 
+        transform: rotate(0deg); 
+    }
+    100% { 
+        transform: rotate(360deg); 
+    }
+}
+
 * {
     font-family: "Lexend", sans-serif;
     font-optical-sizing: auto;
@@ -61,11 +70,21 @@ html {
     --gray-90: #5a5a5a;
     --gray-100: #707070;
     --gray-110: #747474;
+    --gray-113: #787878;
+    --gray-116: #818181;
     --gray-120: #888888;
+    --gray-125: #898989;
     --gray-130: #8e8e8e;
+    --gray-132: #919191;
+    --gray-134: #9A9A9A;
+    --gray-136: #A2A2A2;
+    --gray-138: #ABABAB;
     --gray-140: #a4a4a4;
     --gray-150: #aaaaaa;
+    --gray-153: #B3B3B3;
+    --gray-156: #BBBBBB;
     --gray-160: #c3c3c3;
+    --gray-165: #C4C4C4;
     --gray-170: #c9c9c9;
     --gray-180: #cccccc;
     --gray-190: #d0d0d0;
@@ -90,6 +109,54 @@ html {
     /* ==== cfoverlay -> Confirmation Overlay ==== */
     --cfoverlay-bgcolor: var(--black-a10);
 
+    /* ==== cfprimarypath -> Confirmation Primary Path ==== */
+    --cfprimarypath-fill: var(--gray-100);
+    --cfprimarypath-stroke: var(--gray-100);
+
+    /* ==== cfsecondarypath -> Confirmation Secondary Path ==== */
+    --cfsecondarypath-fill: var(--gray-113);
+    --cfsecondarypath-stroke: var(--gray-113);
+
+    /* ==== cftertiarypath -> Confirmation Tertiary Path ==== */
+    --cftertiarypath-fill: var(--gray-116);
+    --cftertiarypath-stroke: var(--gray-116);
+
+    /* ==== cffourthpath -> Confirmation Fourth Path ==== */
+    --cffourthpath-fill: var(--gray-125);
+    --cffourthpath-stroke: var(--gray-125);
+
+    /* ==== cffifthpath -> Confirmation Fifth Path ==== */
+    --cffifthpath-fill: var(--gray-132);
+    --cffifthpath-stroke: var(--gray-132);
+
+    /* ==== cfsixthpath -> Confirmation Sixth Path ==== */
+    --cfsixthpath-fill: var(--gray-134);
+    --cfsixthpath-stroke: var(--gray-134);
+
+    /* ==== cfseventhpath -> Confirmation Seventh Path ==== */
+    --cfseventhpath-fill: var(--gray-136);
+    --cfseventhpath-stroke: var(--gray-136);
+
+    /* ==== cfeighthpath -> Confirmation Eighth Path ==== */
+    --cfeighthpath-fill: var(--gray-138);
+    --cfeighthpath-stroke: var(--gray-138);
+
+    /* ==== cfninthpath -> Confirmation Ninth Path ==== */
+    --cfninthpath-fill: var(--gray-153);
+    --cfninthpath-stroke: var(--gray-153);
+
+    /* ==== cftenthpath -> Confirmation Tenth Path ==== */
+    --cftenthpath-fill: var(--gray-156);
+    --cftenthpath-stroke: var(--gray-156);
+
+    /* ==== cfeleventhpath -> Confirmation Eleventh Path ==== */
+    --cfeleventhpath-fill: var(--gray-165);
+    --cfeleventhpath-stroke: var(--gray-165);
+
+    /* ==== cftwelfthpath -> Confirmation Twelfth Path ==== */
+    --cftwelfthpath-fill: var(--gray-180);
+    --cftwelfthpath-stroke: var(--gray-180);
+    
     /* ==== cfconfirmbtn -> Confirmation Confirm Button ==== */
     --cfconfirmbtn-bgcolor: var(--blue-40);
     --cfconfirmbtn-alt-bgcolor: var(--blue-30);
@@ -242,6 +309,9 @@ html[data-theme="dark"] {
 
     /* ==== cflabel -> Confirmation Label ==== */
     --cflabel-color: var(--gray-220);
+
+    /* ==== cfthirteenthpath -> Confirmation Thirteenth Path ==== */
+    --cfthirteenthpath-fill: var(--gray-40);
 
     /* ==== cffield -> Confirmation Field ==== */
     --cffield-color: var(--gray-220);
@@ -592,6 +662,9 @@ html[data-theme="light"] {
     /* ==== cflabel -> Confirmation Label ==== */
     --cflabel-color: var(--gray-20);
 
+    /* ==== cfthirteenthpath -> Confirmation Thirteenth Path ==== */
+    --cfthirteenthpath-fill: var(--gray-230);
+
     /* ==== cffield -> Confirmation Field ==== */
     --cffield-color: var(--gray-20);
 
@@ -914,6 +987,7 @@ html[data-theme="light"] {
     --gstdesc-alt-color: var(--black);
 }
 
+/* transitions and animations*/
 html {
     /* default transition times */
     --def-time-2000: 0.2s;
@@ -925,6 +999,9 @@ html {
 
     /* ==== ioverlay -> Initialization Overlay ==== */
     --ioverlay-transition: opacity var(--def-time-5000);
+
+    /* ==== cfloadingicon -> Confirmation Loading Icon ==== */
+    --cfloadingicon-anim: full-rotation 1s linear infinite;
 
     /* ==== cfnamefield -> Confirmation Name Field ==== */
     --cfnamefield-transition: color var(--def-time-3000);

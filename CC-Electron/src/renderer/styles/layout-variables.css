@@ -1,5 +1,5 @@
 html {
-    --usin-scale: 0.5;
+    /* --usin-scale: 0.5; */
     /* --usin-scale: 2; */
     --usin-scale: 1;
     --effect-scale: 0.5;
@@ -40,6 +40,44 @@ html {
     --cflabel-maxwidth: calc(260px * var(--usin-scale));
     --cflabel-fsize: calc(30px * var(--usin-scale));
     --cflabel-fweight: 400;
+
+    /* ==== cfloadingicon -> Confirmation Loading Icon ==== */
+    --cfloadingicon-length: 100px;
+    --cfloadingicon-hmargin: 80px;
+    --cfloadingicon-cpath: circle(25%);
+
+    /* ==== cfsecondarypath -> Confirmation Secondary Path ==== */
+    --cfsecondarypath-rotate: 30deg;
+
+    /* ==== cftertiarypath -> Confirmation Tertiary Path ==== */
+    --cftertiarypath-rotate: 60deg;
+
+    /* ==== cffourthpath -> Confirmation Fourth Path ==== */
+    --cffourthpath-rotate: 90deg;
+
+    /* ==== cffifthpath -> Confirmation Fifth Path ==== */
+    --cffifthpath-rotate: 120deg;
+
+    /* ==== cfsixthpath -> Confirmation Sixth Path ==== */
+    --cfsixthpath-rotate: 150deg;
+
+    /* ==== cfseventhpath -> Confirmation Seventh Path ==== */
+    --cfseventhpath-rotate: 180deg;
+
+    /* ==== cfeighthpath -> Confirmation Eighth Path ==== */
+    --cfeighthpath-rotate: 210deg;
+
+    /* ==== cfninthpath -> Confirmation Ninth Path ==== */
+    --cfninthpath-rotate: 240deg;
+
+    /* ==== cftenthpath -> Confirmation Tenth Path ==== */
+    --cftenthpath-rotate: 270deg;
+
+    /* ==== cfeleventhpath -> Confirmation Eleventh Path ==== */
+    --cfeleventhpath-rotate: 300deg;
+
+    /* ==== cftwelfthpath -> Confirmation Twelfth Path ==== */
+    --cftwelfthpath-rotate: 330deg;
 
     /* ==== cffield -> Confirmation Field ==== */
     --cffield-bradius: calc(10px * var(--usin-scale));
@@ -388,9 +426,11 @@ html {
 
     /* ==== vvoslider -> Video Volume Slider ==== */
     --vvoslider-width: calc(100px * var(--usin-scale));
+    --vvoslider-maxwidth: calc(100px * var(--usin-scale));
 
     /* ==== pbrtslider -> Playback Rate Slider ==== */
     --pbrtslider-width: calc(150px * var(--usin-scale));
+    --pbrtslider-maxwidth: calc(150px * var(--usin-scale));
 
     /* ==== mtrack-> Media Track ==== */
     --mtrack-bradius: calc(2px * var(--usin-scale));

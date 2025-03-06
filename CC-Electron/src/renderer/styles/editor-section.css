@@ -211,6 +211,14 @@
     transition: var(--mslider-transition);
 }
 
+#slider-video-volume {
+    max-width: var(--vvoslider-maxwidth);
+}
+
+#slider-playback-rate {
+    max-width: var(--pbrtslider-maxwidth);
+}
+
 #slider-video-volume.active {
     width: var(--vvoslider-width);
 }

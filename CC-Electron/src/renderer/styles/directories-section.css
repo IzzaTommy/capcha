@@ -1,3 +1,8 @@
+#template-video-preview-ctr {
+    height: var(--vtnimage-height);
+    padding: var(--vpctr-padding);
+}
+
 .directories-label2 {
     flex: 0 1 fit-content;
 
@@ -253,6 +258,8 @@
 
     background-color: var(--vtnimage-bgcolor);
     object-fit: contain;
+
+    -webkit-user-drag: none;
 }
 
 .video-thumbnail-duration-label {

@@ -5,7 +5,7 @@
  * @requires rendererGeneral
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, getStyle, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
 import { SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, getStgVolSldrBox, getIsStgVolSldrCtrHover, getIsStgVolSldrDrag, setIsStgVolSldrDrag, pseudoSetStgVol, setStgVol, setStgVolSldr, getStg, setStg } from './rendererSettingsSection.js';
 
 // editor section constants
@@ -60,8 +60,8 @@ const CLIP_LENGTH_MIN = 5;
 let editProgLabel, 
 videoCtr, videoPlr, playPauseStatIcon, 
 plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
-mediaBar, playPauseBarBtn, playPauseBarIcon, videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrWidth, videoVolOvrl, videoVolThumb, 
-curVideoTimeLabel, curVideoDurLabel, plbkRateSldrCtr, plbkRateSldr, plbkRateSldrWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, fscBarBtn, fscBarIcon, 
+mediaBar, playPauseBarBtn, playPauseBarIcon, videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrMaxWidth, videoVolOvrl, videoVolThumb, 
+curVideoTimeLabel, curVideoDurLabel, plbkRateSldrCtr, plbkRateSldr, plbkRateSldrMaxWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, fscBarBtn, fscBarIcon, 
 tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
 clipBar, viewBarBtn, createBarBtn, clipTogBtn, clipTogIcon;
 
@@ -102,7 +102,7 @@ export function initRendEditSectVars() {
     videoVolBarIcon = videoVolBarBtn.querySelector('#bar-icon-video-volume > use');
     videoVolSldrCtr = document.getElementById('slider-ctr-video-volume');
     videoVolSldr = document.getElementById('slider-video-volume');
-    videoVolSldrWidth = getStyle('--vvoslider-width');
+    videoVolSldrMaxWidth = parseInt(window.getComputedStyle(videoVolSldr).getPropertyValue('max-width'));
     videoVolOvrl = document.getElementById('overlay-video-volume');
     videoVolThumb = document.getElementById('thumb-video-volume');
 
@@ -111,7 +111,7 @@ export function initRendEditSectVars() {
     curVideoDurLabel = document.getElementById('duration-label-current-video');
     plbkRateSldrCtr = document.getElementById('slider-ctr-playback-rate');
     plbkRateSldr = document.getElementById('slider-playback-rate');
-    plbkRateSldrWidth = getStyle('--pbrtslider-width');
+    plbkRateSldrMaxWidth = parseInt(window.getComputedStyle(plbkRateSldr).getPropertyValue('max-width'));
     plbkRateThumb = document.getElementById('thumb-playback-rate');
     plbkRateBarBtn = document.getElementById('bar-btn-playback-rate');
     plbkRateValueLabel = document.getElementById('value-label-playback-rate');
@@ -1472,7 +1472,7 @@ function setVideoVolBarBtnSldr() {
         }
 
         // set the volume thumb and overlay
-        setVideoVolThumb(videoPlr.volume * videoVolSldrWidth);
+        setVideoVolThumb(videoPlr.volume * videoVolSldrMaxWidth);
         setVideoVolOvrl(videoPlr.volume * 100);
     }
 }
@@ -1501,8 +1501,8 @@ function setVideoVolThumb(thumbLoc) {
 export function setVideoVolSldrBox() {
     // get the new modifiable volume slider bounding box
     videoVolSldrBox = getModBox(videoVolSldr.getBoundingClientRect());
-    videoVolSldrBox['right'] = videoVolSldrBox['left'] + videoVolSldrWidth;
-    videoVolSldrBox['width'] = videoVolSldrWidth;
+    videoVolSldrBox['right'] = videoVolSldrBox['left'] + videoVolSldrMaxWidth;
+    videoVolSldrBox['width'] = videoVolSldrMaxWidth;
 }
 
 /**
@@ -1524,7 +1524,7 @@ function setPlbkRate(value) {
 function setPlbkRateBarBtnSldr() {
     // set the playback rate value label and playback rate thumb
     plbkRateValueLabel.textContent = videoPlr.playbackRate;
-    setPlbkRateThumb(plbkRateSldrWidth / 6 * (PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + 2));
+    setPlbkRateThumb(plbkRateSldrMaxWidth / 6 * (PLAYBACK_RATE_MAPPING[videoPlr.playbackRate] + 2));
 }
 
 /**
@@ -1542,8 +1542,8 @@ function setPlbkRateThumb(thumbLoc) {
 export function setPlbkRateSldrBox() {
     // get the new modifiable playback rate slider bounding box
     plbkRateSldrBox = getModBox(plbkRateSldr.getBoundingClientRect());
-    plbkRateSldrBox['left'] = plbkRateSldrBox['right'] - plbkRateSldrWidth;
-    plbkRateSldrBox['width'] = plbkRateSldrWidth;
+    plbkRateSldrBox['left'] = plbkRateSldrBox['right'] - plbkRateSldrMaxWidth;
+    plbkRateSldrBox['width'] = plbkRateSldrMaxWidth;
 }
 
 /**
