@@ -5,7 +5,7 @@
  * @requires rendererGeneral
  * @requires rendererDirectoriesSection
  */
-import { ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, setIcon, getModBox, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, setConfOvrlState, setConfCtrState, setContStatLabelText, setIcon, getModBox, getPtrEventPct } from './rendererGeneral.js';
 import { setVideosTotalLabel3Text, addAllVideos } from './rendererDirectoriesSection.js';
 
 // settings section constants
@@ -93,9 +93,9 @@ export function initRendStgsSectVars() {
     isMicVolSldrDrag = false;
 
     // settings, displays, and devices
-    stgs = null;
-    disps = null;
-    devs = null;
+    stgs = {};
+    disps = {};
+    devs = {};
 }
 
 /**
@@ -106,7 +106,7 @@ export async function initRendStgsSect() {
     initStgCtrEL();
 
     // initialize the setting container
-    await atmpAsyncFunc(() => initStgCtr());
+    await initStgCtr();
 }
 
 /**
@@ -121,32 +121,64 @@ function initStgCtrEL() {
 
         // on change, set the setting, update the settings cache, and update the field value
         genStgTogFld.addEventListener('change', async () => {
-            genStgTogFld.checked = stgs[genStgTogFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(genStgTogFld.name, genStgTogFld.checked));
+            // try to update the setting
+            try {
+                genStgTogFld.checked = stgs[genStgTogFld.name] = await window['stgsAPI'].setStg(genStgTogFld.name, genStgTogFld.checked);
 
-            // set the icon based on if the setting toggle field is checked
-            genStgTogFld.checked ? setIcon(genStgTogIcon, 'check') : setIcon(genStgTogIcon, 'close');
+                // set the icon based on if the setting toggle field is checked
+                genStgTogFld.checked ? setIcon(genStgTogIcon, 'check') : setIcon(genStgTogIcon, 'close');
+            }
+            catch (_) {
+                // notify the user that the setting could not be changed
+                setContStatLabelText('Failed to change the setting!');
+
+                // revert the change
+                genStgTogFld.checked = stgs[genStgTogFld.name];
+            }
         });
     }
 
     // on change, set the setting, update the settings cache, and update the field value
     darkModeTogFld.addEventListener('change', async () => {
-        darkModeTogFld.checked = stgs['darkMode'] = await atmpAsyncFunc(() => window['stgsAPI'].setStg('darkMode', darkModeTogFld.checked));
+        // try to update the setting
+        try {
+            darkModeTogFld.checked = stgs['darkMode'] = await window['stgsAPI'].setStg('darkMode', darkModeTogFld.checked);
 
-        // change the theme attribute, depending on if dark mode is enabled
-        if (darkModeTogFld.checked) {
-            setIcon(darkModeTogIcon, 'check');
-            html.dataset.theme = 'dark';
+            // change the theme attribute, depending on if dark mode is enabled
+            if (darkModeTogFld.checked) {
+                setIcon(darkModeTogIcon, 'check');
+                html.dataset.theme = 'dark';
+            }
+            else {
+                setIcon(darkModeTogIcon, 'close');
+                html.dataset.theme = 'light';
+            }
         }
-        else {
-            setIcon(darkModeTogIcon, 'close');
-            html.dataset.theme = 'light';
+        catch (_) {
+            // notify the user that dark mode could not be toggled
+            setContStatLabelText('Failed to toggle dark mode!');
+
+            // revert the change
+            darkModeTogFld.checked = stgs['darkMode'];
         }
     });
 
     // iterate through each field
     for (const fld of [...mostFlds, capsDispFld, spkFld, micFld]) {
         // on change, set the setting, update the settings cache, and update the field value
-        fld.addEventListener('change', async () => fld.value = stgs[fld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(fld.name, fld.value)));
+        fld.addEventListener('change', async () => { 
+            // try to update the setting
+            try {
+                fld.value = stgs[fld.name] = await window['stgsAPI'].setStg(fld.name, fld.value);
+            }
+            catch (_) {
+                // notify the user that the setting could not be changed
+                setContStatLabelText('Failed to change the setting!');
+
+                // revert the change
+                fld.value = stgs[fld.name];
+            }
+        });
     }
 
     // iterate through each directory field
@@ -156,12 +188,29 @@ function initStgCtrEL() {
 
         // on click, set the setting, update the settings cache, update the field value, and reload the gallery
         dirFld.addEventListener('click', async () => {
-            const dir = await atmpAsyncFunc(() => window['stgsAPI'].setStg(dirFld.name, ''));
+            // try to update the setting
+            try {
+                const dir = await window['stgsAPI'].setStg(dirFld.name, '');
 
-            // if the directory is not the old value, set the new value and load the new gallery
-            if (dir !== dirFld.value) {
-                dirFld.value = stgs[dirFld.name] = dir;
-                await atmpAsyncFunc(() => addAllVideos(isCaps, false));  // boolean1 isCaps, boolean2 isInit
+                // if the directory is not the old value, set the new value and load the new gallery
+                if (dir !== dirFld.value) {
+                    dirFld.value = stgs[dirFld.name] = dir;
+
+                    // set the confirmation container state to adding
+                    setConfCtrState(STATE.ADDING_DIRECTORY);
+                    
+                    // set the confirmation overlay state to active
+                    setConfOvrlState(STATE.ACTIVE);
+
+                    await addAllVideos(isCaps, false);  // boolean1 isCaps, boolean2 isInit
+
+                    // set the confirmation overlay state to inactive
+                    setConfOvrlState(STATE.INACTIVE);
+                }
+            }
+            catch (_) {
+                // notify the user that the directory could not be changed
+                setContStatLabelText('Failed to change the directory!');
             }
         });
     }
@@ -173,35 +222,76 @@ function initStgCtrEL() {
 
         // on change, set the setting, update the settings cache, update the field value, and update the total label
         limitFld.addEventListener('change', async () => {
-            limitFld.value = stgs[limitFld.name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(limitFld.name, limitFld.value));
-            setVideosTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
+            // try to update the setting
+            try {
+                limitFld.value = stgs[limitFld.name] = await window['stgsAPI'].setStg(limitFld.name, limitFld.value);
+                setVideosTotalLabel3Text(`/${stgs[limitFld.name]} GB`, isCaps);
+            }
+            catch (_) {
+                // notify the user that the directory limit could not be changed
+                setContStatLabelText('Failed to change the directory limit!');
+
+                // revert the change
+                limitFld.value = stgs[limitFld.name];
+            }
         });
     }
 
     // on click, add a new program to the programs list
     progsAddBtn.addEventListener('click', async () => {
-        // get the user selected program
-        const prog = await atmpAsyncFunc(() => window['stgsAPI'].setStg('programs', null));
+        //try to update the programs list
+        try {
+            // get the user selected program
+            const prog = await window['stgsAPI'].setStg('programs', null);
 
-        // if the name is not null (the user did not cancel and it is a new program)
-        if (prog !== null) {
-            // get the name and program info
-            const progName = Object.keys(prog)[0];
-            const progInfo = Object.values(prog)[0];
+            // if the name is not null (the user did not cancel and it is a new program)
+            if (prog !== null) {
+                // get the name and program info
+                const progName = Object.keys(prog)[0];
+                const progInfo = Object.values(prog)[0];
 
-            // update the programs list and insert the program into the board
-            stgs['programs'][progName] = progInfo;
-            addGenStgTile(progName, progInfo);
+                // update the programs list and insert the program into the board
+                stgs['programs'][progName] = progInfo;
+                addGenStgTile(progName, progInfo);
+            }
+        }
+        catch (_) {
+            // notify the user that the list of programs could not be changed
+            setContStatLabelText('Failed to change the list of programs!');
         }
     });
 
     // iterate through each clips field (for settings present in the settings section and clip bar)
     for (const flds of [clipsFrmFlds, clipsWidthFlds, clipsHeightFlds]) {
         // on change, set the setting, update the settings cache, and update the field value
-        flds[0].addEventListener('change', async () => flds[0].value = flds[1].value = stgs[flds[0].name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(flds[0].name, flds[0].value)));
+        flds[0].addEventListener('change', async () => { 
+            // try to update the setting
+            try {
+                flds[0].value = flds[1].value = stgs[flds[0].name] = await window['stgsAPI'].setStg(flds[0].name, flds[0].value);
+            }
+            catch (_) {
+                // notify the user that the clip setting could not be changed
+                setContStatLabelText('Failed to change the clip setting!');
+
+                // revert the change
+                flds[0].value = stgs[flds[0].name];
+            }
+        });
 
         // on change, set the setting, update the settings cache, and update the field value
-        flds[1].addEventListener('change', async () => flds[1].value = flds[0].value = stgs[flds[1].name] = await atmpAsyncFunc(() => window['stgsAPI'].setStg(flds[1].name, flds[1].value)));
+        flds[1].addEventListener('change', async () => { 
+            // try to update the setting
+            try {
+                flds[1].value = flds[0].value = stgs[flds[1].name] = await window['stgsAPI'].setStg(flds[1].name, flds[1].value);
+            }
+            catch (_) {
+                // notify the user that the clip setting could not be changed
+                setContStatLabelText('Failed to change the clip setting!');
+
+                // revert the change
+                flds[1].value = stgs[flds[1].name];
+            }
+        });
     }
 
     // iterate through each volume slider container
@@ -246,12 +336,14 @@ function initStgCtrEL() {
 
     // iterate through each setting slider
     for (const [index, volSldr] of [spkVolSldr, micVolSldr].entries()) {
-        // get the speaker or microphone variables
+        // get the speaker or microphone variable
         const isSpk = index === 0;
-        const volSldrBox = isSpk ? spkVolSldrBox : micVolSldrBox;
 
         // on mousedown, enable the dragging boolean and set the volume based on the pointer location
         volSldr.addEventListener('mousedown', (ptr) => {
+            // get the speaker or microphone variable
+            const volSldrBox = isSpk ? spkVolSldrBox : micVolSldrBox;
+
             // set the volume
             pseudoSetStgVol(getPtrEventPct(ptr, volSldrBox), isSpk);
 
@@ -266,10 +358,10 @@ function initStgCtrEL() {
  * Initializes the setting container
  */
 async function initStgCtr() {
-    // get the settings, devices (speakers, microphones, webcams), displays, and the programs list for auto recording
-    stgs = await atmpAsyncFunc(() => window['stgsAPI'].getAllStgs(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
-    disps = await atmpAsyncFunc(() => window['stgsAPI'].getAllDisps(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
-    devs = await atmpAsyncFunc(() => window['stgsAPI'].getAllDevs(), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, true);  // boolean1 isInit
+    // try to get the settings, displays, and the devices (speakers, microphones, webcams)
+    stgs = await window['stgsAPI'].getAllStgs();
+    disps = await window['stgsAPI'].getAllDisps();
+    devs = await window['stgsAPI'].getAllDevs();
 
     // iterate through each toggle switch
     for (const togSwt of mostTogSwtes) {
@@ -384,11 +476,17 @@ function addGenStgTile(progName, progInfo) {
 
     // on click, delete the program from the list
     genStgTileClone.querySelector('.general-setting-delete-btn').addEventListener('click', async () => { 
-        // check if the operation was successful on the main process
-        if (await atmpAsyncFunc(() => window['stgsAPI'].delProg(progName))) {
+        // try to delete the program
+        try {
+            await window['stgsAPI'].delProg(progName);
+
             // delete the program from the programs list and remove the tile from the board
             delete stgs['programs'][progName];
             progsBoard.removeChild(genStgTile);
+        }
+        catch (_) {
+            // notify the user that the program could not be deleted
+            setContStatLabelText('Failed to delete the program!');
         }
     });
 
@@ -460,7 +558,15 @@ export async function setStgVol(isSpk) {
     // get the speaker or microphone variables
     const stgStr = isSpk ? 'speakerVolume' : 'microphoneVolume';
 
-    await atmpAsyncFunc(() => window['stgsAPI'].setStg(stgStr, stgs[stgStr]));
+    // try to update the setting volume
+    try {
+        await window['stgsAPI'].setStg(stgStr, stgs[stgStr]);
+    }
+    catch (_) {
+        // notify the user that the setting volume could not be updated
+        // unrevertable since the old value was deleted...
+        setContStatLabelText('Failed to update the setting volume!');
+    }
 }
 
 /**

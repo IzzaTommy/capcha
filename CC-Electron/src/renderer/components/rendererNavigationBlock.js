@@ -7,7 +7,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, MSECONDS_IN_SECOND, setSectState, setIcon, getRdblRecDur, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getRdblRecDur } from './rendererGeneral.js';
 import { setVideosGallBox } from './rendererDirectoriesSection.js';
 import { setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox } from './rendererEditorSection.js';
 import { setStgVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
@@ -15,7 +15,7 @@ import { setStgVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
 // navigation block constants
 // program default name and navigation bar timeout
 const PROGRAM_DEF = 'Manual';
-const NAVIGATION_BAR_TIMEOUT = 500;
+const NAVIGATION_BAR_TIMEOUT = 550;
 
 // navigation block variables
 let navBar, 
@@ -55,8 +55,8 @@ export function initRendNavBlockVars() {
     navTogIcon = document.querySelector('#toggle-icon-nav > use');
 
     // current recording time, interval, and recording flags
-    curRecTime = null;
-    curRecTimeIntvId = null;
+    curRecTime = -1;
+    curRecTimeIntvId = -1;
     wasAutoStart = false;
     wasManualStop = false;
     isRec = false
@@ -85,7 +85,7 @@ function initNavBarBtnEL() {
     stgsBarBtn.addEventListener('click', () => setSectState(SECTION.SETTINGS));
 
     // on click, set the recording bar button state
-    recBarBtn.addEventListener('click', async () => await atmpAsyncFunc(() => setRecBarBtnState(false, true)));  // boolean1 isAutoStart, boolean2 isManualStop
+    recBarBtn.addEventListener('click', async () => await setRecBarBtnState(false, true));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on click, hide the label and reallow auto recording if it is shown
     autoRecResLabel.addEventListener('click', () => {
@@ -100,47 +100,54 @@ function initNavBarBtnEL() {
 function initNavTogBtnEL() {
     // on click, change the navigation bar state
     navTogBtn.addEventListener('click', async () => {
-        // toggle the navigation bar
-        navBar.classList.toggle('active');
+        // try to set the setting and update the settings cache
+        try {
+            setStg('navigationBarActive', await window['stgsAPI'].setStg('navigationBarActive', !navBar.classList.contains('active')));
 
-        // hide the auto recording resume label before the navigation bar transition begins
-        autoRecResLabel.classList.remove('active');
+            // check if the setting changed
+            if (getStg('navigationBarActive') !== navBar.classList.contains('active')) {
+                // hide the auto recording resume label before the navigation bar transition begins
+                autoRecResLabel.classList.remove('active');
 
-        // change the toggle icon and save the setting, depending on if the navigation bar is active
-        if (navBar.classList.contains('active')) {
-            setIcon(navTogIcon, 'arrow-back-ios');
-            setStg('navigationBarActive', await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', true)));  // boolean1 value
-        }
-        else {
-            setIcon(navTogIcon, 'arrow-forward-ios');
-            setStg('navigationBarActive', await atmpAsyncFunc(() => window['stgsAPI'].setStg('navigationBarActive', false)));  // boolean1 value
-        }
+                // change the toggle icon and state
+                if (navBar.classList.contains('active')) {
+                    setIcon(navTogIcon, 'arrow-forward-ios');
+                    navBar.classList.remove('active');
+                }
+                else {
+                    setIcon(navTogIcon, 'arrow-back-ios');
+                    navBar.classList.add('active');
+                }
+
+                // update all size/location dependent elements after the navigation bar transition finishes
+                setTimeout(() => { 
+                    // update the captures and clips galleries
+                    setVideosGallBox(true);  // boolean1 isCaps
+                    setVideosGallBox(false);  // boolean1 isCaps
         
-        // update all size/location dependent elements after the navigation bar transition finishes
-        atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
-            // update the captures and clips galleries
-            setVideosGallBox(true);  // boolean1 isCaps
-            setVideosGallBox(false);  // boolean1 isCaps
-
-            // update the seek, video volume, playback rate, and timeline sliders
-            setSeekSldrBox();
-            setVideoVolSldrBox();
-            setPlbkRateSldrBox();
-            setTmlnSldrBox();
-            
-            // update the speaker and microphone volume sliders
-            setStgVolSldrBox(true);  // boolean1 isSpk
-            setStgVolSldrBox(false);  // boolean1 isSpk
-
-            // check if auto recording is on and the recording was manually stopped
-            if (wasManualStop && getStg('autoRecord')) {
-                // show the label to let the user reenable auto recording
-                // not width dependent, but transition dependent, show after the navigation bar finishes transition
-                autoRecResLabel.classList.add('active');
+                    // update the seek, video volume, playback rate, and timeline sliders
+                    setSeekSldrBox();
+                    setVideoVolSldrBox();
+                    setPlbkRateSldrBox();
+                    setTmlnSldrBox();
+                    
+                    // update the speaker and microphone volume sliders
+                    setStgVolSldrBox(true);  // boolean1 isSpk
+                    setStgVolSldrBox(false);  // boolean1 isSpk
+        
+                    // check if auto recording is on and the recording was manually stopped
+                    if (wasManualStop && getStg('autoRecord')) {
+                        // show the label to let the user reenable auto recording
+                        // not width dependent, but transition dependent, show after the navigation bar finishes transition
+                        autoRecResLabel.classList.add('active');
+                    }
+                }, NAVIGATION_BAR_TIMEOUT);
             }
-
-            resolve();
-        }, NAVIGATION_BAR_TIMEOUT)));
+        }
+        catch (_) {
+            // notify the user that the navigation bar could not be toggled
+            setContStatLabelText('Failed to toggle the navigation bar!');
+        }
     });
 }
 
@@ -155,7 +162,7 @@ async function initNavTogBtn() {
     }
 
     // update all size/location dependent elements after the navigation bar transition finishes
-    await atmpAsyncFunc(() => new Promise(resolve => setTimeout(() => { 
+    setTimeout(() => { 
         // update the captures and clips galleries
         setVideosGallBox(true);  // boolean1 isCaps
         setVideosGallBox(false);  // boolean1 isCaps
@@ -169,9 +176,7 @@ async function initNavTogBtn() {
         // update the speaker and microphone volume sliders
         setStgVolSldrBox(true);  // boolean1 isSpk
         setStgVolSldrBox(false);  // boolean1 isSpk
-
-        resolve();
-    }, NAVIGATION_BAR_TIMEOUT)));
+    }, NAVIGATION_BAR_TIMEOUT);
 }
 
 /**
@@ -204,8 +209,16 @@ export async function setRecBarBtnState(isAutoStart, isManualStop, recProgName =
     if (isRec) {
         // check if it was a (manual start / manual stop) or (auto start / auto stop) or (auto start / manual stop)
         if ((!wasAutoStart && isManualStop) || (wasAutoStart && !isManualStop) || (wasAutoStart && isManualStop)) {
-            // send a request to OBS to stop recording
-            if (await atmpAsyncFunc(() => window['webSocketAPI'].stopRecord())) {
+            // try to send a request to OBS to stop recording
+            try {
+                await window['webSocketAPI'].stopRecord();
+
+                // set the confirmation container state to adding
+                setConfCtrState(STATE.ADDING);
+
+                // set the confirmation overlay state to active
+                setConfOvrlState(STATE.ACTIVE);
+
                 // hide the record bar button and the recording label container
                 recBarBtn.classList.remove('active');
                 curRecLabelCtr.classList.remove('active');
@@ -221,15 +234,21 @@ export async function setRecBarBtnState(isAutoStart, isManualStop, recProgName =
 
                 // set the manual stop and recording flags
                 wasManualStop = isManualStop;
-                isRec = false;
+                isRec = false; 
+            }
+            catch (_) {
+                // notify the user the recording could not be stopped
+                setContStatLabelText('Failed to stop recording!');
             }
         }
     }
     else {
         // check if it was an (auto start / with no manual stop) or if it was a (manual start)
         if ((isAutoStart && !wasManualStop) || !isAutoStart) {
-            // send a request to OBS to start recording
-            if (await atmpAsyncFunc(() => window['webSocketAPI'].startRecord(recProgName))) {
+            // try to send a request to OBS to start recording
+            try {
+                await window['webSocketAPI'].startRecord(recProgName)
+
                 // show the record bar button and the recording label container
                 recBarBtn.classList.add('active');
                 curRecLabelCtr.classList.add('active');
@@ -250,6 +269,10 @@ export async function setRecBarBtnState(isAutoStart, isManualStop, recProgName =
                 // set auto start and recording flags
                 wasAutoStart = isAutoStart;
                 isRec = true;
+            }
+            catch (_) {
+                // notify the user the recording could not start
+                setContStatLabelText('Failed to start recording!');
             }
         }
     }

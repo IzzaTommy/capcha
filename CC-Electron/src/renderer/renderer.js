@@ -9,7 +9,7 @@
  * @requires rendererDirectoriesSection
  * @requires rendererSettingsSection
  */
-import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText } from './components/rendererGeneral.js';
+import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText, setContStatLabelText } from './components/rendererGeneral.js';
 import { initRendTitleBarVars, initRendTitleBar, setTitleBarStyle } from './components/rendererTitleBar.js';
 import { initRendNavBlockVars, initRendNavBlock } from './components/rendererNavigationBlock.js';
 import { initRendEditSectVars, initRendEditSect } from './components/rendererEditorSection.js';
@@ -76,8 +76,8 @@ async function finishInit() {
     // initialize the editor section
     initRendEditSect();
 
-    // request a call to setAutoRecState on the main process
-    window['stgsAPI'].reqSetAutoRecState();
+    // request a call to setAutoRecState in the main process
+    await window['stgsAPI'].reqSetAutoRecState();
 
     // allow window dragging
     setTitleBarStyle('webkitAppRegion', 'drag');

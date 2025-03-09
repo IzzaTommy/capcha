@@ -21,9 +21,13 @@ export const STATE = {
     PLAY: 4, 
     PAUSE: 5, 
     STANDBY: 6, 
-    CONFIRM: 7, 
-    RENAME: 8, 
-    DELETE: 9
+    ADDING: 7, 
+    ADDING_DIRECTORY: 8, 
+    CREATING: 9, 
+    RENAMING: 10,  
+    CONFIRM: 11, 
+    RENAME: 12, 
+    DELETE: 13
 };
 export const SECTION = {
     DIRECTORIES: 1, 
@@ -42,13 +46,9 @@ const SECONDS_IN_MINUTE = 60;
 const SECONDS_IN_HOUR = 3600;
 const SECONDS_IN_DAY = 86400;
 
-// asynchronous function attempts and delay
-export const ASYNC_ATTEMPTS = 3;
-export const ASYNC_DELAY_IN_MSECONDS = 3000;
-
 // general variables
 let initOvrl, initStatLabel, 
-confOvrl, confCtr, confLabel, confFldCtr, confNameFld, confFormatFld, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
+confOvrl, confCtr, confLabel, confLoadIcon, confFldCtr, confNameFld, confFormatFld, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
 contStatLabel, 
 dirsSect, editSect, stgsSect;
 
@@ -67,6 +67,7 @@ export function initRendGenVars() {
     confOvrl = document.getElementById('overlay-confirmation');
     confCtr = document.getElementById('ctr-confirmation');
     confLabel = document.getElementById('label-confirmation');
+    confLoadIcon = document.getElementById('loading-icon-confirmation');
     confFldCtr = document.getElementById('field-ctr-confirmation');
     confNameFld = document.getElementById('name-field-confirmation');
     confFormatFld = document.getElementById('format-field-confirmation');
@@ -84,7 +85,7 @@ export function initRendGenVars() {
     stgsSect = document.getElementById('section-settings');
 
     // content status label timeout
-    contStatLabelTmoId = null;
+    contStatLabelTmoId = -1;
 }
 
 /**
@@ -121,9 +122,11 @@ function initGenEL() {
 
     // on click, set the confirmation overlay state to inactive and reject the confirmation promise
     confOvrl.addEventListener('mousedown', () => {
-        setConfOvrlState(STATE.INACTIVE);
+        if (confCancelBtn.classList.contains('active')) {
+            setConfOvrlState(STATE.INACTIVE);
 
-        rejConfProm();
+            rejConfProm();
+        }
     });
 
     // on click, prevent the click event from propagating to the confirmation overlay
@@ -164,8 +167,11 @@ function initGenEL() {
  * Initializes the inter-process communication callbacks
  */
 function initGenIPC() {
+    // on request, sets the initialization status label text
+    window['genAPI'].reqSetInitStatLabelText((text) => setInitStatLabelText(text));
+
     // on request, toggle the record button (initiated from the main auto recording process)
-    window['stgsAPI'].reqSetRecBarBtnState(async (recProgName) => await atmpAsyncFunc(() => setRecBarBtnState(true, false, recProgName)));  // boolean1 isAutoStart, boolean2 isManualStop
+    window['stgsAPI'].reqSetRecBarBtnState(async (recProgName) => await setRecBarBtnState(true, false, recProgName));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on request, add a video to the captures or clips gallery
     window['stgsAPI'].reqAddVideo((video, isCaps) => addVideo(video, isCaps));
@@ -208,9 +214,84 @@ export function setConfOvrlState(state) {
  */
 export function setConfCtrState(state, videoName, videoExt) {
     switch (state) {
+        case STATE.ADDING:
+            // change the confirmation label text
+            confLabel.textContent = 'Adding Video';
+
+            // show the confirmation loading icon
+            confLoadIcon.classList.add('active');
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // hide every button
+            confCancelBtn.classList.remove('active');
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
+        case STATE.ADDING_DIRECTORY:
+            // change the confirmation label text
+            confLabel.textContent = 'Adding All Videos';
+
+            // show the confirmation loading icon
+            confLoadIcon.classList.add('active');
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // hide every button
+            confCancelBtn.classList.remove('active');
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
+        case STATE.CREATING:
+            // change the confirmation label text
+            confLabel.textContent = 'Creating Clip';
+
+            // show the confirmation loading icon
+            confLoadIcon.classList.add('active');
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // hide every button
+            confCancelBtn.classList.remove('active');
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
+        case STATE.RENAMING:
+            // change the confirmation label text
+            confLabel.textContent = 'Renaming Video';
+
+            // show the confirmation loading icon
+            confLoadIcon.classList.add('active');
+
+            // hide the confirmation field container
+            confFldCtr.classList.remove('active');
+
+            // hide every button
+            confCancelBtn.classList.remove('active');
+            confConfBtn.classList.remove('active');
+            confRenBtn.classList.remove('active');
+            confDelBtn.classList.remove('active');
+
+            break;
+
         case STATE.CONFIRM:
             // change the confirmation label text
             confLabel.textContent = 'Confirm';
+
+            // hide the confirmation loading icon
+            confLoadIcon.classList.remove('active');
 
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
@@ -226,6 +307,9 @@ export function setConfCtrState(state, videoName, videoExt) {
         case STATE.RENAME:
             // change the confirmation label text
             confLabel.textContent = 'Rename Video';
+
+            // hide the confirmation loading icon
+            confLoadIcon.classList.remove('active');
 
             // show the confirmation field container
             confFldCtr.classList.add('active');
@@ -245,6 +329,9 @@ export function setConfCtrState(state, videoName, videoExt) {
         case STATE.DELETE:
             // change the confirmation label text
             confLabel.textContent = 'Delete Video';
+
+            // hide the confirmation loading icon
+            confLoadIcon.classList.remove('active');
 
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
@@ -562,37 +649,4 @@ export function getPtrEventLoc(ptr, box) {
  */
 export function getPtrEventPct(ptr, box) {
     return getPtrEventLoc(ptr, box) / box['width'];
-}
-
-/**
- * Attempts an asynchronous function a specified number of times with a specified delay between iterations
- * 
- * @param {Function} asyncFunc - The asynchronous function
- * @param {number} atmps - The number of attempts
- * @param {number} delay - The delay between attempts in milliseconds
- * @param {boolean} isInit - If the asynchronous function is run during initialization
- * @returns {Promise} The result of the attempts
- */
-export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS, isInit = false) {
-    // repeat for the number of attempts
-    for (let i = 1; i <= atmps; i++) {
-        // try the asynchronous function
-        try {
-            return await asyncFunc();
-        }
-        catch (error) {
-            // check if attempts are remaining
-            if (i < atmps) {
-                // set the right text label depending on if this is an initialization or runtime error
-                isInit ? setInitStatLabelText(`Attempt ${i} failed: ${error.message}`) : setContStatLabelText(`Attempt ${i} failed: ${error.message}`);
-
-                // do another attempt after the delay
-                await new Promise(resolve => setTimeout(resolve, delay));
-            }
-            else {
-                // set the right text label depending on if this is an initialization or runtime error
-                isInit ? setInitStatLabelText(`Program Failure: ${error.message}`) : setContStatLabelText(`Program Failure: ${error.message}`);
-            }
-        }
-    }
 }

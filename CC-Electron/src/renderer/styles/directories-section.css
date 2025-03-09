@@ -82,12 +82,11 @@
 
 .directory-setting-field {
     border-radius: var(--dstfield-bradius);
-    flex: 0 0 fit-content;
+    flex: 0 0 auto;
     height: var(--dstfield-height);
     line-height: var(--dstfield-lheight);
     padding-right: var(--dstfield-hpadding);
     padding-left: var(--dstfield-hpadding);
-    max-width: var(--dstfield-maxwidth);
 
     background-color: var(--dstfield-bgcolor);
     color: var(--dstfield-color);
@@ -100,6 +99,14 @@
 
 .directory-setting-field:hover {
     color: var(--dstfield-alt-color);
+}
+
+.directory-setting-field[name="capturesProgramFilter"], .directory-setting-field[name="clipsProgramFilter"] {
+    width: var(--dstfield-width);
+}
+
+.directory-setting-field[name="capturesMetaFilter"], .directory-setting-field[name="clipsMetaFilter"] {
+    width: var(--dstfield-alt-width);
 }
 
 .directory-bar-btn {

@@ -79,9 +79,6 @@ app.on('quit', () => {
  * Initializes the main process
  */
 function initMain() {
-    // check the logs directory storage limit
-    checkLogsDirSize();
-
     // initialize the main variables
     initVars();
 
@@ -112,6 +109,9 @@ async function init() {
  * Initializes OBS, WebSocket, and the settings
  */
 export async function finishInit() {
+    // check the logs directory storage limit
+    checkLogsDirSize();
+    
     // initialize OBS
     initMainOBS();
 

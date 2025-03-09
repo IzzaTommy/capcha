@@ -8,7 +8,7 @@
  */
 import { ipcMain } from 'electron';
 import { WebSocket } from 'ws';
-import { addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
+import { ASYNC_DELAY_IN_MSECONDS, addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
 
 // WebSocket constants
 // captures date format
@@ -39,18 +39,18 @@ export function initMainWebSocketVars() {
  */
 export async function initMainWebSocket() {
     // initialize WebSocket
-    await atmpAsyncFunc(() => initWebSocket());
+    await atmpAsyncFunc(startWebSocket, 5, ASYNC_DELAY_IN_MSECONDS, 'Failed to load WebSocket!', true);  // boolean1 isInit
 
     // initialize the WebSocket listeners
     initWebSocketL();
 }
 
 /**
- * Initializes the WebSocket instance
+ * Starts the WebSocket instance
  * 
  * @returns {Promise} The result of opening a WebSocket connection
  */
-export function initWebSocket() {
+function startWebSocket() {
     // return a promise to initialize WebSocket
     return new Promise((resolve, reject) => {
         // if an instance exists

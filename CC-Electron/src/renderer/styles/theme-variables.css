@@ -1001,7 +1001,7 @@ html {
     --ioverlay-transition: opacity var(--def-time-5000);
 
     /* ==== cfloadingicon -> Confirmation Loading Icon ==== */
-    --cfloadingicon-anim: full-rotation 1s linear infinite;
+    --cfloadingicon-anim: full-rotation 1.75s linear infinite;
 
     /* ==== cfnamefield -> Confirmation Name Field ==== */
     --cfnamefield-transition: color var(--def-time-3000);

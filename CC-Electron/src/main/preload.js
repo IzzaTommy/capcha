@@ -15,6 +15,9 @@ contextBridge.exposeInMainWorld('genAPI', {
     // R -> M, closes the window
     'closeWindow': () => ipcRenderer.send('gen:closeWindow'),
 
+    // M -> R, requests a call to setInitStatLabelText
+    'reqSetInitStatLabelText': (cb) => ipcRenderer.once('gen:reqSetInitStatLabelText', (_, text) => cb(text)), 
+
     // R -> M, creates a clip of the video
     'reqCreateClip': (videoPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoPath, clipStartTime, clipEndTime)
 });
@@ -29,13 +32,13 @@ contextBridge.exposeInMainWorld('webSocketAPI', {
 
 contextBridge.exposeInMainWorld('stgsAPI', {
     // R -> M, requests a call to setAutoRecState
-    'reqSetAutoRecState': () => ipcRenderer.send('stgs:reqSetAutoRecState'), 
+    'reqSetAutoRecState': () => ipcRenderer.invoke('stgs:reqSetAutoRecState'), 
 
     // M -> R, requests a call to reqSetRecBarBtnState
     'reqSetRecBarBtnState': (cb) => ipcRenderer.on('stgs:reqSetRecBarBtnState', (_, recProgName) => cb(recProgName)),
     
     // R -> M, opens the captures or clips directory
-    'openDir': (isCaps) => ipcRenderer.send('stgs:openDir', isCaps), 
+    'openDir': (isCaps) => ipcRenderer.invoke('stgs:openDir', isCaps), 
 
     // R -> M, deletes a program from the programs list
     'delProg': (progName) => ipcRenderer.invoke('stgs:delProg', progName), 
@@ -56,10 +59,10 @@ contextBridge.exposeInMainWorld('stgsAPI', {
     'setStg': (key, value) => ipcRenderer.invoke('stgs:setStg', key, value), 
 
     // R -> M, renames a video from the videos list
-    'renVideo': (videoPath, videoName, videoExt) => ipcRenderer.send('stgs:renVideo', videoPath, videoName, videoExt), 
+    'renVideo': (videoPath, videoName, videoExt) => ipcRenderer.invoke('stgs:renVideo', videoPath, videoName, videoExt), 
 
     // R -> M, deletes a video from the videos list
-    'delVideo': (videoPath) => ipcRenderer.send('stgs:delVideo', videoPath), 
+    'delVideo': (videoPath) => ipcRenderer.invoke('stgs:delVideo', videoPath), 
 
     // M -> R, requests a call to addVideo
     'reqAddVideo': (cb) => ipcRenderer.on('stgs:reqAddVideo', (_, video, isCaps) => cb(video, isCaps)), 

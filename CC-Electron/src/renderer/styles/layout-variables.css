@@ -291,7 +291,8 @@ html {
     --dstfield-height: calc(30px * var(--usin-scale));
     --dstfield-lheight: calc(30px * var(--usin-scale));
     --dstfield-hpadding: calc(10px * var(--usin-scale));
-    --dstfield-maxwidth: calc(200px * var(--usin-scale));
+    --dstfield-width: calc(150px * var(--usin-scale));
+    --dstfield-alt-width: calc(110px * var(--usin-scale));
     --dstfield-fsize: calc(14px * var(--usin-scale));
     --dstfield-fweight: 400;
 
@@ -354,10 +355,10 @@ html {
     --vplabel-fweight: 350;
 
     /* ==== vpprogramlabel -> Video Preview Program Label ==== */
-    --vpprogramlabel-maxwidth: calc(170px * var(--usin-scale));
+    --vpprogramlabel-maxwidth: calc(141px * var(--usin-scale));
 
     /* ==== vpagelabel -> Video Preview Age Label ==== */
-    --vpagelabel-maxwidth: calc(71px * var(--usin-scale));
+    --vpagelabel-maxwidth: calc(100px * var(--usin-scale));
 
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-height: calc(14px * var(--usin-scale));

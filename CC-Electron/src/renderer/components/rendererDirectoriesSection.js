@@ -6,7 +6,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, MSECONDS_IN_SECOND, ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec } from './rendererGeneral.js';
 import { setEditProgLabelText, setVideoFrameLen, setVideoPlrSrc } from './rendererEditorSection.js';
 import { getStg, setStg } from './rendererSettingsSection.js';
 
@@ -90,15 +90,15 @@ export function initRendDirsSectVars() {
     clipsGallBox = getModBox(clipsGall.getBoundingClientRect()); 
 
     // captures and clips videos and counts
-    caps = null;
-    clips = null;
+    caps = [];
+    clips = [];
     capsCounts = {
-        'normal': null, 
-        'size': null
+        'normal': -1, 
+        'size': -1
     };
     clipsCounts = {
-        'normal': null, 
-        'size': null
+        'normal': -1, 
+        'size': -1
     };
 
     // confirmation promise
@@ -121,9 +121,23 @@ export async function initRendDirsSect() {
     initVideosGallEL(true);  // boolean1 isCaps
     initVideosGallEL(false);  // boolean1 isCaps
 
-    // add all videos to the gallery for captures and clips
-    await atmpAsyncFunc(() => addAllVideos(true, true));  // boolean1 isCaps, boolean2 isInit
-    await atmpAsyncFunc(() => addAllVideos(false, true));  // boolean1 isCaps, boolean2 isInit
+    // try to add all videos to the captures gallery
+    try {
+        await addAllVideos(true, true);  // boolean1 isCaps, boolean2 isInit
+    }
+    catch (_) {
+        // notify the user that the captures gallery could not be loaded
+        setContStatLabelText('Failed to load the captures gallery!');
+    }
+
+    // try to add all videos to the clips gallery
+    try {
+        await addAllVideos(false, true);  // boolean1 isCaps, boolean2 isInit
+    }
+    catch (_) {
+        // notify the user that the clips gallery could not be loaded
+        setContStatLabelText('Failed to load the clips gallery!');
+    }
 }
 
 /**
@@ -141,56 +155,89 @@ async function initContCtr3EL(isCaps) {
     const videosAscStr = isCaps ? 'capturesAscending' : 'clipsAscending';
 
     // on click, open the captures or clips directory
-    videosNameLabel.addEventListener('click', () => window['stgsAPI'].openDir(isCaps));
+    videosNameLabel.addEventListener('click', async () => { 
+        // try to open the directory
+        try {
+            await window['stgsAPI'].openDir(isCaps);
+        }
+        catch (_) {
+            // notify the user that the directory failed to open
+            setContStatLabelText('Failed to open the directory!');
+        }
+    });
 
     // on change, set the program filter setting, then remove and re-insert the video preview containers in the new order
     videosProgFltFld.addEventListener('change', async () => {
-        setStg(videosProgFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosProgFltFld.name, videosProgFltFld.value)));
-        videosProgFltFld.value = getStg(videosProgFltFld.name);
+        // try to update the setting
+        try {
+            setStg(videosProgFltFld.name, await window['stgsAPI'].setStg(videosProgFltFld.name, videosProgFltFld.value));
+            videosProgFltFld.value = getStg(videosProgFltFld.name);
+        
+            // remove all the video preview containers from the gallery
+            remAllVideoPrvwCtrs(isCaps);
     
-        // remove all the video preview containers from the gallery
-        remAllVideoPrvwCtrs(isCaps);
+            // add all the video preview containers into the gallery
+            addAllVideoPrvwCtrs(isCaps);
+        }
+        catch (_) {
+            // notify the user that the program filter could not be changed
+            setContStatLabelText('Failed to change the program filter!');
 
-        // add all the video preview containers into the gallery
-        addAllVideoPrvwCtrs(isCaps);
+            // revert the change
+            videosProgFltFld.value = getStg(videosProgFltFld.name);
+        }
     });
 
     // on change, set the meta filter setting, then remove and re-insert the video preview containers in the new order
     videosMetaFltFld.addEventListener('change', async () => {
-        setStg(videosMetaFltFld.name, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosMetaFltFld.name, videosMetaFltFld.value)));
-        videosMetaFltFld.value = getStg(videosMetaFltFld.name);
+        // try to update the setting
+        try {
+            setStg(videosMetaFltFld.name, await window['stgsAPI'].setStg(videosMetaFltFld.name, videosMetaFltFld.value));
+            videosMetaFltFld.value = getStg(videosMetaFltFld.name);
+        
+            // remove all the video preview containers from the gallery
+            remAllVideoPrvwCtrs(isCaps);
     
-        // remove all the video preview containers from the gallery
-        remAllVideoPrvwCtrs(isCaps);
+            // add all the video preview containers into the gallery
+            addAllVideoPrvwCtrs(isCaps);
+        }
+        catch (_) {
+            // notify the user that the meta filter could not be changed
+            setContStatLabelText('Failed to change the meta filter!');
 
-        // add all the video preview containers into the gallery
-        addAllVideoPrvwCtrs(isCaps);
+            // revert the change
+            videosMetaFltFld.value = getStg(videosMetaFltFld.name);
+        }
     });
 
     // on click, change the sort order
     videosBarBtn.addEventListener('click', async () => {
-        videosBarBtn.classList.toggle('active');
+        // try to set the setting and update the settings cache
+        try {
+            setStg(videosAscStr, await window['stgsAPI'].setStg(videosAscStr, !videosBarBtn.classList.contains('active')));
+        
+            // check if the setting changed
+            if (getStg(videosAscStr) !== videosBarBtn.classList.contains('active')) {
+                // change the toggle icon and state
+                if (videosBarBtn.classList.contains('active')) {
+                    setIcon(videosBarIcon, 'arrow-downward-alt');
+                    videosBarBtn.classList.remove('active');
+                }
+                else {
+                    setIcon(videosBarIcon, 'arrow-upward-alt');
+                    videosBarBtn.classList.add('active');
+                }
 
-        // change the icon, save the order setting, then remove and re-insert the video preview containers
-        if (videosBarBtn.classList.contains('active')) {
-            setIcon(videosBarIcon, 'arrow-upward-alt');
-            setStg(videosAscStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosAscStr, true)));
+                // remove all the video preview containers from the gallery
+                remAllVideoPrvwCtrs(isCaps);
 
-            // remove all the video preview containers from the gallery
-            remAllVideoPrvwCtrs(isCaps);
-
-            // add all the video preview containers into the gallery
-            addAllVideoPrvwCtrs(isCaps);
+                // add all the video preview containers into the gallery
+                addAllVideoPrvwCtrs(isCaps);
+            }
         }
-        else {
-            setIcon(videosBarIcon, 'arrow-downward-alt');
-            setStg(videosAscStr, await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosAscStr, false)));
-
-            // remove all the video preview containers from the gallery
-            remAllVideoPrvwCtrs(isCaps);
-
-            // add all the video preview containers into the gallery
-            addAllVideoPrvwCtrs(isCaps);
+        catch (_) {
+            // notify the user that the order could not be updated
+            setContStatLabelText('Failed to update the sorting order!');
         }
     });
 }
@@ -317,7 +364,14 @@ async function setVideosProgFltFld(isCaps) {
 
     // check if the filter is not 'All' (no program named 'All') and if an update is needed
     if (getStg(videosProgFltFld.name) !== GAME_FILTER_DEF && doUpdate) {
-        videosProgFltFld.value = getStg(videosProgFltFld.name) = await atmpAsyncFunc(() => window['stgsAPI'].setStg(videosProgFltFld.name, GAME_FILTER_DEF));
+        // try to update the setting
+        try {
+            videosProgFltFld.value = getStg(videosProgFltFld.name) = await window['stgsAPI'].setStg(videosProgFltFld.name, GAME_FILTER_DEF);
+        }
+        catch (_) {
+            // notify the user that program filter could not be updated
+            setContStatLabelText('Failed to update the program filter!');
+        }
     }
     // else, set the value of the program filter field
     else {
@@ -374,6 +428,10 @@ export function setVideosGallBox(isCaps) {
  * @param {boolean} isCaps - If the call is for captures or clips
  */
 export async function addVideo(video, isCaps) {
+    // set the confirmation container state to adding
+    // the overlay is assumed to be active due to creating a clip, stopping recording, or renaming a video
+    setConfCtrState(STATE.ADDING);
+
     // get the captures or clips variables
     const videos = isCaps ? caps : clips;
     const videosCounts = isCaps ? capsCounts : clipsCounts;
@@ -391,7 +449,7 @@ export async function addVideo(video, isCaps) {
     createVideoPrvwCtr(video);
 
     // update the program filter field based on the programs in the gallery
-    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
+    await setVideosProgFltFld(isCaps);
 
     // remove all the video preview containers from the gallery
     remAllVideoPrvwCtrs(isCaps);
@@ -401,6 +459,9 @@ export async function addVideo(video, isCaps) {
 
     // set the usage label
     setVideosUsageLabel3Text(isCaps);
+
+    // set the confirmation overlay state to inactive
+    setConfOvrlState(STATE.INACTIVE);
 }
 
 /**
@@ -429,9 +490,15 @@ export async function addAllVideos(isCaps, isInit) {
         }
     }
 
-    // get the captures or clips and counts
-    isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllVideos(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit)
-    : [clips, videosCounts['normal'], videosCounts['size']] = await atmpAsyncFunc(() => window['stgsAPI'].getAllVideos(isCaps), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, isInit);
+    // try to get the captures or clips and counts
+    try {
+        isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await window['stgsAPI'].getAllVideos(isCaps)  //isinit
+        : [clips, videosCounts['normal'], videosCounts['size']] = await window['stgsAPI'].getAllVideos(isCaps);  //isinit
+    }
+    catch (_) {
+        // notify the user that the captures or clips could not be retrieved
+        setContStatLabelText('Failed to get the videos!');
+    }
 
     // get the new captures or clips variable
     videos = isCaps ? caps : clips;
@@ -440,7 +507,7 @@ export async function addAllVideos(isCaps, isInit) {
     videos.forEach(video => createVideoPrvwCtr(video));
 
     // update the program filter field based on the programs in the videos
-    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
+    await setVideosProgFltFld(isCaps);
 
     // add all the video preview containers into the gallery
     addAllVideoPrvwCtrs(isCaps);
@@ -458,6 +525,7 @@ export async function addAllVideos(isCaps, isInit) {
 export async function delVideo(videoFullName, isCaps) {
     // get the captures or clips variables
     const videosGall = isCaps ? capsGall : clipsGall;
+    const videosStatLabel = isCaps ? capsStatLabel : clipsStatLabel;
     const videos = isCaps ? caps : clips;
     const videosCounts = isCaps ? capsCounts : clipsCounts;
     const index = videos.findIndex(video => video['data']['fullName'] === videoFullName);
@@ -478,7 +546,7 @@ export async function delVideo(videoFullName, isCaps) {
     videos.splice(index, 1);
 
     // update the program filter field based on the programs in the gallery
-    await atmpAsyncFunc(() => setVideosProgFltFld(isCaps));
+    await setVideosProgFltFld(isCaps);
 
     // set the usage label
     setVideosUsageLabel3Text(isCaps);
@@ -553,11 +621,28 @@ function createVideoPrvwCtr(video) {
         try {
             await confProm;
 
-            // send a request to main to delete the video
-            window['stgsAPI'].renVideo(video['data']['path'], getConfNameFldValue(), getConfFormatFldValue());
+            // try to rename the video
+            try {
+                // set the confirmation container state to renaming
+                setConfCtrState(STATE.RENAMING);
+
+                // set the confirmation overlay state to active
+                setConfOvrlState(STATE.ACTIVE);
+
+                // send a request to main to delete the video
+                await window['stgsAPI'].renVideo(video['data']['path'], getConfNameFldValue(), getConfFormatFldValue());
+            }
+            catch (_) {
+                // notify the user than the video could not be renamed
+                setContStatLabelText('Failed to rename the video!');
+
+                // set the confirmation overlay state to inactive
+                setConfOvrlState(STATE.INACTIVE);
+            }
         }
-        catch (error) {
-            console.log('ERROR RUNNING');
+        catch (_) {
+            // notify the user than the action was cancelled
+            setContStatLabelText('Action cancelled!');
         }
     });
 
@@ -582,12 +667,22 @@ function createVideoPrvwCtr(video) {
         try {
             await confProm;
 
-            // send a request to main to delete the video
-            window['stgsAPI'].delVideo(video['data']['path']);
+            // try to delete the video
+            try {
+                // send a request to main to delete the video
+                await window['stgsAPI'].delVideo(video['data']['path']);
+            }
+            catch (_) {
+                // notify the user than the video could not be deleted
+                setContStatLabelText('Failed to delete the video!');
+            }
         }
-        catch (error) {
-            console.log('ERROR');
+        catch (_) {
+            // notify the user than the action was cancelled
+            setContStatLabelText('Action cancelled!');
         }
+
+
     });
 
     // set the video element node

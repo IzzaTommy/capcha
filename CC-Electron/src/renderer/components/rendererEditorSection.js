@@ -5,7 +5,7 @@
  * @requires rendererGeneral
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct, atmpAsyncFunc } from './rendererGeneral.js';
+import { STATE, SECTION, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct } from './rendererGeneral.js';
 import { SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, getStgVolSldrBox, getIsStgVolSldrCtrHover, getIsStgVolSldrDrag, setIsStgVolSldrDrag, pseudoSetStgVol, setStgVol, setStgVolSldr, getStg, setStg } from './rendererSettingsSection.js';
 
 // editor section constants
@@ -155,18 +155,18 @@ export function initRendEditSectVars() {
     isClipRightThumbDrag = false;
 
     // video frame length, animation id, playback container timeout, and timeline
-    videoFrameLen = null;
-    animId = null;
-    plbkCtrTmoId = null;
+    videoFrameLen = -1;
+    animId = -1;
+    plbkCtrTmoId = -1;
     tmln = {
-        'startTime': null, 
-        'endTime': null, 
-        'dur': null, 
-        'intv': null, 
-        'subIntv': null, 
-        'clipLen': null, 
-        'clipStartTime': null, 
-        'clipEndTime': null
+        'startTime': -1, 
+        'endTime': -1, 
+        'dur': -1, 
+        'intv': -1, 
+        'subIntv': -1, 
+        'clipLen': -1, 
+        'clipStartTime': -1, 
+        'clipEndTime': -1
     };
 }
 
@@ -1147,7 +1147,23 @@ function initClipCtrEL() {
 
     // on click, create the clip
     createBarBtn.addEventListener('click', async () => {
-        await atmpAsyncFunc(() => window['genAPI'].reqCreateClip(videoPlr.getAttribute('src'), tmln['clipStartTime'], tmln['clipEndTime']));
+        // try to create the clip
+        try {
+            // set the confirmation container state to creating
+            setConfCtrState(STATE.CREATING);
+
+            // set the confirmation overlay state to active
+            setConfOvrlState(STATE.ACTIVE);
+
+            await window['genAPI'].reqCreateClip(videoPlr.getAttribute('src'), tmln['clipStartTime'], tmln['clipEndTime']);
+        }
+        catch (_) {
+            // notify the user that the clip could not be created
+            setContStatLabelText('Failed to create the clip!');
+
+            // set the confirmation overlay state to inactive
+            setConfOvrlState(STATE.INACTIVE);
+        }
     });
 
     // on click, change the clip toggle button state
@@ -1440,7 +1456,15 @@ function pseudoSetVideoVolState() {
  * Sets the video volume in the main process settings
  */
 async function setVideoVol() {
-    await Promise.all([atmpAsyncFunc(() => window['stgsAPI'].setStg('videoVolume', getStg('videoVolume'))), atmpAsyncFunc(() => window.stgsAPI.setStg('videoVolumeMuted', getStg('videoVolumeMuted')))]);
+    // try to update the video volume setting
+    try {
+        await Promise.all([window['stgsAPI'].setStg('videoVolume', getStg('videoVolume')), window.stgsAPI.setStg('videoVolumeMuted', getStg('videoVolumeMuted'))]);
+    }
+    catch (_) {
+        // notify the user that the video volume setting could not be updated
+        // unrevertable since the old value was deleted...
+        setContStatLabelText('Failed to update the video volume setting!');
+    }
 }
 
 /**

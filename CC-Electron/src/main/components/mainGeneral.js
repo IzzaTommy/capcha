@@ -44,9 +44,10 @@ const LOGS_PATH = path.join(LOGS_DIRECTORY, `${INITIALIZATION_DATE.getFullYear()
 const LOGS_DIV = '------------------------------------------------------------';
 const BYTES_IN_GIGABYTE = 1073741824;
 
-// asynchronous function attempts and delay
-const ASYNC_ATTEMPTS = 3;
-const ASYNC_DELAY_IN_MSECONDS = 3000;
+// asynchronous function attempts and delays
+export const ASYNC_ATTEMPTS = 3;
+export const ASYNC_DELAY_IN_MSECONDS = 3000;
+const CLOSE_DELAY = 5000;
 
 // general variables
 let mainWindow;
@@ -110,7 +111,7 @@ function initGenL() {
     ipcMain.on('gen:closeWindow', (_) => mainWindow.close());
 
     // on createClip, create a clip of the video with the given clip start and end times
-    ipcMain.handle('gen:reqCreateClip', async (_, videoPath, clipStartTime, clipEndTime) => await atmpAsyncFunc(() => createClip(videoPath, clipStartTime, clipEndTime)));
+    ipcMain.handle('gen:reqCreateClip', async (_, videoPath, clipStartTime, clipEndTime) => await atmpAsyncFunc(() => createClip(videoPath, clipStartTime, clipEndTime), 1));
 }
 
 /**
@@ -135,6 +136,7 @@ function getRdblVideoDate() {
  * @returns {Promise} - The result of creating a clip
  */
 function createClip(videoPath, clipStartTime, clipEndTime) {
+    // throw new Error('test error');
     // log that the clip is being created
     addLogMsg('General', 'CLIP', 'Creating clip...', false);  // boolean1 isFinalMsg
 
@@ -142,7 +144,7 @@ function createClip(videoPath, clipStartTime, clipEndTime) {
     return new Promise((resolve, reject) => {
         // get the ffmpeg command and clip name
         const cmd = ffmpeg(videoPath);
-        const clipName = `Clip-${getRdblVideoDate()}.${getStg('clipsFormat')}`;
+        const clipName = `Clip-CC${getRdblVideoDate()}.${getStg('clipsFormat')}`;
 
         // on end, log the successful clip creation and resolve the promise
         cmd.on('end', () => {
@@ -183,7 +185,7 @@ function createClip(videoPath, clipStartTime, clipEndTime) {
  */
 export async function checkLogsDirSize() {
     // read the directory for files
-    const filesFullNames = await atmpAsyncFunc(() => fs.readdir(LOGS_DIRECTORY));
+    const filesFullNames = await atmpAsyncFunc(() => fs.readdir(LOGS_DIRECTORY), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to load the logs!', true);
 
     // filter the files for logs
     const logsFullNames = filesFullNames.filter(fileFullName => ['txt'].includes(path.extname(fileFullName).toLowerCase().replace('.', '')));
@@ -192,7 +194,7 @@ export async function checkLogsDirSize() {
     const logs = await Promise.all(logsFullNames.map(async (logFullName) => { 
         // get the logs path and stats
         const logPath = path.join(LOGS_DIRECTORY, logFullName);
-        const logStats = await atmpAsyncFunc(() => fs.stat(logPath));
+        const logStats = await atmpAsyncFunc(() => fs.stat(logPath), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to get info on the logs!', true);
 
         // return the logs date, path, and size
         return {
@@ -217,7 +219,7 @@ export async function checkLogsDirSize() {
         logsSize -= log['size'];
 
         // delete the log
-        await atmpAsyncFunc(() => fs.unlink(log['path']));
+        await atmpAsyncFunc(() => fs.unlink(log['path']), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to remove old logs!', true);
     }
 }
 
@@ -282,9 +284,11 @@ export function sendIPC(event, ...args) {
  * @param {Function} asyncFunc - The asynchronous function
  * @param {number} atmps - The number of attempts
  * @param {number} delay - The delay between attempts in milliseconds
+ * @param {string} text - The new text of the initialization or content status label
+ * @param {boolean} isInit - If the asynchronous function is run during initialization
  * @returns {Promise} The result of the attempts
  */
-export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS) {
+export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = ASYNC_DELAY_IN_MSECONDS, text, isInit = false) {
     // repeat for the number of attempts
     for (let i = 1; i <= atmps; i++) {
         // try the asynchronous function
@@ -300,8 +304,17 @@ export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = A
             else {
                 // log that an error has occurred
                 addLogMsg('General', 'GEN', error);
-                // throw new Error(`Function failed after ${atmps} atmps: `, error);
-                // error code...
+
+                if (isInit) {
+                    // add the new video to the gallery
+                    sendIPC('gen:reqSetInitStatLabelText', text);
+
+                    // close CapCha after a delay
+                    setTimeout(() => mainWindow.close(), CLOSE_DELAY);
+                }
+                else {
+                    return Promise.reject(new Error("Rejected promise error"));
+                }
             }
         }
     }
