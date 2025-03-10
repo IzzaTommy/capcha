@@ -320,6 +320,9 @@ html[data-theme="dark"] {
     --cfnamefield-bgcolor: var(--gray-90);
     --cfnamefield-color: var(--white);
 
+    /* ==== cfdesc -> Confirmation Description ==== */
+    --cfdesc-color: var(--gray-220);
+
     /* ==== cfbtn -> Confirmation Button ==== */
     --cfbtn-color: var(--gray-220);
     --cfbtn-alt-color: var(--white);
@@ -671,6 +674,9 @@ html[data-theme="light"] {
     /* ==== cfnamefield -> Confirmation Name Field ==== */
     --cfnamefield-bgcolor: var(--slate-50);
     --cfnamefield-color: var(--black);
+
+    /* ==== cfdesc -> Confirmation Description ==== */
+    --cfdesc-color: var(--gray-20);
 
     /* ==== cfbtn -> Confirmation Button ==== */
     --cfbtn-color: var(--gray-20);

@@ -96,6 +96,13 @@ html {
     --cfformatfield-lpadding: calc(5px * var(--usin-scale));
     --cfformatfield-width: calc(50px * var(--usin-scale));
 
+    /* ==== cfdesc -> Confirmation Description ==== */
+    --cfdesc-height: calc(13px * var(--usin-scale));
+    --cfdesc-lheight: calc(13px * var(--usin-scale));
+    --cfdesc-maxwidth: calc(260px * var(--usin-scale));
+    --cfdesc-fsize: calc(10px * var(--usin-scale));
+    --cfdesc-fweight: 300;
+
     /* ==== cfbtnctr -> Confirmation Button Container ==== */
     --cfbtnctr-cgap: calc(10px * var(--usin-scale));
 

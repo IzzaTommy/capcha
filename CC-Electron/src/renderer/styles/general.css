@@ -308,6 +308,25 @@ body {
     cursor: default;
 }
 
+#description-confirmation {
+    display: none;
+    flex: 0 0 auto;
+    height: var(--cfdesc-height);
+    line-height: var(--cfdesc-lheight);
+    overflow: hidden;
+    max-width: var(--cfdesc-maxwidth);
+
+    color: var(--cfdesc-color);
+    font-size: var(--cfdesc-fsize);
+    font-weight: var(--cfdesc-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#description-confirmation.active {
+    display: block;
+}
+
 #btn-ctr-confirmation {
     display: flex;
     flex: 0 0 fit-content;

@@ -641,8 +641,9 @@ function createVideoPrvwCtr(video) {
             }
         }
         catch (_) {
+            // DO NOTHING
             // notify the user than the action was cancelled
-            setContStatLabelText('Action cancelled!');
+            // setContStatLabelText('Action cancelled!');
         }
     });
 
@@ -678,8 +679,9 @@ function createVideoPrvwCtr(video) {
             }
         }
         catch (_) {
+            // DO NOTHING
             // notify the user than the action was cancelled
-            setContStatLabelText('Action cancelled!');
+            // setContStatLabelText('Action cancelled!');
         }
 
 

@@ -48,7 +48,7 @@ const SECONDS_IN_DAY = 86400;
 
 // general variables
 let initOvrl, initStatLabel, 
-confOvrl, confCtr, confLabel, confLoadIcon, confFldCtr, confNameFld, confFormatFld, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
+confOvrl, confCtr, confLabel, confLoadIcon, confFldCtr, confNameFld, confFormatFld, confDesc, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
 contStatLabel, 
 dirsSect, editSect, stgsSect;
 
@@ -71,6 +71,7 @@ export function initRendGenVars() {
     confFldCtr = document.getElementById('field-ctr-confirmation');
     confNameFld = document.getElementById('name-field-confirmation');
     confFormatFld = document.getElementById('format-field-confirmation');
+    confDesc = document.getElementById('description-confirmation');
     confCancelBtn = document.getElementById('cancel-btn-confirmation');
     confConfBtn = document.getElementById('confirm-btn-confirmation');
     confRenBtn = document.getElementById('rename-btn-confirmation');
@@ -224,6 +225,9 @@ export function setConfCtrState(state, videoName, videoExt) {
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
 
+            // hide the confirmation description
+            confDesc.classList.remove('active');
+
             // hide every button
             confCancelBtn.classList.remove('active');
             confConfBtn.classList.remove('active');
@@ -241,6 +245,9 @@ export function setConfCtrState(state, videoName, videoExt) {
 
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
+
+            // hide the confirmation description
+            confDesc.classList.remove('active');
 
             // hide every button
             confCancelBtn.classList.remove('active');
@@ -260,6 +267,9 @@ export function setConfCtrState(state, videoName, videoExt) {
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
 
+            // hide the confirmation description
+            confDesc.classList.remove('active');
+
             // hide every button
             confCancelBtn.classList.remove('active');
             confConfBtn.classList.remove('active');
@@ -278,6 +288,9 @@ export function setConfCtrState(state, videoName, videoExt) {
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
 
+            // hide the confirmation description
+            confDesc.classList.remove('active');
+
             // hide every button
             confCancelBtn.classList.remove('active');
             confConfBtn.classList.remove('active');
@@ -295,6 +308,9 @@ export function setConfCtrState(state, videoName, videoExt) {
 
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
+
+            // hide the confirmation description
+            confDesc.classList.remove('active');
 
             // show the correct confirmation button
             confCancelBtn.classList.add('active');
@@ -318,6 +334,10 @@ export function setConfCtrState(state, videoName, videoExt) {
             confNameFld.value = videoName;
             confFormatFld.value = `.${videoExt}`
 
+            // show the confirmation description
+            confDesc.textContent = 'Unallowed characters will be ommitted.';
+            confDesc.classList.add('active');
+
             // show the correct confirmation button
             confCancelBtn.classList.add('active');
             confConfBtn.classList.remove('active');
@@ -335,6 +355,9 @@ export function setConfCtrState(state, videoName, videoExt) {
 
             // hide the confirmation field container
             confFldCtr.classList.remove('active');
+
+            // hide the confirmation description
+            confDesc.classList.remove('active');
 
             // show the correct confirmation button
             confCancelBtn.classList.add('active');
