@@ -104,8 +104,12 @@ function initGenL() {
     // on minWindow, minimize the main window
     ipcMain.on('gen:minWindow', (_) => mainWindow.minimize());
 
-    // on maxWindow, maximize or unmaximize the main window
-    ipcMain.on('gen:maxWindow', (_) => mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize());
+    // on maxWindow, maximize or unmaximize the main window and return the state
+    ipcMain.handle('gen:maxWindow', (_) => { 
+        mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
+
+        return mainWindow.isMaximized();
+    });
 
     // on closeWindow, close the main window
     ipcMain.on('gen:closeWindow', (_) => mainWindow.close());

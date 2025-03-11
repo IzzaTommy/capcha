@@ -113,7 +113,7 @@ export async function finishInit() {
     checkLogsDirSize();
     
     // initialize OBS
-    initMainOBS();
+    await initMainOBS();
 
     // initialize WebSocket
     await initMainWebSocket();

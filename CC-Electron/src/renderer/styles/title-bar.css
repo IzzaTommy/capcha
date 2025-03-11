@@ -50,3 +50,7 @@
 .title-bar-btn:hover > .title-bar-icon {
     fill: var(--tbaricon-alt-fill);
 }
+
+#bar-icon-maximize {
+    transform: rotate(180deg);
+}

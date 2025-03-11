@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld('genAPI', {
     'minWindow': () => ipcRenderer.send('gen:minWindow'),
 
     // R -> M, maximizes the window
-    'maxWindow': () => ipcRenderer.send('gen:maxWindow'),
+    'maxWindow': () => ipcRenderer.invoke('gen:maxWindow'),
 
     // R -> M, closes the window
     'closeWindow': () => ipcRenderer.send('gen:closeWindow'),

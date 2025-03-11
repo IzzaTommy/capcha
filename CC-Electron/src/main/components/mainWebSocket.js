@@ -2,13 +2,16 @@
  * Module for initializing WebSocket for the main process
  * 
  * @module mainWebSocket
+ * @requires crypto
  * @requires electron
  * @requires ws
  * @requires mainGeneral
  */
+import crypto from 'crypto';
 import { ipcMain } from 'electron';
 import { WebSocket } from 'ws';
 import { ASYNC_DELAY_IN_MSECONDS, addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
+import { OBS_PASSWORD, getTCPPort } from './mainOBS.js';
 
 // WebSocket constants
 // captures date format
@@ -61,7 +64,7 @@ function startWebSocket() {
         }
 
         // get a new WebSocket instance
-        webSocket = new WebSocket('ws://localhost:4444');
+        webSocket = new WebSocket(`ws://localhost:${getTCPPort()}`);
 
         // on open, log that WebSocket is open
         webSocket.on('open', () => addLogMsg('WebSocket', 'OPEN', 'Connected to OBS WebSocket'));
@@ -96,7 +99,11 @@ function startWebSocket() {
                     addLogMsg('WebSocket', 'MSG', `RPC Version: ${msg['d']['rpcVersion']}`, true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
                     // send op 1 to OBS WebSocket to initiate a connection
-                    webSocket.send(JSON.stringify({ 'op': 1, 'd': { rpcVersion: 1 } }));
+                    webSocket.send(JSON.stringify(
+                        { 
+                            'op': 1, 
+                            'd': { 'rpcVersion': 1, 'authentication': getAuthStr(msg['d']['authentication']['challenge'], msg['d']['authentication']['salt']) } 
+                        }));
 
                     break;
 
@@ -229,6 +236,17 @@ function initWebSocketL() {
  */
 export function getIsRec() {
     return isRec;
+}
+
+/**
+ * Gets the authentication string for OBS WebSocket
+ * 
+ * @param {string} chall - The challenge of the authentication
+ * @param {string} salt - The salt of the authentication
+ * @returns {string} - The authentication string
+ */
+function getAuthStr(chall, salt) {
+    return crypto.createHash('sha256').update((crypto.createHash('sha256').update(OBS_PASSWORD + salt).digest('base64') + chall)).digest('base64');
 }
 
 /**
