@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IzzaTommy/CapCha.git"
+    "url": "git+https://github.com/IzzaTommy/capcha.git"
   },
   "author": "Thomas Joel",
-  "license": "ISC",
+  "license": "GPL-2.0-only",
   "bugs": {
-    "url": "https://github.com/IzzaTommy/CapCha/issues"
+    "url": "https://github.com/IzzaTommy/capcha/issues"
   },
-  "homepage": "https://github.com/IzzaTommy/CapCha#readme",
+  "homepage": "https://github.com/IzzaTommy/capcha#readme",
   "devDependencies": {
     "electron": "^35.0.1"
   },
