@@ -234,7 +234,7 @@ let recProgName;
 let capsWatch, clipsWatch, checkProgsIntvId;
 
 // settings uuids
-let sceneUuid, spkInpUuid, micInpUuid, dispInpUuid, scenes, inps;
+let sceneUuid, spkInpUuid, micInpUuid, dispInpUuid, dispInpItemId, scenes, inps;
 
 // settings, devices, displays, captures, and clips
 let stgs, devs, disps, caps, clips, capsCounts, clipsCounts;
@@ -251,11 +251,12 @@ export function initMainStgsVars() {
     clipsWatch = null;
     checkProgsIntvId = -1;
 
-    // scene, speaker, microphone, and display input uuids, scenes, and inputs lists
+    // scene, speaker, microphone, and display input uuids and item ids, scenes, and inputs lists
     sceneUuid = '';
     spkInpUuid = '';
     micInpUuid = '';
     dispInpUuid = '';
+    dispInpItemId = -1;
     scenes = [];
     inps = [];
 
@@ -560,6 +561,44 @@ async function initStgs() {
                 }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the display input device!', true);
         }
     }
+
+    // get the display input item id
+    dispInpItemId = (await atmpAsyncFunc(() => sendWebSocketReq('GetSceneItemId', 
+        { 
+            'sceneName': SCENE_NAME, 
+            'sceneUuid': sceneUuid, 
+            'sourceName': DISPLAY_INPUT_NAME 
+        }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to get the display ID!', true))['responseData']['sceneItemId'];
+
+    // set the display input item transform to prevent mispositioning of the recording screen
+    await atmpAsyncFunc(() => sendWebSocketReq('SetSceneItemTransform', 
+        { 
+            'sceneName': SCENE_NAME, 
+            'sceneUuid': sceneUuid, 
+            'sceneItemId': dispInpItemId, 
+            'sceneItemTransform': 
+                { 
+                    'alignment': 5, 
+                    'boundsAlignment': 0,
+                    'boundsHeight': 1, 
+                    'boundsType': 'OBS_BOUNDS_NONE',
+                    'boundsWidth': 1,
+                    'cropBottom': 0, 
+                    'cropLeft': 0, 
+                    'cropRight': 0, 
+                    'cropToBounds': false, 
+                    'cropTop': 0, 
+                    'height': stgs.get('capturesHeight'), 
+                    'positionX': 0, 
+                    'positionY': 0, 
+                    'rotation': 0, 
+                    'scaleX': 1, 
+                    'scaleY': 1, 
+                    'sourceHeight': stgs.get('capturesHeight'), 
+                    'sourceWidth': stgs.get('capturesWidth'), 
+                    'width': stgs.get('capturesWidth')
+                }
+        }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the recording screen size!', true);
 }
 
 /**

@@ -62,7 +62,7 @@ app.on('before-quit', () => {
     }
 
     // log if the OBS process has been terminated
-    addLogMsg('General', 'CLOSE', `${getOBSState() ? 'Failed to terminate' : 'Successfully terminated'}` + 'the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
+    addLogMsg('General', 'CLOSE', `${getOBSState() ? 'Failed to terminate' : 'Successfully terminated'}` + ' the OBS Process', false, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 });
 
 // on will-quit, log that CapCha is quitting
