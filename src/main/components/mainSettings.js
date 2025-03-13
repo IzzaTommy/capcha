@@ -209,8 +209,8 @@ const SETTINGS_DATA_DEF = {
     'microphoneVolume': 0.5
     // webcam: ''
 };
-const RECORDING_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
-const RUNTIME_DISPLAYS_PATH = path.join(ACTIVE_DIRECTORY, '..', 'runtime-displays.json');
+const RECORDING_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
+const RUNTIME_DISPLAYS_PATH = path.join(ACTIVE_DIRECTORY, '..', 'monitors.json');
 
 // watcher stability threshold and poll interval
 const WATCHER_STABILITY_THRESHOLD = 2000;

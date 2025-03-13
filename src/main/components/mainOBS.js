@@ -16,7 +16,7 @@ import { atmpAsyncFunc } from './mainGeneral.js';
 const ACTIVE_DIRECTORY = import.meta.dirname;
 
 // OBS executable path, password, and termination signal
-const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 export const OBS_PASSWORD = 'CapChaOBSPassword';
 const OBS_TERMINATION_SIGNAL = 'SIGTERM';
 
