@@ -233,7 +233,7 @@ let recProgName;
 // settings states
 let capsWatch, clipsWatch, checkProgsIntvId;
 
-// settings uuids
+// settings uuids, ids, scenes, and inputs
 let sceneUuid, spkInpUuid, micInpUuid, dispInpUuid, dispInpItemId, scenes, inps;
 
 // settings, devices, displays, captures, and clips
@@ -361,7 +361,7 @@ async function initStgs() {
         }, 
         {
             'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'FPSType', 'parameterValue': '1' } 
+            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'FPSType', 'parameterValue': '2' } 
         }, 
         // set the recording path, format, encoder, width, height, and FPS
         {
@@ -376,26 +376,10 @@ async function initStgs() {
             'requestType': 'SetProfileParameter', 
             'requestData': { 'parameterCategory': 'AdvOut', 'parameterName': 'RecEncoder', 'parameterValue': stgs.get('capturesEncoder') } 
         }, 
-        {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'BaseCX', 'parameterValue': `${stgs.get('capturesWidth')}` } 
-        }, 
-        {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'OutputCX', 'parameterValue': `${stgs.get('capturesWidth')}` } 
-        }, 
-        {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'BaseCY', 'parameterValue': `${stgs.get('capturesHeight')}` } 
-        }, 
-        {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'OutputCY', 'parameterValue': `${stgs.get('capturesHeight')}` } 
-        }, 
-        {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'Video', 'parameterName': 'FPSInt', 'parameterValue': `${stgs.get('capturesFramerate')}` } 
-        }, 
+        { 
+            'requestType': 'SetVideoSettings', 
+            'requestData': { 'fpsNumerator': stgs.get('capturesFramerate'), 'fpsDenominator': 1, 'baseWidth': stgs.get('capturesWidth'), 'baseHeight': stgs.get('capturesHeight'), 'outputWidth': stgs.get('capturesWidth'), 'outputHeight': stgs.get('capturesHeight') }
+        } 
     ]), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set initial profile settings!', true);
 
     // try to set the bitrate by manipulating the file with bitrate information
@@ -534,6 +518,9 @@ async function initStgs() {
                 'sceneItemEnabled': true 
             })))['responseData']['inputUuid'];
 
+    // get the display input item id
+    dispInpItemId = (await sendWebSocketReq('GetSceneItemId', { 'sceneName': SCENE_NAME, 'sceneUuid': sceneUuid, 'sourceName': DISPLAY_INPUT_NAME }))['responseData']['sceneItemId'];
+
     // set the display to the device in the settings
     if (stgs.get('capturesDisplay') in disps) {
         await atmpAsyncFunc(() => sendWebSocketReq('SetInputSettings', 
@@ -543,6 +530,36 @@ async function initStgs() {
                 'inputSettings': { 'method': 2, 'monitor_id': '\\\\?\\' + disps[stgs.get('capturesDisplay')]['id'] }, 
                 'overlay': true 
             }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to create the display input!', true);
+
+        // set the display input item transform to prevent mispositioning of the recording screen
+        await atmpAsyncFunc(() => sendWebSocketReq('SetSceneItemTransform', 
+            { 
+                'sceneName': SCENE_NAME, 
+                'sceneUuid': sceneUuid, 
+                'sceneItemId': dispInpItemId, 
+                'sceneItemTransform': 
+                    { 
+                        'alignment': 5, 
+                        'boundsAlignment': 0,
+                        'boundsHeight': 1, 
+                        'boundsType': 'OBS_BOUNDS_NONE',
+                        'boundsWidth': 1,
+                        'cropBottom': 0, 
+                        'cropLeft': 0, 
+                        'cropRight': 0, 
+                        'cropToBounds': false, 
+                        'cropTop': 0, 
+                        'height': stgs.get('capturesHeight'), 
+                        'positionX': 0, 
+                        'positionY': 0, 
+                        'rotation': 0, 
+                        'scaleX': stgs.get('capturesWidth') / disps[stgs.get('capturesDisplay')]['sizeX'], 
+                        'scaleY': stgs.get('capturesHeight') / disps[stgs.get('capturesDisplay')]['sizeY'], 
+                        'sourceHeight': disps[stgs.get('capturesDisplay')]['sizeY'], 
+                        'sourceWidth': disps[stgs.get('capturesDisplay')]['sizeX'], 
+                        'width': stgs.get('capturesWidth')
+                    }
+            }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the recording screen size!', true);
     }
     else {
         // if the list of displays is empty, set the display to nothing
@@ -559,46 +576,38 @@ async function initStgs() {
                     'inputSettings': { 'method': 2, 'monitor_id': '\\\\?\\' + disps[stgs.get('capturesDisplay')]['id'] }, 
                     'overlay': true 
                 }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the display input device!', true);
+
+            // set the display input item transform to prevent mispositioning of the recording screen
+            await atmpAsyncFunc(() => sendWebSocketReq('SetSceneItemTransform', 
+                { 
+                    'sceneName': SCENE_NAME, 
+                    'sceneUuid': sceneUuid, 
+                    'sceneItemId': dispInpItemId, 
+                    'sceneItemTransform': 
+                        { 
+                            'alignment': 5, 
+                            'boundsAlignment': 0,
+                            'boundsHeight': 1, 
+                            'boundsType': 'OBS_BOUNDS_NONE',
+                            'boundsWidth': 1,
+                            'cropBottom': 0, 
+                            'cropLeft': 0, 
+                            'cropRight': 0, 
+                            'cropToBounds': false, 
+                            'cropTop': 0, 
+                            'height': stgs.get('capturesHeight'), 
+                            'positionX': 0, 
+                            'positionY': 0, 
+                            'rotation': 0, 
+                            'scaleX': stgs.get('capturesWidth') / disps[stgs.get('capturesDisplay')]['sizeX'], 
+                            'scaleY': stgs.get('capturesHeight') / disps[stgs.get('capturesDisplay')]['sizeY'], 
+                            'sourceHeight': disps[stgs.get('capturesDisplay')]['sizeY'], 
+                            'sourceWidth': disps[stgs.get('capturesDisplay')]['sizeX'], 
+                            'width': stgs.get('capturesWidth')
+                        }
+                }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the recording screen size!', true);
         }
     }
-
-    // get the display input item id
-    dispInpItemId = (await atmpAsyncFunc(() => sendWebSocketReq('GetSceneItemId', 
-        { 
-            'sceneName': SCENE_NAME, 
-            'sceneUuid': sceneUuid, 
-            'sourceName': DISPLAY_INPUT_NAME 
-        }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to get the display ID!', true))['responseData']['sceneItemId'];
-
-    // set the display input item transform to prevent mispositioning of the recording screen
-    await atmpAsyncFunc(() => sendWebSocketReq('SetSceneItemTransform', 
-        { 
-            'sceneName': SCENE_NAME, 
-            'sceneUuid': sceneUuid, 
-            'sceneItemId': dispInpItemId, 
-            'sceneItemTransform': 
-                { 
-                    'alignment': 5, 
-                    'boundsAlignment': 0,
-                    'boundsHeight': 1, 
-                    'boundsType': 'OBS_BOUNDS_NONE',
-                    'boundsWidth': 1,
-                    'cropBottom': 0, 
-                    'cropLeft': 0, 
-                    'cropRight': 0, 
-                    'cropToBounds': false, 
-                    'cropTop': 0, 
-                    'height': stgs.get('capturesHeight'), 
-                    'positionX': 0, 
-                    'positionY': 0, 
-                    'rotation': 0, 
-                    'scaleX': 1, 
-                    'scaleY': 1, 
-                    'sourceHeight': stgs.get('capturesHeight'), 
-                    'sourceWidth': stgs.get('capturesWidth'), 
-                    'width': stgs.get('capturesWidth')
-                }
-        }), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the recording screen size!', true);
 }
 
 /**
@@ -807,15 +816,13 @@ function initStgsL() {
 
             case 'capturesWidth':
                 // sets the new captures width
-                await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'Video', 'parameterName': 'BaseCX', 'parameterValue': `${value}` }));
-                await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'Video', 'parameterName': 'OutputCX', 'parameterValue': `${value}` }));
+                await atmpAsyncFunc(() => sendWebSocketReq('SetVideoSettings', { 'baseWidth': value, 'baseHeight': stgs.get('capturesHeight'), 'outputWidth': value, 'outputHeight': stgs.get('capturesHeight') }));
 
                 break;
 
             case 'capturesHeight':
                 // sets the new captures height
-                await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'Video', 'parameterName': 'BaseCY', 'parameterValue': `${value}` }));
-                await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'Video', 'parameterName': 'OutputCY', 'parameterValue': `${value}` }));
+                await atmpAsyncFunc(() => sendWebSocketReq('SetVideoSettings', { 'baseWidth': stgs.get('capturesWidth'), 'baseHeight': value, 'outputWidth': stgs.get('capturesWidth'), 'outputHeight': value }));
 
                 break;
 
@@ -833,7 +840,7 @@ function initStgsL() {
 
             case 'capturesFramerate':
                 // set the new captures framerate
-                await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'Video', 'parameterName': 'FPSInt', 'parameterValue': `${value}` }));
+                await atmpAsyncFunc(() => sendWebSocketReq('SetVideoSettings', { 'fpsNumerator': value, 'fpsDenominator': 1 }));
 
                 break;
 
