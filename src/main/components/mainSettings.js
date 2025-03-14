@@ -365,8 +365,8 @@ async function initStgs() {
         }, 
         // set the recording path, format, encoder, width, height, and FPS
         {
-            'requestType': 'SetProfileParameter', 
-            'requestData': { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': stgs.get('capturesDirectory') } 
+            'requestType': 'SetRecordDirectory', 
+            'requestData': { 'recordDirectory': stgs.get('capturesDirectory') } 
         }, 
         {
             'requestType': 'SetProfileParameter', 
@@ -383,9 +383,11 @@ async function initStgs() {
     ]), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set initial profile settings!', true);
 
     // try to set the bitrate by manipulating the file with bitrate information
-    await atmpAsyncFunc(() => fs.writeFile(RECORDING_ENCODER_PATH, JSON.stringify(stgs.get('capturesEncoder') == 'obs_x264' 
+    await atmpAsyncFunc(() => fs.writeFile(RECORDING_ENCODER_PATH, JSON.stringify(
+        stgs.get('capturesEncoder') == 'obs_x264' 
         ? { 'bitrate': stgs.get('capturesBitrate') } 
-        : { 'rate_control': 'CBR', 'bitrate': stgs.get('capturesBitrate') })), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the initial bitrate!', true);
+        : { 'rate_control': 'CBR', 'bitrate': stgs.get('capturesBitrate') }
+    )), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to set the initial bitrate!', true);
 
     // get the list of scenes and inputs
     scenes = (await atmpAsyncFunc(() => sendWebSocketReq('GetSceneList'), ASYNC_ATTEMPTS, ASYNC_DELAY_IN_MSECONDS, 'Failed to get the list of scenes!', true))['responseData']['scenes'];
@@ -761,7 +763,7 @@ function initStgsL() {
                     }
 
                     // sets the new captures directory
-                    await atmpAsyncFunc(() => sendWebSocketReq('SetProfileParameter', { 'parameterCategory': 'AdvOut', 'parameterName': 'RecFilePath', 'parameterValue': value }));
+                    await atmpAsyncFunc(() => sendWebSocketReq('SetRecordDirectory', { 'recordDirectory': value }));
 
                     // close the old captures directory watcher
                     await capsWatch.close();
