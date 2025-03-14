@@ -12,7 +12,7 @@
     "url": "git+https://github.com/IzzaTommy/capcha.git"
   },
   "author": "Thomas Joel",
-  "license": "GPL-2.0-only",
+  "license": "GPL-2.0-or-later",
   "bugs": {
     "url": "https://github.com/IzzaTommy/capcha/issues"
   },
