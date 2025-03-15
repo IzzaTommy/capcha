@@ -7,6 +7,8 @@
  * @requires electron
  * @requires electron-store
  * @requires extract-file-icon
+ * @requires ffmpeg-static
+ * @requires ffprobe-static
  * @requires fluent-ffmpeg
  * @requires fs
  * @requires path
@@ -20,6 +22,8 @@ import chokidar from 'chokidar';
 import { app, dialog, ipcMain, shell } from 'electron';
 import Store from 'electron-store';
 import extract from 'extract-file-icon';
+import staticFfmpeg from 'ffmpeg-static';
+import staticFfprobe from 'ffprobe-static';
 import ffmpeg from 'fluent-ffmpeg';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -243,6 +247,10 @@ let stgs, devs, disps, caps, clips, capsCounts, clipsCounts;
  * Initializes the settings variables
  */
 export function initMainStgsVars() {
+    // set the ffmpeg and ffprobe paths to local binaries
+    ffmpeg.setFfmpegPath(staticFfmpeg);
+    ffmpeg.setFfprobePath(staticFfprobe.path);
+
     // recording program
     recProgName = '';
 

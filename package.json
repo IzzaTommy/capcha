@@ -1,31 +1,57 @@
 {
   "name": "capcha",
   "version": "1.0.0",
-  "description": "An Electron-based screen recording application using OBS Studio.",
+  "description": "An Electron-based screen recording application built on OBS Studio and WebSocket.",
   "type": "module",
   "main": "src/main/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IzzaTommy/capcha.git"
   },
-  "author": "Thomas Joel",
+  "author": "github.com/IzzaTommy",
   "license": "GPL-2.0-or-later",
   "bugs": {
     "url": "https://github.com/IzzaTommy/capcha/issues"
   },
   "homepage": "https://github.com/IzzaTommy/capcha#readme",
   "devDependencies": {
+    "@electron-forge/cli": "^7.7.0",
+    "@electron-forge/maker-deb": "^7.7.0",
+    "@electron-forge/maker-rpm": "^7.7.0",
+    "@electron-forge/maker-squirrel": "^7.7.0",
+    "@electron-forge/maker-zip": "^7.7.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.7.0",
+    "@electron-forge/plugin-fuses": "^7.7.0",
+    "@electron/fuses": "^1.8.0",
     "electron": "^35.0.1"
   },
   "dependencies": {
     "chokidar": "^4.0.3",
+    "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^10.0.1",
     "extract-file-icon": "^0.3.2",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.3",
     "ps-list": "^8.1.1",
     "ws": "^8.18.1"
+  },
+  "config": {
+    "forge": {
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "win32"
+          ]
+        }
+      ],
+      "publishers": []
+    }
   }
 }
