@@ -70,21 +70,11 @@ html {
     --gray-90: #5a5a5a;
     --gray-100: #707070;
     --gray-110: #747474;
-    --gray-113: #787878;
-    --gray-116: #818181;
     --gray-120: #888888;
-    --gray-125: #898989;
     --gray-130: #8e8e8e;
-    --gray-132: #919191;
-    --gray-134: #9A9A9A;
-    --gray-136: #A2A2A2;
-    --gray-138: #ABABAB;
     --gray-140: #a4a4a4;
     --gray-150: #aaaaaa;
-    --gray-153: #B3B3B3;
-    --gray-156: #BBBBBB;
     --gray-160: #c3c3c3;
-    --gray-165: #C4C4C4;
     --gray-170: #c9c9c9;
     --gray-180: #cccccc;
     --gray-190: #d0d0d0;
@@ -108,54 +98,6 @@ html {
 html {
     /* ==== cfoverlay -> Confirmation Overlay ==== */
     --cfoverlay-bgcolor: var(--black-a10);
-
-    /* ==== cfprimarypath -> Confirmation Primary Path ==== */
-    --cfprimarypath-fill: var(--gray-100);
-    --cfprimarypath-stroke: var(--gray-100);
-
-    /* ==== cfsecondarypath -> Confirmation Secondary Path ==== */
-    --cfsecondarypath-fill: var(--gray-113);
-    --cfsecondarypath-stroke: var(--gray-113);
-
-    /* ==== cftertiarypath -> Confirmation Tertiary Path ==== */
-    --cftertiarypath-fill: var(--gray-116);
-    --cftertiarypath-stroke: var(--gray-116);
-
-    /* ==== cffourthpath -> Confirmation Fourth Path ==== */
-    --cffourthpath-fill: var(--gray-125);
-    --cffourthpath-stroke: var(--gray-125);
-
-    /* ==== cffifthpath -> Confirmation Fifth Path ==== */
-    --cffifthpath-fill: var(--gray-132);
-    --cffifthpath-stroke: var(--gray-132);
-
-    /* ==== cfsixthpath -> Confirmation Sixth Path ==== */
-    --cfsixthpath-fill: var(--gray-134);
-    --cfsixthpath-stroke: var(--gray-134);
-
-    /* ==== cfseventhpath -> Confirmation Seventh Path ==== */
-    --cfseventhpath-fill: var(--gray-136);
-    --cfseventhpath-stroke: var(--gray-136);
-
-    /* ==== cfeighthpath -> Confirmation Eighth Path ==== */
-    --cfeighthpath-fill: var(--gray-138);
-    --cfeighthpath-stroke: var(--gray-138);
-
-    /* ==== cfninthpath -> Confirmation Ninth Path ==== */
-    --cfninthpath-fill: var(--gray-153);
-    --cfninthpath-stroke: var(--gray-153);
-
-    /* ==== cftenthpath -> Confirmation Tenth Path ==== */
-    --cftenthpath-fill: var(--gray-156);
-    --cftenthpath-stroke: var(--gray-156);
-
-    /* ==== cfeleventhpath -> Confirmation Eleventh Path ==== */
-    --cfeleventhpath-fill: var(--gray-165);
-    --cfeleventhpath-stroke: var(--gray-165);
-
-    /* ==== cftwelfthpath -> Confirmation Twelfth Path ==== */
-    --cftwelfthpath-fill: var(--gray-180);
-    --cftwelfthpath-stroke: var(--gray-180);
     
     /* ==== cfconfirmbtn -> Confirmation Confirm Button ==== */
     --cfconfirmbtn-bgcolor: var(--blue-40);
@@ -172,17 +114,17 @@ html {
     /* ==== tclbarbtn -> Title Close Bar Button ==== */
     --tclbarbtn-bgcolor: var(--red);
 
-    /* ==== rprimarybarpath -> Record Primary Bar Path ==== */
-    --rprimarybarpath-fill: var(--red);
-    --rprimarybarpath-alt-fill: var(--red);
+    /* ==== rfirstbarpath -> Record First Bar Path ==== */
+    --rfirstbarpath-fill: var(--red);
+    --rfirstbarpath-alt-fill: var(--red);
 
-    /* ==== rsecondarybarpath -> Record Secondary Bar Path ==== */
-    --rsecondarybarpath-fill: var(--gray-220);
-    --rsecondarybarpath-alt-fill: var(--red);
+    /* ==== rsecondbarpath -> Record Second Bar Path ==== */
+    --rsecondbarpath-fill: var(--gray-220);
+    --rsecondbarpath-alt-fill: var(--red);
 
-    /* ==== rtertiarybarpath -> Record Tertiary Bar Path ==== */
-    --rtertiarybarpath-fill: var(--red);
-    --rtertiarybarpath-alt-fill: var(--white);
+    /* ==== rthirdbarpath -> Record Third Bar Path ==== */
+    --rthirdbarpath-fill: var(--red);
+    --rthirdbarpath-alt-fill: var(--white);
 
     /* ==== vtnimage -> Video Thumbnail Image ==== */
     --vtnimage-bgcolor: var(--black);
@@ -310,9 +252,6 @@ html[data-theme="dark"] {
     /* ==== cflabel -> Confirmation Label ==== */
     --cflabel-color: var(--gray-220);
 
-    /* ==== cfthirteenthpath -> Confirmation Thirteenth Path ==== */
-    --cfthirteenthpath-fill: var(--gray-40);
-
     /* ==== cffield -> Confirmation Field ==== */
     --cffield-color: var(--gray-220);
 
@@ -387,20 +326,20 @@ html[data-theme="dark"] {
     --rbarbtn-alt2-bgcolor: var(--gray-220);
     --rbarbtn-alt3-bgcolor: var(--white);
 
-    /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
-    --nprimarybarpath-fill: var(--gray-220);
-    --nprimarybarpath-alt-fill: var(--white);
-    --nprimarybarpath-alt2-fill: var(--gray-220);
+    /* ==== nfirstbarpath -> Nav(igation) First Bar Path ==== */
+    --nfirstbarpath-fill: var(--gray-220);
+    --nfirstbarpath-alt-fill: var(--white);
+    --nfirstbarpath-alt2-fill: var(--gray-220);
 
-    /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
-    --nsecondarybarpath-fill: var(--gray-20);
-    --nsecondarybarpath-alt-fill: var(--white);
-    --nsecondarybarpath-alt2-fill: var(--gray-220);
+    /* ==== nsecondbarpath -> Nav(igation) Second Bar Path ==== */
+    --nsecondbarpath-fill: var(--gray-20);
+    --nsecondbarpath-alt-fill: var(--white);
+    --nsecondbarpath-alt2-fill: var(--gray-220);
 
-    /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
-    --ntertiarybarpath-fill: var(--gray-220);
-    --ntertiarybarpath-alt-fill: var(--gray-80);
-    --ntertiarybarpath-alt2-fill: var(--gray-60);
+    /* ==== nthirdbarpath -> Nav(igation) Third Bar Path ==== */
+    --nthirdbarpath-fill: var(--gray-220);
+    --nthirdbarpath-alt-fill: var(--gray-80);
+    --nthirdbarpath-alt2-fill: var(--gray-60);
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
     --nbarlabel-color: var(--gray-220);
@@ -485,14 +424,14 @@ html[data-theme="dark"] {
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-color: var(--gray-120);
 
-    /* ==== vpprimarypath -> Video Preview Primary Path ==== */
-    --vpprimarypath-fill: var(--gray-220);
-    --vpprimarypath-alt-fill: var(--white);
+    /* ==== vpfirstpath -> Video Preview First Path ==== */
+    --vpfirstpath-fill: var(--gray-220);
+    --vpfirstpath-alt-fill: var(--white);
 
-    /* ==== vpsecondarypath -> Video Preview Secondary Path ==== */
-    --vpsecondarypath-fill: var(--gray-20);
-    --vpsecondarypath-alt-fill: var(--gray-70);
-    --vpsecondarypath-alt2-fill: var(--white);
+    /* ==== vpsecondpath -> Video Preview Second Path ==== */
+    --vpsecondpath-fill: var(--gray-20);
+    --vpsecondpath-alt-fill: var(--gray-70);
+    --vpsecondpath-alt2-fill: var(--white);
 
     /* ==== vprenamepath -> Video Preview Rename Path ==== */
     --vprenamepath-fill: var(--gray-220);
@@ -546,17 +485,17 @@ html[data-theme="dark"] {
     --cpbarbtn-bgcolor: var(--gray-20);
     --cpbarbtn-alt-bgcolor: var(--gray-80);
 
-    /* ==== cpprimarybarpath -> Clip Primary Bar Path ==== */
-    --cpprimarybarpath-fill: var(--gray-220);
-    --cpprimarybarpath-alt-fill: var(--white);
+    /* ==== cpfirstbarpath -> Clip First Bar Path ==== */
+    --cpfirstbarpath-fill: var(--gray-220);
+    --cpfirstbarpath-alt-fill: var(--white);
 
-    /* ==== cpsecondarybarpath -> Clip Secondary Bar Path ==== */
-    --cpsecondarybarpath-fill: var(--gray-20);
-    --cpsecondarybarpath-alt-fill: var(--white);
+    /* ==== cpsecondbarpath -> Clip Second Bar Path ==== */
+    --cpsecondbarpath-fill: var(--gray-20);
+    --cpsecondbarpath-alt-fill: var(--white);
 
-    /* ==== cptertiarybarpath -> Clip Tertiary Bar Path ==== */
-    --cptertiarybarpath-fill: var(--gray-220);
-    --cptertiarybarpath-alt-fill: var(--gray-80);
+    /* ==== cpthirdbarpath -> Clip Third Bar Path ==== */
+    --cpthirdbarpath-fill: var(--gray-220);
+    --cpthirdbarpath-alt-fill: var(--gray-80);
 
     /* ==== cpbarlabel -> Clip Bar Label ==== */
     --cpbarlabel-color: var(--gray-220);
@@ -602,17 +541,17 @@ html[data-theme="dark"] {
     --gsttile-bgcolor: var(--gray-220);
     --gsttile-alt-bgcolor: var(--white);
 
-    /* ==== gstprimarypath -> General Setting Primary Path ==== */
-    --gstprimarypath-fill: var(--gray-60);
-    --gstprimarypath-alt-fill: var(--gray-80);
+    /* ==== gstfirstpath -> General Setting First Path ==== */
+    --gstfirstpath-fill: var(--gray-60);
+    --gstfirstpath-alt-fill: var(--gray-80);
 
-    /* ==== gstsecondarypath -> General Setting Secondary Path ==== */
-    --gstsecondarypath-fill: var(--gray-60);
-    --gstsecondarypath-alt-fill: var(--gray-80);
+    /* ==== gstsecondpath -> General Setting Second Path ==== */
+    --gstsecondpath-fill: var(--gray-60);
+    --gstsecondpath-alt-fill: var(--gray-80);
 
-    /* ==== gsttertiarypath -> General Setting Tertiary Path ==== */
-    --gsttertiarypath-fill: var(--gray-220);
-    --gsttertiarypath-alt-fill: var(--white);
+    /* ==== gstthirdpath -> General Setting Third Path ==== */
+    --gstthirdpath-fill: var(--gray-220);
+    --gstthirdpath-alt-fill: var(--white);
 
     /* ==== gstprogramlabel -> General Setting Program Label ==== */
     --gstprogramlabel-color: var(--gray-20);
@@ -664,9 +603,6 @@ html[data-theme="light"] {
 
     /* ==== cflabel -> Confirmation Label ==== */
     --cflabel-color: var(--gray-20);
-
-    /* ==== cfthirteenthpath -> Confirmation Thirteenth Path ==== */
-    --cfthirteenthpath-fill: var(--gray-230);
 
     /* ==== cffield -> Confirmation Field ==== */
     --cffield-color: var(--gray-20);
@@ -742,20 +678,20 @@ html[data-theme="light"] {
     --rbarbtn-alt2-bgcolor: var(--gray-200);
     --rbarbtn-alt3-bgcolor: var(--white);
 
-    /* ==== nprimarybarpath -> Nav(igation) Primary Bar Path ==== */
-    --nprimarybarpath-fill: var(--gray-20);
-    --nprimarybarpath-alt-fill: var(--black);
-    --nprimarybarpath-alt2-fill: var(--gray-20);
+    /* ==== nfirstbarpath -> Nav(igation) First Bar Path ==== */
+    --nfirstbarpath-fill: var(--gray-20);
+    --nfirstbarpath-alt-fill: var(--black);
+    --nfirstbarpath-alt2-fill: var(--gray-20);
 
-    /* ==== nsecondarybarpath -> Nav(igation) Secondary Bar Path ==== */
-    --nsecondarybarpath-fill: var(--gray-230);
-    --nsecondarybarpath-alt-fill: var(--black);
-    --nsecondarybarpath-alt2-fill: var(--gray-20);
+    /* ==== nsecondbarpath -> Nav(igation) Second Bar Path ==== */
+    --nsecondbarpath-fill: var(--gray-230);
+    --nsecondbarpath-alt-fill: var(--black);
+    --nsecondbarpath-alt2-fill: var(--gray-20);
 
-    /* ==== ntertiarybarpath -> Nav(igation) Tertiary Bar Path ==== */
-    --ntertiarybarpath-fill: var(--gray-20);
-    --ntertiarybarpath-alt-fill: var(--gray-180);
-    --ntertiarybarpath-alt2-fill: var(--gray-200);
+    /* ==== nthirdbarpath -> Nav(igation) Third Bar Path ==== */
+    --nthirdbarpath-fill: var(--gray-20);
+    --nthirdbarpath-alt-fill: var(--gray-180);
+    --nthirdbarpath-alt2-fill: var(--gray-200);
 
     /* ==== nbarlabel -> Nav(igation) Bar Label ==== */
     --nbarlabel-color: var(--gray-20);
@@ -840,14 +776,14 @@ html[data-theme="light"] {
     /* ==== vpnamelabel -> Video Preview Name Label ==== */
     --vpnamelabel-color: var(--gray-120);
 
-    /* ==== vpprimarypath -> Video Preview Primary Path ==== */
-    --vpprimarypath-fill: var(--gray-20);
-    --vpprimarypath-alt-fill: var(--white);
+    /* ==== vpfirstpath -> Video Preview First Path ==== */
+    --vpfirstpath-fill: var(--gray-20);
+    --vpfirstpath-alt-fill: var(--white);
 
-    /* ==== vpsecondarypath -> Video Preview Secondary Path ==== */
-    --vpsecondarypath-fill: var(--gray-230);
-    --vpsecondarypath-alt-fill: var(--slate-60);
-    --vpsecondarypath-alt2-fill: var(--white);
+    /* ==== vpsecondpath -> Video Preview Second Path ==== */
+    --vpsecondpath-fill: var(--gray-230);
+    --vpsecondpath-alt-fill: var(--slate-60);
+    --vpsecondpath-alt2-fill: var(--white);
 
     /* ==== vprenamepath -> Video Preview Rename Path ==== */
     --vprenamepath-fill: var(--gray-20);
@@ -901,17 +837,17 @@ html[data-theme="light"] {
     --cpbarbtn-bgcolor: var(--gray-230);
     --cpbarbtn-alt-bgcolor: var(--gray-180);
 
-    /* ==== cpprimarybarpath -> Clip Primary Bar Path ==== */
-    --cpprimarybarpath-fill: var(--gray-20);
-    --cpprimarybarpath-alt-fill: var(--black);
+    /* ==== cpfirstbarpath -> Clip First Bar Path ==== */
+    --cpfirstbarpath-fill: var(--gray-20);
+    --cpfirstbarpath-alt-fill: var(--black);
 
-    /* ==== cpsecondarybarpath -> Clip Secondary Bar Path ==== */
-    --cpsecondarybarpath-fill: var(--gray-230);
-    --cpsecondarybarpath-alt-fill: var(--black);
+    /* ==== cpsecondbarpath -> Clip Second Bar Path ==== */
+    --cpsecondbarpath-fill: var(--gray-230);
+    --cpsecondbarpath-alt-fill: var(--black);
 
-    /* ==== cptertiarybarpath -> Clip Tertiary Bar Path ==== */
-    --cptertiarybarpath-fill: var(--gray-20);
-    --cptertiarybarpath-alt-fill: var(--gray-180);
+    /* ==== cpthirdbarpath -> Clip Third Bar Path ==== */
+    --cpthirdbarpath-fill: var(--gray-20);
+    --cpthirdbarpath-alt-fill: var(--gray-180);
 
     /* ==== cpbarlabel -> Clip Bar Label ==== */
     --cpbarlabel-color: var(--gray-20);
@@ -957,17 +893,17 @@ html[data-theme="light"] {
     --gsttile-bgcolor: var(--gray-250);
     --gsttile-alt-bgcolor: var(--white);
 
-    /* ==== gstprimarypath -> General Setting Primary Path ==== */
-    --gstprimarypath-fill: var(--gray-20);
-    --gstprimarypath-alt-fill: var(--black);
+    /* ==== gstfirstpath -> General Setting First Path ==== */
+    --gstfirstpath-fill: var(--gray-20);
+    --gstfirstpath-alt-fill: var(--black);
 
-    /* ==== gstsecondarypath -> General Setting Secondary Path ==== */
-    --gstsecondarypath-fill: var(--gray-250);
-    --gstsecondarypath-alt-fill: var(--black);
+    /* ==== gstsecondpath -> General Setting Second Path ==== */
+    --gstsecondpath-fill: var(--gray-250);
+    --gstsecondpath-alt-fill: var(--black);
 
-    /* ==== gsttertiarypath -> General Setting Tertiary Path ==== */
-    --gsttertiarypath-fill: var(--gray-20);
-    --gsttertiarypath-alt-fill: var(--white);
+    /* ==== gstthirdpath -> General Setting Third Path ==== */
+    --gstthirdpath-fill: var(--gray-20);
+    --gstthirdpath-alt-fill: var(--white);
 
     /* ==== gstprogramlabel -> General Setting Program Label ==== */
     --gstprogramlabel-color: var(--gray-20);

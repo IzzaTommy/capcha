@@ -211,28 +211,28 @@
     transition: var(--gstpath-transition);
 }
 
-.general-setting-primary-path {
-    fill: var(--gstprimarypath-fill);
+.general-setting-first-path {
+    fill: var(--gstfirstpath-fill);
 }
 
-.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-primary-path {
-    fill: var(--gstprimarypath-alt-fill);
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-first-path {
+    fill: var(--gstfirstpath-alt-fill);
 }
 
-.general-setting-secondary-path {
-    fill: var(--gstsecondarypath-fill);
+.general-setting-second-path {
+    fill: var(--gstsecondpath-fill);
 }
 
-.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-secondary-path {
-    fill: var(--gstsecondarypath-alt-fill);
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-second-path {
+    fill: var(--gstsecondpath-alt-fill);
 }
 
-.general-setting-tertiary-path {
-    fill: var(--gsttertiarypath-fill);
+.general-setting-third-path {
+    fill: var(--gstthirdpath-fill);
 }
 
-.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-tertiary-path {
-    fill: var(--gsttertiarypath-alt-fill);
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-third-path {
+    fill: var(--gstthirdpath-alt-fill);
 }
 
 .general-setting-program-icon {

@@ -1,0 +1,23 @@
+<svg id="loading" xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200">
+    <defs> 
+        <mask id="first-mask-loading">
+            <rect height="100%" width="100%" fill="#ffffff" x="-100" y="-100"/>
+    
+            <circle fill="#000000" cx="0" cy="0" r="35" />
+            <circle fill="none" stroke="#000000" stroke-width="25px" cx="0" cy="0" r="63" />
+        </mask>
+    </defs>
+
+    <path fill="#707070" stroke="#707070" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#787878" stroke="#787878" style="rotate: 30deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#818181" stroke="#818181" style="rotate: 60deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#898989" stroke="#898989" style="rotate: 90deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#919191" stroke="#919191" style="rotate: 120deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#9a9a9a" stroke="#9a9a9a" style="rotate: 150deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#a2a2a2" stroke="#a2a2a2" style="rotate: 180deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#ababab" stroke="#ababab" style="rotate: 210deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#b3b3b3" stroke="#b3b3b3" style="rotate: 240deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#bbbbbb" stroke="#bbbbbb" style="rotate: 270deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#c4c4c4" stroke="#c4c4c4" style="rotate: 300deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+    <path fill="#cccccc" stroke="#cccccc" style="rotate: 330deg" mask="url(#first-mask-loading)" d="M-50 -50Q20 -50 0 0Q42.3205081 -33.3012702 -18.3012702 -68.3012702Z" />
+</svg>

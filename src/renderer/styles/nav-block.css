@@ -141,64 +141,64 @@
     transition: var(--nbarpath-transition);
 }
 
-.nav-primary-bar-path {
-    fill: var(--nprimarybarpath-fill);
+.nav-first-bar-path {
+    fill: var(--nfirstbarpath-fill);
 }
 
-.nav-bar-btn:hover > .nav-bar-icon > .nav-primary-bar-path {
-    fill: var(--nprimarybarpath-alt-fill)!important;
+.nav-bar-btn:hover > .nav-bar-icon > .nav-first-bar-path {
+    fill: var(--nfirstbarpath-alt-fill)!important;
 }
 
-.nav-bar-btn.active > .nav-bar-icon > .nav-primary-bar-path {
-    fill: var(--nprimarybarpath-alt2-fill);
+.nav-bar-btn.active > .nav-bar-icon > .nav-first-bar-path {
+    fill: var(--nfirstbarpath-alt2-fill);
 }
 
-#bar-btn-record.active > #bar-icon-record > #primary-bar-path-record {
-    fill: var(--rprimarybarpath-fill);
+#bar-btn-record.active > #bar-icon-record > #first-bar-path-record {
+    fill: var(--rfirstbarpath-fill);
 }
 
-#bar-btn-record.active:hover > #bar-icon-record > #primary-bar-path-record {
-    fill: var(--rprimarybarpath-alt-fill)!important;
+#bar-btn-record.active:hover > #bar-icon-record > #first-bar-path-record {
+    fill: var(--rfirstbarpath-alt-fill)!important;
 }
 
-.nav-secondary-bar-path {
-    fill: var(--nsecondarybarpath-fill);
+.nav-second-bar-path {
+    fill: var(--nsecondbarpath-fill);
 }
 
-.nav-bar-btn:hover > .nav-bar-icon > .nav-secondary-bar-path {
-    fill: var(--nsecondarybarpath-alt-fill)!important;
+.nav-bar-btn:hover > .nav-bar-icon > .nav-second-bar-path {
+    fill: var(--nsecondbarpath-alt-fill)!important;
 }
 
-.nav-bar-btn.active > .nav-bar-icon > .nav-secondary-bar-path {
-    fill: var(--nsecondarybarpath-alt2-fill);
+.nav-bar-btn.active > .nav-bar-icon > .nav-second-bar-path {
+    fill: var(--nsecondbarpath-alt2-fill);
 }
 
-#bar-btn-record.active > #bar-icon-record > #secondary-bar-path-record {
-    fill: var(--rsecondarybarpath-fill);
+#bar-btn-record.active > #bar-icon-record > #second-bar-path-record {
+    fill: var(--rsecondbarpath-fill);
 }
 
-#bar-btn-record.active:hover > #bar-icon-record > #secondary-bar-path-record {
-    fill: var(--rsecondarybarpath-alt-fill)!important;
+#bar-btn-record.active:hover > #bar-icon-record > #second-bar-path-record {
+    fill: var(--rsecondbarpath-alt-fill)!important;
 }
 
-.nav-tertiary-bar-path {
-    fill: var(--ntertiarybarpath-fill);
+.nav-third-bar-path {
+    fill: var(--nthirdbarpath-fill);
 }
 
-.nav-bar-btn:hover > .nav-bar-icon > .nav-tertiary-bar-path {
-    fill: var(--ntertiarybarpath-alt-fill)!important;
+.nav-bar-btn:hover > .nav-bar-icon > .nav-third-bar-path {
+    fill: var(--nthirdbarpath-alt-fill)!important;
 }
 
-.nav-bar-btn.active > .nav-bar-icon > .nav-tertiary-bar-path {
-    fill: var(--ntertiarybarpath-alt2-fill);
+.nav-bar-btn.active > .nav-bar-icon > .nav-third-bar-path {
+    fill: var(--nthirdbarpath-alt2-fill);
 }
 
-#bar-btn-record.active > #bar-icon-record > #tertiary-bar-path-record {
-    fill: var(--rtertiarybarpath-fill);
+#bar-btn-record.active > #bar-icon-record > #third-bar-path-record {
+    fill: var(--rthirdbarpath-fill);
 }
 
-#bar-btn-record.active:hover > #bar-icon-record > #tertiary-bar-path-record {
-    fill: var(--rtertiarybarpath-alt-fill)!important;
+#bar-btn-record.active:hover > #bar-icon-record > #third-bar-path-record {
+    fill: var(--rthirdbarpath-alt-fill)!important;
 }
 
 .nav-bar-label {

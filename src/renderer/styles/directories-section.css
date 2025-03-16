@@ -386,24 +386,24 @@
     transition: var(--vppath-transition);
 }
 
-.video-preview-primary-path {
-    fill: var(--vpprimarypath-fill);
+.video-preview-first-path {
+    fill: var(--vpfirstpath-fill);
 }
 
-.video-preview-btn:hover > .video-preview-icon > .video-preview-primary-path {
-    fill: var(--vpprimarypath-alt-fill);
+.video-preview-btn:hover > .video-preview-icon > .video-preview-first-path {
+    fill: var(--vpfirstpath-alt-fill);
 }
 
-.video-preview-secondary-path {
-    fill: var(--vpsecondarypath-fill);
+.video-preview-second-path {
+    fill: var(--vpsecondpath-fill);
 }
 
-.video-preview-ctr:hover > .video-preview-btn-ctr > .video-preview-btn > .video-preview-icon > .video-preview-secondary-path {
-    fill: var(--vpsecondarypath-alt-fill);
+.video-preview-ctr:hover > .video-preview-btn-ctr > .video-preview-btn > .video-preview-icon > .video-preview-second-path {
+    fill: var(--vpsecondpath-alt-fill);
 }
 
-.video-preview-btn:hover > .video-preview-icon > .video-preview-secondary-path {
-    fill: var(--vpsecondarypath-alt2-fill)!important;
+.video-preview-btn:hover > .video-preview-icon > .video-preview-second-path {
+    fill: var(--vpsecondpath-alt2-fill)!important;
 }
 
 .video-preview-rename-path {

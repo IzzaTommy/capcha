@@ -612,28 +612,28 @@
     transition: var(--cpbarpath-transition);
 }
 
-.clip-primary-bar-path {
-    fill: var(--cpprimarybarpath-fill);
+.clip-first-bar-path {
+    fill: var(--cpfirstbarpath-fill);
 }
 
-.clip-bar-btn:hover > .clip-bar-icon > .clip-primary-bar-path {
-    fill: var(--cpprimarybarpath-alt-fill);
+.clip-bar-btn:hover > .clip-bar-icon > .clip-first-bar-path {
+    fill: var(--cpfirstbarpath-alt-fill);
 }
 
-.clip-secondary-bar-path {
-    fill: var(--cpsecondarybarpath-fill);
+.clip-second-bar-path {
+    fill: var(--cpsecondbarpath-fill);
 }
 
-.clip-bar-btn:hover > .clip-bar-icon > .clip-secondary-bar-path {
-    fill: var(--cpsecondarybarpath-alt-fill);
+.clip-bar-btn:hover > .clip-bar-icon > .clip-second-bar-path {
+    fill: var(--cpsecondbarpath-alt-fill);
 }
 
-.clip-tertiary-bar-path {
-    fill: var(--cptertiarybarpath-fill);
+.clip-third-bar-path {
+    fill: var(--cpthirdbarpath-fill);
 }
 
-.clip-bar-btn:hover > .clip-bar-icon > .clip-tertiary-bar-path {
-    fill: var(--cptertiarybarpath-alt-fill);
+.clip-bar-btn:hover > .clip-bar-icon > .clip-third-bar-path {
+    fill: var(--cpthirdbarpath-alt-fill);
 }
 
 .clip-bar-label {
