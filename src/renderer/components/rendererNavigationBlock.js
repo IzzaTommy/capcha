@@ -22,7 +22,7 @@ let navBar,
 dirsBarBtn, stgsBarBtn, 
 curRecLabelCtr, curRecTimeLabel, curRecProgLabel, 
 recBarBtn, 
-autoRecResLabel, 
+autoRecLabelCtr, 
 navTogBtn, navTogIcon;
 
 // navigation block time, interval, recording flags
@@ -47,8 +47,8 @@ export function initRendNavBlockVars() {
     // recording bar button
     recBarBtn = document.getElementById('bar-btn-record');
 
-    // automatic recording resume label
-    autoRecResLabel = document.getElementById('resume-label-auto-record');
+    // automatic recording label container
+    autoRecLabelCtr = document.getElementById('label-ctr-auto-record');
 
     // navigation toggle button and icon
     navTogBtn = document.getElementById('toggle-btn-nav');
@@ -88,8 +88,8 @@ function initNavBarBtnEL() {
     recBarBtn.addEventListener('click', async () => await setRecBarBtnState(false, true));  // boolean1 isAutoStart, boolean2 isManualStop
 
     // on click, hide the label and reallow auto recording if it is shown
-    autoRecResLabel.addEventListener('click', () => {
-        autoRecResLabel.classList.remove('active');
+    autoRecLabelCtr.addEventListener('click', () => {
+        autoRecLabelCtr.classList.remove('active');
         wasManualStop = false;
      });
 }
@@ -107,7 +107,7 @@ function initNavTogBtnEL() {
             // check if the setting changed
             if (getStg('navigationBarActive') !== navBar.classList.contains('active')) {
                 // hide the auto recording resume label before the navigation bar transition begins
-                autoRecResLabel.classList.remove('active');
+                autoRecLabelCtr.classList.remove('active');
 
                 // change the toggle icon and state
                 if (navBar.classList.contains('active')) {
@@ -139,7 +139,7 @@ function initNavTogBtnEL() {
                     if (wasManualStop && getStg('autoRecord')) {
                         // show the label to let the user reenable auto recording
                         // not width dependent, but transition dependent, show after the navigation bar finishes transition
-                        autoRecResLabel.classList.add('active');
+                        autoRecLabelCtr.classList.add('active');
                     }
                 }, NAVIGATION_BAR_TIMEOUT);
             }
@@ -226,7 +226,7 @@ export async function setRecBarBtnState(isAutoStart, isManualStop, recProgName =
                 // check if auto record is on and the recording was manually stopped
                 if (isManualStop && getStg('autoRecord')) {
                     // show the label to let the user re-allow auto recording
-                    autoRecResLabel.classList.add('active');
+                    autoRecLabelCtr.classList.add('active');
                 }
 
                 // clear the recording time label interval

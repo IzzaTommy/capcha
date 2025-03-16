@@ -1,6 +1,6 @@
 html {
-    /* --usin-scale: 0.5; */
-    /* --usin-scale: 2; */
+    --usin-scale: 0.5;
+    --usin-scale: 2;
     --usin-scale: 1;
     --effect-scale: 0.5;
 
@@ -181,6 +181,9 @@ html {
     --ndivider-lmargin: calc(-5px * var(--usin-scale));
     --ndivider-width: calc(100% + 10px * var(--usin-scale));
 
+    /* ==== nstrip -> Nav(igation) Strip ==== */
+    --nstrip-rgap: calc(10px * var(--usin-scale));
+
     /* ==== nbarbtn -> Nav(igation) Bar Button ==== */
     --nbarbtn-bradius: calc(10px * var(--usin-scale));
     --nbarbtn-cgap: calc(40px * var(--usin-scale));
@@ -202,37 +205,40 @@ html {
     --nbarlabel-fweight: 400;
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
-    --curlabelctr-rinset: calc(15px * var(--usin-scale));
-    --curlabelctr-binset: calc(78px * var(--usin-scale));
-    --curlabelctr-alt-binset: calc(105.5px * var(--usin-scale));
-    --curlabelctr-linset: calc(15px * var(--usin-scale));
+    --curlabelctr-tinset: calc(58.25px * var(--usin-scale));
+    --curlabelctr-alt-tinset: calc(30.75px * var(--usin-scale));
     --curlabelctr-bwidth: calc(1.5px * var(--usin-scale));
     --curlabelctr-bradius: calc(10px * var(--usin-scale));
     --curlabelctr-cgap: calc(10px * var(--usin-scale));
     --curlabelctr-tpadding: calc(2.5px * var(--usin-scale));
     --curlabelctr-hpadding: calc(2.5px * var(--usin-scale));
     --curlabelctr-bpadding: calc(25px * var(--usin-scale));
+    --curlabelctr-hmargin: calc(5px * var(--usin-scale));
 
     /* ==== curtimelabel -> Current Recording Time Label ==== */
     --curtimelabel-height: calc(14px * var(--usin-scale));
     --curtimelabel-lheight: calc(14px * var(--usin-scale));
-    --curtimelabel-width: calc(43px * var(--usin-scale));
+    --curtimelabel-width: calc(42px * var(--usin-scale));
     --curtimelabel-fsize: calc(10.75px * var(--usin-scale));
     --curtimelabel-fweight: 300;
 
     /* ==== curprogramlabel -> Current Recording Program Label ==== */
     --curprogramlabel-height: calc(16px * var(--usin-scale));
     --curprogramlabel-lheight: calc(16px * var(--usin-scale));
-    --curprogramlabel-maxwidth: calc(120px * var(--usin-scale));
+    --curprogramlabel-maxwidth: calc(121px * var(--usin-scale));
     --curprogramlabel-fsize: calc(12px * var(--usin-scale));
     --curprogramlabel-fweight: 400;
 
-    /* ==== arresumelabel -> Auto Record Resume Label ==== */
-    --arresumelabel-height: calc(48px * var(--usin-scale));
-    --arresumelabel-lheight: calc(16px * var(--usin-scale));
-    --arresumelabel-hmargin: calc(5px * var(--usin-scale));
-    --arresumelabel-fsize: calc(12px * var(--usin-scale));
-    --arresumelabel-fweight: 400;
+    /* ==== arlabelctr -> Auto Record Label Container ==== */
+    --arlabelctr-cgap: 0.5ch;
+    --arlabelctr-height: calc(48px * var(--usin-scale));
+    --arlabelctr-hmargin: calc(4px * var(--usin-scale));
+
+    /* ==== arlabel -> Auto Record Label ==== */
+    --arlabel-lheight: calc(16px * var(--usin-scale));
+    --arlabel-maxwidth: calc(52px * var(--usin-scale));
+    --arlabel-fsize: calc(12px * var(--usin-scale));
+    --arlabel-fweight: 400;
 
     /* ==== ntoggleicon -> Nav(igation) Toggle Icon ==== */
     --ntoggleicon-length: calc(15px * var(--usin-scale));

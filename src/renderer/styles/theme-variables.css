@@ -359,9 +359,9 @@ html[data-theme="dark"] {
     /* ==== curprogramlabel -> Current Recording Program Label ==== */
     --curprogramlabel-color: var(--gray-220);
 
-    /* ==== arresumelabel -> Auto Record Resume Label ==== */
-    --arresumelabel-color: var(--slate-40);
-    --arresumelabel-alt-color: var(--gray-220);
+    /* ==== arlabel -> Auto Record Label ==== */
+    --arlabel-color: var(--slate-40);
+    --arlabel-alt-color: var(--gray-220);
 
     /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
     --ntogglebtn-bgcolor: var(--gray-50);
@@ -711,9 +711,9 @@ html[data-theme="light"] {
     /* ==== curprogramlabel -> Current Recording Program Label ==== */
     --curprogramlabel-color: var(--gray-20);
 
-    /* ==== arresumelabel -> Auto Record Resume Label ==== */
-    --arresumelabel-color: var(--slate-40);
-    --arresumelabel-alt-color: var(--gray-20);
+    /* ==== arlabel -> Auto Record Label ==== */
+    --arlabel-color: var(--slate-40);
+    --arlabel-alt-color: var(--gray-20);
 
     /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
     --ntogglebtn-bgcolor: var(--slate-70);
@@ -972,14 +972,17 @@ html {
     --nbarlabel-alt-transition: opacity var(--def-time-2000) var(--def-time-5000), color var(--def-time-3000);
 
     /* ==== curlabelctr -> Current Recording Label Container ==== */
-    --curlabelctr-transition: bottom var(--def-time-3000);
+    --curlabelctr-transition: top var(--def-time-3000);
 
     /* ==== curprogramlabel -> Current Recording Program Label ==== */
     --curprogramlabel-transition: opacity var(--def-time-2000);
     --curprogramlabel-alt-transition: opacity var(--def-time-2000) var(--def-time-5000);
 
-    /* ==== arresumelabel -> Auto Record Resume Label ==== */
-    --arresumelabel-transition: color var(--def-time-3000), opacity var(--def-time-3000);
+    /* ==== arlabelctr -> Auto Record Label Container ==== */
+    --arlabelctr-transition: opacity var(--def-time-3000);
+
+    /* ==== arlabel -> Auto Record Label ==== */
+    --arlabel-transition: color var(--def-time-3000);
 
     /* ==== ntogglebtn -> Nav(igation) Toggle Button ==== */
     --ntogglebtn-transition: background-color var(--def-time-3000);
