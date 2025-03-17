@@ -29,6 +29,9 @@ export function initRendTitleBarVars() {
 export function initRendTitleBar() {
     // initialize the title bar button event listeners
     initTitleBarBtnEL();
+
+    // initialize the title bar inter-process communication listeners to the main process
+    initTitleBarIPC();
 }
 
 /**
@@ -39,12 +42,18 @@ function initTitleBarBtnEL() {
     minBarBtn.addEventListener('click', window['genAPI'].minWindow);
 
     // on click, maximize the window
-    maxBarBtn.addEventListener('click', async () => {
-        await window['genAPI'].maxWindow() ? setIcon(maxBarIcon, 'filter-none-600') : setIcon(maxBarIcon, 'square-600');
-    });
+    maxBarBtn.addEventListener('click', window['genAPI'].maxWindow);
 
     // on click, save the cached video volume data and close the window
     closeBarBtn.addEventListener('click', window['genAPI'].closeWindow);
+}
+
+/**
+ * Initializes the title bar inter-process communication callbacks
+ */
+function initTitleBarIPC() {
+    // on request, set the maximize bar icon
+    window['genAPI'].reqSetMaxBarIcon((isMax) => setMaxBarIcon(isMax));
 }
 
 /**
@@ -55,4 +64,13 @@ function initTitleBarBtnEL() {
  */
 export function setTitleBarStyle(style, value) {
     titleBar['style'][style] = value;
+}
+
+/**
+ * Sets the maximize bar icon
+ * 
+ * @param {*} isMax - If the window is maximized or unmaximized
+ */
+function setMaxBarIcon(isMax) {
+    isMax ? setIcon(maxBarIcon, 'filter-none-600') : setIcon(maxBarIcon, 'square-600');
 }

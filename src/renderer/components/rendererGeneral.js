@@ -96,7 +96,7 @@ export function initRendGen() {
     // initialize the general event listeners
     initGenEL();
     
-    // initialize the inter-process communication listeners to the main process
+    // initialize the general inter-process communication listeners to the main process
     initGenIPC();
 }
 
@@ -165,7 +165,7 @@ function initGenEL() {
 }
 
 /**
- * Initializes the inter-process communication callbacks
+ * Initializes the general inter-process communication callbacks
  */
 function initGenIPC() {
     // on request, sets the initialization status label text

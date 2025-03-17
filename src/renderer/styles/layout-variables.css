@@ -1,7 +1,7 @@
 html {
     --usin-scale: 0.5;
     --usin-scale: 2;
-    /* --usin-scale: 1; */
+    --usin-scale: 1;
 
     /* ==== scbar -> Scroll Bar ==== */
     --scbar-length: calc(20px * var(--usin-scale));  /* width if vertical, height is horizontal of the whole scroll bar */

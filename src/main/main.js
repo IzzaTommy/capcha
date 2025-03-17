@@ -108,7 +108,7 @@ async function init() {
 /**
  * Initializes OBS, WebSocket, and the settings
  */
-export async function finishInit() {
+async function finishInit() {
     // check the logs directory storage limit
     checkLogsDirSize();
     

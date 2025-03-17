@@ -105,17 +105,22 @@ function initGenL() {
     ipcMain.on('gen:minWindow', (_) => mainWindow.minimize());
 
     // on maxWindow, maximize or unmaximize the main window and return the state
-    ipcMain.handle('gen:maxWindow', (_) => { 
-        mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
-
-        return mainWindow.isMaximized();
-    });
+    ipcMain.on('gen:maxWindow', (_) => mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize());
 
     // on closeWindow, close the main window
     ipcMain.on('gen:closeWindow', (_) => mainWindow.close());
 
     // on createClip, create a clip of the video with the given clip start and end times
     ipcMain.handle('gen:reqCreateClip', async (_, videoPath, clipStartTime, clipEndTime) => await atmpAsyncFunc(() => createClip(videoPath, clipStartTime, clipEndTime), 1));
+
+    // on maximize, set the maximize bar icon
+    mainWindow.on('maximize', () => mainWindow['webContents'].send('gen:reqSetMaxBarIcon', true));
+
+    // on unmaximize, set the maximize bar icon
+    mainWindow.on('unmaximize', () => mainWindow['webContents'].send('gen:reqSetMaxBarIcon', false));
+
+    // on minimize, set the maximize bar icon
+    mainWindow.on('minimize', () => mainWindow['webContents'].send('gen:reqSetMaxBarIcon', false));
 }
 
 /**
@@ -311,7 +316,7 @@ export async function atmpAsyncFunc(asyncFunc, atmps = ASYNC_ATTEMPTS, delay = A
 
                 if (isInit) {
                     // add the new video to the gallery
-                    sendIPC('gen:reqSetInitStatLabelText', text);
+                    mainWindow['webContents'].send('gen:reqSetInitStatLabelText', text);
 
                     // close CapCha after a delay
                     setTimeout(() => mainWindow.close(), CLOSE_DELAY);

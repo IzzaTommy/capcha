@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld('genAPI', {
     'minWindow': () => ipcRenderer.send('gen:minWindow'),
 
     // R -> M, maximizes the window
-    'maxWindow': () => ipcRenderer.invoke('gen:maxWindow'),
+    'maxWindow': () => ipcRenderer.send('gen:maxWindow'),
 
     // R -> M, closes the window
     'closeWindow': () => ipcRenderer.send('gen:closeWindow'),
@@ -19,7 +19,10 @@ contextBridge.exposeInMainWorld('genAPI', {
     'reqSetInitStatLabelText': (cb) => ipcRenderer.once('gen:reqSetInitStatLabelText', (_, text) => cb(text)), 
 
     // R -> M, creates a clip of the video
-    'reqCreateClip': (videoPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoPath, clipStartTime, clipEndTime)
+    'reqCreateClip': (videoPath, clipStartTime, clipEndTime) => ipcRenderer.invoke('gen:reqCreateClip', videoPath, clipStartTime, clipEndTime), 
+
+    // M -> R, requests a call to setMaxBarIcon
+    'reqSetMaxBarIcon': (cb) => ipcRenderer.on('gen:reqSetMaxBarIcon', (_, isMax) => cb(isMax))
 });
 
 contextBridge.exposeInMainWorld('webSocketAPI', {

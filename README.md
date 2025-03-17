@@ -52,7 +52,6 @@ In particular, I needed a program that could:
 - Adding multiple videos at once to the captures or clips directory will cause the gallery to desync from the actual contents of the directory.
 - If **CapCha** is recording, the computer cannot be suspended (On Windows, it will stay on with a black screen).
 - On **CapCha**’s first run, OBS will NOT use the default settings for the capture format (.mp4) and possibly the encoder (NVIDIA NVENC H.264) and bitrate (3000 kbps). Subsequent runs SHOULD use the default settings and allow them to be changed.
-- If the user “unmaximizes” the **CapCha** window by dragging on the title bar, the maximize button does not change to the correct icon
 - Deleting the last video in a directory does not show the “No Videos Found” label.
 - When clipping, the timeline slider may run past the clip bounds when viewing the clip.
 
