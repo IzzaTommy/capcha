@@ -430,7 +430,7 @@ body {
 .content-ctr3 {    
     display: flex;
     flex: 0 0 fit-content;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     row-gap: var(--cctr3-rgap);
     column-gap: var(--cctr3-cgap);
     max-height: var(--cctr3-maxheight);

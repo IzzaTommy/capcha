@@ -4,7 +4,7 @@
 }
 
 .directories-label2 {
-    flex: 0 1 fit-content;
+    flex: 1 1 fit-content;
 
     transition: var(--dlabel-transition);
 
@@ -85,6 +85,7 @@
     flex: 0 0 auto;
     height: var(--dstfield-height);
     line-height: var(--dstfield-lheight);
+    overflow: hidden;
     padding-right: var(--dstfield-hpadding);
     padding-left: var(--dstfield-hpadding);
 
@@ -92,7 +93,9 @@
     color: var(--dstfield-color);
     font-size: var(--dstfield-fsize);
     font-weight: var(--dstfield-fweight);
+    text-overflow: ellipsis;
     transition: var(--dstfield-transition);
+    white-space: nowrap;
 
     cursor: pointer;
 }
@@ -220,6 +223,7 @@
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
+    max-width: 100%;
 
     color: var(--dstatuslabel-color);
     font-size: var(--dstatuslabel-fsize);

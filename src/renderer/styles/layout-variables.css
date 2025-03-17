@@ -1,8 +1,7 @@
 html {
     --usin-scale: 0.5;
     --usin-scale: 2;
-    --usin-scale: 1;
-    --effect-scale: 0.5;
+    /* --usin-scale: 1; */
 
     /* ==== scbar -> Scroll Bar ==== */
     --scbar-length: calc(20px * var(--usin-scale));  /* width if vertical, height is horizontal of the whole scroll bar */
@@ -27,7 +26,7 @@ html {
     --istatuslabel-fweight: 300;
 
     /* ==== ctarea -> Client Area ==== */
-    --ctarea-cgap: calc(12px * var(--effect-scale) * var(--usin-scale));
+    --ctarea-cgap: calc(12px * 0.5 * var(--usin-scale));
 
     /* ==== cfctr -> Confirmation Container ==== */
     --cfctr-bradius: calc(10px * var(--usin-scale));
@@ -271,8 +270,8 @@ html {
     --dstfield-height: calc(30px * var(--usin-scale));
     --dstfield-lheight: calc(30px * var(--usin-scale));
     --dstfield-hpadding: calc(10px * var(--usin-scale));
-    --dstfield-width: calc(150px * var(--usin-scale));
-    --dstfield-alt-width: calc(110px * var(--usin-scale));
+    --dstfield-width: calc(100px * var(--usin-scale));
+    --dstfield-alt-width: calc(90px * var(--usin-scale));
     --dstfield-fsize: calc(14px * var(--usin-scale));
     --dstfield-fweight: 400;
 
@@ -299,7 +298,6 @@ html {
     /* ==== dstatuslabel -> Directory Status Label ==== */
     --dstatuslabel-height: calc(50px * var(--usin-scale));
     --dstatuslabel-lheight: calc(50px * var(--usin-scale));
-    --dstatuslabel-maxwidth: 100%;
     --dstatuslabel-fsize: calc(40px * var(--usin-scale));
     --dstatuslabel-fweight: 500;
 
@@ -359,8 +357,8 @@ html {
 
     /* ==== vctr -> Video Container ==== */
     --vctr-bradius: calc(10px * var(--usin-scale));
-    --vctr-height: calc(525px * var(--usin-scale));
-    --vctr-width: calc(1100px * var(--usin-scale));
+    --vctr-height: 70%;
+    --vctr-width: 90%;
 
     /* ==== plpastatusicon -> Play Pause Status Icon ==== */
     --plpastatusicon-length: calc(80px * var(--usin-scale));
@@ -390,7 +388,7 @@ html {
     /* ==== pbrtlabel -> Playback Rate Label ==== */
     --pbrtlabel-height: calc(26px * var(--usin-scale));
     --pbrtlabel-lheight: calc(26px * var(--usin-scale));
-    --pbrtlabel-width: calc(2.5ch * var(--usin-scale));
+    --pbrtlabel-width: 2.5ch;
     --pbrtlabel-fsize: calc(20px * var(--usin-scale));
     --pbrtlabel-fweight: 400;
 
@@ -426,7 +424,7 @@ html {
     --pbrtoverlay-swidth: calc(1px * var(--usin-scale));
 
     /* ==== pbrttext -> Playback Rate Text ==== */
-    --pbrttext-fsize: calc(10px * var(--usin-scale));
+    --pbrttext-fsize: 10px;
     --pbrttext-fweight: 100;
 
     /* ==== mthumb -> Media Thumb ==== */
@@ -443,22 +441,22 @@ html {
     --cuvlabel-fweight: 400;
 
     /* ==== cuvtimelabel -> Current Video Time Label ==== */
-    --cuvtimelabel-width: calc(7ch * var(--usin-scale));
+    --cuvtimelabel-width: 7ch;
 
     /* ==== cuvdurlabel -> Current Video Duration Label ==== */
-    --cuvdurlabel-width: calc(8ch * var(--usin-scale));
+    --cuvdurlabel-width: 8ch;
 
     /* ==== tlslider -> Timeline Slider ==== */
     --tlslider-bradius: calc(10px * var(--usin-scale));
     --tlslider-height: calc(60px * var(--usin-scale));
-    --tlslider-width: calc(1100px * var(--usin-scale));
+    --tlslider-width: 90%;
 
     /* ==== tloverlay -> Timeline Overlay ==== */
     --tloverlay-swidth: calc(1px * var(--usin-scale));
 
     /* ==== tltext -> Timeline Text ==== */
-    --tltext-fsize: calc(12px * var(--usin-scale));
-    --tltext-fweight: 10;
+    --tltext-fsize: 11px;
+    --tltext-fweight: 100;
 
     /* ==== tlthumb -> Timeline Thumb ==== */
     --tlthumb-tinset: calc(-12px * var(--usin-scale));

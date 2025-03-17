@@ -46,11 +46,12 @@ const PLAYBACK_RATE_MAPPING_OFFSET = 2;
 const TIMELINE_ZOOM_MIN = 30;
 const TIMELINE_GROW = 0.15;
 const TIMELINE_REDUCE = 0.1;
-const TIMELINE_OVERLAY_SUB_TICK_LINE_TOP = 15;
-const TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM = 30;
-const TIMELINE_OVERLAY_TICK_LINE_TOP = 10;
-const TIMELINE_OVERLAY_TICK_LINE_BOTTOM = 50;
-const TIMELINE_OVERLAY_TICK_TEXT_TOP = 45;
+const TIMELINE_OVERLAY_HEIGHT_DEF = 60;
+const TIMELINE_OVERLAY_SUB_TICK_LINE_TOP_DEF = 15;
+const TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM_DEF = 30;
+const TIMELINE_OVERLAY_TICK_LINE_TOP_DEF = 10;
+const TIMELINE_OVERLAY_TICK_LINE_BOTTOM_DEF = 50;
+const TIMELINE_OVERLAY_TICK_TEXT_TOP_DEF = 45;
 const TIMELINE_OVERLAY_TICK_TEXT_OFFSET = 5;
 
 // clip length min
@@ -62,7 +63,7 @@ videoCtr, videoPlr, playPauseStatIcon,
 plbkCtr, seekSldr, seekTrack, seekOvrl, seekThumb, 
 mediaBar, playPauseBarBtn, playPauseBarIcon, videoVolBarBtn, videoVolBarIcon, videoVolSldrCtr, videoVolSldr, videoVolSldrMaxWidth, videoVolOvrl, videoVolThumb, 
 curVideoTimeLabel, curVideoDurLabel, plbkRateSldrCtr, plbkRateSldr, plbkRateSldrMaxWidth, plbkRateThumb, plbkRateBarBtn, plbkRateValueLabel, fscBarBtn, fscBarIcon, 
-tmlnSldr, tmlnOvrl, tmlnThumb, clipLeftThumb, clipRightThumb, 
+tmlnSldr, tmlnOvrl, tmlnOvrlUIScale, tmlnThumb, clipLeftThumb, clipRightThumb, 
 clipBar, viewBarBtn, createBarBtn, clipTogBtn, clipTogIcon;
 
 // editor section boxes
@@ -121,6 +122,7 @@ export function initRendEditSectVars() {
     // timeline slider, clip thumbs
     tmlnSldr = document.getElementById('slider-timeline');
     tmlnOvrl = document.getElementById('overlay-timeline');
+    tmlnOvrlUIScale = parseInt(window.getComputedStyle(tmlnOvrl).getPropertyValue('height')) / TIMELINE_OVERLAY_HEIGHT_DEF;
     tmlnThumb = document.getElementById('thumb-timeline');
     clipLeftThumb = document.getElementById('left-thumb-clip');
     clipRightThumb = document.getElementById('right-thumb-clip'); 
@@ -1421,6 +1423,9 @@ function setSeekThumb(thumbLoc) {
 export function setSeekSldrBox() {
     // get the new modifiable seek slider bounding box
     seekSldrBox = getModBox(seekSldr.getBoundingClientRect());
+
+    // set the seek slider thumb and overlay
+    setSeekSldr();
 }
 
 /**
@@ -1574,7 +1579,7 @@ export function setPlbkRateSldrBox() {
  * Sets the timeline slider thumb
  */
 function setTmlnSldr() {
-    setTmlnThumb(Math.max(0, Math.min((videoPlr.currentTime - tmln['startTime']) / tmln['dur'], 1) * tmlnSldrBox.width));
+    setTmlnThumb(Math.max(0, Math.min((videoPlr.currentTime - tmln['startTime']) / tmln['dur'], 1) * tmlnSldrBox['width']));
 }
 
 /**
@@ -1589,11 +1594,11 @@ function setTmlnOvrl() {
     const numTicks = ((Math.floor(tmln['endTime'] / tmln['subIntv']) * tmln['subIntv']) - firstTick) / tmln['subIntv'] + 1;
 
     // set the default tick line height
-    tickLineTmpl.setAttribute('y1', TIMELINE_OVERLAY_SUB_TICK_LINE_TOP);
-    tickLineTmpl.setAttribute('y2', TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM);
+    tickLineTmpl.setAttribute('y1', TIMELINE_OVERLAY_SUB_TICK_LINE_TOP_DEF * tmlnOvrlUIScale);
+    tickLineTmpl.setAttribute('y2', TIMELINE_OVERLAY_SUB_TICK_LINE_BOTTOM_DEF * tmlnOvrlUIScale);
 
     // set the default tick text vertical location
-    tickTextTmpl.setAttribute('y', TIMELINE_OVERLAY_TICK_TEXT_TOP);
+    tickTextTmpl.setAttribute('y', TIMELINE_OVERLAY_TICK_TEXT_TOP_DEF * tmlnOvrlUIScale);
     tickTextTmpl.classList.add('timeline-text');
 
     // remove all timeline overlay ticks
@@ -1620,8 +1625,8 @@ function setTmlnOvrl() {
             const tickTextClone = tickTextTmpl.cloneNode(true);
 
             // set the tick line height to be larger
-            tickLineClone.setAttribute('y1', TIMELINE_OVERLAY_TICK_LINE_TOP);
-            tickLineClone.setAttribute('y2', TIMELINE_OVERLAY_TICK_LINE_BOTTOM);
+            tickLineClone.setAttribute('y1', TIMELINE_OVERLAY_TICK_LINE_TOP_DEF * tmlnOvrlUIScale);
+            tickLineClone.setAttribute('y2', TIMELINE_OVERLAY_TICK_LINE_BOTTOM_DEF * tmlnOvrlUIScale);
 
             // set the tick text horizontal location
             tickTextClone.setAttribute('x', tickPct * tmlnSldrBox.width + TIMELINE_OVERLAY_TICK_TEXT_OFFSET);
@@ -1671,6 +1676,13 @@ function setClipRightThumb(thumbLoc) {
 export function setTmlnSldrBox() {
     // get the new modifiable timeline slider bounding box
     tmlnSldrBox = getModBox(tmlnSldr.getBoundingClientRect());
+    
+    // check if a video is loaded
+    if (isVideoLoaded) {
+        // set the timeline slider thumb and overlay
+        setTmlnSldr();
+        setTmlnOvrl();
+    }
 }
 
 /**
