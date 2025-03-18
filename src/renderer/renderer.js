@@ -8,7 +8,7 @@
  * @requires rendererDirectoriesSection
  * @requires rendererSettingsSection
  */
-import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText, setTitleBarStyle, setContStatLabelText } from './components/rendererGeneral.js';
+import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText, setTitleBarStyle } from './components/rendererGeneral.js';
 import { initRendNavBlockVars, initRendNavBlock } from './components/rendererNavigationBlock.js';
 import { initRendEditSectVars, initRendEditSect } from './components/rendererEditorSection.js';
 import { initRendDirsSectVars, initRendDirsSect } from './components/rendererDirectoriesSection.js';

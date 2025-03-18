@@ -8,12 +8,53 @@
  * @requires rendererSettingsSection
  */
 import { setDirsBarBtnState, setStgsBarBtnState } from './rendererNavigationBlock.js';
-import { setVideosGallBox, addVideo, delVideo, rsvConfProm, rejConfProm } from './rendererDirectoriesSection.js';
+import { setVideosGallBox, rsvConfProm, rejConfProm } from './rendererDirectoriesSection.js';
 import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrSrc, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
 import { setStgVolSldrBox } from './rendererSettingsSection.js';
 
 // general constants
-// state and section enumerations
+// icon, state, and section enumerations
+export const ICON = {
+    'ADD': 'add', 
+    'ASCENDING': 'arrow-upward-alt', 
+    'AUTOMATIC_RECORDING': 'motion-photos-auto-solid', 
+    'BITRATE': 'bar-char-4-bars', 
+    'CAPCHA_LOGO': 'capcha', 
+    'CHECK_MARK': 'check', 
+    'CLIP': 'movie-edit-solid', 
+    'COLLAPSE': 'arrow-back-ios', 
+    'DARK_MODE': 'dark-mode-solid', 
+    'DESCENDING': 'arrow-downward-alt', 
+    'DIRECTORY': 'folder-open-solid', 
+    'DISPLAY': 'desktop-windows-solid', 
+    'ENCODER': 'compress', 
+    'EXPAND': 'arrow-forward-ios', 
+    'FORMAT': 'draft-solid', 
+    'FRAMERATE': 'autofps-select', 
+    'FULLSCREEN': 'fullscreen', 
+    'FULLSCREEN_EXIT': 'fullscreen-exit', 
+    'HEIGHT': 'height', 
+    'LOADING': 'loading', 
+    'MICROPHONE': 'mic-solid', 
+    'PAUSE': 'pause-solid', 
+    'PLAY': 'play-arrow-solid', 
+    'PLAY_CIRCLE': 'play-circle-solid', 
+    'PROGRAM': 'terminal', 
+    // 'SCALE': 'aspect-ratio-solid', 
+    'SPEAKER': 'speaker-solid', 
+    'STORAGE': 'storage', 
+    'VOLUME_0_PCT': 'volume-mute-solid', 
+    'VOLUME_10_PCT': 'volume-down-solid', 
+    'VOLUME_60_PCT': 'volume-up-solid', 
+    'VOLUME_MUTE': 'volume-off-solid', 
+    'WEBCAM': 'camera-video-solid', 
+    'WIDTH': 'arrow-range', 
+    'WINDOW_CLOSE': 'close-600', 
+    'WINDOW_MAXIMIZE': 'square-600', 
+    'WINDOW_MINIMIZE': 'horizontal-rule-600', 
+    'WINDOW_UNMAXIMIZE': 'filter-none-600', 
+    'X_MARK': 'close', 
+}
 export const STATE = {
     TOGGLE: 1, 
     ACTIVE: 2, 
@@ -228,7 +269,7 @@ export function setTitleBarStyle(style, value) {
  * @param {boolean} isMax - If the window is maximized or unmaximized
  */
 function setMaxBarIcon(isMax) {
-    isMax ? setIcon(maxBarIcon, 'filter-none-600') : setIcon(maxBarIcon, 'square-600');
+    isMax ? setIcon(maxBarIcon, ICON.WINDOW_UNMAXIMIZE) : setIcon(maxBarIcon, ICON.WINDOW_MAXIMIZE);
 }
 
 /**

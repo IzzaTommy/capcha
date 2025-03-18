@@ -5,7 +5,7 @@
  * @requires rendererGeneral
  * @requires rendererDirectoriesSection
  */
-import { STATE, setConfOvrlState, setConfCtrState, setContStatLabelText, setIcon, getModBox, getPtrEventPct } from './rendererGeneral.js';
+import { ICON, STATE, setConfOvrlState, setConfCtrState, setContStatLabelText, setIcon, getModBox, getPtrEventPct } from './rendererGeneral.js';
 import { setVideosTotalLabel3Text, addAllVideos } from './rendererDirectoriesSection.js';
 
 // settings section constants
@@ -126,7 +126,7 @@ function initStgCtrEL() {
                 genStgTogFld.checked = stgs[genStgTogFld.name] = await window['stgsAPI'].setStg(genStgTogFld.name, genStgTogFld.checked);
 
                 // set the icon based on if the setting toggle field is checked
-                genStgTogFld.checked ? setIcon(genStgTogIcon, 'check') : setIcon(genStgTogIcon, 'close');
+                genStgTogFld.checked ? setIcon(genStgTogIcon, ICON.CHECK_MARK) : setIcon(genStgTogIcon, ICON.X_MARK);
             }
             catch (_) {
                 // notify the user that the setting could not be changed
@@ -146,11 +146,11 @@ function initStgCtrEL() {
 
             // change the theme attribute, depending on if dark mode is enabled
             if (darkModeTogFld.checked) {
-                setIcon(darkModeTogIcon, 'check');
+                setIcon(darkModeTogIcon, ICON.CHECK_MARK);
                 html.dataset.theme = 'dark';
             }
             else {
-                setIcon(darkModeTogIcon, 'close');
+                setIcon(darkModeTogIcon, ICON.X_MARK);
                 html.dataset.theme = 'light';
             }
         }
@@ -373,7 +373,7 @@ async function initStgCtr() {
         genStgTogFld.checked = stgs[genStgTogFld.name];
 
         // set the icon based on if the toggle field is checked
-        genStgTogFld.checked ? setIcon(genStgTogIcon, 'check') : setIcon(genStgTogIcon, 'close');
+        genStgTogFld.checked ? setIcon(genStgTogIcon, ICON.CHECK_MARK) : setIcon(genStgTogIcon, ICON.X_MARK);
     }
 
     // load the initial setting value from stored settings
@@ -381,11 +381,11 @@ async function initStgCtr() {
 
     // change the theme attribute, depending on if dark mode is enabled
     if (darkModeTogFld.checked) {
-        setIcon(darkModeTogIcon, 'check');
+        setIcon(darkModeTogIcon, ICON.CHECK_MARK);
         html.dataset.theme = 'dark';
     }
     else {
-        setIcon(darkModeTogIcon, 'close');
+        setIcon(darkModeTogIcon, ICON.X_MARK);
         html.dataset.theme = 'light';
     }
 

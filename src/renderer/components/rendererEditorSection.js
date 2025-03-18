@@ -5,7 +5,7 @@
  * @requires rendererGeneral
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct } from './rendererGeneral.js';
+import { ICON, STATE, SECTION, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getTruncDec, getPtrEventLoc, getPtrEventPct } from './rendererGeneral.js';
 import { SPEAKER_VOLUME_GROW, SPEAKER_VOLUME_REDUCE, MICROPHONE_VOLUME_GROW, MICROPHONE_VOLUME_REDUCE, getStgVolSldrBox, getIsStgVolSldrCtrHover, getIsStgVolSldrDrag, setIsStgVolSldrDrag, pseudoSetStgVol, setStgVol, setStgVolSldr, getStg, setStg } from './rendererSettingsSection.js';
 
 // editor section constants
@@ -410,7 +410,7 @@ function initVideoCtrEL() {
         // check if the document has an element in fullscreen
         if (document.fullscreenElement !== null) {
             // change the fullscreen bar icon
-            setIcon(fscBarIcon, 'fullscreen-exit');
+            setIcon(fscBarIcon, ICON.FULLSCREEN_EXIT);
 
             // update the seek, video volume, and playback rate sliders
             setSeekSldrBox();
@@ -419,7 +419,7 @@ function initVideoCtrEL() {
         }
         else {
             // change the fullscreen bar icon
-            setIcon(fscBarIcon, 'fullscreen');
+            setIcon(fscBarIcon, ICON.FULLSCREEN);
 
             // update the seek, video volume, and playback rate sliders
             setSeekSldrBox();
@@ -1226,7 +1226,7 @@ export function setVideoPlrState(state) {
     switch (state) {
         case STATE.PLAY:
             // change the icon to pause, hide the play pause status icon, and play the video
-            setIcon(playPauseBarIcon, 'pause-solid');
+            setIcon(playPauseBarIcon, ICON.PAUSE);
             playPauseStatIcon.classList.remove('active');
             videoPlr.play();
 
@@ -1234,7 +1234,7 @@ export function setVideoPlrState(state) {
 
         case STATE.PAUSE:
             // change the icon to play, show the play pause status icon, and pause the video
-            setIcon(playPauseBarIcon, 'play-arrow-solid');
+            setIcon(playPauseBarIcon, ICON.PLAY);
             playPauseStatIcon.classList.add('active');
             videoPlr.pause();
 
@@ -1244,13 +1244,13 @@ export function setVideoPlrState(state) {
             // if the video is paused or ended
             if (videoPlr.paused || videoPlr.ended) {
                 // change the icon to pause, hide the play pause status icon, and play the video
-                setIcon(playPauseBarIcon, 'pause-solid');
+                setIcon(playPauseBarIcon, ICON.PAUSE);
                 playPauseStatIcon.classList.remove('active');
                 videoPlr.play();
             }
             else {
                 // change the icon to play, show the play pause status icon, and pause the video
-                setIcon(playPauseBarIcon, 'play-arrow-solid');
+                setIcon(playPauseBarIcon, ICON.PLAY);
                 playPauseStatIcon.classList.add('active');
                 videoPlr.pause();
             }
@@ -1259,7 +1259,7 @@ export function setVideoPlrState(state) {
         case STATE.STANDBY:
             // change the icon to pause, hide the play pause status icon, and pause the video
             // this is meant to prevent the play pause status icon from showing for a moment when a new video starts
-            setIcon(playPauseBarIcon, 'pause-solid');
+            setIcon(playPauseBarIcon, ICON.PAUSE);
             playPauseStatIcon.classList.remove('active');
             videoPlr.pause();
 
@@ -1479,7 +1479,7 @@ function setVideoVolBarBtnSldr() {
     // check if the video is muted
     if (videoPlr.muted) {
         // set the volume bar icon to muted
-        setIcon(videoVolBarIcon, 'volume-off-solid');
+        setIcon(videoVolBarIcon, ICON.VOLUME_MUTE);
 
         // set the video volume thumb and overlay
         setVideoVolThumb(0);
@@ -1489,15 +1489,15 @@ function setVideoVolBarBtnSldr() {
         // check if the video volume is greater than 0.6
         if (videoPlr.volume > 0.6)
             // set the volume bar icon
-            setIcon(videoVolBarIcon, 'volume-up-solid');
+            setIcon(videoVolBarIcon, ICON.VOLUME_60_PCT);
         else {
             // check if the video volume is greater than 0.1
             if (videoPlr.volume > 0.1)
                 // set the volume bar icon
-                setIcon(videoVolBarIcon, 'volume-down-solid');
+                setIcon(videoVolBarIcon, ICON.VOLUME_10_PCT);
             else
                 // set the volume bar icon
-                setIcon(videoVolBarIcon, 'volume-mute-solid');
+                setIcon(videoVolBarIcon, ICON.VOLUME_0_PCT);
         }
 
         // set the volume thumb and overlay
@@ -1772,7 +1772,7 @@ export function setClipBarState(state) {
             // if the clip bar is active
             if (clipBar.classList.contains('active')) {
                 // set the clip toggle icon
-                setIcon(clipTogIcon, 'arrow-back-ios');
+                setIcon(clipTogIcon, ICON.COLLAPSE);
 
                 // check if the clip length is less than the timeline duration
                 if (tmln['clipLen'] < tmln['dur']) {
@@ -1796,7 +1796,7 @@ export function setClipBarState(state) {
             }
             else {
                 // set the clip toggle icon
-                setIcon(clipTogIcon, 'arrow-forward-ios');
+                setIcon(clipTogIcon, ICON.EXPAND);
             }
 
             // toggle the clip thumbs
@@ -1811,7 +1811,7 @@ export function setClipBarState(state) {
             clipBar.classList.remove('active');
             
             // set the clip toggle icon
-            setIcon(clipTogIcon, 'arrow-forward-ios');
+            setIcon(clipTogIcon, ICON.EXPAND);
 
             // set the clip thumbs inactive
             clipLeftThumb.classList.remove('active');

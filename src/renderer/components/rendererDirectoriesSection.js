@@ -6,7 +6,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec } from './rendererGeneral.js';
+import { ICON, STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, getConfNameFldValue, getConfFormatFldValue, setContStatLabelText, setSectState, setIcon, getModBox, getRdblDur, getRdblAge, getTruncDec } from './rendererGeneral.js';
 import { setEditProgLabelText, setVideoFrameLen, setVideoPlrSrc } from './rendererEditorSection.js';
 import { getStg, setStg } from './rendererSettingsSection.js';
 
@@ -234,11 +234,11 @@ async function initContCtr3EL(isCaps) {
             if (getStg(videosAscStr) !== videosBarBtn.classList.contains('active')) {
                 // change the toggle icon and state
                 if (videosBarBtn.classList.contains('active')) {
-                    setIcon(videosBarIcon, 'arrow-downward-alt');
+                    setIcon(videosBarIcon, ICON.DESCENDING);
                     videosBarBtn.classList.remove('active');
                 }
                 else {
-                    setIcon(videosBarIcon, 'arrow-upward-alt');
+                    setIcon(videosBarIcon, ICON.ASCENDING);
                     videosBarBtn.classList.add('active');
                 }
 
@@ -277,7 +277,7 @@ function initContCtr3(isCaps) {
     // toggle the sort order and change the icon, depending on setting
     if (getStg(videosAscStr) === true) {
         videosBarBtn.classList.add('active');
-        setIcon(videosBarIcon, 'arrow-upward-alt');
+        setIcon(videosBarIcon, ICON.ASCENDING);
     }
 }
 
@@ -567,9 +567,15 @@ export async function delVideo(videoFullName, isCaps) {
 
     // check if there are no videos
     if (videos.length === 0) {
+        // show the directory status label
+        videosStatLabel.classList.add('active');
+
         // set the directory status label
         videosStatLabel.textContent = 'No Videos Found';
     }
+
+    // toggle the directory buttons
+    setVideosBtnState(isCaps);
 }
 
 /**

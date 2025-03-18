@@ -7,7 +7,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getRdblRecDur } from './rendererGeneral.js';
+import { ICON, STATE, SECTION, MSECONDS_IN_SECOND, setConfOvrlState, setConfCtrState, setContStatLabelText, setSectState, setIcon, getRdblRecDur } from './rendererGeneral.js';
 import { setVideosGallBox } from './rendererDirectoriesSection.js';
 import { setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox } from './rendererEditorSection.js';
 import { setStgVolSldrBox, getStg, setStg } from './rendererSettingsSection.js';
@@ -116,11 +116,11 @@ function initNavTogBtnEL() {
 
                 // change the toggle icon and state
                 if (navBar.classList.contains('active')) {
-                    setIcon(navTogIcon, 'arrow-forward-ios');
+                    setIcon(navTogIcon, ICON.EXPAND);
                     navBar.classList.remove('active');
                 }
                 else {
-                    setIcon(navTogIcon, 'arrow-back-ios');
+                    setIcon(navTogIcon, ICON.COLLAPSE);
                     navBar.classList.add('active');
                 }
 
@@ -171,7 +171,7 @@ async function initNavTogBtn() {
     // toggle the navigation bar and change the icon depending on setting
     if (getStg('navigationBarActive') === true) {
         navBar.classList.add('active');
-        setIcon(navTogIcon, 'arrow-back-ios');
+        setIcon(navTogIcon, ICON.COLLAPSE);
     }
 
     // update all size/location dependent elements after the navigation bar transition finishes
