@@ -4,15 +4,18 @@
  * @module main
  * @requires electron
  * @requires mainGeneral
+ * @requires mainEditSect
  * @requires mainOBS
  * @requires mainWebSocket
  * @requires mainSettings
  */
 import { app, powerMonitor } from 'electron';
 import { initMainGenVars, initMainGen, checkLogsDirSize, addLogMsg, openDevTools, sendIPC } from './components/mainGeneral.js';
+import { initMainEditSect } from './components/mainEditorSection.js';
 import { initMainOBSVars, initMainOBS, getOBSState, setOBSState } from './components/mainOBS.js';
 import { initMainWebSocketVars, initMainWebSocket, getIsRec } from './components/mainWebSocket.js';
 import { initMainStgsVars, initMainStgs } from './components/mainSettings.js';
+import { initMainDirsSectVars, initMainDirsSect } from './components/mainDirectoriesSection.js';
 
 // on ready, initialize all components
 app.on('ready', initMain);
@@ -30,7 +33,7 @@ powerMonitor.on('suspend', () => {
         addLogMsg('General', 'SUSPD', 'Attempting to stop recording', true, true);  // boolean1 isFinalMsg, boolean2 isSubMsg
 
         // request a call to setRecBarBtnState on the renderer process
-        sendIPC('stgs:reqSetRecBarBtnState');
+        sendIPC('webSocket:reqSetRecBarBtnState');
     }
     else {
         // log the recording status
@@ -95,6 +98,7 @@ function initVars() {
     initMainOBSVars();
     initMainWebSocketVars();
     initMainStgsVars();
+    initMainDirsSectVars();
 }
 
 /**
@@ -103,6 +107,9 @@ function initVars() {
 async function init() {
     // initialize the general components
     initMainGen(finishInit);
+
+    // initialize the editor section
+    initMainEditSect();
 }
 
 /**
@@ -120,6 +127,9 @@ async function finishInit() {
 
     // initialize the settings
     await initMainStgs();
+
+    // initialize the directories section
+    initMainDirsSect();
 
     openDevTools();
     // request a call to finishInit on the renderer process

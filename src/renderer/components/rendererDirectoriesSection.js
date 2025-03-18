@@ -121,6 +121,9 @@ export async function initRendDirsSect() {
     initVideosGallEL(true);  // boolean1 isCaps
     initVideosGallEL(false);  // boolean1 isCaps
 
+    // initialize the directories section inter-process communication listeners to the main process
+    initDirsSectIPC();
+
     // try to add all videos to the captures gallery
     try {
         await addAllVideos(true, true);  // boolean1 isCaps, boolean2 isInit
@@ -141,6 +144,17 @@ export async function initRendDirsSect() {
 }
 
 /**
+ * Initializes the directories section inter-process communication callbacks
+ */
+function initDirsSectIPC() {
+    // on request, add a video to the captures or clips gallery
+    window['dirsSectAPI'].reqAddVideo((video, isCaps) => addVideo(video, isCaps));
+
+    // on request, delete a video from the captures or clips gallery
+    window['dirsSectAPI'].reqDelVideo((videoFullName, isCaps) => delVideo(videoFullName, isCaps));
+}
+
+/**
  * Initializes the content container 3 event listeners
  * 
  * @param {boolean} isCaps - If the call is for captures or clips
@@ -158,7 +172,7 @@ async function initContCtr3EL(isCaps) {
     videosNameLabel.addEventListener('click', async () => { 
         // try to open the directory
         try {
-            await window['stgsAPI'].openDir(isCaps);
+            await window['dirsSectAPI'].openDir(isCaps);
         }
         catch (_) {
             // notify the user that the directory failed to open
@@ -492,8 +506,8 @@ export async function addAllVideos(isCaps, isInit) {
 
     // try to get the captures or clips and counts
     try {
-        isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await window['stgsAPI'].getAllVideos(isCaps)  //isinit
-        : [clips, videosCounts['normal'], videosCounts['size']] = await window['stgsAPI'].getAllVideos(isCaps);  //isinit
+        isCaps ? [caps, videosCounts['normal'], videosCounts['size']] = await window['dirsSectAPI'].getAllVideos(isCaps)  //isinit
+        : [clips, videosCounts['normal'], videosCounts['size']] = await window['dirsSectAPI'].getAllVideos(isCaps);  //isinit
     }
     catch (_) {
         // notify the user that the captures or clips could not be retrieved
@@ -630,7 +644,7 @@ function createVideoPrvwCtr(video) {
                 setConfOvrlState(STATE.ACTIVE);
 
                 // send a request to main to delete the video
-                await window['stgsAPI'].renVideo(video['data']['path'], getConfNameFldValue(), getConfFormatFldValue());
+                await window['dirsSectAPI'].renVideo(video['data']['path'], getConfNameFldValue(), getConfFormatFldValue());
             }
             catch (_) {
                 // notify the user than the video could not be renamed
@@ -671,7 +685,7 @@ function createVideoPrvwCtr(video) {
             // try to delete the video
             try {
                 // send a request to main to delete the video
-                await window['stgsAPI'].delVideo(video['data']['path']);
+                await window['dirsSectAPI'].delVideo(video['data']['path']);
             }
             catch (_) {
                 // notify the user than the video could not be deleted

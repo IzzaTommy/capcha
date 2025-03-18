@@ -33,7 +33,7 @@ export function initMainOBSVars() {
     // tcp port
     tcpPort = -1;
 
-    // OBS process
+    // OBS process instance
     obsProc = null;
 }
 
@@ -81,6 +81,15 @@ export function setOBSState() {
 }
 
 /**
+ * Gets the TCP port used by WebSocket
+ * 
+ * @returns {number} - The TCP port
+ */
+export function getTCPPort() {
+    return tcpPort;
+}
+
+/**
  * Finds an available TCP port for WebSocket
  * 
  * @returns {number} - The available TCP port
@@ -107,13 +116,4 @@ function findTCPPort() {
         server.once('close', () => resolve(port));
     });
 
-}
-
-/**
- * Gets the TCP port used by WebSocket
- * 
- * @returns {number} - The TCP port
- */
-export function getTCPPort() {
-    return tcpPort;
 }

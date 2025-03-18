@@ -4,18 +4,25 @@
  * @module mainWebSocket
  * @requires crypto
  * @requires electron
+ * @requires ps-list
  * @requires ws
  * @requires mainGeneral
+ * @requires mainOBS
  */
 import crypto from 'crypto';
 import { ipcMain } from 'electron';
+import psList from 'ps-list';
 import { WebSocket } from 'ws';
-import { ASYNC_DELAY_IN_MSECONDS, addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
+import { ASYNC_DELAY_IN_MSECONDS, addLogMsg, sendIPC, atmpAsyncFunc } from './mainGeneral.js';
 import { OBS_PASSWORD, getTCPPort } from './mainOBS.js';
+import { getStg } from './mainSettings.js';
 
 // WebSocket constants
 // captures date format
 const CAPTURES_DATE_FORMAT = '%MM%DD%YY%hh%mm%ss';
+
+// WebSocket variable
+let recProgName;
 
 // WebSocket flag
 let isRec;
@@ -27,13 +34,16 @@ let pendReqs, webSocket;
  * Initializes the WebSocket variables
  */
 export function initMainWebSocketVars() {
+    // recording program name
+    recProgName = '';
+
     // recording flag
     isRec = false;
 
     // pending requests map
     pendReqs = new Map();
 
-    // WebSocket instance
+    // WebSocket connection instance
     webSocket = null;
 }
 
@@ -42,7 +52,7 @@ export function initMainWebSocketVars() {
  */
 export async function initMainWebSocket() {
     // initialize WebSocket
-    await atmpAsyncFunc(startWebSocket, 5, ASYNC_DELAY_IN_MSECONDS, 'Failed to load WebSocket!', true);  // boolean1 isInit
+    await atmpAsyncFunc(startWebSocket, 7, ASYNC_DELAY_IN_MSECONDS, 'Failed to load WebSocket!', true);  // boolean1 isInit
 
     // initialize the WebSocket listeners
     initWebSocketL();
@@ -307,4 +317,37 @@ export function sendWebSocketBatchReq(haltOnFail, execType, reqs) {
         // send the batch request to OBS WebSocket
         webSocket.send(JSON.stringify({ 'op': 8, 'd': { 'requestId': reqId, 'haltOnFailure': haltOnFail, 'executionType': execType, 'requests': reqs } }));
     });
+}
+
+/**
+ * Checks if certain programs are running and toggle recording
+ */
+export async function checkProgs() {
+    // get the process and programs lists
+    const procs = await atmpAsyncFunc(psList);
+    const progs = getStg('programs');
+
+    // check if recording is on
+    if (isRec) {
+        // check if the recording program is not running or the program is not in the list
+        if ((recProgName && !procs.some(proc => proc['name'] === progs[recProgName]['fullName'])) || !progs[recProgName]) {
+            // request a call to setRecBarBtnState on the renderer process
+            sendIPC('webSocket:reqSetRecBarBtnState');
+        }
+    }
+    else {
+        // iterate through each program
+        for (const [progName, progInfo] of Object.entries(progs)) {
+            // check the program list for a match
+            if (procs.some(proc => proc['name'] === progInfo['fullName'])) {
+                // set the recording program
+                recProgName = progName;
+
+                // request a call to setRecBarBtnState on the renderer process
+                sendIPC('webSocket:reqSetRecBarBtnState', recProgName);
+
+                break;
+            }
+        }
+    }
 }

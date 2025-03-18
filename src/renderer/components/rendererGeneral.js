@@ -7,7 +7,7 @@
  * @requires rendererEditorSection
  * @requires rendererSettingsSection
  */
-import { setDirsBarBtnState, setStgsBarBtnState, setRecBarBtnState } from './rendererNavigationBlock.js';
+import { setDirsBarBtnState, setStgsBarBtnState } from './rendererNavigationBlock.js';
 import { setVideosGallBox, addVideo, delVideo, rsvConfProm, rejConfProm } from './rendererDirectoriesSection.js';
 import { getIsVideoLoaded, setIsVideoLoaded, setVideoPlrSrc, setVideoPlrState, setSeekSldrBox, setVideoVolSldrBox, setPlbkRateSldrBox, setTmlnSldrBox, setClipBarState } from './rendererEditorSection.js';
 import { setStgVolSldrBox } from './rendererSettingsSection.js';
@@ -48,6 +48,7 @@ const SECONDS_IN_DAY = 86400;
 
 // general variables
 let initOvrl, initStatLabel, 
+titleBar, minBarBtn, maxBarBtn, maxBarIcon, closeBarBtn, 
 confOvrl, confCtr, confLabel, confLoadIcon, confFldCtr, confNameFld, confFormatFld, confDesc, confCancelBtn, confConfBtn, confRenBtn, confDelBtn, 
 contStatLabel, 
 dirsSect, editSect, stgsSect;
@@ -62,6 +63,15 @@ export function initRendGenVars() {
     // initialization overlay and status label
     initOvrl = document.getElementById('overlay-initialization');
     initStatLabel = document.getElementById('status-label-initialization');
+
+    // title bar
+    titleBar = document.getElementById('bar-title');
+
+    // title bar buttons and icon
+    minBarBtn = document.getElementById('bar-btn-minimize');
+    maxBarBtn = document.getElementById('bar-btn-maximize');
+    maxBarIcon = maxBarBtn.querySelector('#bar-icon-maximize > use');
+    closeBarBtn = document.getElementById('bar-btn-close');
 
     // confirmation overlay, label, field container, cancel, and option button
     confOvrl = document.getElementById('overlay-confirmation');
@@ -121,6 +131,15 @@ function initGenEL() {
         setStgVolSldrBox(false);  // boolean1 isSpk
     });
 
+    // on click, minimize the window
+    minBarBtn.addEventListener('click', window['genAPI'].minWindow);
+
+    // on click, maximize the window
+    maxBarBtn.addEventListener('click', window['genAPI'].maxWindow);
+
+    // on click, save the cached video volume data and close the window
+    closeBarBtn.addEventListener('click', window['genAPI'].closeWindow);
+
     // on click, set the confirmation overlay state to inactive and reject the confirmation promise
     confOvrl.addEventListener('mousedown', () => {
         if (confCancelBtn.classList.contains('active')) {
@@ -171,14 +190,8 @@ function initGenIPC() {
     // on request, sets the initialization status label text
     window['genAPI'].reqSetInitStatLabelText((text) => setInitStatLabelText(text));
 
-    // on request, toggle the record button (initiated from the main auto recording process)
-    window['stgsAPI'].reqSetRecBarBtnState(async (recProgName) => await setRecBarBtnState(true, false, recProgName));  // boolean1 isAutoStart, boolean2 isManualStop
-
-    // on request, add a video to the captures or clips gallery
-    window['stgsAPI'].reqAddVideo((video, isCaps) => addVideo(video, isCaps));
-
-    // on request, delete a video from the captures or clips gallery
-    window['stgsAPI'].reqDelVideo((videoFullName, isCaps) => delVideo(videoFullName, isCaps));
+    // on request, set the maximize bar icon
+    window['genAPI'].reqSetMaxBarIcon((isMax) => setMaxBarIcon(isMax));
 }
 
 /**
@@ -197,6 +210,25 @@ export function setInitOvrlState(state) {
  */
 export function setInitStatLabelText(text) {
     initStatLabel.textContent = text;
+}
+
+/**
+ * Sets the title bar style
+ * 
+ * @param {string} style - The name of the style
+ * @param {string} value - The new value of the style
+ */
+export function setTitleBarStyle(style, value) {
+    titleBar['style'][style] = value;
+}
+
+/**
+ * Sets the maximize bar icon
+ * 
+ * @param {boolean} isMax - If the window is maximized or unmaximized
+ */
+function setMaxBarIcon(isMax) {
+    isMax ? setIcon(maxBarIcon, 'filter-none-600') : setIcon(maxBarIcon, 'square-600');
 }
 
 /**

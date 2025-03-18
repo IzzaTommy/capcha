@@ -69,8 +69,13 @@ export function initRendNavBlock() {
     // initialize the navigation bar button event listeners
     initNavBarBtnEL();
 
-    // initialize the navigation toggle button
+    // initialize the navigation toggle button event listener
     initNavTogBtnEL();
+
+    // initialize the navigation bar inter-process communication listeners to the main process
+    initNavBarIPC();
+
+    // initialize the navigation toggle button
     initNavTogBtn();
 }
 
@@ -149,6 +154,14 @@ function initNavTogBtnEL() {
             setContStatLabelText('Failed to toggle the navigation bar!');
         }
     });
+}
+
+/**
+ * Initializes the navigation bar inter-process communication callbacks
+ */
+function initNavBarIPC() {
+    // on request, toggle the record button (initiated from the main auto recording process)
+    window['webSocketAPI'].reqSetRecBarBtnState(async (recProgName) => await setRecBarBtnState(true, false, recProgName));  // boolean1 isAutoStart, boolean2 isManualStop
 }
 
 /**

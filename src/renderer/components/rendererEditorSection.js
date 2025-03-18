@@ -1157,7 +1157,7 @@ function initClipCtrEL() {
             // set the confirmation overlay state to active
             setConfOvrlState(STATE.ACTIVE);
 
-            await window['genAPI'].reqCreateClip(videoPlr.getAttribute('src'), tmln['clipStartTime'], tmln['clipEndTime']);
+            await window['editSectAPI'].reqCreateClip(videoPlr.getAttribute('src'), tmln['clipStartTime'], tmln['clipEndTime']);
         }
         catch (_) {
             // notify the user that the clip could not be created

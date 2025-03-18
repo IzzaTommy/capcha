@@ -3,14 +3,12 @@
  * 
  * @module renderer
  * @requires rendererGeneral
- * @requires rendererTitleBar
  * @requires rendererNavigationBlock
  * @requires rendererEditorSection
  * @requires rendererDirectoriesSection
  * @requires rendererSettingsSection
  */
-import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText, setContStatLabelText } from './components/rendererGeneral.js';
-import { initRendTitleBarVars, initRendTitleBar, setTitleBarStyle } from './components/rendererTitleBar.js';
+import { STATE, initRendGenVars, initRendGen, setInitOvrlState, setInitStatLabelText, setTitleBarStyle, setContStatLabelText } from './components/rendererGeneral.js';
 import { initRendNavBlockVars, initRendNavBlock } from './components/rendererNavigationBlock.js';
 import { initRendEditSectVars, initRendEditSect } from './components/rendererEditorSection.js';
 import { initRendDirsSectVars, initRendDirsSect } from './components/rendererDirectoriesSection.js';
@@ -39,7 +37,6 @@ function initRend() {
 function initVars() {
     // initialize all the variables
     initRendGenVars();
-    initRendTitleBarVars();
     initRendNavBlockVars();
     initRendEditSectVars();
     initRendDirsSectVars();
@@ -53,9 +50,6 @@ function init() {
     // initialize and indicate to the user the general components are being loaded
     setInitStatLabelText('Loading...');
     initRendGen();
-
-    // initialize the title bar
-    initRendTitleBar();
 }
 
 /**
