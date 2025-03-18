@@ -107,9 +107,6 @@ function initVars() {
 async function init() {
     // initialize the general components
     initMainGen(finishInit);
-
-    // initialize the editor section
-    initMainEditSect();
 }
 
 /**
@@ -118,6 +115,9 @@ async function init() {
 async function finishInit() {
     // check the logs directory storage limit
     checkLogsDirSize();
+    
+    // initialize the editor section
+    initMainEditSect();
     
     // initialize OBS
     await initMainOBS();
