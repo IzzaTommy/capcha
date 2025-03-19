@@ -13,7 +13,12 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['win32'], 
+      config: {
+        options: {
+          icon: '/src/assets/app-icon/icon.png'
+        }
+      }
     },
     {
       name: '@electron-forge/maker-deb',

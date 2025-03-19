@@ -18,7 +18,7 @@ const INITIALIZATION_DATE = new Date();
 // minimum window size, paths
 const MAIN_WINDOW_WIDTH_MIN = 1280;
 const MAIN_WINDOW_HEIGHT_MIN = 900;
-const MAIN_WINDOW_ICON_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', 'assets', 'app-icon', 'capcha-app-icon.png');
+const MAIN_WINDOW_ICON_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', 'assets', 'app-icon', 'icon.png');
 const PRELOAD_PATH = path.join(ACTIVE_DIRECTORY, '..', 'preload.js');
 const INDEX_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '/renderer/index.html');
 

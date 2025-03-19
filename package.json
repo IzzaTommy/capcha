@@ -48,7 +48,12 @@
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "win32"
-          ]
+          ], 
+          "config": {
+            "options": {
+              "icon": "/src/assets/app-icon/icon.png"
+            }
+          }
         }
       ],
       "publishers": []
