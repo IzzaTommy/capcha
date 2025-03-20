@@ -1,3 +1,4 @@
 node_modules
 src/main/monitors.json
-out/
+dist/
+build/
