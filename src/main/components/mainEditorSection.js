@@ -15,6 +15,15 @@ import { TIME_PAD, addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
 import { getStg } from './mainSettings.js';
 
 // editor section constants
+// active directory, initialization date
+const ACTIVE_DIRECTORY = import.meta.dirname;
+
+// ffmpeg and ffprobe paths
+export const FFMPEG_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'ffmpeg', 'bin', 'ffmpeg.exe');
+export const FFPROBE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'ffmpeg', 'bin', 'ffprobe.exe');
+// export const FFMPEG_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'ffmpeg', 'bin', 'ffmpeg.exe');
+// export const FFPROBE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'ffmpeg', 'bin', 'ffprobe.exe');
+
 // clip parameters
 const CLIP_FRAMERATE = 30;
 const CLIP_VIDEO_BITRATE = '4000k';
@@ -23,6 +32,15 @@ const CLIP_AUDIO_BITRATE = '96k';
 const CLIP_AUDIO_CHANNELS = 1;
 const CLIP_THREADS = '-threads 2';
 const CLIP_VIDEO_CODEC = 'h264_nvenc';
+
+/**
+ * Initializes the editor section variables
+ */
+export function initMainEditSectVars() {
+    // set the ffmpeg and ffprobe paths to local binaries
+    ffmpeg.setFfmpegPath(FFMPEG_PATH);
+    ffmpeg.setFfprobePath(FFPROBE_PATH);
+}
 
 /**
  * Initializes the editor section

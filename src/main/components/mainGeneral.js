@@ -18,7 +18,6 @@ const INITIALIZATION_DATE = new Date();
 // minimum window size, paths
 const MAIN_WINDOW_WIDTH_MIN = 1280;
 const MAIN_WINDOW_HEIGHT_MIN = 900;
-// const MAIN_WINDOW_ICON_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', 'assets', 'icon', 'icon.ico');
 const PRELOAD_PATH = path.join(ACTIVE_DIRECTORY, '..', 'preload.js');
 const INDEX_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '/renderer/index.html');
 
@@ -70,7 +69,6 @@ function initWindow() {
         minWidth: MAIN_WINDOW_WIDTH_MIN,
         minHeight: MAIN_WINDOW_HEIGHT_MIN,
         show: false,  // hide the window at start
-        // icon: MAIN_WINDOW_ICON_PATH,
         frame: false,  // hide the native OS window frame
         webPreferences: { 
             preload: PRELOAD_PATH,
@@ -170,7 +168,7 @@ function getRdblLogTime() {
  * @param {boolean} isSubMsg - If the log is a sub message in its set
  * @param {boolean} isCons - If the log is sent to console or a log file
  */
-export async function addLogMsg(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = false) {
+export async function addLogMsg(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = true) {
     // get the log entry with the time
     const logEntry = `[${getRdblLogTime()}][${proc}][${EVENT_PAD(event.toUpperCase())}]: ${isSubMsg ? '  ' : ''}` + `${msg}${isFinalMsg ? `\n${LOGS_DIV}` : ''}`;
     

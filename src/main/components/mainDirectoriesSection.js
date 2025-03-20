@@ -4,24 +4,22 @@
  * @module mainDirectoriesSection
  * @requires chokidar
  * @requires electron
- * @requires ffmpeg-static
- * @requires ffprobe-static
  * @requires fluent-ffmpeg
  * @requires fs
  * @requires path
  * @requires util
  * @requires mainGeneral
+ * @requires mainEditorSection
  * @requires mainSettings
  */
 import chokidar from 'chokidar';
 import { app, ipcMain, shell } from 'electron';
-import staticFfmpeg from 'ffmpeg-static';
-import staticFfprobe from 'ffprobe-static';
 import ffmpeg from 'fluent-ffmpeg';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import { BYTES_IN_GIGABYTE, ASYNC_ATTEMPTS, addLogMsg, sendIPC, atmpAsyncFunc } from './mainGeneral.js';
+import { FFMPEG_PATH, FFPROBE_PATH } from './mainEditorSection.js';
 import { getStg, getStgsDataSchema } from './mainSettings.js';
 
 // directories section constants
@@ -45,8 +43,8 @@ let caps, clips, capsCounts, clipsCounts;
  */
 export function initMainDirsSectVars() {
     // set the ffmpeg and ffprobe paths to local binaries
-    ffmpeg.setFfmpegPath(staticFfmpeg);
-    ffmpeg.setFfprobePath(staticFfprobe.path);
+    ffmpeg.setFfmpegPath(FFMPEG_PATH);
+    ffmpeg.setFfprobePath(FFPROBE_PATH);
 
     // captures and clips watcher
     capsWatch = null;

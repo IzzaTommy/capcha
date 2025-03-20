@@ -11,7 +11,7 @@
  */
 import { app, powerMonitor } from 'electron';
 import { initMainGenVars, initMainGen, checkLogsDirSize, addLogMsg, openDevTools, sendIPC } from './components/mainGeneral.js';
-import { initMainEditSect } from './components/mainEditorSection.js';
+import { initMainEditSectVars, initMainEditSect } from './components/mainEditorSection.js';
 import { initMainOBSVars, initMainOBS, getOBSState, setOBSState } from './components/mainOBS.js';
 import { initMainWebSocketVars, initMainWebSocket, getIsRec } from './components/mainWebSocket.js';
 import { initMainStgsVars, initMainStgs } from './components/mainSettings.js';
@@ -95,6 +95,7 @@ function initMain() {
 function initVars() {
     // initialize all the variables
     initMainGenVars();
+    initMainEditSectVars();
     initMainOBSVars();
     initMainWebSocketVars();
     initMainStgsVars();
