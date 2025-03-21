@@ -11,15 +11,15 @@ import path from 'path';
 import { promises as fs } from 'fs';
 
 // general constants
-// active directory, initialization date
-const ACTIVE_DIRECTORY = import.meta.dirname;
+// app path, initialization date
+const APP_PATH = app.getAppPath();
 const INITIALIZATION_DATE = new Date();
 
 // minimum window size, paths
 const MAIN_WINDOW_WIDTH_MIN = 1280;
 const MAIN_WINDOW_HEIGHT_MIN = 900;
-const PRELOAD_PATH = path.join(ACTIVE_DIRECTORY, '..', 'preload.js');
-const INDEX_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '/renderer/index.html');
+const PRELOAD_PATH = path.join(APP_PATH, 'src', 'main', 'preload.js');
+const INDEX_PATH = path.join(APP_PATH, 'src', 'renderer', 'index.html');
 
 // padding functions, logs limit, path, and divider, and byte sizing
 export const TIME_PAD = (time) => time.toString().padStart(2, '0');
@@ -168,7 +168,7 @@ function getRdblLogTime() {
  * @param {boolean} isSubMsg - If the log is a sub message in its set
  * @param {boolean} isCons - If the log is sent to console or a log file
  */
-export async function addLogMsg(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = true) {
+export async function addLogMsg(proc, event, msg, isFinalMsg = true, isSubMsg = false, isCons = false) {
     // get the log entry with the time
     const logEntry = `[${getRdblLogTime()}][${proc}][${EVENT_PAD(event.toUpperCase())}]: ${isSubMsg ? '  ' : ''}` + `${msg}${isFinalMsg ? `\n${LOGS_DIV}` : ''}`;
     

@@ -23,9 +23,12 @@ import { FFMPEG_PATH, FFPROBE_PATH } from './mainEditorSection.js';
 import { getStg, getStgsDataSchema } from './mainSettings.js';
 
 // directories section constants
+// user data path
+const USER_DATA_PATH = app.getPath('userData');
+
 // thumbnail directories and size
-export const CAPTURES_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Captures');
-export const CLIPS_THUMBNAIL_DIRECTORY = path.join(app.getPath('userData'), 'Thumbnails', 'Clips');
+export const CAPTURES_THUMBNAIL_DIRECTORY = path.join(USER_DATA_PATH, 'Thumbnails', 'Captures');
+export const CLIPS_THUMBNAIL_DIRECTORY = path.join(USER_DATA_PATH, 'Thumbnails', 'Clips');
 const THUMBNAIL_SIZE = '320x180';
 
 // watcher stability threshold and poll interval

@@ -25,12 +25,15 @@ import { sendWebSocketReq, sendWebSocketBatchReq, checkProgs } from './mainWebSo
 import { CAPTURES_THUMBNAIL_DIRECTORY, CLIPS_THUMBNAIL_DIRECTORY, startWatch, checkDirSize } from './mainDirectoriesSection.js';
 
 // settings constants
-// active directory
-const ACTIVE_DIRECTORY = import.meta.dirname;
+// resource directory, app, videos, and user data path
+const RESOURCE_DIRECTORY = process.resourcesPath;
+const APP_PATH = app.getAppPath();
+const VIDEOS_PATH = app.getPath('videos');
+const USER_DATA_PATH = app.getPath('userData');
 
 // shell devices command, settings config file path, schema, and defaults, encoder and runtime displays path
 const SHELL_DEVICES_COMMAND = `Get-CimInstance Win32_PnPEntity | Where-Object { $_.PNPClass -eq 'AudioEndpoint' } | Select-Object Name, DeviceID | ConvertTo-Json -Compress`;
-const SETTINGS_CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
+const SETTINGS_CONFIG_PATH = path.join(USER_DATA_PATH, 'config.json');
 const SETTINGS_DATA_SCHEMA = { 
     'navigationBarActive': {
         'type': 'boolean'
@@ -176,7 +179,7 @@ const SETTINGS_DATA_DEF = {
 
     'darkMode': true,
 
-    'capturesDirectory': path.join(app.getPath('videos'), 'CapCha', 'Captures'),
+    'capturesDirectory': path.join(VIDEOS_PATH, 'CapCha', 'Captures'),
     'capturesLimit': 50, 
     'capturesFormat': 'mp4', 
     'capturesEncoder': 'obs_nvenc_h264_tex', 
@@ -188,7 +191,7 @@ const SETTINGS_DATA_DEF = {
     'autoRecord': false,
     'programs': { }, 
 
-    'clipsDirectory': path.join(app.getPath('videos'), 'CapCha', 'Clips'),
+    'clipsDirectory': path.join(VIDEOS_PATH, 'CapCha', 'Clips'),
     'clipsLimit': 50, 
     'clipsFormat': 'mp4', 
     'clipsWidth': 1280, 
@@ -200,9 +203,10 @@ const SETTINGS_DATA_DEF = {
     'microphoneVolume': 0.5
     // webcam: ''
 };
-const RECORDING_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'obs-studio', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
-// const RECORDING_ENCODER_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
-const RUNTIME_DISPLAYS_PATH = path.join(ACTIVE_DIRECTORY, '..', 'monitors.json');
+const RECORDING_ENCODER_PATH = app.isPackaged 
+    ? path.join(RESOURCE_DIRECTORY, 'obs-studio', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json') 
+    : path.join(APP_PATH, 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'config', 'obs-studio', 'basic', 'profiles', 'CapCha', 'recordEncoder.json');
+const RUNTIME_DISPLAYS_PATH = path.join(APP_PATH, 'src', 'main', 'monitors.json');
 
 // default profile, scene, speaker, microphone, and display input names, check programs delay
 const PROFILE_NAME = 'CapCha';

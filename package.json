@@ -6,7 +6,7 @@
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder"
+    "release": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -32,27 +32,34 @@
   },
   "build": {
     "appId": "com.electron.capcha",
+    "asar": true,
     "productName": "CapCha",
     "directories": {
       "buildResources": "build",
-      "output": "dist"
+      "output": "release"
     },
     "extraResources": [
       {
+        "from": "obs-studio",
+        "to": "obs-studio",
+        "filter": ["COPYING"]
+      },
+      {
         "from": "obs-studio/build_x64/rundir/Release",
-        "to": "obs-studio"
+        "to": "obs-studio",
+        "filter": ["!config/**"]
       },
       {
-        "from": "ffmpeg/bin/ffmpeg.exe",
-        "to": "ffmpeg/bin/ffmpeg.exe"
-      },
-      {
-        "from": "ffmpeg/bin/ffprobe.exe",
-        "to": "ffmpeg/bin/ffprobe.exe"
+        "from": "ffmpeg",
+        "to": "ffmpeg",
+        "filter": ["**/*", "!doc/**", "!bin/ffplay.exe", "!README.txt"]
       }
     ],
     "files": [
-      "!**/obs-studio/*"
+      "!**/diagrams/*",
+      "!**/ffmpeg/*",
+      "!**/obs-studio/*",
+      "!**/{.gitmodules,LICENSE,README.md}"
     ],
     "win": {
       "target": "nsis"

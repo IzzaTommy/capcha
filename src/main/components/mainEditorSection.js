@@ -8,21 +8,20 @@
  * @requires mainGeneral
  * @requires mainSettings
  */
-import { ipcMain } from 'electron';
+import { app, ipcMain } from 'electron';
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
 import { TIME_PAD, addLogMsg, atmpAsyncFunc } from './mainGeneral.js';
 import { getStg } from './mainSettings.js';
 
 // editor section constants
-// active directory, initialization date
-const ACTIVE_DIRECTORY = import.meta.dirname;
+// resource directory, app path
+const RESOURCE_DIRECTORY = process.resourcesPath;
+const APP_PATH = app.getAppPath();
 
 // ffmpeg and ffprobe paths
-export const FFMPEG_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'ffmpeg', 'bin', 'ffmpeg.exe');
-export const FFPROBE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'ffmpeg', 'bin', 'ffprobe.exe');
-// export const FFMPEG_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'ffmpeg', 'bin', 'ffmpeg.exe');
-// export const FFPROBE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'ffmpeg', 'bin', 'ffprobe.exe');
+export const FFMPEG_PATH = app.isPackaged ? path.join(RESOURCE_DIRECTORY, 'ffmpeg', 'bin', 'ffmpeg.exe') : path.join(APP_PATH, 'ffmpeg', 'bin', 'ffmpeg.exe');
+export const FFPROBE_PATH = app.isPackaged ? path.join(RESOURCE_DIRECTORY, 'ffmpeg', 'bin', 'ffprobe.exe') : path.join(APP_PATH, 'ffmpeg', 'bin', 'ffprobe.exe');
 
 // clip parameters
 const CLIP_FRAMERATE = 30;

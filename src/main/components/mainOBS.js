@@ -3,21 +3,25 @@
  * 
  * @module mainOBS
  * @requires child_process
+ * @requires electron
  * @requires net
  * @requires path
  */
 import { spawn } from 'child_process';
+import { app } from 'electron';
 import net from 'net'
 import path from 'path';
 import { atmpAsyncFunc } from './mainGeneral.js';
 
 // OBS constants
-// active directory
-const ACTIVE_DIRECTORY = import.meta.dirname;
+// resource directory, app path
+const RESOURCE_DIRECTORY = process.resourcesPath;
+const APP_PATH = app.getAppPath();
 
 // OBS executable path, password, and termination signal
-const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', '..', 'obs-studio', 'bin', '64bit', 'obs64.exe');
-// const OBS_EXECUTABLE_PATH = path.join(ACTIVE_DIRECTORY, '..', '..', '..', 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
+const OBS_EXECUTABLE_PATH = app.isPackaged 
+    ? path.join(RESOURCE_DIRECTORY, 'obs-studio', 'bin', '64bit', 'obs64.exe') 
+    : path.join(APP_PATH, 'obs-studio', 'build_x64', 'rundir', 'RelWithDebInfo', 'bin', '64bit', 'obs64.exe');
 export const OBS_PASSWORD = 'CapChaOBSPassword';
 const OBS_TERMINATION_SIGNAL = 'SIGTERM';
 
