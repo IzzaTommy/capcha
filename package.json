@@ -32,12 +32,16 @@
   },
   "build": {
     "appId": "com.electron.capcha",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "asar": true,
-    "productName": "CapCha",
+    "compression": "maximum",
+    "copyright": "github.com/IzzaTommy",
+    "defaultArch": "x64",
     "directories": {
-      "buildResources": "build",
+      "buildResources": "store",
       "output": "release"
     },
+    "executableName": "CapCha",
     "extraResources": [
       {
         "from": "obs-studio",
@@ -61,12 +65,35 @@
       "!**/obs-studio/*",
       "!**/{.gitmodules,LICENSE,README.md}"
     ],
-    "win": {
-      "target": "nsis"
-    },
+    "icon": "build/icon.ico",
     "nsis": {
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-${version}-${os}-${arch} Setup.${ext}",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "displayLanguageSelector": false,
+      "include": "build/installer.nsh",
+      "installerHeader": "build/installerHeader.bmp", 
+      "installerIcon": "build/installerIcon.ico",
+      "installerSidebar": "build/installerSidebar.bmp",
+      "license": "LICENSE",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "packElevateHelper": true,
+      "perMachine": true,
+      "removeDefaultUninstallWelcomePage": false,
+      "runAfterFinish": true,
+      "selectPerMachineByDefault": false,
+      "shortcutName": "CapCha",
+      "uninstallDisplayName": "CapCha Uninstaller",
+      "uninstallerIcon": "build/uninstallerIcon.ico",
+      "uninstallerSidebar": "build/uninstallerSidebar.bmp",
+      "warningsAsErrors": true
+    },
+    "productName": "CapCha",
+    "win": {
+      "requestedExecutionLevel": "asInvoker",
+      "target": ["zip"]
     }
   }
 }

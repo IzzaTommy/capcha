@@ -10,12 +10,21 @@
  * @requires mainSettings
  */
 import { app, powerMonitor } from 'electron';
-import { initMainGenVars, initMainGen, checkLogsDirSize, addLogMsg, openDevTools, sendIPC } from './components/mainGeneral.js';
+import { initMainGenVars, initMainGen, setMainWindowState, checkLogsDirSize, addLogMsg, openDevTools, sendIPC } from './components/mainGeneral.js';
 import { initMainEditSectVars, initMainEditSect } from './components/mainEditorSection.js';
 import { initMainOBSVars, initMainOBS, getOBSState, setOBSState } from './components/mainOBS.js';
 import { initMainWebSocketVars, initMainWebSocket, getIsRec } from './components/mainWebSocket.js';
 import { initMainStgsVars, initMainStgs } from './components/mainSettings.js';
 import { initMainDirsSectVars, initMainDirsSect } from './components/mainDirectoriesSection.js';
+
+// on second-instance, restore and focus the main window
+app.on('second-instance', (_, __, ___) => {
+    // log that a second instance has been detected
+    addLogMsg('General', 'OPEN', 'Second instance detected, the newer instance will be closed.');
+
+    // restore and focus the main window
+    setMainWindowState();
+});
 
 // on ready, initialize all components
 app.on('ready', initMain);
@@ -82,11 +91,19 @@ app.on('quit', () => {
  * Initializes the main process
  */
 function initMain() {
-    // initialize the main variables
-    initVars();
+    // check if this is not the first instance of the app
+    if (!app.requestSingleInstanceLock()) {
+        // exit the app
+        // quit is not used because we don't want to trigger the before-quit event
+        app.exit();
+    }
+    else {
+        // initialize the main variables
+        initVars();
 
-    // initialize the main components
-    init();
+        // initialize the main components
+        init();
+    }
 }
 
 /**
@@ -132,7 +149,7 @@ async function finishInit() {
     // initialize the directories section
     initMainDirsSect();
 
-    openDevTools();
+    // openDevTools();
     // request a call to finishInit on the renderer process
     sendIPC('proc:reqFinishInit');
 }

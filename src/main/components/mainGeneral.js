@@ -103,6 +103,20 @@ function initGenL() {
 }
 
 /**
+ * Sets the main window state to be restored and focused
+ */
+export function setMainWindowState() {
+    // check if the main window is minimized
+    if (mainWindow.isMinimized()) {
+        // restore the main window
+        mainWindow.restore();
+    }
+
+    // focus the main window
+    mainWindow.focus();
+}
+
+/**
  * Checks if the logs directory storage limit has been exceeded and removes the oldest log(s)
  */
 export async function checkLogsDirSize() {

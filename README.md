@@ -52,7 +52,9 @@ In particular, I needed a program that could:
 - Adding multiple videos at once to the captures or clips directory will cause the gallery to desync from the actual contents of the directory.
 - If **CapCha** is recording, the computer cannot be suspended (On Windows, it will stay on with a black screen).
 - On **CapCha**’s first run, OBS will NOT use the default settings for the capture format (.mp4) and possibly the encoder (NVIDIA NVENC H.264) and bitrate (3000 kbps). Subsequent runs SHOULD use the default settings and allow them to be changed.
+- On **CapCha**'s first run, Windows will prompt to allow the program through the firewall. If not accepted in time, CapCha will fail to run (You can accept, then restart to fix this).
 - When clipping, the timeline slider may run past the clip bounds when viewing the clip.
+- **CapCha** has no installer because an installation location hasn't been decided. The default would be the ProgramFiles folder, but this requires **CapCha** to be run as an administrator to function (Since OBS Studio requires elevated permissions to create / write configuration files). Running web-based applications as administrator is NOT a good idea, so **CapCha** is provided in an extractable ZIP file.
 
 ### Future Additions
 
@@ -74,13 +76,22 @@ In particular, I needed a program that could:
 
 (?) - May not be added
 
-## Thanks
+## Other Notes
 
-Thanks to the contributors of OBS Studio and related works for building and supporting a powerful open-source tool!
+- **CapCha** is not signed (This is just a small project for experience that I plan to use for myself, so use at your own risk).
+
+## Included Works
+
+Thanks to the contributors of OBS Studio and related works for building and supporting a powerful open-source tool.
 
 - OBS Studio ([Website](https://obsproject.com)) ([GitHub Repo](https://github.com/obsproject/obs-studio))
 - OBS WebSocket ([GitHub Repo](https://github.com/obsproject/obs-websocket))
 
-Many icons used in **CapCha** were provided by Material Design!
+Thanks to the contributors of FFmpeg and to GyanD for providing static builds.
+
+- FFmpeg ([Website](https://ffmpeg.org/)) ([GitHub Repo](https://github.com/FFmpeg/FFmpeg))
+- Static FFmpeg Builds ([Website](https://gyan.dev/ffmpeg)) ([GitHub Repo](https://github.com/GyanD/codexffmpeg))
+
+Many icons used in **CapCha** were provided by Material Design.
 
 - Material Design ([Website](https://fonts.google.com/icons)) ([GitHub Repo](https://github.com/google/material-design-icons))
