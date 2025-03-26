@@ -1,0 +1,56 @@
+#bar-title {
+    align-items: center;
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+#version-label-title {
+    flex: 0 1 fit-content;
+    height: var(--tversionlabel-height);
+    line-height: var(--tversionlabel-lheight);
+    margin-left: var(--tversionlabel-lmargin);
+    overflow: hidden;
+
+    color: var(--tversionlabel-color);
+    font-size: var(--tversionlabel-fsize);
+    font-weight: var(--tversionlabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.title-bar-btn {
+    flex: 0 0 fit-content;
+    padding: var(--tbarbtn-vpadding) var(--tbarbtn-hpadding);
+
+    -webkit-app-region: no-drag;
+}
+
+.title-bar-btn:hover {
+    background-color: var(--tbarbtn-bgcolor);
+}
+
+#bar-btn-minimize {
+    margin-left: auto;
+}
+
+#bar-btn-close:hover {
+    background-color: var(--tclbarbtn-bgcolor);
+}
+
+.title-bar-icon {
+    display: block;
+    height: var(--tbaricon-length);
+    width: var(--tbaricon-length);
+
+    fill: var(--tbaricon-fill);
+}
+
+.title-bar-btn:hover > .title-bar-icon {
+    fill: var(--tbaricon-alt-fill);
+}
+
+#bar-icon-maximize {
+    transform: rotate(180deg);
+}

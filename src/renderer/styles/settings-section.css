@@ -1,0 +1,365 @@
+.settings-label2 {
+    flex: 0 0 auto;
+}
+
+.general-setting-group-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--gstgroupctr-cgap);
+}
+
+.general-setting-ctr {
+    align-items: start;
+    align-self: start;
+
+    border: var(--gstctr-bwidth) solid transparent;
+    border-radius: var(--gstctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--gstctr-rgap);
+    padding: var(--gstctr-vpadding) var(--gstctr-hpadding);
+
+    transition: var(--gstctr-transition);
+}
+
+.general-setting-ctr:hover/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus)*/ {
+    background-color: var(--gstctr-bgcolor);
+    border-color: var(--gstctr-bcolor);
+}
+
+.general-setting-label {
+    flex: 0 0 auto;
+    height: var(--gstlabel-height);
+    line-height: var(--gstlabel-lheight);
+    overflow: hidden;
+    max-width: var(--gstlabel-maxwidth);
+
+    color: var(--gstlabel-color);
+    font-size: var(--gstlabel-fsize);
+    font-weight: var(--gstlabel-fweight);
+    text-overflow: ellipsis;
+    transition: var(--gstlabel-transition);
+    white-space: nowrap;
+}
+
+.general-setting-ctr:hover > .general-setting-label/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-label*/ {
+    color: var(--gstlabel-alt-color);
+}
+
+.general-setting-pill {
+    border-radius: var(--gstpill-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    background-color: var(--gstpill-bgcolor);
+}
+
+.general-setting-icon {
+    align-self: center;
+
+    display: block;
+    flex: 0 0 auto;
+    height: var(--gsticon-length);
+    margin: var(--gsticon-margin);
+    width: var(--gsticon-length);
+
+    fill: var(--gsticon-fill);
+    transition: var(--gsticon-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-icon/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-pill > .general-setting-icon*/ {
+    fill: var(--gsticon-alt-fill);
+}
+
+.general-setting-field {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    box-sizing: content-box;
+    flex: 0 0 auto;
+    height: var(--gstfield-height);
+    line-height: var(--gstfield-lheight);
+    padding-right: var(--gstfield-hpadding);
+    padding-left: var(--gstfield-hpadding);
+    width: var(--gstfield-width);
+
+    background-color: var(--gstfield-bgcolor);
+    color: var(--gstfield-color);
+    font-size: var(--gstfield-fsize);
+    font-weight: var(--gstfield-fweight);
+    transition: var(--gstfield-transition);
+
+    cursor: pointer;
+}
+
+.general-setting-field[name="capturesDirectory"], .general-setting-field[name="clipsDirectory"] {
+    width: var(--gstfield-alt-width);
+}
+
+.general-setting-field[name="capturesWidth"], .general-setting-field[name="capturesHeight"], .general-setting-field[name="clipsWidth"], .general-setting-field[name="clipsHeight"] {
+    cursor: text;
+}
+
+.general-setting-field[name="capturesDisplay"], .general-setting-field[name="speaker"], .general-setting-field[name="microphone"], .general-setting-field[name="webcam"] {
+    width: var(--gstfield-alt2-width);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-field/*, .general-setting-field:focus*/ {
+    color: var(--gstfield-alt-color);
+}
+
+.general-setting-toggle-switch {
+    position: relative;
+
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    flex: 0 0 auto;
+    width: var(--gsttoggleswitch-width);
+
+    background-color: var(--gsttoggleswitch-bgcolor);
+    transition: var(--gsttoggleswitch-transition);
+
+    cursor: pointer;
+}
+
+.general-setting-toggle-switch:has(.general-setting-toggle-field:checked) {
+    background-color: var(--gsttoggleswitch-alt-bgcolor);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch:has(.general-setting-toggle-field:checked) {
+    background-color: var(--gsttoggleswitch-alt2-bgcolor);
+}
+
+.general-setting-toggle-field {
+    padding-right: var(--gsttogglefield-hpadding);
+    padding-left: var(--gsttogglefield-hpadding);
+    width: var(--gsttogglefield-width);
+
+    visibility: hidden;
+}
+
+.general-setting-toggle-icon {
+    position: absolute;
+    inset: var(--gsttoggleicon-inset);
+
+    border-radius: var(--gsttoggleicon-bradius);
+    height: var(--gsttoggleicon-height);
+    width: var(--gsttoggleicon-width);
+
+    background-color: var(--gsttoggleicon-bgcolor);
+    fill: var(--gsttoggleicon-fill);
+    transition: var(--gsttoggleicon-transition);
+}
+
+.general-setting-toggle-field:checked + .general-setting-toggle-icon {
+    transform: translateX(var(--gsttoggleicon-translateX));
+
+    fill: var(--gsttoggleicon-alt-fill);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-icon {
+    background-color: var(--gsttoggleicon-alt-bgcolor);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-toggle-switch > .general-setting-toggle-field:checked + .general-setting-toggle-icon {
+    fill: var(--gsttoggleicon-alt2-fill);
+}
+
+#board-programs {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row wrap;
+    gap: var(--prboard-gap);
+    padding: var(--prboard-padding);
+    width: var(--prboard-width);
+
+    background-color: var(--prboard-bgcolor);
+}
+
+.general-setting-tile {
+    align-items: center;
+
+    border-radius: var(--gsttile-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    padding: var(--gsttile-vpadding) var(--gsttile-rpadding) var(--gsttile-vpadding) var(--gsttile-lpadding);
+    
+    background-color: var(--gsttile-bgcolor);
+    transition: var(--gsttile-transition);
+}
+
+.general-setting-tile:hover {
+    background-color: var(--gsttile-alt-bgcolor);
+}
+
+.general-setting-delete-btn {
+    flex: 0 0 fit-content;
+}
+
+.general-setting-delete-icon {
+    display: block;
+    height: var(--gstdeleteicon-length);
+    width: var(--gstdeleteicon-length);
+}
+
+.general-setting-path {
+    transition: var(--gstpath-transition);
+}
+
+.general-setting-first-path {
+    fill: var(--gstfirstpath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-first-path {
+    fill: var(--gstfirstpath-alt-fill);
+}
+
+.general-setting-second-path {
+    fill: var(--gstsecondpath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-second-path {
+    fill: var(--gstsecondpath-alt-fill);
+}
+
+.general-setting-third-path {
+    fill: var(--gstthirdpath-fill);
+}
+
+.general-setting-delete-btn:hover > .general-setting-delete-icon > .general-setting-third-path {
+    fill: var(--gstthirdpath-alt-fill);
+}
+
+.general-setting-program-icon {
+    display: block;
+    flex: 0 0 auto;
+
+    height: var(--gstprogramicon-length);
+    margin-right: var(--gstprogramicon-rmargin);
+    margin-left: var(--gstprogramicon-lmargin);
+    width: var(--gstprogramicon-length);
+}
+
+.general-setting-program-label {
+    flex: 0 0 fit-content;
+    height: var(--gstprogramlabel-height);
+    line-height: var(--gstprogramlabel-lheight);
+    overflow: hidden;
+    max-width: var(--gstprogramlabel-maxwidth);
+
+    color: var(--gstprogramlabel-color);
+    font-size: var(--gstprogramlabel-fsize);
+    font-weight: var(--gstprogramlabel-fweight);
+    text-overflow: ellipsis;
+    transition: var(--gstprogramlabel-transition);
+    white-space: nowrap;
+}
+
+.general-setting-tile:hover > .general-setting-program-label {
+    color: var(--gstprogramlabel-alt-color);
+}
+
+#add-btn-programs {
+    border-radius: var(--praddbtn-bradius);
+    flex: 0 0 fit-content;
+    padding: var(--praddbtn-vpadding) var(--praddbtn-hpadding);
+    
+    background-color: var(--praddbtn-bgcolor);
+    transition: var(--praddbtn-transition);
+
+    cursor: pointer;
+}
+
+#add-btn-programs:hover {
+    background-color: var(--praddbtn-alt-bgcolor);
+}
+
+#add-icon-programs {
+    display: block;
+    height: var(--praddicon-length);
+    width: var(--praddicon-length);
+
+    fill: var(--praddicon-fill);
+}
+
+#add-btn-programs:hover > #add-icon-programs {
+    fill: var(--praddicon-alt-fill);
+}
+
+.general-setting-slider-ctr {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    flex: 0 0 fit-content;
+    padding-right: var(--gstsliderctr-hmargin);
+    padding-left: var(--gstsliderctr-hmargin);
+
+    background-color: var(--gstsliderctr-bgcolor);
+
+    cursor: pointer;
+}
+
+.general-setting-slider {
+    box-sizing: content-box;
+    height: var(--gstslider-height);
+    padding-top: var(--gstslider-vpadding);
+    padding-bottom: var(--gstslider-vpadding);
+    width: var(--gstslider-width);
+}
+
+.general-setting-track {
+    position: relative;
+
+    border-radius: var(--gsttrack-bradius);
+    height: 100%;
+
+    background-color: var(--gsttrack-bgcolor);
+    transition: var(--gsttrack-transition);
+}
+
+.general-setting-ctr:hover > .general-setting-pill > .general-setting-slider-ctr > .general-setting-slider > .general-setting-track {
+    background-color: var(--gsttrack-alt-bgcolor);
+}
+
+.general-setting-overlay {
+    position: absolute;
+
+    border-radius: inherit;
+    height: 100%;
+    width: 100%;
+}
+
+.general-setting-thumb {
+    position: absolute;
+    top: var(--gstthumb-tinset);
+    left: var(--gstthumb-linset);
+
+    border-radius: var(--gstthumb-bradius);
+    height: var(--gstthumb-height);
+    width: var(--gstthumb-width);
+
+    background-color: var(--gstthumb-bgcolor);
+}
+
+.general-setting-description {
+    flex: 0 0 auto;
+    height: var(--gstdesc-height);
+    line-height: var(--gstdesc-lheight);
+    overflow: hidden;
+    max-width: var(--gstdesc-maxwidth);
+
+    color: var(--gstdesc-color);
+    font-size: var(--gstdesc-fsize);
+    font-weight: var(--gstdesc-fweight);
+    text-overflow: ellipsis;
+    transition: var(--gstdesc-transition);
+    white-space: nowrap;
+}
+
+.general-setting-ctr:hover > .general-setting-description/*, .general-setting-ctr:has(> .general-setting-pill > .general-setting-field:focus) > .general-setting-description*/ {
+    color: var(--gstdesc-alt-color);
+}

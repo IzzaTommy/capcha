@@ -1,0 +1,10 @@
+<!-- 
+File modified from original @ https://github.com/google/material-design-icons:
+    Name modified
+    Width attribute removed
+    Height attribute removed
+    Fill attribute removed
+    ID attribute added
+Licensed under Apache 2.0 @ https://www.apache.org/licenses/LICENSE-2.0
+-->
+<svg id="pause-solid" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M600-240q-16.08 0-28.04-11.96T560-280v-400q0-16.08 11.96-28.04T600-720h60q16.08 0 28.04 11.96T700-680v400q0 16.08-11.96 28.04T660-240h-60Zm-300 0q-16.08 0-28.04-11.96T260-280v-400q0-16.08 11.96-28.04T300-720h60q16.08 0 28.04 11.96T400-680v400q0 16.08-11.96 28.04T360-240h-60Z"/></svg>

@@ -1,0 +1,39 @@
+<svg id="capcha" xmlns="http://www.w3.org/2000/svg" viewBox="-86 -65 172 130">	
+	<defs>
+        <mask id="first-mask-capcha">
+            <rect height="100%" width="100%" fill="#ffffff" x="-86" y="-65"/>
+
+            <path fill="#000000" d="M-68 -26L-68 26Q-66 45-46 47L12 47Q32 45 34 26L34 -26Q32 -45 12 -47L-46 -47Q-66 -45 -68 -26Z"/>
+
+            <polygon fill="#000000" points="-15,0 60,-57 60,57" />
+        </mask>
+        
+        <mask id="second-mask-capcha">
+            <rect height="100%" width="100%" fill="#ffffff" x="-86" y="-65"/>
+
+            <circle fill="#000000" cx="-12.5" cy="0" r="30"/>
+        </mask>
+    
+        <mask id="third-mask-capcha">
+            <rect height="100%" width="100%" fill="#ffffff" x="-86" y="-65"/>
+
+            <circle fill="#000000" cx="-20.5" cy="-8" r="5"/>
+        </mask>
+    
+        <mask id="fourth-mask-capcha">
+            <rect height="100%" width="100%" fill="#ffffff" x="-86" y="-65"/>
+
+            <circle fill="#000000" cx="-7" cy="0" r="50"/>
+
+            <circle fill="none" stroke="#000000" stroke-width="10px" cx="-7" cy="0" r="68"/>
+        </mask>
+	</defs>
+
+	<path mask="url(#first-mask-capcha)" d="M-86 -37L-86 37Q-83 62 -57 65L23 65Q49 62 52 37L52 -37Q49 -62 23 -65L-57 -65Q-83 -62 -86 -38Z"/>
+	
+	<circle mask="url(#second-mask-capcha)" cx="-12.5" cy="0" r="38"/>
+	
+	<circle mask="url(#third-mask-capcha)" cx="-12.5" cy="0" r="22"/>
+	
+	<polygon mask="url(#fourth-mask-capcha)" points="11,0 86,-57 86,57"/>
+</svg>

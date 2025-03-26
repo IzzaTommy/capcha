@@ -1,0 +1,427 @@
+#template-video-preview-ctr {
+    height: var(--vtnimage-height);
+    padding: var(--vpctr-padding);
+}
+
+.directories-label2 {
+    flex: 0 1 fit-content;
+
+    transition: var(--dlabel-transition);
+
+    cursor: pointer;
+}
+
+.directories-label2:hover {
+    color: var(--dlabel-color);
+}
+
+.storage-ctr {
+    justify-content: center;
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--sgctr-rgap);
+    opacity: 0;
+    transition: var(--sgctr-transition);
+}
+
+.directories-label2:hover + .storage-ctr {
+    opacity: 1;
+}
+
+.directory-label2 {
+    text-align: left;
+
+    flex: 0 0 auto;
+    height: var(--dlabel2-height);
+    line-height: var(--dlabel2-lheight);
+    overflow: hidden;
+    max-width: var(--dlabel2-maxwidth);
+
+    color: var(--dlabel2-color);
+    direction: rtl;
+    font-size: var(--dlabel2-fsize);
+    font-weight: var(--dlabel2-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.directory-label-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+.directory-label3 {
+    flex: 0 0 fit-content;
+    height: var(--dlabel3-height);
+    line-height: var(--dlabel3-lheight);
+    overflow: hidden;
+    max-width: var(--dlabel3-maxwidth);
+
+    color: var(--dlabel3-color);
+    font-size: var(--dlabel3-fsize);
+    font-weight: var(--dlabel3-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.directory-bar {
+    border: var(--dbar-bwidth) solid var(--dbar-bcolor);
+    border-radius: var(--dbar-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--dbar-cgap);
+    margin-left: auto;
+    padding: var(--dbar-padding);
+
+    background-color: var(--dbar-bgcolor);
+}
+
+.directory-setting-field {
+    border-radius: var(--dstfield-bradius);
+    flex: 0 0 auto;
+    height: var(--dstfield-height);
+    line-height: var(--dstfield-lheight);
+    overflow: hidden;
+    padding-right: var(--dstfield-hpadding);
+    padding-left: var(--dstfield-hpadding);
+
+    background-color: var(--dstfield-bgcolor);
+    color: var(--dstfield-color);
+    font-size: var(--dstfield-fsize);
+    font-weight: var(--dstfield-fweight);
+    text-overflow: ellipsis;
+    transition: var(--dstfield-transition);
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.directory-setting-field:hover {
+    color: var(--dstfield-alt-color);
+}
+
+.directory-setting-field[name="capturesProgramFilter"], .directory-setting-field[name="clipsProgramFilter"] {
+    width: var(--dstfield-width);
+}
+
+.directory-setting-field[name="capturesMetaFilter"], .directory-setting-field[name="clipsMetaFilter"] {
+    width: var(--dstfield-alt-width);
+}
+
+.directory-bar-btn {
+    border-radius: var(--dbarbtn-bradius);
+    flex: 0 0 fit-content;
+    
+    transition: var(--dbarbtn-transition);
+
+    cursor: pointer;
+}
+
+.directory-bar-btn:hover {
+    background-color: var(--dbarbtn-bgcolor);
+}
+
+.directory-bar-icon {
+    display: block;
+    height: var(--dbaricon-length);
+    width: var(--dbaricon-length);
+
+    fill: var(--dbaricon-fill);
+    transition: var(--dbaricon-transition);
+}
+
+.directory-bar-btn:hover > .directory-bar-icon {
+    fill: var(--dbaricon-fill);
+}
+
+.directory-ctr {
+    border: var(--dctr-bwidth) solid var(--dctr-bcolor);
+    border-radius: var(--dctr-bradius);
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    height: var(--dctr-height);
+
+    background-color: var(--dctr-bgcolor);
+}
+
+.directory-btn {
+    align-items: center;
+
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+
+    transition: var(--dbtn-transition);
+}
+
+.directory-btn.active:hover {
+    background-color: var(--dbtn-bgcolor);
+}
+
+#left-btn-captures, #left-btn-clips {
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+}
+
+#right-btn-captures, #right-btn-clips {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+.directory-icon {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--dicon-length);
+    width: var(--dicon-length);
+
+    fill: var(--dicon-fill);
+    transition: var(--dicon-transition)
+}
+
+.directory-btn.active > .directory-icon {
+    fill: var(--dicon-alt-fill);
+}
+
+.directory-btn.active:hover > .directory-icon {
+    fill: var(--dicon-alt2-fill);
+}
+
+.directory-gallery {
+    align-items: start;
+
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: row nowrap;
+    margin-right: var(--dgallery-hmargin);
+    margin-left: var(--dgallery-hmargin);
+    overflow-x: auto;
+    padding-top: var(--dgallery-vpadding);
+    padding-bottom: var(--dgallery-vpadding);
+
+    transition: var(--dgallery-transition);
+
+    scroll-snap-type: x mandatory;
+}
+
+.directory-gallery::-webkit-scrollbar-track {
+    margin-right: var(--dgallery-sb-track-hmargin);
+    margin-left: var(--dgallery-sb-track-hmargin);
+}
+
+.directory-status-label {
+    align-self: center;
+
+    display: none;
+    flex: 0 0 fit-content;
+    height: var(--dstatuslabel-height);
+    line-height: var(--dstatuslabel-lheight);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    max-width: 100%;
+
+    color: var(--dstatuslabel-color);
+    font-size: var(--dstatuslabel-fsize);
+    font-weight: var(--dstatuslabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.directory-status-label.active {
+    display: block;
+}
+
+.video-preview-ctr {
+    border-radius: var(--vpctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--vpctr-rgap);
+    padding: var(--vpctr-padding);
+
+    transition: var(--vpctr-transition);
+
+    cursor: pointer;
+    scroll-snap-align: start;
+}
+
+.video-preview-ctr:hover {
+    background-color: var(--vpctr-bgcolor);
+}
+
+.video-thumbnail-ctr {
+    position: relative;
+
+    border-radius: var(--vtnctr-bradius);
+    flex: 0 0 fit-content;
+}
+
+.video-thumbnail-image {
+    aspect-ratio: 16 / 9;
+    border-radius: inherit;
+    display: block;
+    height: var(--vtnimage-height);
+
+    background-color: var(--vtnimage-bgcolor);
+    object-fit: contain;
+
+    -webkit-user-drag: none;
+}
+
+.video-thumbnail-duration-label {
+    position: absolute;
+    right: var(--vtndurlabel-rinset);
+    bottom: var(--vtndurlabel-binset);
+
+    border-radius: var(--vtndurlabel-bradius);
+    box-sizing: content-box;
+    height: var(--vtndurlabel-height);
+    line-height: var(--vtndurlabel-lheight);
+    overflow: hidden;
+    padding: var(--vtndurlabel-padding);
+    max-width: var(--vtndurlabel-maxwidth);
+
+    background-color: var(--vtndurlabel-bgcolor);
+    color: var(--vtndurlabel-color);
+    font-size: var(--vtndurlabel-fsize);
+    font-weight: var(--vtndurlabel-fweight);
+    text-overflow: ellipsis;
+    transition: var(--vtndurlabel-transition);
+    white-space: nowrap;
+}
+
+.video-preview-ctr:hover > .video-thumbnail-ctr > .video-thumbnail-duration-label {
+    color: var(--vtndurlabel-alt-color);
+}
+
+.video-preview-label-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--vplabelctr-cgap);
+}
+
+.video-preview-label {
+    flex: 0 0 fit-content;
+    height: var(--vplabel-height);
+    line-height: var(--vplabel-lheight);
+    overflow: hidden;
+
+    font-size: var(--vplabel-fsize);
+    font-weight: var(--vplabel-fweight);
+    text-overflow: ellipsis;
+    transition: var(--vplabel-transition);
+    white-space: nowrap;
+}
+
+.video-preview-program-label {
+    max-width: var(--vpprogramlabel-maxwidth);
+
+    color: var(--vpprogramlabel-color);
+}
+
+.video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-program-label {
+    color: var(--vpprogramlabel-alt-color);
+}
+
+.video-preview-age-label {
+    margin-left: auto;
+    max-width: var(--vpagelabel-maxwidth);
+
+    color: var(--vpagelabel-color);
+}
+
+.video-preview-ctr:hover > .video-preview-label-ctr > .video-preview-age-label {
+    color: var(--vpagelabel-alt-color);
+}
+
+.video-preview-name-label {
+    flex: 0 0 auto;
+    height: var(--vpnamelabel-height);
+    line-height: var(--vpnamelabel-lheight);
+    overflow: hidden;
+    max-width: var(--vpnamelabel-maxwidth);
+
+    color: var(--vpnamelabel-color);
+    font-size: var(--vpnamelabel-fsize);
+    font-weight: var(--vpnamelabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.video-preview-btn-ctr {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--vpbtnctr-cgap);
+}
+
+.video-preview-btn {
+    border-radius: var(--vpbtn-bradius);
+    flex: 0 0 fit-content;
+    padding: var(--vpbtn-padding);
+
+    transition: var(--vpbtn-transition);
+
+    cursor: pointer;
+}
+
+.video-preview-rename-btn:hover {
+    background-color: var(--vprenamebtn-bgcolor);
+}
+
+.video-preview-delete-btn:hover {
+    background-color: var(--vpdeletebtn-bgcolor);
+}
+
+.video-preview-icon {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--vpicon-length);
+    width: var(--vpicon-length);
+}
+
+.video-preview-path {
+    transition: var(--vppath-transition);
+}
+
+.video-preview-first-path {
+    fill: var(--vpfirstpath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-first-path {
+    fill: var(--vpfirstpath-alt-fill);
+}
+
+.video-preview-second-path {
+    fill: var(--vpsecondpath-fill);
+}
+
+.video-preview-ctr:hover > .video-preview-btn-ctr > .video-preview-btn > .video-preview-icon > .video-preview-second-path {
+    fill: var(--vpsecondpath-alt-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-second-path {
+    fill: var(--vpsecondpath-alt2-fill)!important;
+}
+
+.video-preview-rename-path {
+    fill: var(--vprenamepath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-rename-path {
+    fill: var(--vprenamepath-alt-fill);
+}
+
+.video-preview-delete-path {
+    fill: var(--vpdeletepath-fill);
+}
+
+.video-preview-btn:hover > .video-preview-icon > .video-preview-delete-path {
+    fill: var(--vpdeletepath-alt-fill);
+}

@@ -1,0 +1,10 @@
+<!-- 
+File modified from original @ https://github.com/google/material-design-icons:
+    Name modified
+    Width attribute removed
+    Height attribute removed
+    Fill attribute removed
+    ID attribute added
+Licensed under Apache 2.0 @ https://www.apache.org/licenses/LICENSE-2.0
+-->
+<svg id="square-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M206.78-100.78q-44.3 0-75.15-30.85-30.85-30.85-30.85-75.15v-546.44q0-44.3 30.85-75.15 30.85-30.85 75.15-30.85h546.44q44.3 0 75.15 30.85 30.85 30.85 30.85 75.15v546.44q0 44.3-30.85 75.15-30.85 30.85-75.15 30.85H206.78Zm0-106h546.44v-546.44H206.78v546.44Zm0 0v-546.44 546.44Z"/></svg>

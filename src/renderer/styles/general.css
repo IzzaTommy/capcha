@@ -1,0 +1,458 @@
+:focus {
+    /* outline: 2px solid rgba(255, 0, 0, 0.3); */
+}
+
+* {
+    border: none;
+    box-sizing: border-box;
+    line-height: 1;
+    margin: 0;
+    outline: 1px solid rgba(169, 228, 157, 0.2);
+    outline: none;
+    padding: 0;
+    
+    background-color: transparent;
+
+    -webkit-user-select: none;
+}
+
+::-webkit-scrollbar {
+    height: var(--scbar-length);
+    width: var(--scbar-length);
+}
+
+::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: var(--scbar-thumb-bwidth) solid transparent;
+    border-radius: var(--scbar-thumb-bradius);
+
+    background-color: var(--scbar-thumb-bgcolor);
+    /* transition: var(--scbar-thumb-transition); */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scbar-thumb-alt-bgcolor);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+
+    background-color: var(--body-bgcolor);
+}
+
+#overlay-initialization {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 4;
+
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--ioverlay-bgcolor);
+    opacity: 0;
+    transition: var(--ioverlay-transition);
+
+    pointer-events: none;
+}
+
+#overlay-initialization.active {
+    opacity: 1;
+
+    pointer-events: all;
+}
+
+#icon-initialization {
+    display: block;
+    flex: 0 0 auto;
+    height: var(--iicon-length);
+    width: var(--iicon-length);
+
+    fill: var(--iicon-fill);
+}
+
+#name-label-initialization {
+    flex: 0 0 auto;
+    height: var(--inamelabel-height);
+    line-height: var(--inamelabel-lheight);
+    overflow: hidden;
+    max-width: 100%;
+
+    color: var(--inamelabel-color);
+    font-size: var(--inamelabel-fsize);
+    font-weight: var(--inamelabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#status-label-initialization {
+    flex: 0 0 auto;
+    height: var(--istatuslabel-height);
+    line-height: var(--istatuslabel-lheight);
+    margin-top: var(--istatuslabel-tmargin);
+    overflow: hidden;
+    max-width: 100%;
+
+    color: var(--istatuslabel-color);
+    font-size: var(--istatuslabel-fsize);
+    font-weight: var(--istatuslabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#area-client {
+    position: relative;
+
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--ctarea-cgap);
+    min-height: 0;
+}
+
+#overlay-confirmation {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 3;
+
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--cfoverlay-bgcolor);
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
+#overlay-confirmation.active {
+    visibility: visible;
+
+    pointer-events: all;
+}
+
+#ctr-confirmation {
+    align-items: center;
+
+    border-radius: var(--cfctr-bradius);
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--cfctr-rgap);
+    padding: var(--cfctr-padding);
+
+    background-color: var(--cfctr-bgcolor);
+}
+
+#label-confirmation {
+    flex: 0 0 auto;
+    height: var(--cflabel-height);
+    line-height: var(--cflabel-lheight);
+    overflow: hidden;
+    max-width: var(--cflabel-maxwidth);
+
+    color: var(--cflabel-color);
+    font-size: var(--cflabel-fsize);
+    font-weight: var(--cflabel-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#loading-icon-confirmation {
+    display: none;
+    flex: 0 0 auto;
+    height: var(--cfloadingicon-length);
+    width: var(--cfloadingicon-length);
+    margin-right: var(--cfloadingicon-hmargin);
+    margin-left: var(--cfloadingicon-hmargin);
+
+    clip-path: var(--cfloadingicon-cpath);
+}
+
+#loading-icon-confirmation.active {
+    display: block;
+
+    animation: var(--cfloadingicon-anim);
+}
+
+#field-ctr-confirmation {
+    display: none;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+}
+
+#field-ctr-confirmation.active {
+    display: flex;
+}
+
+.confirmation-field {
+    border-radius: var(--cffield-bradius);
+    flex: 0 0 auto;
+    height: var(--cffield-height);
+    line-height: var(--cffield-lheight);
+
+    color: var(--cffield-color);
+    font-size: var(--cffield-fsize);
+    font-weight: var(--cffield-fweight);
+}
+
+#name-field-confirmation {
+    text-align: right;
+
+    padding-right: var(--cfnamefield-rpadding);
+    padding-left: var(--cfnamefield-lpadding);
+    width: var(--cfnamefield-width);
+
+    background-color: var(--cfnamefield-bgcolor);
+    transition: var(--cfnamefield-transition);
+}
+
+#name-field-confirmation:hover {
+    color: var(--cfnamefield-color);
+}
+
+#format-field-confirmation {
+    padding-right: var(--cfformatfield-rpadding);
+    padding-left: var(--cfformatfield-lpadding);
+    width: var(--cfformatfield-width);
+
+    cursor: default;
+}
+
+#description-confirmation {
+    display: none;
+    flex: 0 0 auto;
+    height: var(--cfdesc-height);
+    line-height: var(--cfdesc-lheight);
+    overflow: hidden;
+    max-width: var(--cfdesc-maxwidth);
+
+    color: var(--cfdesc-color);
+    font-size: var(--cfdesc-fsize);
+    font-weight: var(--cfdesc-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#description-confirmation.active {
+    display: block;
+}
+
+#btn-ctr-confirmation {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    column-gap: var(--cfbtnctr-cgap);
+}
+
+.confirmation-btn {
+    border-radius: var(--cfbtn-bradius);
+    box-sizing: content-box;
+    display: none;
+    flex: 0 0 auto;
+    height: var(--cfbtn-height);
+    line-height: var(--cfbtn-lheight);
+    overflow: hidden;
+    padding: var(--cfbtn-padding);
+    width: var(--cfbtn-width);
+
+    color: var(--cfbtn-color);
+    font-size: var(--cfbtn-fsize);
+    font-weight: var(--cfbtn-fweight);
+    text-overflow: ellipsis;
+    transition: var(--cfbtn-transition);
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.confirmation-btn:hover {
+    color: var(--cfbtn-alt-color);
+}
+
+.confirmation-btn.active {
+    display: block;
+}
+
+#cancel-btn-confirmation {
+    background-color: var(--cfcancelbtn-bgcolor);
+}
+
+#cancel-btn-confirmation:hover {
+    background-color: var(--cfcancelbtn-alt-bgcolor);
+}
+
+#confirm-btn-confirmation {
+    background-color: var(--cfconfirmbtn-bgcolor);
+}
+
+#confirm-btn-confirmation:hover {
+    background-color: var(--cfconfirmbtn-alt-bgcolor);
+}
+
+#rename-btn-confirmation {
+    background-color: var(--cfrenamebtn-bgcolor);
+}
+
+#rename-btn-confirmation:hover {
+    background-color: var(--cfrenamebtn-alt-bgcolor);
+}
+
+#delete-btn-confirmation {
+    background-color: var(--cfdeletebtn-bgcolor);
+}
+
+#delete-btn-confirmation:hover {
+    background-color: var(--cfdeletebtn-alt-bgcolor);
+}
+
+#block-content {
+    position: relative;
+
+    border-top-left-radius: var(--cblock-tlbradius);
+    flex: 1 1 fit-content;
+
+    background-color: var(--cblock-bgcolor);
+}
+
+#status-label-content {
+    position: absolute;
+    top: var(--cstatuslabel-tinset);
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+
+    border-radius: var(--cstatuslabel-bradius);
+    box-sizing: content-box;
+    height: var(--cstatuslabel-height);
+    line-height: var(--cstatuslabel-lheight);
+    overflow: hidden;
+    padding: var(--cstatuslabel-padding);
+    max-width: var(--cstatuslabel-maxwidth);
+
+    background-color: var(--cstatuslabel-bgcolor);
+    color: var(--cstatuslabel-color);
+    font-size: var(--cstatuslabel-fsize);
+    font-weight: var(--cstatuslabel-fweight);
+    opacity: 0;
+    text-overflow: ellipsis;
+    transition: var(--cstatuslabel-transition);
+    white-space: nowrap;
+
+    pointer-events: none;
+}
+
+#status-label-content.active {
+    opacity: 1;
+
+    pointer-events: all;
+}
+
+.content-section {
+    position: absolute;
+
+    border-top-left-radius: inherit;
+    display: flex;
+    flex-flow: column nowrap;
+    row-gap: var(--csection-rgap);
+    height: 100%;
+    padding: var(--csection-vpadding) var(--csection-hpadding);
+    width: 100%;
+
+    visibility: hidden;
+}
+
+.content-section.active {
+    visibility: visible;
+}
+
+.content-label1 {
+    flex: 0 0 auto;
+    height: var(--clabel1-height);
+    line-height: var(--clabel1-lheight);
+    overflow: hidden;
+
+    color: var(--clabel1-color);
+    font-size: var(--clabel1-fsize);
+    font-weight: var(--clabel1-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.content-divider1 {
+    flex: 0 0 auto;
+    height: var(--cdivider1-height);
+    margin-left: var(--cdivider1-lmargin);
+    width: var(--cdivider1-width);
+
+    background-color: var(--cdivider1-bgcolor);
+}
+
+.content-ctr1 {
+    border-radius: var(--cctr1-bradius);
+    display: flex;
+    flex: 1 1 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--cctr1-rgap);
+    overflow-y: auto;
+    padding: var(--cctr1-vpadding) var(--cctr1-hpadding);
+
+    background-color: var(--cctr1-bgcolor);
+}
+
+.content-ctr1::-webkit-scrollbar-track {
+    margin-top: var(--cctr1-sb-track-vmargin);
+    margin-bottom: var(--cctr1-sb-track-vmargin);
+}
+
+.content-ctr2 {
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: column nowrap;
+    row-gap: var(--cctr2-rgap);
+}
+
+.content-ctr3 {    
+    display: flex;
+    flex: 0 0 fit-content;
+    flex-flow: row nowrap;
+    row-gap: var(--cctr3-rgap);
+    column-gap: var(--cctr3-cgap);
+    max-height: var(--cctr3-maxheight);
+}
+
+.content-label2 {
+    height: var(--clabel2-height);
+    line-height: var(--clabel2-lheight);
+    overflow: hidden;
+
+    color: var(--clabel2-color);
+    font-size: var(--clabel2-fsize);
+    font-weight: var(--clabel2-fweight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.content-divider2 {
+    flex: 0 0 auto;
+    height: var(--cdivider2-height);
+    margin-left: var(--cdivider2-lmargin);
+    width: var(--cdivider2-width);
+
+    background-color: var(--cdivider2-bgcolor);
+}
